@@ -123,6 +123,7 @@ a.sidebar-link {
     font-size: 0.9rem;
     white-space: nowrap;
     border-left: 3px solid transparent;
+    font-size: 16px;
 }
 
 .sidebar-link::after {
@@ -151,6 +152,7 @@ a.sidebar-link {
 .sidebar-link span {
     display: inline-block;
     line-height: 1.1rem; /* Adjust if necessary */
+    font-size: 16px;
 }
 
 a.sidebar-link:hover {
@@ -309,6 +311,17 @@ select.form-control {
         });
     });
     </script>
+
+    <!-- Script sa Toast -->
+    @if (session('status'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            });
+        </script>
+    @endif
 
     <!-- Bootstrap 5 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
