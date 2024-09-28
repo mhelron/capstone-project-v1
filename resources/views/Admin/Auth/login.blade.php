@@ -14,18 +14,6 @@
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">  
-
-    <style>
-        /* Login Buttons*/
-        .btn-primary {
-            background-color: #ec7714;
-            border-color: #ec7714;
-        }
-        .btn-primary:hover {
-            background-color: #d65a0f;
-            border-color: #d65a0f;
-        }
-    </style>
         
 </head>
 

@@ -19,6 +19,10 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
+                <div class="d-flex justify-content-end mb-2">
+                    <a href="#" class="btn btn-primary me-2">Add Reservation</a>
+                    <a href="#" class="btn btn-secondary">Add Pencil Reservation</a>
+                </div>
 
                 <!-- Bootstrap Toast -->
                 @if (session('status'))

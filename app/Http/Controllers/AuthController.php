@@ -56,7 +56,6 @@ class AuthController extends Controller
         Session::flush();
         Session::forget('firebase_user');
         Session::forget('firebase_id_token');
-        dd("dd9");
         return redirect()->route('login')->with('status', 'Logged out successfully!');
     }
 }

@@ -15,20 +15,21 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
+
         ::after,
-::before {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+        ::before {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-a {
-    text-decoration: none;
-}
+        a {
+            text-decoration: none;
+        }
 
-li {
-    list-style: none;
-}
+        li {
+            list-style: none;
+        }
 
 h1 {
     font-weight: 600;
@@ -270,7 +271,7 @@ select.form-control {
                     </li>
                 </ul>
                 <div class="sidebar-footer">
-                    <a href="#" class="sidebar-link">
+                    <a href="#" class="sidebar-link" id="logout-link" data-bs-toggle="modal" data-bs-target="#logoutModal">
                         <i class='bx bx-log-out'></i>
                         <span>Logout</span>
                     </a>
@@ -282,6 +283,28 @@ select.form-control {
                 </div>
             </div>
         </div>
+
+         <!-- Logout Confirmation Modal -->
+         <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true" style="z-index: 9999;">
+            <div class="modal-dialog modal-dialog-centered modal-sm ">
+                <di v class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to log out?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-danger" id="confirm-logout-btn">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            @csrf
+        </form>
     </body>
 
     <!-- Script sa ToggleMenu -->
@@ -311,6 +334,32 @@ select.form-control {
         });
     });
     </script>
+
+<script>
+            document.getElementById('logout-link').addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default link behavior
+
+                try {
+                    // Ensure the modal is initialized properly
+                    var myModal = new bootstrap.Modal(document.getElementById('logoutModal'));
+                    myModal.show();
+                } catch (error) {
+                    console.error('Error initializing modal: ', error);
+                }
+            });
+
+            // When the user clicks "Logout" in the modal, submit the form
+            document.getElementById('confirm-logout-btn').addEventListener('click', function() {
+                document.getElementById('logout-form').submit();
+            });
+
+            document.addEventListener('hidden.bs.modal', function (event) {
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
+            });
+        </script>
 
     <!-- Script sa Toast -->
     @if (session('status'))
