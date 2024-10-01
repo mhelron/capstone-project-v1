@@ -30,6 +30,9 @@ Route::middleware([AuthMiddleware::class])->group(function () {
     Route::get('/admin/packages', [PackageController::class, 'index'])->name('admin.packages');
 
     Route::get('/admin/reservations', [ReservationController::class, 'index'])->name('admin.reservation');
+    Route::get('/admin/add-reservation', [ReservationController::class, 'createReservation'])->name('admin.reserve.addRes');
+    Route::post('/admin/add-reservation', [ReservationController::class, 'reservation'])->name('admin.reserve.reserve');
+    Route::put('/admin/confirm-reservation/{id}', [ReservationController::class, 'confirmReservation'])->name('admin.reserve.confirm');
 
     Route::prefix('admin/reports')->group(function () {
         Route::get('/reservation', [ReportsController::class, 'reservation'])->name('admin.reports.reservation');

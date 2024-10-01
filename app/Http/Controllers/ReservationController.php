@@ -15,7 +15,7 @@ class ReservationController extends Controller
         $this->reservations = 'reservations';
         $this->area = 'area';
         $this->packages = 'packages';
-        $this->menu = 'menu';
+        $this->menu = 'menu';       
         $this->events = 'events';
         $this->archived_reservations = 'archived_reservations';
     }
@@ -52,20 +52,12 @@ class ReservationController extends Controller
         ]);
     }
 
-    public function create_res(){
-        $areas = $this->database->getReference($this->area)->getValue();
-        $areas = is_array($areas) ? array_map(fn($area) => $area['area_name'], $areas) : [];
-        
+    public function createReservation(){
         $packages = $this->database->getReference($this->packages)->getValue();
         $packages = is_array($packages) ? $packages : [];
 
-        $menus = $this->database->getReference($this->menu)->getValue();
-        $menus = is_array($menus) ? $menus : [];
-
-        $events = $this->database->getReference($this->events)->getValue();
-        $events = is_array($events) ? $events : [];
-    
-        return view('firebase.admin.reservation.create_res', compact('areas', 'packages', 'menus', 'events'));
+        $isExpanded = session()->get('sidebar_is_expanded', true);    
+        return view('admin.reservation.createReservation', compact('packages', 'isExpanded'));
     }
 
     public function create_pen(){
@@ -84,7 +76,7 @@ class ReservationController extends Controller
         return view('firebase.admin.reservation.create_pen', compact('areas', 'packages', 'menus', 'events'));
     }
 
-    public function reserve(Request $request){
+    public function reservation(Request $request){
 
         $validatedData = $request->validate([
             'first_name' => 'required',
@@ -92,9 +84,7 @@ class ReservationController extends Controller
             'address' => 'required',
             'phone' => 'required',
             'email' => 'required',
-            'area_name' => 'required',
-            'package_name' => 'required',
-            'menu_name' => 'required',
+            'package_name' => 'nullable',
             'event_date' => 'required',
             'guests_number' => 'required',
             'sponsors' => 'nullable|integer',
@@ -112,9 +102,7 @@ class ReservationController extends Controller
             'address' => $validatedData['address'],
             'phone' => $validatedData['phone'],
             'email' => $validatedData['email'],
-            'area_name' => $validatedData['area_name'],
-            'package_name' => $validatedData['package_name'],
-            'menu_name' => $validatedData['menu_name'],
+            'package_name' => $validatedData['package_name'] ?? null,
             'event_date' => $validatedData['event_date'],
             'guests_number' => $validatedData['guests_number'],
             'sponsors' => $validatedData['sponsors'] ?? null,
@@ -127,13 +115,13 @@ class ReservationController extends Controller
         $postRef = $this->database->getReference($this->reservations)->push($reserveData);
 
         if ($postRef) {
-            return redirect('admin/calendar')->with('status', 'Reservation Added Successfully');
+            return redirect('admin/reservations')->with('status', 'Reservation Added Successfully');
         } else {
-            return redirect('admin/calendar')->with('status', 'Reservation Not Added');
+            return redirect('admin/reservations')->with('status', 'Reservation Not Added');
         }
     }
 
-    public function penReserve(Request $request){
+    public function pencilReservation(Request $request){
 
         $validatedData = $request->validate([
             'first_name' => 'required',
@@ -192,9 +180,9 @@ class ReservationController extends Controller
         $res_updated = $this->database->getReference($this->reservations. '/'.$key)->update($reserveData);
 
         if ($res_updated) {
-            return redirect('admin/calendar')->with('status', 'Category Updated Successfully');
+            return redirect('admin/reservations')->with('status', 'Category Updated Successfully');
         } else {
-            return redirect('admin/calendar')->with('status', 'Category Not Updated');
+            return redirect('admin/reservations')->with('status', 'Category Not Updated');
         }
     }
 }

@@ -20,7 +20,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="d-flex justify-content-end mb-2">
-                    <a href="#" class="btn btn-primary me-2">Add Reservation</a>
+                    <a href="{{route('admin.reserve.addRes')}}" class="btn btn-primary me-2">Add Reservation</a>
                     <a href="#" class="btn btn-secondary">Add Pencil Reservation</a>
                 </div>
 
@@ -72,7 +72,7 @@
                                                 <th scope="col">First name</th>
                                                 <th scope="col">Last name</th>
                                                 <th scope="col">Event Date</th>
-                                                <th scope="col">Event Type</th>
+                                                <th scope="col">Package</th>
                                                 <th scope="col">Pax</th>
                                                 <th scope="col">Status</th>
                                                 <th scope="col">Details</th>
@@ -106,8 +106,6 @@
                                                                         <ul>
                                                                             <li><strong>Address:</strong> {{ $item['address'] }}</li>
                                                                             <li><strong>Phone:</strong> {{ $item['phone'] }}</li>
-                                                                            <li><strong>Area:</strong> {{ $item['area_name'] }}</li>
-                                                                            <li><strong>Menu:</strong> {{ $item['menu_name'] }}</li>
                                                                             <li><strong>Venue:</strong> {{ $item['venue'] }}</li>
                                                                             <li><strong>Event Time:</strong> {{ \Carbon\Carbon::parse($item['event_time'])->format('g:i A') }}</li>
                                                                             <li><strong>Theme:</strong> {{ $item['theme'] }}</li>
@@ -120,10 +118,10 @@
                                                     </td>
                                                     <td>
                                                         <div class="d-flex">
-                                                            <form action="{{url('admin/calendar/confirm-reservation/'.$key)}}" method="POST">
+                                                            <form action="{{url('admin/confirm-reservation/'.$key)}}" method="POST">
                                                             @csrf
                                                             @method('PUT')
-                                                                <button type="submit" class="btn btn-sm btn-success mr-2">Confirm</button>
+                                                                <button type="submit" class="btn btn-sm btn-success me-2">Confirm</button>
                                                             </form>
                                                             <a href="#" class="btn btn-sm btn-secondary">Cancel</a>
                                                         </div>
@@ -167,7 +165,7 @@
                                                             <form action="{{url('admin/calendar/confirm-reservation/'.$key)}}" method="POST">
                                                             @csrf
                                                             @method('PUT')
-                                                                <button type="submit" class="btn btn-sm btn-success mr-2">Finish</button>
+                                                                <button type="submit" class="btn btn-sm btn-success me-2">Finish</button>
                                                             </form>
                                                             <a href="#" class="btn btn-sm btn-secondary">Cancel</a>
                                                         </div>

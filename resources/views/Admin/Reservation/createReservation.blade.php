@@ -28,7 +28,7 @@
                 @endif
 
                 <div class="d-flex justify-content-end mb-2">
-                    <a href="{{route('admin.calendar')}}" class="btn btn-danger">Back</a>
+                    <a href="{{route('admin.reservation')}}" class="btn btn-danger">Back</a>
                 </div>
 
                 <div class="card">
@@ -37,7 +37,7 @@
                             @csrf
 
                             <div class="form-row">
-                                <div class="col-md-6 mb-3">
+                                <div class="form-group col-md-6 mb-3">
                                     <label>First Name</label>
                                     <input type="text" name="first_name" value="{{ old('first_name') }}" class="form-control">
                                     @if ($errors->has('first_name'))
@@ -45,7 +45,7 @@
                                     @endif
                                 </div>
 
-                                <div class="col-md-6 mb-3">
+                                <div class="form-group col-md-6 mb-3">
                                     <label>Last Name</label>
                                     <input type="text" name="last_name" value="{{ old('last_name') }}" class="form-control">
                                     @if ($errors->has('last_name'))
@@ -81,23 +81,9 @@
                             </div>
 
                             <div class="form-row">
-                                <div class="col-md-6 form-group mb-3">
-                                    <label for="area_name">Area</label>
-                                        <select onchange="areaChange()" name="area_name" id="area_name" class="form-control">
-                                            <option value="" disabled selected>Select an Area</option>
-                                        @foreach ($areas as $area)
-                                            <option>{{ $area }}</option>
-                                        @endforeach
-                                        </select>
-
-                                    @if ($errors->has('area_name'))
-                                        <small class="text-danger">{{ $errors->first('area_name') }}</small>
-                                    @endif
-                                </div>
-
                                 <div class="col-md-6 mb-3">
                                     <label for="package_name">Package</label>
-                                    <select onchange="packageChange()" name="package_name" id="package_name" class="form-control" disabled>
+                                    <select onchange="packageChange()" name="package_name" id="package_name" class="form-control">
                                         <option value="" disabled selected>Select a Package</option>
                                         
                                     </select>
@@ -108,18 +94,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-row">
-                                <div class="col-md-6 form-group mb-3">
-                                    <label for="menu_name">Menu</label>
-                                        <select name="menu_name" id="menu_name" class="form-control" disabled>
-                                            <option value="" disabled selected>Select a Menu</option>
-
-                                    </select>
-
-                                    @if ($errors->has('menu_name'))
-                                        <small class="text-danger">{{ $errors->first('menu_name') }}</small>
-                                    @endif
-                                </div>
+                            <div class="form-row">  
 
                                 <div class="col-md-6 mb-3">
                                     <label>Date of Event</label>
@@ -192,99 +167,7 @@
 </div>
 <!-- /.content -->
 
-<!-- Script para sa dependedent dropdown para sa Packages base sa selected area ni user-->
 <script>
-
-// container ng packages na i-pupush natin
-var packages = [];
-
-// php syntax para ma push ang package data sa package var
-<?php 
-    foreach($packages as $package){
-        echo 'packages.push({"area_name": "'. $package['area_name'] .'", "package_name": "'. $package['package_name'] .'", "event_name": "'. $package['event_name'] .'"});';
-    }
-?>
-
-// container ng events na i-pupush natin
-var events = [];
-
-// php syntax para ma push ang event data sa events var
-<?php 
-    foreach($events as $event_id => $event){
-        echo 'events.push({"event_id": "'. $event_id .'", "event_name": "'. $event['event_name'] .'"});';
-    }
-?>
-
-// container ng menus na i-pupush natin
-var menus = [];
-
-// php syntax para ma push ang menu data sa menus var
-<?php 
-    foreach($menus as $menu_id => $menu) {
-        // kunin natin event_ids
-        $event_ids = isset($menu['event_ids']) ? $menu['event_ids'] : [];
-        
-        // convert sa string
-        $event_ids_string = implode(', ', $event_ids);
-        
-        // push data
-        echo 'menus.push({"menu_name": "'. $menu['menu_name'] .'", "event_ids": "'. $event_ids_string .'"});';
-    }
-?>
-
-// pang map sa event_ids into event_name
-var eventMap = {};
-events.forEach(function(event) {
-    eventMap[event.event_id] = event.event_name;
-});
-
-// mapping
-menus.forEach(function(menu) {
-    var eventIds = menu.event_ids.split(', ');
-    var eventNames = eventIds.map(function(eventId) {
-        return eventMap[eventId] || eventId;
-    });
-    menu.event_name = eventNames.join(', ');
-});
-
-// i-filter yung values ng package dropdown base sa area selected
-function areaChange() {
-    document.getElementById('package_name').disabled = false;
-    $('#package_name').html('<option value="" disabled selected>Select a Package</option>');
-    packages.forEach(package => {
-        if(package['area_name'] == $('#area_name :selected').text()){
-            $('#package_name').append('<option value="' + package['package_name'] + '">' + package['package_name'] + '</option>');
-        }
-    });
-}
-
-
-// i-filter yung values ng menu dropdown base sa package selected
-function packageChange() {
-    document.getElementById('menu_name').disabled = false;
-    $('#menu_name').html('<option value="" disabled selected>Select a Menu</option>');
-    
-    // Get the selected package name
-    var selectedPackageName = $('#package_name :selected').text();
-    
-    // Find event_names related to the selected package
-    var selectedEventNames = [];
-    packages.forEach(package => {
-        if (package.package_name === selectedPackageName) {
-            selectedEventNames = package.event_name.split(', ');
-        }
-    });
-    
-    // Filter menus based on event_names
-    menus.forEach(menu => {
-        var menuEventNames = menu.event_ids.split(', ').map(id => eventMap[id] || id);
-        var hasMatchingEventName = menuEventNames.some(name => selectedEventNames.includes(name));
-        
-        if (hasMatchingEventName) {
-            $('#menu_name').append('<option value="' + menu['menu_name'] + '">' + menu['menu_name'] + '</option>');
-        }
-    });
-
     var wed = "Wedding Package";
 
     if ($('#package_name :selected').text() == wed) {
@@ -292,8 +175,6 @@ function packageChange() {
     } else {
         document.getElementById('sponsors').disabled = true;
     }
-
-}
 
 document.getElementById('myForm').addEventListener('submit', function(event) {
         const sponsorsField = document.getElementById('sponsors');

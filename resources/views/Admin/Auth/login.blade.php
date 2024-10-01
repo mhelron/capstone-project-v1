@@ -14,7 +14,24 @@
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">  
-        
+    
+    <style>
+        body {
+    background-color: #f8f9fa;
+}
+.login-container {
+    max-width: 700px;
+    margin: 5% auto;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: .375rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+.login-header {
+    margin-bottom: 1.5rem;
+}
+  
+    </style>
 </head>
 
 <body>
