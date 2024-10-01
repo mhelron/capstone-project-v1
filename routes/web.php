@@ -16,30 +16,38 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Login
+// Login Route
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login'])->name('firebase.login');
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
+// Auth Middleware
 Route::middleware([AuthMiddleware::class])->group(function () {
 
+    // Dashboard Route
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
+    // Calendar Route
     Route::get('/admin/calendar', [CalendarController::class, 'index'])->name('admin.calendar');
 
+    // Packages Route
     Route::get('/admin/packages', [PackageController::class, 'index'])->name('admin.packages');
 
-    Route::get('/admin/reservations', [ReservationController::class, 'index'])->name('admin.reservation');
-    Route::get('/admin/add-reservation', [ReservationController::class, 'createReservation'])->name('admin.reserve.addRes');
-    Route::post('/admin/add-reservation', [ReservationController::class, 'reservation'])->name('admin.reserve.reserve');
-    Route::put('/admin/confirm-reservation/{id}', [ReservationController::class, 'confirmReservation'])->name('admin.reserve.confirm');
+    // Reservation Route
+    Route::prefix('admin/reservations')->group(function () {
+        Route::get('/', [ReservationController::class, 'index'])->name('admin.reservation');
+        Route::get('/add-reservation', [ReservationController::class, 'createReservation'])->name('admin.reserve.addRes');
+        Route::post('/add-reservation', [ReservationController::class, 'reservation'])->name('admin.reserve.reserve');
+        Route::put('/confirm-reservation/{id}', [ReservationController::class, 'confirmReservation'])->name('admin.reserve.confirm');
+    });
 
+    // Reports Route
     Route::prefix('admin/reports')->group(function () {
         Route::get('/reservation', [ReportsController::class, 'reservation'])->name('admin.reports.reservation');
         Route::get('/sales', [ReportsController::class, 'sales'])->name('admin.reports.sales');
     });
 
-    // Users
+    // Users Route
     Route::prefix('admin/users')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('admin.users');
         Route::get('add-user', [UserController::class, 'create'])->name('admin.users.add');
