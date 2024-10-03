@@ -31,9 +31,21 @@ Route::middleware([AuthMiddleware::class])->group(function () {
     Route::get('/admin/calendar', [CalendarController::class, 'index'])->name('admin.calendar');
 
     // Packages Route
-    Route::get('/admin/packages', [PackageController::class, 'index'])->name('admin.packages');
+    Route::prefix('/admin/packages')->group(function () {
+        Route::get('/', [PackageController::class, 'index'])->name('admin.packages');
+        Route::get('/add-package', [PackageController::class, 'create'])->name('admin.packages.add');
+        Route::post('/add-package', [PackageController::class, 'store'])->name('admin.packages.store');
+        Route::get('/edit-package/{id}', [UserController::class, 'edit'])->name('admin.packages.edit');
+        Route::put('/update-package/{id}', [UserController::class, 'update'])->name('admin.packages.update');
+    });
 
-    // Reservation Route
+    Route::get('/admin/packages', [PackageController::class, 'index'])->name('admin.packages');
+    Route::get('/admin/packages/add-package', [PackageController::class, 'create'])->name('admin.packages.add');
+    Route::post('/admin/packages/add-package', [PackageController::class, 'store'])->name('admin.packages.store');
+    Route::get('/admin/packages/edit-package/{id}', [PackageController::class, 'edit'])->name('admin.packages.edit');
+    Route::put('/admin/packages/edit-package/{id}', [PackageController::class, 'update'])->name('admin.packages.update');
+
+    // Reservation Route 
     Route::prefix('admin/reservations')->group(function () {
         Route::get('/', [ReservationController::class, 'index'])->name('admin.reservation');
         Route::get('/add-reservation', [ReservationController::class, 'createReservation'])->name('admin.reserve.addRes');

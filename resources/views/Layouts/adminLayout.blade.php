@@ -93,18 +93,19 @@
         </div>
 
          <!-- Logout Confirmation Modal -->
-         <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true" style="z-index: 9999;">
-            <div class="modal-dialog modal-dialog-centered modal-sm ">
-                <di v class="modal-content">
+        <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true" >
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
                     </div>
                     <div class="modal-body">
-                        Are you sure you want to log out?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-danger" id="confirm-logout-btn">Logout</button>
+                        <p class="pt-4 pb-4">Are you sure you want to log out?</p>
+                        <!-- Align buttons to the right -->
+                        <div class="text-end">
+                            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-danger" id="confirm-logout-btn">Logout</button>
+                        </div>
                     </div>
                 </div>
             </div>

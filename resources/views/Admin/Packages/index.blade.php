@@ -35,10 +35,10 @@
                 @endif
 
                 <div class="d-flex justify-content-end">
-                    <a href="{{ route('admin.users.add') }}" class="btn btn-primary mb-2">Add Packages</a>
+                    <a href="{{ route('admin.packages.add') }}" class="btn btn-primary mb-2">Add Packages</a>
                 </div>
 
-                <!-- Users Table -->
+                <!-- Package Table -->
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive">
@@ -48,10 +48,10 @@
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">Package Name</th>
-                                        <th scope="col">Last name</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Role</th>
-                                        <th scope="col">Status</th>
+                                        <th scope="col">Persons</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Food</th>
+                                        <th scope="col">Services</th>
                                         <th scope="col">Options</th>
                                     </tr>
                                 </thead>
@@ -61,15 +61,70 @@
                                     @forelse ($packages as $key => $item)
                                     <tr>
                                         <td>{{ $i++ }}</td>
-                                        <td>{{ $item['fname'] }}</td>
-                                        <td>{{ $item['lname'] }}</td>
-                                        <td>{{ $item['email'] }}</td>
-                                        <td>{{ $item['user_role'] }}</td>
-                                        <td></td>
+                                        <td>{{ $item['package_name'] }}</td>
+                                        <td>{{ $item['persons'] }}</td>
+                                        <td>₱{{ number_format($item['price'], 2) }}</td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#foodModal{{ $key }}">View Food</button>
+
+                                            <!-- Food Modal -->
+                                            <div class="modal fade" id="foodModal{{ $key }}" tabindex="-1" aria-labelledby="foodModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="foodModalLabel">{{ $item['menu_name'] }} for {{ $item['package_name'] }}</h5>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            @if (isset($item['foods']) && count($item['foods']) > 0)
+                                                                <ul class="list-group">
+                                                                    @foreach ($item['foods'] as $food)
+                                                                        <li class="list-group-item">{{ $food['food'] }}</li>
+                                                                    @endforeach
+                                                                </ul>
+                                                            @else
+                                                                <p>No Food Items Available</p>
+                                                            @endif
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#serviceModal{{ $key }}">View Services</button>
+
+                                            
+                                            <!-- Services Modal -->
+                                            <div class="modal fade" id="serviceModal{{ $key }}" tabindex="-1" aria-labelledby="serviceModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="serviceModalLabel">Services for {{ $item['package_name'] }}</h5>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            @if (isset($item['services']) && count($item['services']) > 0)
+                                                                <ul class="list-group">
+                                                                    @foreach ($item['services'] as $service)
+                                                                        <li class="list-group-item">{{ $service['service'] }}</li>
+                                                                    @endforeach
+                                                                </ul>
+                                                            @else
+                                                                <p>No Services Available</p>
+                                                            @endif
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
                                         <td>
                                             <div class="d-flex">
-                                                <a href="{{ url('admin/users/edit-user/' . $key) }}" class="btn btn-sm btn-success me-2">Edit</a>
-                                                <a href="{{ url('admin/users/delete-user/' . $key) }}" class="btn btn-sm btn-secondary">Archive</a>
+                                                <a href="{{ url('admin/packages/edit-package/' . $key) }}" class="btn btn-sm btn-success me-2">Edit</a>
+                                                <a href="{{ url('admin/packages/archive-package/' . $key) }}" class="btn btn-sm btn-secondary">Archive</a>
                                             </div>
                                         </td>
                                     </tr>
@@ -79,6 +134,7 @@
                                     </tr>
                                     @endforelse
                                 </tbody>
+
 
                             </table>
                         </div>

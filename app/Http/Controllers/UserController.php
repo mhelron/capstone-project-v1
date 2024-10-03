@@ -66,14 +66,15 @@ class UserController extends Controller
             // By pass lang para mag show yung confirm error password sa field nito.
             'password_confirmation.required_with' => 'The password confirmation does not match.'
         ]);
-    
+        
+        // Checking if yung email is existing
         try { 
             $firebaseAuth = app('firebase.auth');
             $existingUser = $firebaseAuth->getUserByEmail($validatedData['email']);
     
             if ($existingUser) {
                 return redirect('admin/users/add-user')->withErrors([
-                    'email' => 'This email has already been taken.'
+                    'email' => 'This email is already in use.'
                 ])->withInput();
             }
         } catch (\Kreait\Firebase\Exception\Auth\UserNotFound $e) {
@@ -156,7 +157,7 @@ class UserController extends Controller
             'password_confirmation.required_with' => 'The password confirmation does not match.',
         ]);
     
-        // Retrieve the existing user data including firebase_uid
+        
         $existingUser = $this->database->getReference($this->users . '/' . $key)->getValue();
     
         if (!$existingUser || !isset($existingUser['firebase_uid'])) {
