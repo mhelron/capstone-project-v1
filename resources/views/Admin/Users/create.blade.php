@@ -31,7 +31,7 @@
                             @csrf
 
                             <div class="form-group mb-3">
-                                <label>First Name</label>
+                                <label>First Name <span class="text-danger"> *</span></label></label>
                                 <input type="text" name="first_name" value="{{ old('first_name') }}" class="form-control">
 
                                 @if ($errors->has('first_name'))
@@ -40,7 +40,7 @@
                             </div>
 
                             <div class="form-group mb-3">
-                                <label>Last Name</label>
+                                <label>Last Name <span class="text-danger"> *</span></label></label>
                                 <input type="text" name="last_name" value="{{ old('last_name') }}" class="form-control">
 
                                 @if ($errors->has('last_name'))
@@ -49,7 +49,7 @@
                             </div>
 
                             <div class="form-group mb-3">
-                                <label>Email</label>
+                                <label>Email <span class="text-danger"> *</span></label></label>
                                 <input type="text" name="email" value="{{ old('email') }}" class="form-control">
                                 
                                 @if ($errors->has('email'))
@@ -58,7 +58,7 @@
                             </div>
               
                             <div class="form-group mb-3">
-                                <label>User Role</label>
+                                <label>User Role <span class="text-danger"> *</span></label></label>
                                 <select name="user_role" class="form-control">
                                     <option value="" disabled selected>Select a role</option>
                                     <option value="Super Admin" {{ old('user_role') == 'Super Admin' ? 'selected' : '' }}>Super Admin</option>
@@ -73,7 +73,7 @@
                             </div>
 
                             <div class="form-group mb-3">
-                                <label>Password</label>
+                                <label>Password <span class="text-danger"> *</span></label></label>
                                 <input type="password" name="password" class="form-control">
 
                                 @if ($errors->has('password') && $errors->first('password') !== 'The password confirmation does not match.')
@@ -82,7 +82,7 @@
                             </div>
 
                             <div class="form-group mb-3">
-                                <label>Confirm Password</label>
+                                <label>Confirm Password <span class="text-danger"> *</span></label></label></label>
                                 <input type="password" name="password_confirmation" class="form-control">
 
                                 @if (!$errors->has('password') && $errors->has('password_confirmation'))

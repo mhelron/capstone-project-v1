@@ -32,14 +32,14 @@
 
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="package_name" class="form-label">Package Name</label>
+                                    <label for="package_name" class="form-label">Package Name <span class="text-danger">*</span></label></label>
                                     <input type="text" name="package_name" value="{{ old('package_name') }}" class="form-control @error('package_name') is-invalid @enderror" placeholder="Enter package name">
                                     @error('package_name')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="persons" class="form-label">Persons</label>
+                                    <label for="persons" class="form-label">Persons <span class="text-danger"> *</span></label></label>
                                     <input type="number" name="persons" value="{{ old('persons') }}" class="form-control @error('persons') is-invalid @enderror" placeholder="Enter number of persons" >
                                     @error('persons')
                                         <small class="text-danger">{{ $message }}</small>
@@ -49,14 +49,14 @@
 
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="price" class="form-label">Price</label>
+                                    <label for="price" class="form-label">Price <span class="text-danger"> *</span></label></label>
                                     <input type="text" name="price" value="{{ old('price') }}" class="form-control @error('price') is-invalid @enderror" placeholder="Enter price">
                                     @error('price')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="menu_name" class="form-label">Menu Name</label>
+                                    <label for="menu_name" class="form-label">Menu Name <span class="text-danger"> *</span></label></label>
                                     <input type="text" name="menu_name" value="{{ old('menu_name') }}" class="form-control @error('menu_name') is-invalid @enderror" placeholder="Enter menu name">
                                     @error('menu_name')
                                         <small class="text-danger">{{ $message }}</small>
@@ -66,7 +66,7 @@
 
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="services" class="form-label">Services</label>
+                                    <label for="services" class="form-label">Services <span class="text-danger"> *</span></label></label>
                                         <div id="services-list">
                                             @foreach(old('services', ['']) as $index => $service)
                                                 <div class="row mb-2">
@@ -99,7 +99,7 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label for="foods" class="form-label">Foods & Categories</label>
+                                    <label for="foods" class="form-label">Foods & Categories <span class="text-danger"> *</span></label></label>
                                         <div id="food-list">
                                             @foreach(old('foods', [['food' => '', 'category' => '']]) as $index => $food)
                                                 <div class="row mb-2">
