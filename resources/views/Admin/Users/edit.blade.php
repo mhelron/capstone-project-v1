@@ -37,7 +37,7 @@
 								<div class="col-md-6">
 									<div class="form-group mb-3">
 										<label>First Name</label>
-										<input type="text" name="first_name" value="{{ old('first_name', $editdata['fname']) }}" class="form-control @error('first_name') is-invalid @enderror">
+										<input type="text" name="first_name" value="{{ old('first_name', $editdata['fname']) }}" class="form-control">
 										@error('first_name')
 											<small class="text-danger">{{ $message }}</small>
 										@enderror
@@ -48,7 +48,7 @@
 								<div class="col-md-6">
 									<div class="form-group mb-3">
 										<label>Last Name</label>
-										<input type="text" name="last_name" value="{{ old('last_name', $editdata['lname']) }}" class="form-control @error('last_name') is-invalid @enderror">
+										<input type="text" name="last_name" value="{{ old('last_name', $editdata['lname']) }}" class="form-control">
 										@error('last_name')
 											<small class="text-danger">{{ $message }}</small>
 										@enderror
@@ -59,7 +59,7 @@
 								<div class="col-md-6">
 									<div class="form-group mb-3">
 										<label>Email</label>
-										<input type="text" name="email" value="{{ old('email', $editdata['email']) }}" class="form-control @error('email') is-invalid @enderror">
+										<input type="text" name="email" value="{{ old('email', $editdata['email']) }}" class="form-control">
 										@error('email')
 											<small class="text-danger">{{ $message }}</small>
 										@enderror
@@ -70,7 +70,7 @@
 								<div class="col-md-6">
 									<div class="form-group mb-3">
 										<label>User Role</label>
-										<select name="user_role" class="form-control @error('user_role') is-invalid @enderror">
+										<select name="user_role" class="form-control">
 											<option value="Super Admin" {{ $editdata['user_role'] == 'Super Admin' ? 'selected' : '' }}>Super Admin</option>
 											<option value="Admin" {{ $editdata['user_role'] == 'Admin' ? 'selected' : '' }}>Admin</option>
 											<option value="Manager" {{ $editdata['user_role'] == 'Manager' ? 'selected' : '' }}>Manager</option>
@@ -86,7 +86,7 @@
 								<div class="col-md-6">
 									<div class="form-group mb-3">
 										<label>New Password</label>
-										<input type="password" name="password" class="form-control @error('password') is-invalid @enderror">
+										<input type="password" name="password" class="form-control">
 										@error('password')
 											<small class="text-danger">{{ $message }}</small>
 										@enderror
@@ -97,7 +97,7 @@
 								<div class="col-md-6">
 									<div class="form-group mb-3">
 										<label>Confirm New Password</label>
-										<input type="password" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror">
+										<input type="password" name="password_confirmation" class="form-control">
 										@error('password_confirmation')
 											<small class="text-danger">{{ $message }}</small>
 										@enderror

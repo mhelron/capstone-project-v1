@@ -4,16 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Kreait\Firebase\Contract\Database;
 use Kreait\Firebase\Contract\Auth as FirebaseAuth;
 use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
-    protected $auth;
+    protected $auth, $database, $users;
 
-    public function __construct(FirebaseAuth $auth)
+    public function __construct(FirebaseAuth $auth, Database $database)
     {
         $this->auth = $auth;
+        $this->database = $database;
+        $this->users = 'users';
     }
 
     public function showLoginForm()
@@ -27,6 +30,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -34,17 +38,15 @@ class AuthController extends Controller
 
         try {
             $signInResult = $this->auth->signInWithEmailAndPassword($request->email, $request->password);
-    
-            Session::flush();
-            
+
             $idTokenString = $signInResult->idToken();
             $verifiedIdToken = $this->auth->verifyIdToken($idTokenString);
             $uid = $verifiedIdToken->claims()->get('sub');
             $user = $this->auth->getUser($uid);
-    
+
             Session::put('firebase_user', $user);
             Session::put('firebase_id_token', $idTokenString);
-    
+
             return redirect()->route('admin.dashboard')->with('status', 'Logged in successfully!');
         } catch (\Kreait\Firebase\Exception\Auth\FailedToVerifyToken $e) {
             return redirect()->back()->with('error', 'The token is invalid: ' . $e->getMessage());
@@ -54,10 +56,11 @@ class AuthController extends Controller
     }
 
     public function logout()
-    {   
+    {
+        Session::get('firebase_user');
+        // Clear the session
         Session::flush();
-        Session::forget('firebase_user');
-        Session::forget('firebase_id_token');
+
         return redirect()->route('login')->with('status', 'Logged out successfully!');
     }
 }

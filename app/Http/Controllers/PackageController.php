@@ -39,8 +39,8 @@ class PackageController extends Controller
             'services' => 'required|array',
             'services.*' => 'required|string|max:255',
             'foods' => 'required|array',
-            'foods.*.food' => 'required|string|max:255', // for each food
-            'foods.*.category' => 'required|string|max:255', // for each food category
+            'foods.*.food' => 'required|string|max:255', 
+            'foods.*.category' => 'required|string|max:255',
         ], [
             'package_name.required' => 'Package name is required.',
             'persons.required' => 'Number of persons is required.',

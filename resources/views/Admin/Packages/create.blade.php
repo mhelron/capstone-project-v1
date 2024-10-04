@@ -33,14 +33,14 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="package_name" class="form-label">Package Name <span class="text-danger">*</span></label></label>
-                                    <input type="text" name="package_name" value="{{ old('package_name') }}" class="form-control @error('package_name') is-invalid @enderror" placeholder="Enter package name">
+                                    <input type="text" name="package_name" value="{{ old('package_name') }}" class="form-control" placeholder="Enter package name">
                                     @error('package_name')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
                                     <label for="persons" class="form-label">Persons <span class="text-danger"> *</span></label></label>
-                                    <input type="number" name="persons" value="{{ old('persons') }}" class="form-control @error('persons') is-invalid @enderror" placeholder="Enter number of persons" >
+                                    <input type="number" name="persons" value="{{ old('persons') }}" class="form-control" placeholder="Enter number of persons" >
                                     @error('persons')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -50,14 +50,14 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="price" class="form-label">Price <span class="text-danger"> *</span></label></label>
-                                    <input type="text" name="price" value="{{ old('price') }}" class="form-control @error('price') is-invalid @enderror" placeholder="Enter price">
+                                    <input type="text" name="price" value="{{ old('price') }}" class="form-control" placeholder="Enter price">
                                     @error('price')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
                                     <label for="menu_name" class="form-label">Menu Name <span class="text-danger"> *</span></label></label>
-                                    <input type="text" name="menu_name" value="{{ old('menu_name') }}" class="form-control @error('menu_name') is-invalid @enderror" placeholder="Enter menu name">
+                                    <input type="text" name="menu_name" value="{{ old('menu_name') }}" class="form-control" placeholder="Enter menu name">
                                     @error('menu_name')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -73,7 +73,7 @@
                                                     @if ($index === 0)
                                                         <div class="col-md-12"> <!-- Full width for the first service input -->
                                                             <div class="input-group">
-                                                                <input type="text" name="services[]" class="form-control @error("services.$index") is-invalid @enderror" placeholder="Enter service" value="{{ old("services.$index", $service) }}">
+                                                                <input type="text" name="services[]" class="form-control" placeholder="Enter service" value="{{ old("services.$index", $service) }}">
                                                             </div>
                                                             @error("services.$index")
                                                                 <small class="text-danger" style="margin-top: 2px; margin-bottom: 1px; display: block;">{{ $message }}</small>
@@ -82,7 +82,7 @@
                                                     @else
                                                         <div class="col-md-10"> <!-- Input field column for subsequent services -->
                                                             <div class="input-group">
-                                                                <input type="text" name="services[]" class="form-control @error("services.$index") is-invalid @enderror" placeholder="Enter service" value="{{ old("services.$index", $service) }}">
+                                                                <input type="text" name="services[]" class="form-control" placeholder="Enter service" value="{{ old("services.$index", $service) }}">
                                                             </div>
                                                             @error("services.$index")
                                                                 <small class="text-danger" style="margin-top: 2px; margin-bottom: 1px; display: block;">{{ $message }}</small>
@@ -105,26 +105,26 @@
                                                 <div class="row mb-2">
                                                     @if ($index === 0)
                                                         <div class="col-md-5">
-                                                            <input type="text" name="foods[{{ $index }}][food]" class="form-control @error("foods.$index.food") is-invalid @enderror" placeholder="Enter food" value="{{ old("foods.$index.food", $food['food']) }}">
+                                                            <input type="text" name="foods[{{ $index }}][food]" class="form-control" placeholder="Enter food" value="{{ old("foods.$index.food", $food['food']) }}">
                                                             @error("foods.$index.food")
                                                                 <small class="text-danger">{{ $message }}</small>
                                                             @enderror
                                                         </div>
                                                         <div class="col-md-7">
-                                                            <input type="text" name="foods[{{ $index }}][category]" class="form-control @error("foods.$index.category") is-invalid @enderror" placeholder="Enter category" value="{{ old("foods.$index.category", $food['category']) }}">
+                                                            <input type="text" name="foods[{{ $index }}][category]" class="form-control" placeholder="Enter category" value="{{ old("foods.$index.category", $food['category']) }}">
                                                             @error("foods.$index.category")
                                                                 <small class="text-danger">{{ $message }}</small>
                                                             @enderror
                                                         </div>
                                                     @else
                                                         <div class="col-md-5">
-                                                            <input type="text" name="foods[{{ $index }}][food]" class="form-control @error("foods.$index.food") is-invalid @enderror" placeholder="Enter food" value="{{ old("foods.$index.food", $food['food']) }}">
+                                                            <input type="text" name="foods[{{ $index }}][food]" class="form-control" placeholder="Enter food" value="{{ old("foods.$index.food", $food['food']) }}">
                                                             @error("foods.$index.food")
                                                                 <small class="text-danger">{{ $message }}</small>
                                                             @enderror
                                                         </div>
                                                         <div class="col-md-5">
-                                                            <input type="text" name="foods[{{ $index }}][category]" class="form-control @error("foods.$index.category") is-invalid @enderror" placeholder="Enter category" value="{{ old("foods.$index.category", $food['category']) }}">
+                                                            <input type="text" name="foods[{{ $index }}][category]" class="form-control" placeholder="Enter category" value="{{ old("foods.$index.category", $food['category']) }}">
                                                             @error("foods.$index.category")
                                                                 <small class="text-danger">{{ $message }}</small>
                                                             @enderror

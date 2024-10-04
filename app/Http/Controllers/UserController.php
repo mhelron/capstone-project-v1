@@ -99,16 +99,16 @@ class UserController extends Controller
                 'email' => $validatedData['email'],
                 'password' => $hashedPassword,
                 'firebase_uid' => $firebaseUser->uid,
+                'status' => 'Offline'
             ];
-    
+            
             $postRef = $this->database->getReference($this->users)->push($userData);
-    
+            
             if ($postRef) {
                 return redirect('admin/users')->with('status', 'User Added Successfully');
             } else {
                 return redirect('admin/users')->with('status', 'User Not Added');
             }
-
         } catch (\Exception $e) {
             return redirect('admin/users/add-user')->with('status', 'Error: ' . $e->getMessage())->withInput();
         }
@@ -169,6 +169,7 @@ class UserController extends Controller
             'fname' => $validatedData['first_name'],
             'lname' => $validatedData['last_name'],
             'email' => $validatedData['email'],
+            'status' => $request->input('status', 'Offline'),
         ];
     
         if ($request->filled('password')) {

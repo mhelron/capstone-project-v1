@@ -44,7 +44,7 @@
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <thead>
-                                    <tr>
+                                    <tr>    
                                         <th scope="col">#</th>
                                         <th scope="col">First name</th>
                                         <th scope="col">Last name</th>
@@ -64,7 +64,7 @@
                                         <td>{{ $item['lname'] }}</td>
                                         <td>{{ $item['email'] }}</td>
                                         <td>{{ $item['user_role'] }}</td>
-                                        <td></td>
+                                        <td>{{ $item['status'] }}</td>
                                         <td>
                                             <div class="d-flex">
                                                 <a href="{{ url('admin/users/edit-user/' . $key) }}" class="btn btn-sm btn-success me-2">Edit</a>

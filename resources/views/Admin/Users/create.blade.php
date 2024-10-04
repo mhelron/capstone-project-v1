@@ -37,7 +37,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
                                         <label>First Name <span class="text-danger"> *</span></label>
-                                        <input type="text" name="first_name" value="{{ old('first_name') }}" class="form-control @error('first_name') is-invalid @enderror" placeholder="Enter first name">
+                                        <input type="text" name="first_name" value="{{ old('first_name') }}" class="form-control" placeholder="Enter first name">
                                         @error('first_name')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
@@ -48,7 +48,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
                                         <label>Last Name <span class="text-danger"> *</span></label>
-                                        <input type="text" name="last_name" value="{{ old('last_name') }}" class="form-control @error('last_name') is-invalid @enderror" placeholder="Enter last name">
+                                        <input type="text" name="last_name" value="{{ old('last_name') }}" class="form-control" placeholder="Enter last name">
                                         @error('last_name')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
@@ -59,7 +59,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
                                         <label>Email <span class="text-danger"> *</span></label>
-                                        <input type="email" name="email" value="{{ old('email') }}" class="form-control @error('email') is-invalid @enderror" placeholder="Enter email">
+                                        <input type="email" name="email" value="{{ old('email') }}" class="form-control" placeholder="Enter email">
                                         @error('email')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
@@ -70,7 +70,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
                                         <label>User Role <span class="text-danger"> *</span></label>
-                                        <select name="user_role" class="form-control @error('user_role') is-invalid @enderror">
+                                        <select name="user_role" class="form-control">
                                             <option value="" disabled selected>Select a role</option>
                                             <option value="Super Admin" {{ old('user_role') == 'Super Admin' ? 'selected' : '' }}>Super Admin</option>
                                             <option value="Admin" {{ old('user_role') == 'Admin' ? 'selected' : '' }}>Admin</option>
@@ -87,10 +87,10 @@
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
                                         <label>Password <span class="text-danger"> *</span></label>
-                                        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Enter password">
-                                        @error('password')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
+                                        <input type="password" name="password" class="form-control" placeholder="Enter password">
+                                        @if ($errors->has('password') && $errors->first('password') !== 'The password confirmation does not match.')
+                                            <small class="text-danger">{{ $errors->first('password') }}</small>
+                                        @endif
                                     </div>
                                 </div>
 
@@ -98,10 +98,12 @@
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
                                         <label>Confirm Password <span class="text-danger"> *</span></label>
-                                        <input type="password" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="Confirm password">
-                                        @error('password_confirmation')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
+                                        <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm password">
+                                        @if (!$errors->has('password') && $errors->has('password_confirmation'))
+                                            <small class="text-danger">{{ $errors->first('password_confirmation') }}</small>
+                                        @elseif ($errors->has('password') && $errors->first('password') === 'The password confirmation does not match.')
+                                            <small class="text-danger">{{ $errors->first('password') }}</small>
+                                        @endif
                                     </div>
                                 </div>
 
