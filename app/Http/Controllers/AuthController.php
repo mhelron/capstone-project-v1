@@ -34,15 +34,17 @@ class AuthController extends Controller
 
         try {
             $signInResult = $this->auth->signInWithEmailAndPassword($request->email, $request->password);
-
+    
+            Session::flush();
+            
             $idTokenString = $signInResult->idToken();
             $verifiedIdToken = $this->auth->verifyIdToken($idTokenString);
             $uid = $verifiedIdToken->claims()->get('sub');
             $user = $this->auth->getUser($uid);
-
+    
             Session::put('firebase_user', $user);
             Session::put('firebase_id_token', $idTokenString);
-
+    
             return redirect()->route('admin.dashboard')->with('status', 'Logged in successfully!');
         } catch (\Kreait\Firebase\Exception\Auth\FailedToVerifyToken $e) {
             return redirect()->back()->with('error', 'The token is invalid: ' . $e->getMessage());

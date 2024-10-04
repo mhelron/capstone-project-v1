@@ -75,6 +75,9 @@
                             <li class="sidebar-item">
                                 <a href="{{route('admin.reports.sales')}}" class="sidebar-link">Sales</a>
                             </li>
+                            <li class="sidebar-item">
+                                <a href="#" class="sidebar-link">Activity Logs</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
