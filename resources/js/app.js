@@ -127,6 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // ----------------------------------------------------------------------------------------------------------------------------------------- //
 document.addEventListener('DOMContentLoaded', function () {
     const priceInput = document.querySelector('input[name="price"]');
+    const packageForm = document.getElementById('package-form');
 
     // Lalagyan ng comma yung price every 3 digits
     function formatWithCommas(value) {
@@ -149,7 +150,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Pag i-submit na yung form aalisin na yung comma
-    const packageForm = document.getElementById('package-form');
     packageForm.addEventListener('submit', function () {
         priceInput.value = priceInput.value.replace(/,/g, ''); // Alis comma sa pag submit
     });
@@ -191,3 +191,21 @@ document.getElementById('add-food').addEventListener('click', function () {
 });
 
 // ----------------------------------------------------------------------------------------------------------------------------------------- //
+
+// Event listener for the Archive button
+const archiveButtons = document.querySelectorAll('[data-bs-target="#archiveModal"]');
+const userNameField = document.getElementById('userName');
+const confirmArchiveButton = document.getElementById('confirm-archive-btn');
+
+archiveButtons.forEach(button => {
+    button.addEventListener('click', function() {
+        const userName = this.getAttribute('data-name');
+        const userId = this.getAttribute('data-id');
+        userNameField.textContent = userName;
+
+        // Set up the confirm button with the user ID
+        confirmArchiveButton.onclick = function() {
+            window.location.href = '{{ url("admin/users/delete-user/") }}/' + userId;
+        };
+    });
+});

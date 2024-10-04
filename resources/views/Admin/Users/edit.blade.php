@@ -30,69 +30,87 @@
 							@csrf
 							@method('PUT')
 
-							<div class="form-group mb-3">
-								<label>First Name</label>
-								<input type="text" name="first_name" value="{{ old('first_name', $editdata['fname']) }}" class="form-control">
-								@if ($errors->has('first_name'))
-								  <small class="text-danger">{{ $errors->first('first_name') }}</small>
-								@endif
-							</div>
-
-							<div class="form-group mb-3">
-								<label>Last Name</label>
-								<input type="text" name="last_name" value="{{ old('last_name', $editdata['lname']) }}" class="form-control">
-								@if ($errors->has('last_name'))
-								  <small class="text-danger">{{ $errors->first('last_name') }}</small>
-								@endif
-							</div>
-
-							<div class="form-group mb-3">
-								<label>Email</label>
-								<input type="text" name="email" value="{{ old('email', $editdata['email']) }}" class="form-control">
-								@if ($errors->has('email'))
-								  <small class="text-danger">{{ $errors->first('email') }}</small>
-							   @endif
-							</div>
-
-							<div class="form-group mb-3">
-								<label>User Role</label>
-								<div class="d-flex align-items-center">
-								  <select name="user_role" class="form-control">
-									  <option value="Super Admin" {{ $editdata['user_role'] == 'Super Admin' ? 'selected' : '' }}>Super Admin</option>
-									  <option value="Admin" {{ $editdata['user_role'] == 'Admin' ? 'selected' : '' }}>Admin</option>
-									  <option value="Manager" {{ $editdata['user_role'] == 'Manager' ? 'selected' : '' }}>Manager</option>
-									  <option value="Staff" {{ $editdata['user_role'] == 'Staff' ? 'selected' : '' }}>Staff</option>
-								  </select>
+							<!-- Start of row -->
+							<div class="row">
+								
+								<!-- First Name -->
+								<div class="col-md-6">
+									<div class="form-group mb-3">
+										<label>First Name</label>
+										<input type="text" name="first_name" value="{{ old('first_name', $editdata['fname']) }}" class="form-control @error('first_name') is-invalid @enderror">
+										@error('first_name')
+											<small class="text-danger">{{ $message }}</small>
+										@enderror
+									</div>
 								</div>
 
-								@if ($errors->has('user_role'))
-								  <small class="text-danger">{{ $errors->first('user_role') }}</small>
-							   @endif
+								<!-- Last Name -->
+								<div class="col-md-6">
+									<div class="form-group mb-3">
+										<label>Last Name</label>
+										<input type="text" name="last_name" value="{{ old('last_name', $editdata['lname']) }}" class="form-control @error('last_name') is-invalid @enderror">
+										@error('last_name')
+											<small class="text-danger">{{ $message }}</small>
+										@enderror
+									</div>
+								</div>
+
+								<!-- Email -->
+								<div class="col-md-6">
+									<div class="form-group mb-3">
+										<label>Email</label>
+										<input type="text" name="email" value="{{ old('email', $editdata['email']) }}" class="form-control @error('email') is-invalid @enderror">
+										@error('email')
+											<small class="text-danger">{{ $message }}</small>
+										@enderror
+									</div>
+								</div>
+
+								<!-- User Role -->
+								<div class="col-md-6">
+									<div class="form-group mb-3">
+										<label>User Role</label>
+										<select name="user_role" class="form-control @error('user_role') is-invalid @enderror">
+											<option value="Super Admin" {{ $editdata['user_role'] == 'Super Admin' ? 'selected' : '' }}>Super Admin</option>
+											<option value="Admin" {{ $editdata['user_role'] == 'Admin' ? 'selected' : '' }}>Admin</option>
+											<option value="Manager" {{ $editdata['user_role'] == 'Manager' ? 'selected' : '' }}>Manager</option>
+											<option value="Staff" {{ $editdata['user_role'] == 'Staff' ? 'selected' : '' }}>Staff</option>
+										</select>
+										@error('user_role')
+											<small class="text-danger">{{ $message }}</small>
+										@enderror
+									</div>
+								</div>
+
+								<!-- Password -->
+								<div class="col-md-6">
+									<div class="form-group mb-3">
+										<label>New Password</label>
+										<input type="password" name="password" class="form-control @error('password') is-invalid @enderror">
+										@error('password')
+											<small class="text-danger">{{ $message }}</small>
+										@enderror
+									</div>
+								</div>
+
+								<!-- Confirm Password -->
+								<div class="col-md-6">
+									<div class="form-group mb-3">
+										<label>Confirm New Password</label>
+										<input type="password" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror">
+										@error('password_confirmation')
+											<small class="text-danger">{{ $message }}</small>
+										@enderror
+									</div>
+								</div>
+
 							</div>
+							<!-- End of row -->
 
 							<div class="form-group mb-3">
-								<label>New Password</label>
-								<input type="password" name="password" class="form-control">
-
-								@if ($errors->has('password') && $errors->first('password') !== 'The password confirmation does not match.')
-                                    <small class="text-danger">{{ $errors->first('password') }}</small>
-                                @endif
+								<button type="submit" class="btn btn-primary float-end">Update User</button>
 							</div>
 
-							<div class="form-group mb-3">
-								<label>Confirm New Password</label>
-								<input type="password" name="password_confirmation" class="form-control">
-
-								@if (!$errors->has('password') && $errors->has('password_confirmation'))
-                                    <small class="text-danger">{{ $errors->first('password_confirmation') }}</small>
-                                @elseif ($errors->has('password') && $errors->first('password') === 'The password confirmation does not match.')
-                                    <small class="text-danger">{{ $errors->first('password') }}</small>
-                                @endif
-							</div>
-
-							<div class="form-group mb-3">
-								<button type="submit" class="btn btn-primary">Update</button>
-							</div>
 						</form>
 					</div>
 				</div>

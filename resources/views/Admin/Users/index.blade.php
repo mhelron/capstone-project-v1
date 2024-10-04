@@ -106,24 +106,4 @@
     </div>
 </div>
 
-<script>
-    // Event listener for the Archive button
-    const archiveButtons = document.querySelectorAll('[data-bs-target="#archiveModal"]');
-    const userNameField = document.getElementById('userName');
-    const confirmArchiveButton = document.getElementById('confirm-archive-btn');
-
-    archiveButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const userName = this.getAttribute('data-name');
-            const userId = this.getAttribute('data-id');
-            userNameField.textContent = userName;
-
-            // Set up the confirm button with the user ID
-            confirmArchiveButton.onclick = function() {
-                window.location.href = '{{ url("admin/users/delete-user/") }}/' + userId;
-            };
-        });
-    });
-</script>
-
 @endsection

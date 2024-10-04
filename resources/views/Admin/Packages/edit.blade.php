@@ -83,7 +83,7 @@
                                             </div>
                                         @endforeach
                                     </div>
-                                    <button id="add-service" class="btn btn-primary mt-2" type="button">Add More Services</button>
+                                    <button id="add-service" class="btn btn-sm btn-success mt-2" type="button">Add More Services</button>
                                 </div>
                                 
                                 <div class="col-md-6">
@@ -109,12 +109,12 @@
                                             </div>
                                         @endforeach
                                     </div>
-                                    <button id="add-food" class="btn btn-primary mt-2" type="button">Add More Foods</button>
+                                    <button id="add-food" class="btn btn-sm btn-success mt-2" type="button">Add More Foods</button>
                                 </div>
                             </div>
 
-                            <div class="d-flex justify-content-end mt-4">
-                                <button type="submit" class="btn btn-success">Update Package</button>
+                            <div class="d-flex justify-content-end mt-3">
+                                <button type="submit" class="btn btn-primary">Update Package</button>
                             </div>
                         </form>
                     </div>

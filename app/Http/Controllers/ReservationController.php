@@ -8,15 +8,12 @@ use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
-    protected $database, $area, $packages, $menu, $events, $reservations, $archived_reservations;
+    protected $database, $packages, $reservations, $archived_reservations;
 
     public function __construct(Database $database){
         $this->database = $database;
         $this->reservations = 'reservations';
-        $this->area = 'area';
         $this->packages = 'packages';
-        $this->menu = 'menu';       
-        $this->events = 'events';
         $this->archived_reservations = 'archived_reservations';
     }
     public function index(Request $request){
@@ -60,20 +57,11 @@ class ReservationController extends Controller
         return view('admin.reservation.createReservation', compact('packages', 'isExpanded'));
     }
 
-    public function create_pen(){
-        $areas = $this->database->getReference($this->area)->getValue();
-        $areas = is_array($areas) ? array_map(fn($area) => $area['area_name'], $areas) : [];
-        
+    public function create_pen(){   
         $packages = $this->database->getReference($this->packages)->getValue();
         $packages = is_array($packages) ? $packages : [];
-
-        $menus = $this->database->getReference($this->menu)->getValue();
-        $menus = is_array($menus) ? $menus : [];
-
-        $events = $this->database->getReference($this->events)->getValue();
-        $events = is_array($events) ? $events : [];
     
-        return view('firebase.admin.reservation.create_pen', compact('areas', 'packages', 'menus', 'events'));
+        return view('firebase.admin.reservation.create_pen', compact('packages'));
     }
 
     public function reservation(Request $request){
