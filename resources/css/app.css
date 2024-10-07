@@ -211,3 +211,19 @@ select.form-control {
 .btn-close {
     font-size: 20px;
 }
+
+.status-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.status-online {
+    background-color: green; /* Green for online */
+}
+
+.status-offline {
+    background-color: red; /* Red for offline */
+}

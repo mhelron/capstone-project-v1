@@ -44,7 +44,7 @@
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <thead>
-                                    <tr>    
+                                    <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">First name</th>
                                         <th scope="col">Last name</th>
@@ -64,7 +64,10 @@
                                         <td>{{ $item['lname'] }}</td>
                                         <td>{{ $item['email'] }}</td>
                                         <td>{{ $item['user_role'] }}</td>
-                                        <td>{{ $item['status'] }}</td>
+                                        <td>
+                                            <span class="status-dot {{ $item['status'] === 'Online' ? 'status-online' : 'status-offline' }}"></span>
+                                            {{ $item['status'] }}
+                                        </td>
                                         <td>
                                             <div class="d-flex">
                                                 <a href="{{ url('admin/users/edit-user/' . $key) }}" class="btn btn-sm btn-success me-2">Edit</a>
@@ -105,5 +108,25 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Event listener for the Archive button
+    const archiveButtons = document.querySelectorAll('[data-bs-target="#archiveModal"]');
+    const userNameField = document.getElementById('userName');
+    const confirmArchiveButton = document.getElementById('confirm-archive-btn');
+
+    archiveButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const userName = this.getAttribute('data-name');
+            const userId = this.getAttribute('data-id');
+            userNameField.textContent = userName;
+
+            // Set up the confirm button with the user ID
+            confirmArchiveButton.onclick = function() {
+                window.location.href = '{{ url("admin/users/delete-user/") }}/' + userId;
+            };
+        });
+    });
+</script>
 
 @endsection

@@ -20,6 +20,7 @@ Route::get('/', function () {
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login'])->name('firebase.login');
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/update-status-offline', [AuthController::class, 'updateStatusOffline'])->name('update.status.offline');
 
 // Auth Middleware
 Route::middleware([AuthMiddleware::class])->group(function () {

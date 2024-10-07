@@ -99,7 +99,6 @@ class UserController extends Controller
                 'email' => $validatedData['email'],
                 'password' => $hashedPassword,
                 'firebase_uid' => $firebaseUser->uid,
-                'status' => 'Offline'
             ];
             
             $postRef = $this->database->getReference($this->users)->push($userData);
@@ -169,7 +168,6 @@ class UserController extends Controller
             'fname' => $validatedData['first_name'],
             'lname' => $validatedData['last_name'],
             'email' => $validatedData['email'],
-            'status' => $request->input('status', 'Offline'),
         ];
     
         if ($request->filled('password')) {

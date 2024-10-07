@@ -10,13 +10,11 @@ use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
-    protected $auth, $database, $users;
+    protected $auth;
 
-    public function __construct(FirebaseAuth $auth, Database $database)
+    public function __construct(FirebaseAuth $auth)
     {
         $this->auth = $auth;
-        $this->database = $database;
-        $this->users = 'users';
     }
 
     public function showLoginForm()
@@ -58,9 +56,9 @@ class AuthController extends Controller
     public function logout()
     {
         Session::get('firebase_user');
-        // Clear the session
         Session::flush();
 
         return redirect()->route('login')->with('status', 'Logged out successfully!');
     }
+
 }
