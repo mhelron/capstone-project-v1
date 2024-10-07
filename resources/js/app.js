@@ -87,24 +87,6 @@ document.addEventListener('DOMContentLoaded', function () {
         servicesList.appendChild(newInputGroup);
     });
 
-    document.getElementById('add-more-food').addEventListener('click', function () {
-        const foodList = document.getElementById('food-list');
-        const foodCount = foodList.children.length; // Bilangin yung index ng Foods
-        const newInputGroup = document.createElement('div');
-        newInputGroup.classList.add('row', 'mb-2'); // Gagawa ng bagong input field
-        newInputGroup.innerHTML = `
-            <div class="col-md-5">
-                <input type="text" name="foods[${foodCount}][food]" class="form-control" placeholder="Enter food item">
-            </div>
-            <div class="col-md-5">
-                <input type="text" name="foods[${foodCount}][category]" class="form-control" placeholder="Enter category">
-            </div>
-            <div class="col-md-2 d-flex align-items-end">
-                <button class="btn btn-danger remove-item" type="button">Remove</button>
-            </div>
-        `;
-        foodList.appendChild(newInputGroup);
-    });
 
     document.addEventListener('click', function (e) {
         if (e.target && e.target.classList.contains('remove-item')) {
@@ -160,32 +142,3 @@ document.addEventListener('DOMContentLoaded', function () {
 // Script ng pag add field service and food sa edit package
 
 // ----------------------------------------------------------------------------------------------------------------------------------------- //
-
-// Remove added field
-document.addEventListener('click', function (e) {
-    if (e.target && e.target.classList.contains('remove-item')) {
-        e.target.closest('.row').remove(); // Remove the closest row for both services and foods
-    }
-});
-
-// Function to add a new food item
-document.getElementById('add-food').addEventListener('click', function () {
-    const foodList = document.getElementById('food-list');
-    const foodCount = foodList.children.length; // Get the current count of foods
-    const newInputGroup = document.createElement('div');
-    newInputGroup.classList.add('row', 'mb-2'); // Create a new row
-        
-    // Create the new food input group
-    newInputGroup.innerHTML = `
-        <div class="col-md-5">
-            <input type="text" name="foods[${foodCount}][food]" class="form-control" placeholder="Enter food item">
-        </div>
-        <div class="col-md-5">
-            <input type="text" name="foods[${foodCount}][category]" class="form-control" placeholder="Enter category">
-        </div>
-        <div class="col-md-2 d-flex align-items-end">
-            <button class="btn btn-danger remove-item" type="button">Remove</button>
-        </div>
-    `;
-    foodList.appendChild(newInputGroup);
-});

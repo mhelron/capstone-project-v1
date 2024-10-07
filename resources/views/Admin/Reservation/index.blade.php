@@ -143,9 +143,10 @@
                                                 <th scope="col">First name</th>
                                                 <th scope="col">Last name</th>
                                                 <th scope="col">Event Date</th>
-                                                <th scope="col">Event Type</th>
+                                                <th scope="col">Package</th>
                                                 <th scope="col">Pax</th>
                                                 <th scope="col">Status</th>
+                                                <th scope="col">Details</th>
                                                 <th scope="col">Options</th>
                                             </tr>
                                         </thead>
@@ -160,6 +161,33 @@
                                                     <td>{{ $item['package_name'] }}</td>
                                                     <td>{{ $item['guests_number'] }}</td>
                                                     <td>{{ $item['status'] }}</td>
+                                                    <td>
+                                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#reservationModal{{ $key }}">
+                                                            View Details
+                                                        </button>
+                                                        
+                                                        <div class="modal fade" id="reservationModal{{ $key }}" tabindex="-1" aria-labelledby="reservationModalLabel{{ $key }}" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="reservationModalLabel{{ $key }}">Reservation Details for {{ $item['first_name'] }}</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <ul>
+                                                                            <li><strong>Address:</strong> {{ $item['address'] }}</li>
+                                                                            <li><strong>Phone:</strong> {{ $item['phone'] }}</li>
+                                                                            <li><strong>Venue:</strong> {{ $item['venue'] }}</li>
+                                                                            <li><strong>Event Time:</strong> {{ \Carbon\Carbon::parse($item['event_time'])->format('g:i A') }}</li>
+                                                                            <li><strong>Theme:</strong> {{ $item['theme'] }}</li>
+                                                                            <li><strong>Other Requests:</strong> {{ $item['other_requests'] }}</li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    </td>
                                                     <td>
                                                         <div class="d-flex">
                                                             <form action="{{url('admin/calendar/confirm-reservation/'.$key)}}" method="POST">
@@ -186,8 +214,11 @@
                                                 <th scope="col">#</th>
                                                 <th scope="col">First name</th>
                                                 <th scope="col">Last name</th>
-                                                <th scope="col">Email</th>
+                                                <th scope="col">Event Date</th>
+                                                <th scope="col">Package</th>
+                                                <th scope="col">Pax</th>
                                                 <th scope="col">Status</th>
+                                                <th scope="col">Details</th>
                                                 <th scope="col">Options</th>
                                             </tr>
                                         </thead>
@@ -219,11 +250,14 @@
                             <table class="table table-hover">
                                         <thead>
                                             <tr>
-                                                <th scope="col">#</th>
+                                            <th scope="col">#</th>
                                                 <th scope="col">First name</th>
                                                 <th scope="col">Last name</th>
-                                                <th scope="col">Email</th>
+                                                <th scope="col">Event Date</th>
+                                                <th scope="col">Package</th>
+                                                <th scope="col">Pax</th>
                                                 <th scope="col">Status</th>
+                                                <th scope="col">Details</th>
                                                 <th scope="col">Options</th>
                                             </tr>
                                         </thead>
@@ -258,8 +292,11 @@
                                                 <th scope="col">#</th>
                                                 <th scope="col">First name</th>
                                                 <th scope="col">Last name</th>
-                                                <th scope="col">Email</th>
-                                                <th scope="col">Type</th>
+                                                <th scope="col">Event Date</th>
+                                                <th scope="col">Package</th>
+                                                <th scope="col">Pax</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Details</th>
                                                 <th scope="col">Options</th>
                                             </tr>
                                         </thead>

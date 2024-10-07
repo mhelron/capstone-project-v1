@@ -50,7 +50,6 @@
                                         <th scope="col">Last name</th>
                                         <th scope="col">Email</th>
                                         <th scope="col">Role</th>
-                                        <th scope="col">Status</th>
                                         <th scope="col">Options</th>
                                     </tr>
                                 </thead>
@@ -64,10 +63,6 @@
                                         <td>{{ $item['lname'] }}</td>
                                         <td>{{ $item['email'] }}</td>
                                         <td>{{ $item['user_role'] }}</td>
-                                        <td>
-                                            <span class="status-dot {{ $item['status'] === 'Online' ? 'status-online' : 'status-offline' }}"></span>
-                                            {{ $item['status'] }}
-                                        </td>
                                         <td>
                                             <div class="d-flex">
                                                 <a href="{{ url('admin/users/edit-user/' . $key) }}" class="btn btn-sm btn-success me-2">Edit</a>
