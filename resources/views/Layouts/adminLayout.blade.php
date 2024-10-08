@@ -120,6 +120,8 @@
     </body>
 
     @vite('resources/js/app.js')
+    @vite('resources/js/logout.js')
+    @vite('resources/js/toggleSidebar.js')
 
     @if (session('status'))
         <script>

@@ -65,24 +65,46 @@
                                         <td>{{ $item['persons'] }}</td>
                                         <td>₱{{ number_format($item['price'], 2) }}</td>
                                         <td>
-                                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#foodModal{{ $key }}">View Food</button>
+                                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#menuModal{{ $key }}">View Menu</button>
 
-                                            <!-- Food Modal -->
-                                            <div class="modal fade" id="foodModal{{ $key }}" tabindex="-1" aria-labelledby="foodModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered">
+                                            <!-- Menu Modal -->
+                                            <div class="modal fade" id="menuModal{{ $key }}" tabindex="-1" aria-labelledby="menuModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered modal-lg">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="foodModalLabel">{{ $item['menu_name'] }} for {{ $item['package_name'] }}</h5>
+                                                            <h5 class="modal-title" id="menuModalLabel">Menus for {{ $item['package_name'] }}</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            @if (isset($item['foods']) && count($item['foods']) > 0)
-                                                                <ul class="list-group">
-                                                                    @foreach ($item['foods'] as $food)
-                                                                        <li class="list-group-item">{{ $food['food'] }}</li>
-                                                                    @endforeach
-                                                                </ul>
+                                                            @if (isset($item['menus']) && count($item['menus']) > 0)
+                                                                <table class="table table-bordered">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Menu Name</th>
+                                                                            <th>Food Items</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @foreach ($item['menus'] as $menu)
+                                                                        <tr>
+                                                                            <td>{{ $menu['menu_name'] }}</td>
+                                                                            <td>
+                                                                                @if (isset($menu['foods']) && count($menu['foods']) > 0)
+                                                                                    <ul class="list-unstyled">
+                                                                                        @foreach ($menu['foods'] as $food)
+                                                                                            <li>{{ $food['food'] }}</li>
+                                                                                        @endforeach
+                                                                                    </ul>
+                                                                                @else
+                                                                                    No Food Items Available
+                                                                                @endif
+                                                                            </td>
+                                                                        </tr>
+                                                                        @endforeach
+                                                                    </tbody>
+                                                                </table>
                                                             @else
-                                                                <p>No Food Items Available</p>
+                                                                <p>No Menus Available</p>
                                                             @endif
                                                         </div>
                                                         <div class="modal-footer">
@@ -95,7 +117,6 @@
                                         <td>
                                             <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#serviceModal{{ $key }}">View Services</button>
 
-                                            
                                             <!-- Services Modal -->
                                             <div class="modal fade" id="serviceModal{{ $key }}" tabindex="-1" aria-labelledby="serviceModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered">
@@ -134,7 +155,6 @@
                                     </tr>
                                     @endforelse
                                 </tbody>
-
 
                             </table>
                         </div>

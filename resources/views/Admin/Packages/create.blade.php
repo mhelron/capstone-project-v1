@@ -44,38 +44,97 @@
 
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="menu_name" class="form-label">Menu Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="menu_name" class="form-control" placeholder="Enter menu name">
-                                    @error('menu_name')
+                                    <label for="price" class="form-label">Price</label>
+                                    <input type="text" name="price" value="{{ old('price') }}" class="form-control" placeholder="Enter price">
+                                    @error('price')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
-
                                 <div class="col-md-6">
-                                    <label for="foods" class="form-label">Foods & Categories <span class="text-danger">*</span></label>
-                                    <div id="food-list">
-                                        <div class="row mb-2">
-                                            <div class="col-md-6">
-                                                <input type="text" name="foods[0][food]" class="form-control" placeholder="Enter food">
-                                                @error("foods.0.food")
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-6">
-                                                <input type="text" name="foods[0][category]" class="form-control" placeholder="Enter category">
-                                                @error("foods.0.category")
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button id="add-more-food" class="btn btn-sm btn-success mt-2" type="button">Add More Foods</button>
+                                    <label for="area_name" class="form-label">Area</label>
+                                    <input type="text" name="area_name" value="{{ old('area_name') }}" class="form-control" placeholder="Enter area">
+                                    @error('area_name')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
                                 </div>
                             </div>
 
-                            <div id="menu-section"></div>
+                            <div id="menu-section">
+                                @foreach(old('menus', [['menu_name' => '', 'foods' => [['food' => '', 'category' => '']]]]) as $index => $menu)
+                                    <div class="row mt-3 menu-group">
+                                        <div class="col-md-6">
+                                            <label for="menu_name" class="form-label">Menu Name <span class="text-danger">*</span></label>
+                                            <input type="text" name="menus[{{ $index }}][menu_name]" class="form-control" placeholder="Enter menu name" value="{{ old("menus.$index.menu_name", $menu['menu_name']) }}">
+                                            @error("menus.$index.menu_name")
+                                                <small class="text-danger">{{ $message }}</small>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="foods" class="form-label">Foods & Categories <span class="text-danger">*</span></label>
+                                            <div id="food-list-{{ $index }}" class="food-list">
+                                                @foreach($menu['foods'] as $foodIndex => $food)
+                                                    <div class="row mb-2">
+                                                        <div class="col-md-6">
+                                                            <input type="text" name="menus[{{ $index }}][foods][{{ $foodIndex }}][food]" class="form-control" placeholder="Enter food" value="{{ old("menus.$index.foods.$foodIndex.food", $food['food']) }}">
+                                                            @error("menus.$index.foods.$foodIndex.food")
+                                                                <small class="text-danger">{{ $message }}</small>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <input type="text" name="menus[{{ $index }}][foods][{{ $foodIndex }}][category]" class="form-control" placeholder="Enter category" value="{{ old("menus.$index.foods.$foodIndex.category", $food['category']) }}">
+                                                            @error("menus.$index.foods.$foodIndex.category")
+                                                                <small class="text-danger">{{ $message }}</small>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                            <button class="btn btn-sm btn-success mt-2 float-end" type="button" onclick="addMoreFoods({{ $index }})">Add More Foods</button>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
 
-                            <button id="add-menu" class="btn btn-sm btn-success mt-2" type="button">Add Another Menu</button>
+                            <!-- Add More Menu Button -->
+                            <div class="d-flex justify-content-start mb-2">
+                                <button id="add-menu" class="btn btn-sm btn-success mt-2" type="button">Add More Menu</button>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="services" class="form-label mt-3">Services</label>
+                                    <div id="services-list">
+                                        @foreach(old('services', ['']) as $index => $service)
+                                            <div class="row mb-2">
+                                                @if ($index === 0)
+                                                    <div class="col-md-12">
+                                                        <div class="input-group">
+                                                            <input type="text" name="services[]" class="form-control" placeholder="Enter service" value="{{ old("services.$index", $service) }}">
+                                                        </div>
+                                                        @error("services.$index")
+                                                            <small class="text-danger" style="margin-top: 2px; margin-bottom: 1px; display: block;">{{ $message }}</small>
+                                                        @enderror
+                                                    </div>
+                                                @else
+                                                    <div class="col-md-10">
+                                                        <div class="input-group">
+                                                            <input type="text" name="services[]" class="form-control" placeholder="Enter service" value="{{ old("services.$index", $service) }}">
+                                                        </div>
+                                                        @error("services.$index")
+                                                            <small class="text-danger" style="margin-top: 2px; margin-bottom: 1px; display: block;">{{ $message }}</small>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button class="btn btn-danger remove-item" type="button">Remove</button>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <button id="add-service" class="btn btn-sm btn-success mt-2" type="button">Add More Services</button>
+                                </div>
+                            </div>
+
                             <button type="submit" class="btn btn-primary mt-3 float-end">Add Package</button>
                         </form>
                     </div>
@@ -86,117 +145,88 @@
 </div>
 
 <script>
-
 document.getElementById('add-menu').addEventListener('click', function() {
     var menuSection = document.getElementById('menu-section');
     var index = menuSection.querySelectorAll('.menu-group').length;
 
     var menuGroup = `
-        <div class="row mt-3 menu-group">
-            <div class="col-md-6">
-                <label for="menu_name" class="form-label">Menu Name</label>
-                <input type="text" name="menu_name[]" class="form-control" placeholder="Enter menu name">
-            </div>
-            <div class="col-md-6">
-                <div id="food-list-${index}" class="food-list">
-                    <label for="foods" class="form-label">Foods & Categories</label>
-                    <div class="row mb-2">
-                        <div class="col-md-6">
-                            <input type="text" name="foods[${index}][0][food]" class="form-control" placeholder="Enter food">
-                        </div>
-                        <div class="col-md-6">
-                            <input type="text" name="foods[${index}][0][category]" class="form-control" placeholder="Enter category">
-                        </div>
+    <div class="row mt-3 menu-group">
+        <div class="col-md-6">
+            <label for="menu_name" class="form-label">Menu Name <span class="text-danger">*</span></label>
+            <input type="text" name="menus[${index}][menu_name]" class="form-control" placeholder="Enter menu name">
+        </div>
+        <div class="col-md-6">
+            <label for="foods" class="form-label">Foods & Categories <span class="text-danger">*</span></label>
+            <div id="food-list-${index}" class="food-list">
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <input type="text" name="menus[${index}][foods][0][food]" class="form-control" placeholder="Enter food">
                     </div>
-                    <button class="btn btn-sm btn-success mt-2" type="button" onclick="addMoreFoods(${index})">Add More Foods</button>
+                    <div class="col-md-6">
+                        <input type="text" name="menus[${index}][foods][0][category]" class="form-control" placeholder="Enter category">
+                    </div>
                 </div>
             </div>
-            <div class="col-md-12 mt-2">
-                <button class="btn btn-danger btn-sm remove-menu" type="button">Remove Menu</button>
-            </div>
-        </div>`;
+            <button class="btn btn-sm btn-success mt-2 float-end" type="button" onclick="addMoreFoods(${index})">Add More Foods</button>
+        </div>
+        <div class="col-md-12 mt-2">
+            <button class="btn btn-danger btn-sm remove-menu" type="button">Remove Menu</button>
+        </div>
+    </div>
+    `;
+
     menuSection.insertAdjacentHTML('beforeend', menuGroup);
-    attachRemoveMenuEvent(); // Attach event to new remove buttons
 });
 
-document.getElementById('add-more-food').addEventListener('click', function () {
-    const foodList = document.getElementById('food-list');
-    const foodCount = foodList.children.length; // Count the current number of foods
-    const newInputGroup = document.createElement('div');
-    newInputGroup.classList.add('row', 'mb-2'); // Create a new input field
-    newInputGroup.innerHTML = `
-        <div class="col-md-5">
-            <input type="text" name="foods[0][${foodCount}][food]" class="form-control" placeholder="Enter food item">
-        </div>
-        <div class="col-md-5">
-            <input type="text" name="foods[0][${foodCount}][category]" class="form-control" placeholder="Enter category">
-        </div>
-        <div class="col-md-2 d-flex align-items-end">
-            <button class="btn btn-danger remove-item" type="button">Remove</button>
-        </div>`;
-    foodList.appendChild(newInputGroup);
-});
-
-// Event delegation for removing food input fields
-document.getElementById('food-list').addEventListener('click', function (e) {
-    if (e.target.classList.contains('remove-item')) {
-        e.target.closest('.row').remove(); // Remove the closest row
+document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('remove-menu')) {
+        event.target.closest('.menu-group').remove();
     }
 });
-
-// Attach event to remove menu groups
-function attachRemoveMenuEvent() {
-    document.querySelectorAll('.remove-menu').forEach(button => {
-        button.onclick = function() {
-            var menuGroup = this.closest('.menu-group');
-            menuGroup.remove();
-        };
-    });
-}
 
 function addMoreFoods(menuIndex) {
-    const foodList = document.getElementById(`food-list-${menuIndex}`);
-    const foodCount = foodList.children.length; // Count the current number of foods
-    const newInputGroup = document.createElement('div');
-    newInputGroup.classList.add('row', 'mb-2');
-    newInputGroup.innerHTML = `
-         <div class="col-md-5">
-            <input type="text" name="foods[${menuIndex}][${foodCount}][food]" class="form-control" placeholder="Enter food item">
+    var foodList = document.getElementById('food-list-' + menuIndex);
+    var foodIndex = foodList.querySelectorAll('.row').length;
+
+    var foodGroup = `
+    <div class="row mb-2">
+        <div class="col-md-6">
+            <input type="text" name="menus[${menuIndex}][foods][${foodIndex}][food]" class="form-control" placeholder="Enter food">
         </div>
-        <div class="col-md-5">
-            <input type="text" name="foods[${menuIndex}][${foodCount}][category]" class="form-control" placeholder="Enter category">
+        <div class="col-md-6">
+            <input type="text" name="menus[${menuIndex}][foods][${foodIndex}][category]" class="form-control" placeholder="Enter category">
         </div>
-        <div class="col-md-2 d-flex align-items-end">
-            <button class="btn btn-danger remove-item" type="button">Remove</button>
-        </div>`;
+    </div>
+    `;
 
-    foodList.appendChild(newInputGroup);
-
-    // Insert the "Add More Foods" button after the new input group
-    const addMoreButton = document.createElement('button');
-    addMoreButton.classList.add('btn', 'btn-sm', 'btn-success', 'mt-2');
-    addMoreButton.type = 'button';
-    addMoreButton.textContent = 'Add More Foods';
-    addMoreButton.onclick = function() {
-        addMoreFoods(menuIndex); // Reuse the function to add more foods
-    };
-
-    // Check if the button already exists and remove it before appending a new one
-    const existingButton = foodList.querySelector('.btn-success');
-    if (existingButton) {
-        existingButton.remove();
-    }
-    foodList.appendChild(addMoreButton);
+    foodList.insertAdjacentHTML('beforeend', foodGroup);
 }
 
+document.getElementById('add-service').addEventListener('click', function() {
+    var servicesList = document.getElementById('services-list');
+    var serviceIndex = servicesList.querySelectorAll('input').length;
 
-// Event delegation for removing food input fields within the new menu groups
-document.addEventListener('click', function (e) {
-    if (e.target.classList.contains('remove-item')) {
-        e.target.closest('.row').remove(); // Remove the closest row
-    }
+    var serviceGroup = `
+    <div class="row mb-2">
+        <div class="col-md-10">
+            <div class="input-group">
+                <input type="text" name="services[]" class="form-control" placeholder="Enter service">
+            </div>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-danger remove-item" type="button">Remove</button>
+        </div>
+    </div>
+    `;
+
+    servicesList.insertAdjacentHTML('beforeend', serviceGroup);
 });
 
+document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('remove-item')) {
+        event.target.closest('.row').remove();
+    }
+});
 </script>
 
 @endsection

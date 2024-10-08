@@ -84,7 +84,7 @@
             <button type="submit" class="btn btn-primary w-100">Login</button>
 
             <div class="mt-3 text-center">
-                <a href="#" class="btn btn-link" style="color: #ec7714;">Forgot Your Password?</a>
+                <a href="#" class="btn btn-link" style="color: red;">Forgot Your Password?</a>
             </div>
         </form>
     </div>

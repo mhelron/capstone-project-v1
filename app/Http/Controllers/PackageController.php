@@ -24,9 +24,9 @@ class PackageController extends Controller
     }
 
     public function create(){
-
         $isExpanded = session()->get('sidebar_is_expanded', true);
-        return view('admin.packages.create', compact('isExpanded'));
+        $menus = [];
+        return view('admin.packages.create', compact('isExpanded', 'menus'));
     }
 
     public function store(Request $request)
@@ -35,43 +35,53 @@ class PackageController extends Controller
             'package_name' => 'required|string|max:255',
             'persons' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
-            'menu_name' => 'required|string|max:255',
+            'area_name' => 'required|string|max:255',
+            'menus' => 'required|array',
+            'menus.*.menu_name' => 'required|string|max:255',
+            'menus.*.foods' => 'required|array',
+            'menus.*.foods.*.food' => 'required|string|max:255',
+            'menus.*.foods.*.category' => 'required|string|max:255',
             'services' => 'required|array',
             'services.*' => 'required|string|max:255',
-            'foods' => 'required|array',
-            'foods.*.food' => 'required|string|max:255', 
-            'foods.*.category' => 'required|string|max:255',
         ], [
             'package_name.required' => 'Package name is required.',
             'persons.required' => 'Number of persons is required.',
             'price.required' => 'Price is required.',
-            'menu_name.required' => 'Menu name is required.',
-            'services.required' => 'At least one service is required.',
-            'services.*' => 'Service is required.',
-            'foods.required' => 'At least one food is required.',
-            'foods.*.food.required' => 'Food name is required.',
-            'foods.*.category.required' => 'Food category is required.',
+            'area_name.required' => 'Area is required.',
+            'menus.*.menu_name.required' => 'Menu name is required.',
+            'menus.*.foods.*.food.required' => 'Food name is required.',
+            'menus.*.foods.*.category.required' => 'Food category is required.',
+            'services.*.required' => 'Service is required.',
         ]);
 
         $validatedData['price'] = str_replace(',', '', $validatedData['price']);
 
+        // Store the package details
         $packageId = $this->database->getReference('packages')->push([
             'package_name' => $validatedData['package_name'],
             'persons' => $validatedData['persons'],
             'price' => $validatedData['price'],
-            'menu_name' => $validatedData['menu_name'],
+            'area_name' => $validatedData['area_name'],
         ])->getKey();
 
+        // Store each menu and its related foods and categories
+        foreach ($validatedData['menus'] as $menu) {
+            $menuId = $this->database->getReference("packages/{$packageId}/menus")->push([
+                'menu_name' => $menu['menu_name'],
+            ])->getKey();
+
+            foreach ($menu['foods'] as $food) {
+                $this->database->getReference("packages/{$packageId}/menus/{$menuId}/foods")->push([
+                    'food' => $food['food'],
+                    'category' => $food['category'],
+                ]);
+            }
+        }
+
+        // Store services
         foreach ($validatedData['services'] as $service) {
             $this->database->getReference("packages/{$packageId}/services")->push([
                 'service' => $service,
-            ]);
-        }
-
-        foreach ($validatedData['foods'] as $food) {
-            $this->database->getReference("packages/{$packageId}/foods")->push([
-                'food' => $food['food'],
-                'category' => $food['category'],
             ]);
         }
 
@@ -88,11 +98,11 @@ class PackageController extends Controller
 
         $package = $packageRef;
 
+        $menus = isset($package['menus']) ? array_values($package['menus']) : [];
         $services = isset($package['services']) ? array_values($package['services']) : [];
-        $foods = isset($package['foods']) ? array_values($package['foods']) : [];
 
         $isExpanded = session()->get('sidebar_is_expanded', true);
-        return view('admin.packages.edit', compact('package', 'services', 'foods', 'packageId', 'isExpanded'));
+        return view('admin.packages.edit', compact('package', 'menus', 'services', 'packageId', 'isExpanded'));
     }
 
     public function update(Request $request, $packageId)
@@ -102,34 +112,52 @@ class PackageController extends Controller
             'package_name' => 'required|string|max:255',
             'persons' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
-            'menu_name' => 'required|string|max:255',
-            'services' => 'required|array',
+            'area_name' => 'required|string|max:255',
+            'menus' => 'required|array',
+            'menus.*.menu_name' => 'required|string|max:255',
+            'menus.*.foods' => 'required|array',
+            'menus.*.foods.*.food' => 'required|string|max:255',
+            'menus.*.foods.*.category' => 'required|string|max:255',
             'services.*' => 'required|string|max:255',
-            'foods' => 'required|array',
-            'foods.*.food' => 'required|string|max:255',
-            'foods.*.category' => 'required|string|max:255',
         ], [
             'package_name.required' => 'Package name is required.',
             'persons.required' => 'Number of persons is required.',
             'price.required' => 'Price is required.',
-            'menu_name.required' => 'Menu name is required.',
+            'area_name.required' => 'Area name is required.', 
+            'menus.*.menu_name.required' => 'Menu name is required.',
+            'menus.*.foods.*.food.required' => 'Food name is required.',
+            'menus.*.foods.*.category.required' => 'Food category is required.',
             'services.required' => 'At least one service is required.',
-            'services.*' => 'Service is required.',
-            'foods.required' => 'At least one food is required.',
-            'foods.*.food.required' => 'Food name is required.',
-            'foods.*.category.required' => 'Food category is required.',
         ]);
 
         // Remove commas from the price
         $validatedData['price'] = str_replace(',', '', $validatedData['price']);
 
-        // Update the package details
+        // Update package details
         $this->database->getReference("packages/{$packageId}")->update([
             'package_name' => $validatedData['package_name'],
             'persons' => $validatedData['persons'],
             'price' => $validatedData['price'],
-            'menu_name' => $validatedData['menu_name'],
+            'area_name' => $validatedData['area_name'],
         ]);
+
+        // Update menus and foods
+        $menusRef = $this->database->getReference("packages/{$packageId}/menus");
+        // Clear existing menus before updating
+        $menusRef->remove();
+
+        foreach ($validatedData['menus'] as $menu) {
+            $menuId = $menusRef->push([
+                'menu_name' => $menu['menu_name'],
+            ])->getKey();
+
+            foreach ($menu['foods'] as $food) {
+                $this->database->getReference("packages/{$menuId}/foods")->push([
+                    'food' => $food['food'],
+                    'category' => $food['category'],
+                ]);
+            }
+        }
 
         // Update services
         $servicesRef = $this->database->getReference("packages/{$packageId}/services");
@@ -142,19 +170,6 @@ class PackageController extends Controller
             ]);
         }
 
-        // Update foods
-        $foodsRef = $this->database->getReference("packages/{$packageId}/foods");
-        // Clear existing foods before updating
-        $foodsRef->remove();
-
-        foreach ($validatedData['foods'] as $food) {
-            $foodsRef->push([
-                'food' => $food['food'],
-                'category' => $food['category'],
-            ]);
-        }
-
         return redirect()->route('admin.packages')->with('status', 'Package updated successfully!');
     }
-
 }
