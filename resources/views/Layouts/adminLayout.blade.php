@@ -122,6 +122,7 @@
     @vite('resources/js/app.js')
     @vite('resources/js/logout.js')
     @vite('resources/js/toggleSidebar.js')
+    @vite('resources/js/priceInput.js')
 
     @if (session('status'))
         <script>

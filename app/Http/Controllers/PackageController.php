@@ -50,7 +50,7 @@ class PackageController extends Controller
             'area_name.required' => 'Area is required.',
             'menus.*.menu_name.required' => 'Menu name is required.',
             'menus.*.foods.*.food.required' => 'Food name is required.',
-            'menus.*.foods.*.category.required' => 'Food category is required.',
+            'menus.*.foods.*.category.required' => 'Select a category.',
             'services.*.required' => 'Service is required.',
         ]);
 
