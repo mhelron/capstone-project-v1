@@ -118,16 +118,17 @@ class PackageController extends Controller
             'menus.*.foods' => 'required|array',
             'menus.*.foods.*.food' => 'required|string|max:255',
             'menus.*.foods.*.category' => 'required|string|max:255',
+            'services' => 'required|array',
             'services.*' => 'required|string|max:255',
         ], [
             'package_name.required' => 'Package name is required.',
             'persons.required' => 'Number of persons is required.',
             'price.required' => 'Price is required.',
-            'area_name.required' => 'Area name is required.', 
+            'area_name.required' => 'Area is required.',
             'menus.*.menu_name.required' => 'Menu name is required.',
             'menus.*.foods.*.food.required' => 'Food name is required.',
-            'menus.*.foods.*.category.required' => 'Food category is required.',
-            'services.required' => 'At least one service is required.',
+            'menus.*.foods.*.category.required' => 'Select a category.',
+            'services.*.required' => 'Service is required.',
         ]);
 
         // Remove commas from the price
@@ -143,16 +144,18 @@ class PackageController extends Controller
 
         // Update menus and foods
         $menusRef = $this->database->getReference("packages/{$packageId}/menus");
-        // Clear existing menus before updating
+
         $menusRef->remove();
 
         foreach ($validatedData['menus'] as $menu) {
+            // Create a new menu entry
             $menuId = $menusRef->push([
                 'menu_name' => $menu['menu_name'],
             ])->getKey();
-
+    
+            // Add foods for this menu
             foreach ($menu['foods'] as $food) {
-                $this->database->getReference("packages/{$menuId}/foods")->push([
+                $this->database->getReference("packages/{$packageId}/menus/{$menuId}/foods")->push([
                     'food' => $food['food'],
                     'category' => $food['category'],
                 ]);

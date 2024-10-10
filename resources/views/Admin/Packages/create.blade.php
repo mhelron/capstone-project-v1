@@ -311,7 +311,7 @@
     function generateCategoryOptions(selectedValues = [], currentValue = "") {
         const categories = [
             "Main Course (Chicken)", "Main Course (Pork)", "Main Course (Beef)", "Main Course (Fish)", "Side Dish",
-            "Pasta", "Rice", "Desert", "Drinks"
+            "Pasta", "Rice", "Dessert", "Drinks"
         ];
 
         return categories

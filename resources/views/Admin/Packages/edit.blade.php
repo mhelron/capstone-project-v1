@@ -84,15 +84,15 @@
                                                             <div class="col-md-6">
                                                                 <select name="menus[{{ $index }}][foods][{{ $foodIndex }}][category]" class="form-control category-select" onchange="updateCategoryOptions({{ $index }})">
                                                                     <option value="" disabled selected>Select category</option>
-                                                                    <option value="Main Course (Chicken)" {{ old("menus.$index.foods.$foodIndex.category", $food['category']) == 'Main Course (Chicken)' ? 'selected' : '' }}>Main Course (Chicken)</option>
-                                                                    <option value="Main Course (Pork)" {{ old("menus.$index.foods.$foodIndex.category", $food['category']) == 'Main Course (Pork)' ? 'selected' : '' }}>Main Course (Pork)</option>
-                                                                    <option value="Main Course (Beef)" {{ old("menus.$index.foods.$foodIndex.category", $food['category']) == 'Main Course (Beef)' ? 'selected' : '' }}>Main Course (Beef)</option>
-                                                                    <option value="Main Course (Fish)" {{ old("menus.$index.foods.$foodIndex.category", $food['category']) == 'Main Course (Fish)' ? 'selected' : '' }}>Main Course (Fish)</option>
-                                                                    <option value="Side Dish" {{ old("menus.$index.foods.$foodIndex.category", $food['category']) == 'Side Dish' ? 'selected' : '' }}>Side Dish</option>
-                                                                    <option value="Pasta" {{ old("menus.$index.foods.$foodIndex.category", $food['category']) == 'Pasta' ? 'selected' : '' }}>Pasta</option>
-                                                                    <option value="Rice" {{ old("menus.$index.foods.$foodIndex.category", $food['category']) == 'Rice' ? 'selected' : '' }}>Rice</option>
-                                                                    <option value="Dessert" {{ old("menus.$index.foods.$foodIndex.category", $food['category']) == 'Dessert' ? 'selected' : '' }}>Dessert</option>
-                                                                    <option value="Drinks" {{ old("menus.$index.foods.$foodIndex.category", $food['category']) == 'Drinks' ? 'selected' : '' }}>Drinks</option>
+                                                                    <option value="Main Course (Chicken)" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Chicken)' ? 'selected' : '' }}>Main Course (Chicken)</option>
+                                                                    <option value="Main Course (Pork)" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Pork)' ? 'selected' : '' }}>Main Course (Pork)</option>
+                                                                    <option value="Main Course (Beef)" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Beef)' ? 'selected' : '' }}>Main Course (Beef)</option>
+                                                                    <option value="Main Course (Fish)" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Fish)' ? 'selected' : '' }}>Main Course (Fish)</option>
+                                                                    <option value="Side Dish" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Side Dish' ? 'selected' : '' }}>Side Dish</option>
+                                                                    <option value="Pasta" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Pasta' ? 'selected' : '' }}>Pasta</option>
+                                                                    <option value="Rice" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Rice' ? 'selected' : '' }}>Rice</option>
+                                                                    <option value="Dessert" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Dessert' ? 'selected' : '' }}>Dessert</option>
+                                                                    <option value="Drinks" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Drinks' ? 'selected' : '' }}>Drinks</option>
                                                                 </select>
                                                                 @error("menus.$index.foods.$foodIndex.category")
                                                                     <small class="text-danger">{{ $message }}</small>
@@ -108,15 +108,15 @@
                                                             <div class="col-md-5">
                                                                 <select name="menus[{{ $index }}][foods][{{ $foodIndex }}][category]" class="form-control category-select" onchange="updateCategoryOptions({{ $index }})">
                                                                     <option value="" disabled selected>Select category</option>
-                                                                    <option value="Main Course (Chicken)" {{ old("menus.$index.foods.$foodIndex.category", $food['category']) == 'Main Course (Chicken)' ? 'selected' : '' }}>Main Course (Chicken)</option>
-                                                                    <option value="Main Course (Pork)" {{ old("menus.$index.foods.$foodIndex.category", $food['category']) == 'Main Course (Pork)' ? 'selected' : '' }}>Main Course (Pork)</option>
-                                                                    <option value="Main Course (Beef)" {{ old("menus.$index.foods.$foodIndex.category", $food['category']) == 'Main Course (Beef)' ? 'selected' : '' }}>Main Course (Beef)</option>
-                                                                    <option value="Main Course (Fish)" {{ old("menus.$index.foods.$foodIndex.category", $food['category']) == 'Main Course (Fish)' ? 'selected' : '' }}>Main Course (Fish)</option>
-                                                                    <option value="Side Dish" {{ old("menus.$index.foods.$foodIndex.category", $food['category']) == 'Side Dish' ? 'selected' : '' }}>Side Dish</option>
-                                                                    <option value="Pasta" {{ old("menus.$index.foods.$foodIndex.category", $food['category']) == 'Pasta' ? 'selected' : '' }}>Pasta</option>
-                                                                    <option value="Rice" {{ old("menus.$index.foods.$foodIndex.category", $food['category']) == 'Rice' ? 'selected' : '' }}>Rice</option>
-                                                                    <option value="Dessert" {{ old("menus.$index.foods.$foodIndex.category", $food['category']) == 'Dessert' ? 'selected' : '' }}>Dessert</option>
-                                                                    <option value="Drinks" {{ old("menus.$index.foods.$foodIndex.category", $food['category']) == 'Drinks' ? 'selected' : '' }}>Drinks</option>
+                                                                    <option value="Main Course (Chicken)" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Chicken)' ? 'selected' : '' }}>Main Course (Chicken)</option>
+                                                                    <option value="Main Course (Pork)" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Pork)' ? 'selected' : '' }}>Main Course (Pork)</option>
+                                                                    <option value="Main Course (Beef)" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Beef)' ? 'selected' : '' }}>Main Course (Beef)</option>
+                                                                    <option value="Main Course (Fish)" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Fish)' ? 'selected' : '' }}>Main Course (Fish)</option>
+                                                                    <option value="Side Dish" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Side Dish' ? 'selected' : '' }}>Side Dish</option>
+                                                                    <option value="Pasta" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Pasta' ? 'selected' : '' }}>Pasta</option>
+                                                                    <option value="Rice" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Rice' ? 'selected' : '' }}>Rice</option>
+                                                                    <option value="Dessert" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Dessert' ? 'selected' : '' }}>Dessert</option>
+                                                                    <option value="Drinks" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Drinks' ? 'selected' : '' }}>Drinks</option>
                                                                 </select>
                                                                 @error("menus.$index.foods.$foodIndex.category")
                                                                     <small class="text-danger">{{ $message }}</small>
@@ -179,7 +179,7 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-primary mt-3 float-end">Add Package</button>
+                            <button type="submit" class="btn btn-primary mt-3 float-end">Edit Package</button>
                         </form>
                     </div>
                 </div>
@@ -191,14 +191,65 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         updateAllCategoryOptions(); // Ensure that all fields are updated when the page loads
+
+        // Initialize existing food inputs with category options
+        document.querySelectorAll('.food-list').forEach(foodList => {
+            const menuIndex = foodList.id.split('-').pop(); // Extract menu index from the food list ID
+            updateCategoryOptions(menuIndex);
+        });
     });
+
+    // Function to add more food inputs
+    window.addMoreFoods = function(index) {
+        const foodList = document.getElementById(`food-list-${index}`);
+        const foodCount = foodList.children.length;
+
+        if (foodCount < 9) {
+            const foodRow = document.createElement('div');
+            foodRow.className = 'row mb-2';
+            foodRow.innerHTML = `
+                <div class="col-md-5">
+                    <select name="menus[${index}][foods][${foodCount}][category]" class="form-control category-select" onchange="updateCategoryOptions(${index})">
+                        <option value="" disabled selected>Select category</option>
+                        ${generateCategoryOptions()}
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <input type="text" name="menus[${index}][foods][${foodCount}][food]" class="form-control" placeholder="Enter food">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-danger remove-item" type="button" onclick="removeFood(this)">Remove</button>
+                </div>
+            `;
+            foodList.appendChild(foodRow);
+            updateCategoryOptions(index); // Update category options after adding new food
+        }
+    }
+
+    // Function to remove food inputs
+    window.removeFood = function(button) {
+        const foodRow = button.closest('.row');
+        foodRow.remove();
+    }
+
+    // Function to update category options
+    window.updateCategoryOptions = function(index) {
+        const selectedCategories = Array.from(document.querySelectorAll(`#food-list-${index} .category-select`))
+            .map(select => select.value);
+
+        document.querySelectorAll(`#food-list-${index} .category-select`).forEach(select => {
+            Array.from(select.options).forEach(option => {
+                option.disabled = selectedCategories.includes(option.value) && option.value !== select.value;
+            });
+        });
+    }
 
     // Add menu dynamically
     document.getElementById('add-menu').addEventListener('click', function() {
-        var menuSection = document.getElementById('menu-section');
-        var index = menuSection.querySelectorAll('.menu-group').length;
+        const menuSection = document.getElementById('menu-section');
+        const index = menuSection.querySelectorAll('.menu-group').length;
 
-        var menuGroup = `
+        const menuGroup = `
         <div class="row mt-3 menu-group">
             <div class="col-md-6">
                 <label for="menu_name" class="form-label">Menu Name <span class="text-danger">*</span></label>
@@ -210,7 +261,7 @@
                     <div class="row mb-2">
                         <div class="col-md-6">
                             <select name="menus[${index}][foods][0][category]" class="form-control category-select" onchange="updateCategoryOptions(${index})">
-                                <option value="">Select category</option>
+                                <option value="" disabled selected>Select category</option>
                                 ${generateCategoryOptions()}
                             </select>
                         </div>
@@ -222,7 +273,7 @@
                 <button id="food-${index}" class="btn btn-sm btn-success mt-2 float-end" type="button" onclick="addMoreFoods(${index})">Add More Foods</button>
             </div>
             <div class="col-md-12 mt-2">
-                <button class="btn btn-danger btn-sm remove-menu" type="button">Remove Menu</button>
+                ${index > 0 ? `<button class="btn btn-danger btn-sm remove-menu" type="button">Remove Menu</button>` : ''}
             </div>
         </div>
         `;
@@ -245,66 +296,11 @@
         }
     });
 
-    function addMoreFoods(menuIndex) {
-        var foodList = document.getElementById('food-list-' + menuIndex);
-        var foodCount = foodList.querySelectorAll('.row').length; // Current food count
-        var addButton = document.getElementById('food-' + menuIndex);
-
-        if (foodCount < 9) {
-            var foodIndex = foodCount;
-
-            var foodGroup = `
-            <div class="row mb-2">
-                <div class="col-md-5">
-                    <select name="menus[${menuIndex}][foods][${foodIndex}][category]" class="form-control category-select" onchange="updateCategoryOptions(${menuIndex})">
-                        <option value="">Select category</option>
-                        ${generateCategoryOptions()}
-                    </select>
-                </div>
-                <div class="col-md-5">
-                    <input type="text" name="menus[${menuIndex}][foods][${foodIndex}][food]" class="form-control" placeholder="Enter food">
-                </div>
-                ${foodIndex > 0 ? `
-                <div class="col-md-2">
-                    <button class="btn btn-danger remove-item" type="button">Remove</button>
-                </div>` : ''}
-            </div>
-            `;
-
-            foodList.insertAdjacentHTML('beforeend', foodGroup); 
-            updateCategoryOptions(menuIndex); 
-
-            if (foodCount + 1 === 9) {
-                addButton.style.display = 'none';
-            }
-        }
-    }
-
-
-    // Function to dynamically update category options based on selections in the same menu
-    function updateCategoryOptions(menuIndex) {
-        var foodList = document.getElementById('food-list-' + menuIndex);
-        var selects = foodList.querySelectorAll('.category-select');
-
-        // Gather all selected categories in the current menu
-        var selectedValues = Array.from(selects).map(select => select.value).filter(value => value !== '');
-
-        selects.forEach(select => {
-            var currentValue = select.value;
-            var newOptions = `
-                <option value="">Select category</option>
-                ${generateCategoryOptions(selectedValues, currentValue)}
-            `;
-            select.innerHTML = newOptions; // Rebuild the options based on selected categories
-            select.value = currentValue; // Preserve the current value
-        });
-    }
-
-    // Function to generate category options with the selected ones removed
+    // Function to generate category options
     function generateCategoryOptions(selectedValues = [], currentValue = "") {
         const categories = [
-            "Main Course (Chicken)", "Main Course (Pork)", "Main Course (Beef)", "Main Course (Fish)", "Side Dish",
-            "Pasta", "Rice", "Desert", "Drinks"
+            "Main Course (Chicken)", "Main Course (Pork)", "Main Course (Beef)", "Main Course (Fish)", 
+            "Side Dish", "Pasta", "Rice", "Dessert", "Drinks"
         ];
 
         return categories
@@ -315,10 +311,10 @@
 
     // Add service dynamically
     document.getElementById('add-service').addEventListener('click', function() {
-        var servicesList = document.getElementById('services-list');
-        var serviceIndex = servicesList.querySelectorAll('input').length;
+        const servicesList = document.getElementById('services-list');
+        const serviceIndex = servicesList.querySelectorAll('input').length;
 
-        var serviceGroup = `
+        const serviceGroup = `
         <div class="row mb-2">
             <div class="col-md-10">
                 <div class="input-group">
@@ -334,6 +330,5 @@
         servicesList.insertAdjacentHTML('beforeend', serviceGroup);
     });
 </script>
-
 
 @endsection
