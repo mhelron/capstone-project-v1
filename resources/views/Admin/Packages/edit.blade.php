@@ -135,7 +135,7 @@
                                                     </div>
                                                 @endforeach
                                             </div>
-                                            <button id="food-{{$index}}" class="btn btn-sm btn-success mt-2 float-end" type="button" onclick="addMoreFoods({{ $index }})">Add More Foods</button>
+                                            <button id="food-{{ $index }}" class="btn btn-sm btn-success mt-2 float-end" type="button" onclick="addMoreFoods({{ $index }})">Add More Foods</button>
                                         </div>
 
                                         @if($index > 0)
@@ -189,22 +189,32 @@
 </div>
 
 <script>
+    // gpt solution
     document.addEventListener('DOMContentLoaded', function () {
-        updateAllCategoryOptions(); // Ensure that all fields are updated when the page loads
-
         // Initialize existing food inputs with category options
         document.querySelectorAll('.food-list').forEach(foodList => {
             const menuIndex = foodList.id.split('-').pop(); // Extract menu index from the food list ID
             updateCategoryOptions(menuIndex);
         });
+
+        // Initialize event listeners for adding more foods
+        initializeAddMoreFoods();
     });
 
-    // Function to add more food inputs
+    // Use event delegation for dynamically added 'add-more-foods' buttons
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('add-more-foods')) {
+            const index = event.target.getAttribute('data-index');
+            addMoreFoods(index);
+        }
+    });
+
+    // add more food button
     window.addMoreFoods = function(index) {
         const foodList = document.getElementById(`food-list-${index}`);
         const foodCount = foodList.children.length;
 
-        if (foodCount < 9) {
+        if (foodCount < 9) { // Limit to 9 food entries
             const foodRow = document.createElement('div');
             foodRow.className = 'row mb-2';
             foodRow.innerHTML = `
@@ -218,21 +228,22 @@
                     <input type="text" name="menus[${index}][foods][${foodCount}][food]" class="form-control" placeholder="Enter food">
                 </div>
                 <div class="col-md-2">
-                    <button class="btn btn-danger remove-item" type="button" onclick="removeFood(this)">Remove</button>
+                    <button class="btn btn-danger remove-item" type="button">Remove</button>
                 </div>
             `;
             foodList.appendChild(foodRow);
-            updateCategoryOptions(index); // Update category options after adding new food
+            updateCategoryOptions(index);
         }
-    }
+    };
 
-    // Function to remove food inputs
+    // Remove food
     window.removeFood = function(button) {
         const foodRow = button.closest('.row');
         foodRow.remove();
-    }
+        updateAllCategoryOptions();
+    };
 
-    // Function to update category options
+    // update category
     window.updateCategoryOptions = function(index) {
         const selectedCategories = Array.from(document.querySelectorAll(`#food-list-${index} .category-select`))
             .map(select => select.value);
@@ -242,9 +253,9 @@
                 option.disabled = selectedCategories.includes(option.value) && option.value !== select.value;
             });
         });
-    }
+    };
 
-    // Add menu dynamically
+    // Add menu button
     document.getElementById('add-menu').addEventListener('click', function() {
         const menuSection = document.getElementById('menu-section');
         const index = menuSection.querySelectorAll('.menu-group').length;
@@ -270,7 +281,7 @@
                         </div>
                     </div>
                 </div>
-                <button id="food-${index}" class="btn btn-sm btn-success mt-2 float-end" type="button" onclick="addMoreFoods(${index})">Add More Foods</button>
+                <button class="btn btn-sm btn-success mt-2 float-end add-more-foods" data-index="${index}" type="button">Add More Foods</button>
             </div>
             <div class="col-md-12 mt-2">
                 ${index > 0 ? `<button class="btn btn-danger btn-sm remove-menu" type="button">Remove Menu</button>` : ''}
@@ -279,41 +290,33 @@
         `;
 
         menuSection.insertAdjacentHTML('beforeend', menuGroup);
-        updateAllCategoryOptions(); // Update after adding a new menu
+        initializeAddMoreFoods();
     });
-
-    // Remove dynamically added menus or foods/services using event delegation
+    
+    // Remove
     document.addEventListener('click', function(event) {
-        // Check if the clicked element is a remove button for menu
         if (event.target.classList.contains('remove-menu')) {
             event.target.closest('.menu-group').remove();
-            updateAllCategoryOptions(); // Update options after removing a menu
-        } 
-        // Check if the clicked element is a remove button for food or service
-        else if (event.target.classList.contains('remove-item')) {
+            updateAllCategoryOptions();
+        } else if (event.target.classList.contains('remove-item')) {
             event.target.closest('.row').remove();
-            updateAllCategoryOptions(); // Update options after removing an item
+            updateAllCategoryOptions();
         }
     });
 
-    // Function to generate category options
-    function generateCategoryOptions(selectedValues = [], currentValue = "") {
+    // Categories
+    function generateCategoryOptions() {
         const categories = [
             "Main Course (Chicken)", "Main Course (Pork)", "Main Course (Beef)", "Main Course (Fish)", 
             "Side Dish", "Pasta", "Rice", "Dessert", "Drinks"
         ];
 
-        return categories
-            .filter(category => !selectedValues.includes(category) || category === currentValue)
-            .map(category => `<option value="${category}">${category}</option>`)
-            .join('');
+        return categories.map(category => `<option value="${category}">${category}</option>`).join('');
     }
 
-    // Add service dynamically
+    // Add service button
     document.getElementById('add-service').addEventListener('click', function() {
         const servicesList = document.getElementById('services-list');
-        const serviceIndex = servicesList.querySelectorAll('input').length;
-
         const serviceGroup = `
         <div class="row mb-2">
             <div class="col-md-10">

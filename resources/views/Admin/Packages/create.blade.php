@@ -197,10 +197,10 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        updateAllCategoryOptions(); // Ensure that all fields are updated when the page loads
+        updateAllCategoryOptions();
     });
 
-    // Add menu dynamically
+    // Add menu button
     document.getElementById('add-menu').addEventListener('click', function() {
         var menuSection = document.getElementById('menu-section');
         var index = menuSection.querySelectorAll('.menu-group').length;
@@ -235,26 +235,25 @@
         `;
 
         menuSection.insertAdjacentHTML('beforeend', menuGroup);
-        updateAllCategoryOptions(); // Update after adding a new menu
+        updateAllCategoryOptions();
     });
 
-    // Remove dynamically added menus or foods/services using event delegation
+    // Remove food or services
     document.addEventListener('click', function(event) {
-        // Check if the clicked element is a remove button for menu
         if (event.target.classList.contains('remove-menu')) {
             event.target.closest('.menu-group').remove();
-            updateAllCategoryOptions(); // Update options after removing a menu
+            updateAllCategoryOptions();
         } 
-        // Check if the clicked element is a remove button for food or service
         else if (event.target.classList.contains('remove-item')) {
             event.target.closest('.row').remove();
-            updateAllCategoryOptions(); // Update options after removing an item
+            updateAllCategoryOptions();
         }
     });
 
+    // Add more food button
     function addMoreFoods(menuIndex) {
         var foodList = document.getElementById('food-list-' + menuIndex);
-        var foodCount = foodList.querySelectorAll('.row').length; // Current food count
+        var foodCount = foodList.querySelectorAll('.row').length;
         var addButton = document.getElementById('food-' + menuIndex);
 
         if (foodCount < 9) {
@@ -288,12 +287,11 @@
     }
 
 
-    // Function to dynamically update category options based on selections in the same menu
+    // Update select field
     function updateCategoryOptions(menuIndex) {
         var foodList = document.getElementById('food-list-' + menuIndex);
         var selects = foodList.querySelectorAll('.category-select');
 
-        // Gather all selected categories in the current menu
         var selectedValues = Array.from(selects).map(select => select.value).filter(value => value !== '');
 
         selects.forEach(select => {
@@ -302,12 +300,12 @@
                 <option value="">Select category</option>
                 ${generateCategoryOptions(selectedValues, currentValue)}
             `;
-            select.innerHTML = newOptions; // Rebuild the options based on selected categories
-            select.value = currentValue; // Preserve the current value
+            select.innerHTML = newOptions;
+            select.value = currentValue;
         });
     }
 
-    // Function to generate category options with the selected ones removed
+    // categories
     function generateCategoryOptions(selectedValues = [], currentValue = "") {
         const categories = [
             "Main Course (Chicken)", "Main Course (Pork)", "Main Course (Beef)", "Main Course (Fish)", "Side Dish",
@@ -320,7 +318,7 @@
             .join('');
     }
 
-    // Add service dynamically
+    // Add service button
     document.getElementById('add-service').addEventListener('click', function() {
         var servicesList = document.getElementById('services-list');
         var serviceIndex = servicesList.querySelectorAll('input').length;
