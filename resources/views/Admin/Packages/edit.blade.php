@@ -66,11 +66,14 @@
                             </div>
 
                             <div id="menu-section">
+                                @php
+                                    $counter = 0; // Initialize a counter
+                                @endphp
                                 @foreach(old('menus', $package['menus']) as $index => $menu)
                                     <div class="row mt-3 menu-group">
                                         <div class="col-md-6">
                                             <label for="menu_name" class="form-label">Menu Name <span class="text-danger">*</span></label>
-                                            <input type="text" name="menus[{{ $index }}][menu_name]" class="form-control" placeholder="Enter menu name" value="{{ old("menus.$index.menu_name", $menu['menu_name']) }}" }}">
+                                            <input type="text" name="menus[{{ $index }}][menu_name]" class="form-control" placeholder="Enter menu name" value="{{ old("menus.$index.menu_name", $menu['menu_name']) }}">
                                             @error("menus.$index.menu_name")
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
@@ -80,62 +83,36 @@
                                             <div id="food-list-{{ $index }}" class="food-list">
                                                 @foreach($menu['foods'] as $foodIndex => $food)
                                                     <div class="row mb-2">
-                                                        @if ($foodIndex === 0)
-                                                            <div class="col-md-6">
-                                                                <select name="menus[{{ $index }}][foods][{{ $foodIndex }}][category]" class="form-control category-select" onchange="updateCategoryOptions({{ $index }})">
-                                                                    <option value="" disabled selected>Select category</option>
-                                                                    <option value="Main Course (Chicken)" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Chicken)' ? 'selected' : '' }}>Main Course (Chicken)</option>
-                                                                    <option value="Main Course (Pork)" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Pork)' ? 'selected' : '' }}>Main Course (Pork)</option>
-                                                                    <option value="Main Course (Beef)" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Beef)' ? 'selected' : '' }}>Main Course (Beef)</option>
-                                                                    <option value="Main Course (Fish)" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Fish)' ? 'selected' : '' }}>Main Course (Fish)</option>
-                                                                    <option value="Side Dish" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Side Dish' ? 'selected' : '' }}>Side Dish</option>
-                                                                    <option value="Pasta" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Pasta' ? 'selected' : '' }}>Pasta</option>
-                                                                    <option value="Rice" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Rice' ? 'selected' : '' }}>Rice</option>
-                                                                    <option value="Dessert" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Dessert' ? 'selected' : '' }}>Dessert</option>
-                                                                    <option value="Drinks" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Drinks' ? 'selected' : '' }}>Drinks</option>
-                                                                </select>
-                                                                @error("menus.$index.foods.$foodIndex.category")
-                                                                    <small class="text-danger">{{ $message }}</small>
-                                                                @enderror
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <input type="text" name="menus[{{ $index }}][foods][{{ $foodIndex }}][food]" class="form-control" placeholder="Enter food" value="{{ old("menus.$index.foods.$foodIndex.food", $food['food']) }}">
-                                                                @error("menus.$index.foods.$foodIndex.food")
-                                                                    <small class="text-danger">{{ $message }}</small>
-                                                                @enderror
-                                                            </div>
-                                                        @else
-                                                            <div class="col-md-5">
-                                                                <select name="menus[{{ $index }}][foods][{{ $foodIndex }}][category]" class="form-control category-select" onchange="updateCategoryOptions({{ $index }})">
-                                                                    <option value="" disabled selected>Select category</option>
-                                                                    <option value="Main Course (Chicken)" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Chicken)' ? 'selected' : '' }}>Main Course (Chicken)</option>
-                                                                    <option value="Main Course (Pork)" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Pork)' ? 'selected' : '' }}>Main Course (Pork)</option>
-                                                                    <option value="Main Course (Beef)" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Beef)' ? 'selected' : '' }}>Main Course (Beef)</option>
-                                                                    <option value="Main Course (Fish)" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Fish)' ? 'selected' : '' }}>Main Course (Fish)</option>
-                                                                    <option value="Side Dish" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Side Dish' ? 'selected' : '' }}>Side Dish</option>
-                                                                    <option value="Pasta" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Pasta' ? 'selected' : '' }}>Pasta</option>
-                                                                    <option value="Rice" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Rice' ? 'selected' : '' }}>Rice</option>
-                                                                    <option value="Dessert" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Dessert' ? 'selected' : '' }}>Dessert</option>
-                                                                    <option value="Drinks" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Drinks' ? 'selected' : '' }}>Drinks</option>
-                                                                </select>
-                                                                @error("menus.$index.foods.$foodIndex.category")
-                                                                    <small class="text-danger">{{ $message }}</small>
-                                                                @enderror
-                                                            </div>
-                                                            <div class="col-md-5">
-                                                                <input type="text" name="menus[{{ $index }}][foods][{{ $foodIndex }}][food]" class="form-control" placeholder="Enter food" value="{{ old("menus.$index.foods.$foodIndex.food", $food['food']) }}">
-                                                                @error("menus.$index.foods.$foodIndex.food")
-                                                                    <small class="text-danger">{{ $message }}</small>
-                                                                @enderror
-                                                            </div>
-                                                            <div class="col-md-2">
-                                                                <button class="btn btn-danger remove-item" type="button">Remove</button>
-                                                            </div>
-                                                        @endif
+                                                        <div class="col-md-5">
+                                                            <select name="menus[{{ $index }}][foods][{{ $foodIndex }}][category]" class="form-control category-select" onchange="updateCategoryOptions({{ $index }})">
+                                                                <option value="" disabled selected>Select category</option>
+                                                                <option value="Main Course (Chicken)" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Chicken)' ? 'selected' : '' }}>Main Course (Chicken)</option>
+                                                                <option value="Main Course (Pork)" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Pork)' ? 'selected' : '' }}>Main Course (Pork)</option>
+                                                                <option value="Main Course (Beef)" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Beef)' ? 'selected' : '' }}>Main Course (Beef)</option>
+                                                                <option value="Main Course (Fish)" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Fish)' ? 'selected' : '' }}>Main Course (Fish)</option>
+                                                                <option value="Side Dish" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Side Dish' ? 'selected' : '' }}>Side Dish</option>
+                                                                <option value="Pasta" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Pasta' ? 'selected' : '' }}>Pasta</option>
+                                                                <option value="Rice" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Rice' ? 'selected' : '' }}>Rice</option>
+                                                                <option value="Dessert" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Dessert' ? 'selected' : '' }}>Dessert</option>
+                                                                <option value="Drinks" {{ old("menus.$index.foods.$foodIndex.category", $food['category'] ?? '') == 'Drinks' ? 'selected' : '' }}>Drinks</option>
+                                                            </select>
+                                                            @error("menus.$index.foods.$foodIndex.category")
+                                                                <small class="text-danger">{{ $message }}</small>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <input type="text" name="menus[{{ $index }}][foods][{{ $foodIndex }}][food]" class="form-control" placeholder="Enter food" value="{{ old("menus.$index.foods.$foodIndex.food", $food['food']) }}">
+                                                            @error("menus.$index.foods.$foodIndex.food")
+                                                                <small class="text-danger">{{ $message }}</small>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <button class="btn btn-danger remove-item" type="button" onclick="removeFood(this)">Remove</button>
+                                                        </div>
                                                     </div>
                                                 @endforeach
                                             </div>
-                                            <button id="food-{{ $index }}" class="btn btn-sm btn-success mt-2 float-end" type="button" onclick="addMoreFoods({{ $index }})">Add More Foods</button>
+                                            <button id="food-{{$index }}" class="btn btn-sm btn-success mt-2 float-end add-more-foods" data-index="{{$index}}" type="button">Add More Foods</button>
                                         </div>
 
                                         @if($index > 0)
@@ -189,7 +166,6 @@
 </div>
 
 <script>
-    // gpt solution
     document.addEventListener('DOMContentLoaded', function () {
         // Initialize existing food inputs with category options
         document.querySelectorAll('.food-list').forEach(foodList => {
@@ -197,24 +173,32 @@
             updateCategoryOptions(menuIndex);
         });
 
-        // Initialize event listeners for adding more foods
+        // Initialize event listeners for adding more foods for both existing and new menus
         initializeAddMoreFoods();
     });
 
-    // Use event delegation for dynamically added 'add-more-foods' buttons
+    function initializeAddMoreFoods() {
+        document.querySelectorAll('.add-more-foods').forEach(button => {
+            button.addEventListener('click', function() {
+                const index = this.getAttribute('id');
+                addMoreFoods(index);
+            });
+        });
+    }
+    
     document.addEventListener('click', function(event) {
         if (event.target.classList.contains('add-more-foods')) {
             const index = event.target.getAttribute('data-index');
+            console.log(`Adding more foods for menu index: ${index}`);
             addMoreFoods(index);
         }
     });
 
-    // add more food button
     window.addMoreFoods = function(index) {
         const foodList = document.getElementById(`food-list-${index}`);
         const foodCount = foodList.children.length;
 
-        if (foodCount < 9) { // Limit to 9 food entries
+        if (foodCount < 9) {
             const foodRow = document.createElement('div');
             foodRow.className = 'row mb-2';
             foodRow.innerHTML = `
@@ -228,7 +212,7 @@
                     <input type="text" name="menus[${index}][foods][${foodCount}][food]" class="form-control" placeholder="Enter food">
                 </div>
                 <div class="col-md-2">
-                    <button class="btn btn-danger remove-item" type="button">Remove</button>
+                    <button class="btn btn-danger remove-item" type="button" onclick="removeFood(this)">Remove</button>
                 </div>
             `;
             foodList.appendChild(foodRow);
@@ -236,14 +220,15 @@
         }
     };
 
-    // Remove food
+
+    // Remove food item functionality
     window.removeFood = function(button) {
         const foodRow = button.closest('.row');
         foodRow.remove();
         updateAllCategoryOptions();
     };
 
-    // update category
+    // Update category options to prevent duplicates
     window.updateCategoryOptions = function(index) {
         const selectedCategories = Array.from(document.querySelectorAll(`#food-list-${index} .category-select`))
             .map(select => select.value);
@@ -255,7 +240,7 @@
         });
     };
 
-    // Add menu button
+    // Add menu functionality
     document.getElementById('add-menu').addEventListener('click', function() {
         const menuSection = document.getElementById('menu-section');
         const index = menuSection.querySelectorAll('.menu-group').length;
@@ -292,8 +277,8 @@
         menuSection.insertAdjacentHTML('beforeend', menuGroup);
         initializeAddMoreFoods();
     });
-    
-    // Remove
+
+    // Event delegation for remove menu or food items
     document.addEventListener('click', function(event) {
         if (event.target.classList.contains('remove-menu')) {
             event.target.closest('.menu-group').remove();
@@ -304,8 +289,8 @@
         }
     });
 
-    // Categories
-    function generateCategoryOptions() {
+     // Categories
+     function generateCategoryOptions() {
         const categories = [
             "Main Course (Chicken)", "Main Course (Pork)", "Main Course (Beef)", "Main Course (Fish)", 
             "Side Dish", "Pasta", "Rice", "Dessert", "Drinks"
@@ -314,7 +299,7 @@
         return categories.map(category => `<option value="${category}">${category}</option>`).join('');
     }
 
-    // Add service button
+    // Add service functionality
     document.getElementById('add-service').addEventListener('click', function() {
         const servicesList = document.getElementById('services-list');
         const serviceGroup = `
