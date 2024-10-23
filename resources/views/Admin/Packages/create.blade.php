@@ -80,7 +80,7 @@
                                                  @foreach($menu['foods'] as $foodIndex => $food)
                                                     <div class="row mb-2">
                                                         @if ($foodIndex === 0)
-                                                            <div class="col-md-6">
+                                                            <div class="col-md-5">
                                                                 <select name="menus[{{ $index }}][foods][{{ $foodIndex }}][category]" class="form-control category-select" onchange="updateCategoryOptions({{ $index }})">
                                                                     <option value="" disabled selected>Select category</option>
                                                                     <option value="Main Course (Chicken)" {{ old("menus.$index.foods.$foodIndex.category") == 'Main Course (Chicken)' ? 'selected' : '' }}>Main Course (Chicken)</option>
@@ -97,7 +97,7 @@
                                                                     <small class="text-danger">{{ $message }}</small>
                                                                 @enderror
                                                             </div>
-                                                            <div class="col-md-6">
+                                                            <div class="col-md-5">
                                                                 <input type="text" name="menus[{{ $index }}][foods][{{ $foodIndex }}][food]" class="form-control" placeholder="Enter food" value="{{ old("menus.$index.foods.$foodIndex.food", $food['food']) }}">
                                                                 @error("menus.$index.foods.$foodIndex.food")
                                                                     <small class="text-danger">{{ $message }}</small>
@@ -134,7 +134,7 @@
                                                     </div>
                                                 @endforeach
                                             </div>
-                                            <button id="food-{{$index}}" class="btn btn-sm btn-success mt-2 float-end" type="button" onclick="addMoreFoods({{ $index }})">Add More Foods</button>
+                                            <button id="food-{{$index}}" class="btn btn-sm btn-success mt-2 float-start" type="button" onclick="addMoreFoods({{ $index }})">Add More Foods</button>
                                         </div>
 
                                         @if($index > 0)
@@ -158,7 +158,7 @@
                                         @foreach(old('services', ['']) as $index => $service)
                                             <div class="row mb-2">
                                                 @if ($index === 0)
-                                                    <div class="col-md-12">
+                                                    <div class="col-md-10">
                                                         <div class="input-group">
                                                             <input type="text" name="services[]" class="form-control" placeholder="Enter service" value="{{ old("services.$index", $service) }}">
                                                         </div>
@@ -215,18 +215,18 @@
                 <label for="foods" class="form-label">Foods & Categories <span class="text-danger">*</span></label>
                 <div id="food-list-${index}" class="food-list">
                     <div class="row mb-2">
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <select name="menus[${index}][foods][0][category]" class="form-control category-select" onchange="updateCategoryOptions(${index})">
-                                <option value="">Select category</option>
+                                <option value="" disabled selected>Select category</option>
                                 ${generateCategoryOptions()}
                             </select>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <input type="text" name="menus[${index}][foods][0][food]" class="form-control" placeholder="Enter food">
                         </div>
                     </div>
                 </div>
-                <button id="food-${index}" class="btn btn-sm btn-success mt-2 float-end" type="button" onclick="addMoreFoods(${index})">Add More Foods</button>
+                <button id="food-${index}" class="btn btn-sm btn-success mt-2 float-start" type="button" onclick="addMoreFoods(${index})">Add More Foods</button>
             </div>
             <div class="col-md-12 mt-2">
                 <button class="btn btn-danger btn-sm remove-menu" type="button">Remove Menu</button>
@@ -297,7 +297,7 @@
         selects.forEach(select => {
             var currentValue = select.value;
             var newOptions = `
-                <option value="">Select category</option>
+                <option value="" disabled selected>Select category</option>
                 ${generateCategoryOptions(selectedValues, currentValue)}
             `;
             select.innerHTML = newOptions;
