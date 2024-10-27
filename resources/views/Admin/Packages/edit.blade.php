@@ -94,7 +94,7 @@
                                                                     <option value="Dessert" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Dessert' ? 'selected' : '' }}>Dessert</option>
                                                                     <option value="Drinks" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Drinks' ? 'selected' : '' }}>Drinks</option>
                                                                 </select>
-                                                                @error("menus.$menuIndex.foods.$foodIndex.food")
+                                                                @error("menus.$menuIndex.foods.$foodIndex.category")
                                                                     <small class="text-danger">{{ $message }}</small>
                                                                 @enderror
                                                             </div>
@@ -118,7 +118,7 @@
                                                                     <option value="Dessert" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Dessert' ? 'selected' : '' }}>Dessert</option>
                                                                     <option value="Drinks" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Drinks' ? 'selected' : '' }}>Drinks</option>
                                                                 </select>
-                                                                @error("menus.$menuIndex.foods.$foodIndex.food")
+                                                                @error("menus.$menuIndex.foods.$foodIndex.category")
                                                                     <small class="text-danger">{{ $message }}</small>
                                                                 @enderror
                                                             </div>
