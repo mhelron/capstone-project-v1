@@ -54,6 +54,7 @@ class PackageController extends Controller
             'services.*.required' => 'Service is required.',
         ]);
 
+        // Remove commas from price
         $validatedData['price'] = str_replace(',', '', $validatedData['price']);
 
         // Store the package details
@@ -64,29 +65,32 @@ class PackageController extends Controller
             'area_name' => $validatedData['area_name'],
         ])->getKey();
 
-        // Store each menu and its related foods and categories
-        foreach ($validatedData['menus'] as $menu) {
-            $menuId = $this->database->getReference("packages/{$packageId}/menus")->push([
+        // Store each menu and its related foods and categories using indices
+        foreach ($validatedData['menus'] as $menuIndex => $menu) {
+            // Use the index for the menu instead of pushing to get a unique key
+            $menuRef = $this->database->getReference("packages/{$packageId}/menus/{$menuIndex}");
+            $menuRef->set([
                 'menu_name' => $menu['menu_name'],
-            ])->getKey();
+            ]);
 
-            foreach ($menu['foods'] as $food) {
-                $this->database->getReference("packages/{$packageId}/menus/{$menuId}/foods")->push([
+            foreach ($menu['foods'] as $foodIndex => $food) {
+                $this->database->getReference("packages/{$packageId}/menus/{$menuIndex}/foods/{$foodIndex}")->set([
                     'food' => $food['food'],
                     'category' => $food['category'],
                 ]);
             }
         }
 
-        // Store services
-        foreach ($validatedData['services'] as $service) {
-            $this->database->getReference("packages/{$packageId}/services")->push([
+        // Store services using the same pattern
+        foreach ($validatedData['services'] as $serviceIndex => $service) {
+            $this->database->getReference("packages/{$packageId}/services/{$serviceIndex}")->set([
                 'service' => $service,
             ]);
         }
 
         return redirect()->route('admin.packages')->with('status', 'Package created successfully!');
     }
+
 
     public function edit($packageId)
     {
@@ -142,20 +146,23 @@ class PackageController extends Controller
             'area_name' => $validatedData['area_name'],
         ]);
 
-        // Update menus and foods
+        // Get the current menus to update them based on new data
         $menusRef = $this->database->getReference("packages/{$packageId}/menus");
+        $existingMenus = $menusRef->getValue() ?: [];
 
+        // Clear the existing menus to avoid duplicates
         $menusRef->remove();
 
-        foreach ($validatedData['menus'] as $menu) {
-            // Create a new menu entry
-            $menuId = $menusRef->push([
+        foreach ($validatedData['menus'] as $index => $menu) {
+            // Use the index for menu storage
+            $menuId = (string) $index;  // Convert index to string for Firebase key
+            $menusRef->getChild($menuId)->set([
                 'menu_name' => $menu['menu_name'],
-            ])->getKey();
-    
+            ]);
+
             // Add foods for this menu
-            foreach ($menu['foods'] as $food) {
-                $this->database->getReference("packages/{$packageId}/menus/{$menuId}/foods")->push([
+            foreach ($menu['foods'] as $foodIndex => $food) {
+                $this->database->getReference("packages/{$packageId}/menus/{$menuId}/foods/{$foodIndex}")->set([
                     'food' => $food['food'],
                     'category' => $food['category'],
                 ]);
@@ -175,4 +182,5 @@ class PackageController extends Controller
 
         return redirect()->route('admin.packages')->with('status', 'Package updated successfully!');
     }
+
 }

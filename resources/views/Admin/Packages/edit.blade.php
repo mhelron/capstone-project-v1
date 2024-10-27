@@ -83,7 +83,7 @@
                                                         @if ($loop->index === 0)
                                                             <div class="col-md-5">
                                                                 <select name="menus[{{ $menuIndex }}][foods][{{ $foodIndex }}][category]" class="form-control category-select" onchange="updateCategoryOptions({{ $loop->parent->index }})">
-                                                                    <option value="" disabled selected>Select category</option>
+                                                                    <option value="" disabled selected>Select Category</option>
                                                                     <option value="Main Course (Chicken)" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Chicken)' ? 'selected' : '' }}>Main Course (Chicken)</option>
                                                                     <option value="Main Course (Pork)" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Pork)' ? 'selected' : '' }}>Main Course (Pork)</option>
                                                                     <option value="Main Course (Beef)" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Beef)' ? 'selected' : '' }}>Main Course (Beef)</option>
@@ -94,7 +94,7 @@
                                                                     <option value="Dessert" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Dessert' ? 'selected' : '' }}>Dessert</option>
                                                                     <option value="Drinks" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Drinks' ? 'selected' : '' }}>Drinks</option>
                                                                 </select>
-                                                                @error("menus.$menuIndex.foods.$foodIndex.category")
+                                                                @error("menus.$menuIndex.foods.$foodIndex.food")
                                                                     <small class="text-danger">{{ $message }}</small>
                                                                 @enderror
                                                             </div>
@@ -107,7 +107,7 @@
                                                         @else
                                                             <div class="col-md-5">
                                                                 <select name="menus[{{ $menuIndex }}][foods][{{ $foodIndex }}][category]" class="form-control category-select" onchange="updateCategoryOptions({{ $loop->parent->index }})">
-                                                                    <option value="" disabled selected>Select category</option>
+                                                                    <option value="" disabled selected>Select Category</option>
                                                                     <option value="Main Course (Chicken)" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Chicken)' ? 'selected' : '' }}>Main Course (Chicken)</option>
                                                                     <option value="Main Course (Pork)" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Pork)' ? 'selected' : '' }}>Main Course (Pork)</option>
                                                                     <option value="Main Course (Beef)" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Beef)' ? 'selected' : '' }}>Main Course (Beef)</option>
@@ -118,9 +118,15 @@
                                                                     <option value="Dessert" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Dessert' ? 'selected' : '' }}>Dessert</option>
                                                                     <option value="Drinks" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Drinks' ? 'selected' : '' }}>Drinks</option>
                                                                 </select>
+                                                                @error("menus.$menuIndex.foods.$foodIndex.food")
+                                                                    <small class="text-danger">{{ $message }}</small>
+                                                                @enderror
                                                             </div>
                                                             <div class="col-md-5">
                                                                 <input type="text" name="menus[{{ $menuIndex }}][foods][{{ $foodIndex }}][food]" class="form-control" placeholder="Enter food" value="{{ old("menus.$menuIndex.foods.$foodIndex.food", $food['food']) }}">
+                                                                @error("menus.$menuIndex.foods.$foodIndex.food")
+                                                                    <small class="text-danger">{{ $message }}</small>
+                                                                @enderror
                                                             </div>
                                                             <div class="col-md-2">
                                                                 <button class="btn btn-danger remove-item" type="button" onclick="removeFood(this)">Remove</button>
@@ -206,13 +212,13 @@
         const foodList = document.getElementById(`food-list-${index}`);
         const foodCount = foodList.children.length;
 
-        if (foodCount < 8) {  // Ensure maximum of 8 items
+        if (foodCount < 9) {  // Ensure maximum of 8 items
             const foodRow = document.createElement('div');
             foodRow.className = 'row mb-2';
             foodRow.innerHTML = `
                 <div class="col-md-5">
                     <select name="menus[${index}][foods][${foodCount}][category]" class="form-control category-select" onchange="updateCategoryOptions(${index})">
-                        <option value="" disabled selected>Select category</option>
+                        <option value="" disabled selected>Select Category</option>
                         ${generateCategoryOptions(index)}
                     </select>
                 </div>
@@ -300,7 +306,7 @@
                     <div class="row mb-2">
                         <div class="col-md-5">
                             <select name="menus[${index}][foods][0][category]" class="form-control category-select" onchange="updateCategoryOptions(${index})">
-                                <option value="" disabled selected>Select category</option>
+                                <option value="" disabled selected>Select Category</option>
                                 ${generateCategoryOptions(index)}
                             </select>
                         </div>
