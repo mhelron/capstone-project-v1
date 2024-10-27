@@ -211,3 +211,9 @@ select.form-control {
 .btn-close {
     font-size: 20px;
 }
+
+.form-container {
+    max-height: 800px; /* Adjust this height as needed */
+    overflow-y: auto;
+    margin-bottom: 15px;
+}

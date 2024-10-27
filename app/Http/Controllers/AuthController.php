@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Kreait\Firebase\Contract\Database;
 use Kreait\Firebase\Contract\Auth as FirebaseAuth;
 use Illuminate\Support\Facades\Session;
 

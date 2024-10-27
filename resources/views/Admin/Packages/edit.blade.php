@@ -204,18 +204,19 @@
     });
 
     function initializeAddMoreFoods() {
-        const initialFoodLists = document.querySelectorAll('.food-list');
-        initialFoodLists.forEach((foodList, index) => {
-            updateCategoryOptions(index);
-        });
+    // Select all "Add More Foods" buttons and remove existing click event listeners
+    document.querySelectorAll('.add-more-foods').forEach(button => {
+        // Clone the button to remove existing event listeners
+        const newButton = button.cloneNode(true);
+        button.parentNode.replaceChild(newButton, button);
 
-        document.querySelectorAll('.add-more-foods').forEach(button => {
-            button.addEventListener('click', function() {
-                const index = this.getAttribute('data-index');
-                addMoreFoods(index);
-            });
+        // Add click event listener to the cloned button
+        newButton.addEventListener('click', function() {
+            const index = this.getAttribute('data-index');
+            addMoreFoods(index);
         });
-    }
+    });
+}
 
     window.addMoreFoods = function(index) {
         const foodList = document.getElementById(`food-list-${index}`);
@@ -241,10 +242,10 @@
             `;
             foodList.appendChild(foodRow);
 
-            if (foodCount + 1 >= 9) {
-                addButton.disabled = true;
-            }
+            // Disable the add button if the limit is reached
+            addButton.disabled = (foodCount + 1 >= 9);
             
+            // Update category options after adding a new food item
             updateCategoryOptions(index);
         }
     };
@@ -257,9 +258,7 @@
         const foodCount = foodList.children.length;
         const addButton = document.querySelector(`.add-more-foods[data-index="${index}"]`);
 
-        if (foodCount < 9) {
-            addButton.disabled = false;
-        }
+        addButton.disabled = (foodCount >= 9); // Enable or disable button based on count
 
         updateCategoryOptions(index);
     };
@@ -269,11 +268,11 @@
         const selects = foodList.querySelectorAll('.category-select');
         const selectedValues = Array.from(selects).map(select => select.value).filter(value => value !== '');
 
+        // Ensure all selects are updated with new options
         selects.forEach(select => {
             const currentValue = select.value;
-            const newOptions = generateCategoryOptions(menuIndex, selectedValues, currentValue);
-            select.innerHTML = newOptions;
-            select.value = currentValue;
+            select.innerHTML = generateCategoryOptions(menuIndex, selectedValues, currentValue); // Reset options
+            select.value = currentValue; // Restore the current value if applicable
         });
     }
 
@@ -287,18 +286,16 @@
             "Side Dish", "Pasta", "Rice", "Dessert", "Drinks"
         ];
 
-        return categories
-            .map((category, index) => {
-                const value = values[index];
-                if (category === "Select Category") {
-                    return `<option value="${value}" disabled>Select Category</option>`;
-                }
-                if (!selectedValues.includes(value) || value === currentValue) {
-                    return `<option value="${value}" ${value === currentValue ? 'selected' : ''}>${category}</option>`;
-                }
-                return '';
-            })
-            .join('');
+        return categories.map((category, index) => {
+            const value = values[index];
+            if (category === "Select Category") {
+                return `<option value="${value}" disabled>Select Category</option>`;
+            }
+            if (!selectedValues.includes(value) || value === currentValue) {
+                return `<option value="${value}" ${value === currentValue ? 'selected' : ''}>${category}</option>`;
+            }
+            return '';
+        }).join('');
     }
 
     document.getElementById('add-menu').addEventListener('click', function() {
@@ -335,7 +332,7 @@
         `;
 
         menuSection.insertAdjacentHTML('beforeend', menuGroup);
-        initializeAddMoreFoods();
+        initializeAddMoreFoods(); // Initialize for the new menu
     });
 
     document.addEventListener('click', function(event) {

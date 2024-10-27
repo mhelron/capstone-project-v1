@@ -9,18 +9,21 @@ use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GuestController;
 
 use App\Http\Middleware\AuthMiddleware;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Guest Route
+Route::get('/', [GuestController::class, 'indexHome'])->name('guest.home');
+Route::get('/reservation', [GuestController::class, 'indexReservation'])->name('guest.reservation');
+Route::get('/calendar', [GuestController::class, 'indexCalendar'])->name('guest.calendar');
+Route::get('/contact', [GuestController::class, 'indexContact'])->name('guest.contact');
+Route::get('/about', [GuestController::class, 'indexAbout'])->name('guest.about');
 
 // Login Route
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login'])->name('firebase.login');
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-Route::post('/update-status-offline', [AuthController::class, 'updateStatusOffline'])->name('update.status.offline');
 
 // Auth Middleware
 Route::middleware([AuthMiddleware::class])->group(function () {
@@ -38,6 +41,7 @@ Route::middleware([AuthMiddleware::class])->group(function () {
         Route::post('/add-package', [PackageController::class, 'store'])->name('admin.packages.store');
         Route::get('/edit-package/{id}', [PackageController::class, 'edit'])->name('admin.packages.edit');
         Route::put('/update-package/{id}', [PackageController::class, 'update'])->name('admin.packages.update');
+        Route::get('/archive-package/{id}', [PackageController::class, 'destroy'])->name('admin.packages.delete');
     });
 
     // Reservation Route 

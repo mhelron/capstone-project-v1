@@ -47,7 +47,7 @@ class PackageController extends Controller
             'package_name.required' => 'Package name is required.',
             'persons.required' => 'Number of persons is required.',
             'price.required' => 'Price is required.',
-            'area_name.required' => 'Area is required.',
+            'area_name.required' => 'Select an area.',
             'menus.*.menu_name.required' => 'Menu name is required.',
             'menus.*.foods.*.food.required' => 'Food name is required.',
             'menus.*.foods.*.category.required' => 'Select a category.',
@@ -128,7 +128,7 @@ class PackageController extends Controller
             'package_name.required' => 'Package name is required.',
             'persons.required' => 'Number of persons is required.',
             'price.required' => 'Price is required.',
-            'area_name.required' => 'Area is required.',
+            'area_name.required' => 'Select an area.',
             'menus.*.menu_name.required' => 'Menu name is required.',
             'menus.*.foods.*.food.required' => 'Food name is required.',
             'menus.*.foods.*.category.required' => 'Select a category.',
@@ -183,4 +183,20 @@ class PackageController extends Controller
         return redirect()->route('admin.packages')->with('status', 'Package updated successfully!');
     }
 
+    public function destroy($id)
+    {
+        $key = $id;
+
+        $package_data = $this->database->getReference($this->packages.'/'.$key)->getValue();
+
+        $archive_data = $this->database->getReference($this->archived_packages.'/'.$key)->set($package_data);
+
+        $del_data = $this->database->getReference($this->packages.'/'.$key)->remove();
+
+        if ($del_data && $archive_data) {
+            return redirect('admin/packages')->with('status', 'Package Archived Successfully');
+        } else {
+            return redirect('admin/packages')->with('status', 'Package Not Archived');
+        }
+    }
 }

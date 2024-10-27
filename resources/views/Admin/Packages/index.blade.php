@@ -144,7 +144,7 @@
                                         <td>
                                             <div class="d-flex">
                                                 <a href="{{ url('admin/packages/edit-package/' . $key) }}" class="btn btn-sm btn-success me-2">Edit</a>
-                                                <a href="{{ url('admin/packages/archive-package/' . $key) }}" class="btn btn-sm btn-secondary">Archive</a>
+                                                <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#archiveModal" data-id="{{ $key }}" data-name="{{ $item['package_name'] }}">Archive</button>
                                             </div>
                                         </td>
                                     </tr>
@@ -163,6 +163,43 @@
         </div>
     </div>
 </div>
-<!-- /.Main content -->
+
+<!-- Archive Confirmation Modal -->
+<div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="archiveModalLabel">Confirm Archive</h5>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to archive <strong id="packageName"></strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirm-archive-btn">Archive</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Event listener for the Archive button
+    const archiveButtons = document.querySelectorAll('[data-bs-target="#archiveModal"]');
+    const packageNameField = document.getElementById('packageName');
+    const confirmArchiveButton = document.getElementById('confirm-archive-btn');
+
+    archiveButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const packageName = this.getAttribute('data-name');
+            const packageId = this.getAttribute('data-id');
+            packageNameField.textContent = packageName;
+
+            // Set up the confirm button with the package ID
+            confirmArchiveButton.onclick = function() {
+                window.location.href = '{{ url("admin/packages/archive-package/") }}/' + packageId;
+            };
+        });
+    });
+</script>
 
 @endsection

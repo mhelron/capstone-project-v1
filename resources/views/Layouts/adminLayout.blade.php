@@ -142,33 +142,4 @@
 
     <!-- Calendar JS -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
-
-    <script>
-        let timeout;
-        const timeoutDuration = 300000; // 5 minutes (300,000 milliseconds)
-
-        function setStatusToOffline() {
-            // Send an AJAX request to update the user's status to "Offline"
-            fetch('{{ route("update.status.offline") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({ status: 'Offline' })
-            });
-        }
-
-        function resetTimeout() {
-            clearTimeout(timeout);
-            timeout = setTimeout(setStatusToOffline, timeoutDuration);
-        }
-
-        // Reset the timeout on user activity
-        window.addEventListener('mousemove', resetTimeout);
-        window.addEventListener('keypress', resetTimeout);
-        
-        // Initialize the timeout on page load
-        resetTimeout();
-    </script>
 </html>
