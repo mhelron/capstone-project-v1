@@ -76,7 +76,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label for="foods" class="form-label">Foods & Categories <span class="text-danger">*</span></label>
-                                            <div id="food-list-{{ $index }}" class="food-list">
+                                            <div id="food-list-{{ $index }}" class="food-list" data-index="{{ $loop->index }}">
                                                  @foreach($menu['foods'] as $foodIndex => $food)
                                                     <div class="row mb-2">
                                                         @if ($foodIndex === 0)
@@ -250,49 +250,70 @@
         }
     });
 
-    // Add more food button
     function addMoreFoods(menuIndex) {
         var foodList = document.getElementById('food-list-' + menuIndex);
         var foodCount = foodList.querySelectorAll('.row').length;
         var addButton = document.getElementById('food-' + menuIndex);
 
-        if (foodCount < 9) {
-            var foodIndex = foodCount;
+        if (foodCount < 9) { // Maximum of 8 foods
+            var foodIndex = foodCount; // Set the next index for the new food
 
             var foodGroup = `
             <div class="row mb-2">
                 <div class="col-md-5">
                     <select name="menus[${menuIndex}][foods][${foodIndex}][category]" class="form-control category-select" onchange="updateCategoryOptions(${menuIndex})">
                         <option value="">Select category</option>
-                        ${generateCategoryOptions()}
+                        ${generateCategoryOptions(getSelectedCategories(menuIndex))}
                     </select>
                 </div>
                 <div class="col-md-5">
                     <input type="text" name="menus[${menuIndex}][foods][${foodIndex}][food]" class="form-control" placeholder="Enter food">
                 </div>
-                ${foodIndex > 0 ? `
                 <div class="col-md-2">
-                    <button class="btn btn-danger remove-item" type="button">Remove</button>
-                </div>` : ''}
+                    <button class="btn btn-danger remove-item" type="button" onclick="removeFood(this, ${menuIndex})">Remove</button>
+                </div>
             </div>
             `;
 
-            foodList.insertAdjacentHTML('beforeend', foodGroup); 
-            updateCategoryOptions(menuIndex); 
+            foodList.insertAdjacentHTML('beforeend', foodGroup);
 
-            if (foodCount + 1 === 9) {
-                addButton.style.display = 'none';
+            // Disable the add button if 9 items are reached
+            if (foodCount + 1 >= 9) {
+                addButton.disabled = true;
             }
+
+            updateCategoryOptions(menuIndex); // Ensure options are updated for new field
         }
     }
 
+    function removeFood(button, menuIndex) {
+        // Remove the food item from the DOM
+        var foodRow = button.closest('.row');
+        foodRow.remove();
 
-    // Update select field
-    function updateCategoryOptions(menuIndex) {
+        // Re-count food items
+        var foodList = document.getElementById('food-list-' + menuIndex);
+        var foodCount = foodList.querySelectorAll('.row').length;
+        var addButton = document.getElementById('food-' + menuIndex);
+
+        // Enable the add button if foodCount is less than 9
+        if (foodCount < 9) {
+            addButton.disabled = false;
+        }
+
+        updateCategoryOptions(menuIndex); // Update options after removal
+    }
+
+    function getSelectedCategories(menuIndex) {
         var foodList = document.getElementById('food-list-' + menuIndex);
         var selects = foodList.querySelectorAll('.category-select');
+        return Array.from(selects).map(select => select.value).filter(value => value !== '');
+    }
 
-        var selectedValues = Array.from(selects).map(select => select.value).filter(value => value !== '');
+    function updateCategoryOptions(menuIndex) {
+        var selectedValues = getSelectedCategories(menuIndex);
+        var foodList = document.getElementById('food-list-' + menuIndex);
+        var selects = foodList.querySelectorAll('.category-select');
 
         selects.forEach(select => {
             var currentValue = select.value;
@@ -301,11 +322,10 @@
                 ${generateCategoryOptions(selectedValues, currentValue)}
             `;
             select.innerHTML = newOptions;
-            select.value = currentValue;
+            select.value = currentValue; // Preserve the selected value
         });
     }
 
-    // categories
     function generateCategoryOptions(selectedValues = [], currentValue = "") {
         const categories = [
             "Main Course (Chicken)", "Main Course (Pork)", "Main Course (Beef)", "Main Course (Fish)", "Side Dish",
@@ -339,6 +359,5 @@
         servicesList.insertAdjacentHTML('beforeend', serviceGroup);
     });
 </script>
-
 
 @endsection

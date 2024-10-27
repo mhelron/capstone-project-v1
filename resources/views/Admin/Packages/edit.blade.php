@@ -163,15 +163,24 @@
 
                                         @foreach($oldServices as $index => $service)
                                             <div class="row mb-2">
-                                                <div class="col-md-10">
-                                                    <input type="text" name="services[]" class="form-control" value="{{ is_array($service) ? $service['service'] : $service }}" placeholder="Enter service">
-                                                    @error('services.' . $index)
-                                                        <small class="text-danger">{{ $message }}</small>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <button class="btn btn-danger remove-item" type="button">Remove</button>
-                                                </div>
+                                                @if ($index === 0)
+                                                    <div class="col-md-10">
+                                                        <input type="text" name="services[]" class="form-control" value="{{ is_array($service) ? $service['service'] : $service }}" placeholder="Enter service">
+                                                        @error('services.' . $index)
+                                                            <small class="text-danger">{{ $message }}</small>
+                                                        @enderror
+                                                    </div>
+                                                @else
+                                                    <div class="col-md-10">
+                                                        <input type="text" name="services[]" class="form-control" value="{{ is_array($service) ? $service['service'] : $service }}" placeholder="Enter service">
+                                                        @error('services.' . $index)
+                                                            <small class="text-danger">{{ $message }}</small>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button class="btn btn-danger remove-item" type="button">Remove</button>
+                                                    </div>
+                                                @endif
                                             </div>
                                         @endforeach
                                     </div>
@@ -191,10 +200,10 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         initializeAddMoreFoods();
+        updateAllCategoryOptions();
     });
 
     function initializeAddMoreFoods() {
-        // Update category options for initial fields
         const initialFoodLists = document.querySelectorAll('.food-list');
         initialFoodLists.forEach((foodList, index) => {
             updateCategoryOptions(index);
@@ -211,8 +220,9 @@
     window.addMoreFoods = function(index) {
         const foodList = document.getElementById(`food-list-${index}`);
         const foodCount = foodList.children.length;
+        const addButton = document.querySelector(`.add-more-foods[data-index="${index}"]`);
 
-        if (foodCount < 9) {  // Ensure maximum of 8 items
+        if (foodCount < 9) {
             const foodRow = document.createElement('div');
             foodRow.className = 'row mb-2';
             foodRow.innerHTML = `
@@ -226,70 +236,71 @@
                     <input type="text" name="menus[${index}][foods][${foodCount}][food]" class="form-control" placeholder="Enter food">
                 </div>
                 <div class="col-md-2">
-                    ${foodCount > 0 ? `<button class="btn btn-danger remove-item" type="button" onclick="removeFood(this)">Remove</button>` : '' }
+                    ${foodCount > 0 ? `<button class="btn btn-danger remove-item" type="button" onclick="removeFood(this, ${index})">Remove</button>` : '' }
                 </div>
             `;
             foodList.appendChild(foodRow);
-            updateCategoryOptions(index);  // Update options after adding
+
+            if (foodCount + 1 >= 9) {
+                addButton.disabled = true;
+            }
+            
+            updateCategoryOptions(index);
         }
     };
 
-    // Remove food item functionality
-    window.removeFood = function(button) {
+    window.removeFood = function(button, index) {
         const foodRow = button.closest('.row');
         foodRow.remove();
-        const index = button.closest('.food-list').id.split('-').pop();
-        updateCategoryOptions(index);  // Update categories after removal
+
+        const foodList = document.getElementById(`food-list-${index}`);
+        const foodCount = foodList.children.length;
+        const addButton = document.querySelector(`.add-more-foods[data-index="${index}"]`);
+
+        if (foodCount < 9) {
+            addButton.disabled = false;
+        }
+
+        updateCategoryOptions(index);
     };
 
-    // Update category options to prevent duplicates
     function updateCategoryOptions(menuIndex) {
-        var foodList = document.getElementById('food-list-' + menuIndex);
-        var selects = foodList.querySelectorAll('.category-select');
+        const foodList = document.getElementById(`food-list-${menuIndex}`);
+        const selects = foodList.querySelectorAll('.category-select');
+        const selectedValues = Array.from(selects).map(select => select.value).filter(value => value !== '');
 
-        // Collect selected values for the current menu
-        var selectedValues = Array.from(selects).map(select => select.value).filter(value => value !== '');
         selects.forEach(select => {
             const currentValue = select.value;
             const newOptions = generateCategoryOptions(menuIndex, selectedValues, currentValue);
             select.innerHTML = newOptions;
-            select.value = currentValue; // Keep the current selection
+            select.value = currentValue;
         });
     }
 
-    // Generate category options with the selected values excluded
     function generateCategoryOptions(menuIndex, selectedValues = [], currentValue = '') {
         const categories = [
             "Select Category", "Main Course (Chicken)", "Main Course (Pork)", "Main Course (Beef)", "Main Course (Fish)", 
             "Side Dish", "Pasta", "Rice", "Dessert", "Drinks"
         ];
-
         const values = [
             "", "Main Course (Chicken)", "Main Course (Pork)", "Main Course (Beef)", "Main Course (Fish)", 
             "Side Dish", "Pasta", "Rice", "Dessert", "Drinks"
         ];
 
-        // Filter out the selected values, but allow the current value to stay in the options
         return categories
             .map((category, index) => {
                 const value = values[index];
-
-                // Disable "Select Category" option and handle other options
                 if (category === "Select Category") {
                     return `<option value="${value}" disabled>Select Category</option>`;
                 }
-
-                // Ensure the current value stays in the list even if it's selected, and exclude others
                 if (!selectedValues.includes(value) || value === currentValue) {
                     return `<option value="${value}" ${value === currentValue ? 'selected' : ''}>${category}</option>`;
                 }
-
-                return '';  // Skip if the value is selected in another field
+                return '';
             })
             .join('');
     }
 
-    // Add menu functionality
     document.getElementById('add-menu').addEventListener('click', function() {
         const menuSection = document.getElementById('menu-section');
         const index = menuSection.querySelectorAll('.menu-group').length;
@@ -327,14 +338,17 @@
         initializeAddMoreFoods();
     });
 
-    // Event delegation for remove menu or food items
     document.addEventListener('click', function(event) {
         if (event.target.classList.contains('remove-menu')) {
             event.target.closest('.menu-group').remove();
+            updateAllCategoryOptions();
+        } 
+        else if (event.target.classList.contains('remove-item')) {
+            event.target.closest('.row').remove();
+            updateAllCategoryOptions();
         }
     });
 
-    // Add service functionality
     document.getElementById('add-service').addEventListener('click', function() {
         const servicesList = document.getElementById('services-list');
         const serviceGroup = `
@@ -353,6 +367,5 @@
         servicesList.insertAdjacentHTML('beforeend', serviceGroup);
     });
 </script>
-
 
 @endsection
