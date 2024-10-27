@@ -243,7 +243,6 @@
 
         // Collect selected values for the current menu
         var selectedValues = Array.from(selects).map(select => select.value).filter(value => value !== '');
-
         selects.forEach(select => {
             const currentValue = select.value;
             const newOptions = generateCategoryOptions(menuIndex, selectedValues, currentValue);
@@ -255,13 +254,32 @@
     // Generate category options with the selected values excluded
     function generateCategoryOptions(menuIndex, selectedValues = [], currentValue = '') {
         const categories = [
-            "Main Course (Chicken)", "Main Course (Pork)", "Main Course (Beef)", "Main Course (Fish)", 
+            "Select Category", "Main Course (Chicken)", "Main Course (Pork)", "Main Course (Beef)", "Main Course (Fish)", 
             "Side Dish", "Pasta", "Rice", "Dessert", "Drinks"
         ];
 
+        const values = [
+            "", "Main Course (Chicken)", "Main Course (Pork)", "Main Course (Beef)", "Main Course (Fish)", 
+            "Side Dish", "Pasta", "Rice", "Dessert", "Drinks"
+        ];
+
+        // Filter out the selected values, but allow the current value to stay in the options
         return categories
-            .filter(category => !selectedValues.includes(category) || category === currentValue)
-            .map(category => `<option value="${category}">${category}</option>`)
+            .map((category, index) => {
+                const value = values[index];
+
+                // Disable "Select Category" option and handle other options
+                if (category === "Select Category") {
+                    return `<option value="${value}" disabled>Select Category</option>`;
+                }
+
+                // Ensure the current value stays in the list even if it's selected, and exclude others
+                if (!selectedValues.includes(value) || value === currentValue) {
+                    return `<option value="${value}" ${value === currentValue ? 'selected' : ''}>${category}</option>`;
+                }
+
+                return '';  // Skip if the value is selected in another field
+            })
             .join('');
     }
 

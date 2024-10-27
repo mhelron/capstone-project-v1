@@ -37,8 +37,10 @@ class AuthController extends Controller
         try {
             $signInResult = $this->auth->signInWithEmailAndPassword($request->email, $request->password);
 
+            $leewayInSeconds = 600;
+
             $idTokenString = $signInResult->idToken();
-            $verifiedIdToken = $this->auth->verifyIdToken($idTokenString);
+            $verifiedIdToken = $this->auth->verifyIdToken($idTokenString, $leewayInSeconds);
             $uid = $verifiedIdToken->claims()->get('sub');
             $user = $this->auth->getUser($uid);
 
