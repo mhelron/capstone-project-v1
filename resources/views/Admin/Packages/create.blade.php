@@ -186,10 +186,32 @@
                                 </div>
                             </div>
 
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Is this a Wedding Package? <span class="text-danger">*</span></label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="package_type" id="wedding" value="Not Wedding" {{ old('package_type') == 'Not Wedding' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="wedding">
+                                            Not Wedding
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="package_type" id="not_wedding" value="Wedding" {{ old('package_type') == 'Wedding' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="not_wedding">
+                                            Wedding
+                                        </label>
+                                    </div>
+                                    @error('package_type')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
+
                             <button type="submit" class="btn btn-primary mt-3 float-end">Add Package</button>
                         </form>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

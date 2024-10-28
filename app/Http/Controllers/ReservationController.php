@@ -51,7 +51,7 @@ class ReservationController extends Controller
 
     public function createReservation(){
         $packages = $this->database->getReference($this->packages)->getValue();
-        $packages = is_array($packages) ? $packages : [];
+        $packages = is_array($packages) ? array_map(fn($package) => $package['package_name'], $packages) : [];
 
         $isExpanded = session()->get('sidebar_is_expanded', true);    
         return view('admin.reservation.createReservation', compact('packages', 'isExpanded'));
@@ -79,7 +79,7 @@ class ReservationController extends Controller
             'venue' => 'required',
             'event_time' => 'required',
             'theme' => 'required',
-            'other_requests' => 'required',
+            'other_requests' => 'nullable',
         ]);
 
         $reserveData = [
@@ -158,7 +158,7 @@ class ReservationController extends Controller
         }
     }
 
-    public function confirmReservation(Request $request, $id){
+    public function confirmReservation($id){
         $key = $id;
 
         $reserveData = [
@@ -168,9 +168,25 @@ class ReservationController extends Controller
         $res_updated = $this->database->getReference($this->reservations. '/'.$key)->update($reserveData);
 
         if ($res_updated) {
-            return redirect('admin/reservations')->with('status', 'Category Updated Successfully');
+            return redirect('admin/reservations')->with('status', 'Reservation Confirmed Successfully');
         } else {
-            return redirect('admin/reservations')->with('status', 'Category Not Updated');
+            return redirect('admin/reservations')->with('status', 'Reservation Not Confirmed');
+        }
+    }
+
+    public function finishReservation($id){
+        $key = $id;
+
+        $reserveData = [
+            'status' => 'Finished'
+        ];
+
+        $res_updated = $this->database->getReference($this->reservations. '/'.$key)->update($reserveData);
+
+        if ($res_updated) {
+            return redirect('admin/reservations')->with('status', 'Reservation Finished');
+        } else {
+            return redirect('admin/reservations')->with('status', 'Reservation Not Finished');
         }
     }
 }

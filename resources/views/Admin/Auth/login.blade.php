@@ -17,27 +17,26 @@
     
     <style>
         body {
-    background-color: #f8f9fa;
-}
-.login-container {
-    max-width: 700px;
-    margin: 5% auto;
-    padding: 2rem;
-    background: #ffffff;
-    border-radius: .375rem;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-}
-.login-header {
-    margin-bottom: 1.5rem;
-}
-  
+            background-color: #f8f9fa;
+        }
+        .login-container {
+            max-width: 700px;
+            margin: 5% auto;
+            padding: 2rem;
+            background: #ffffff;
+            border-radius: .375rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        .login-header {
+            margin-bottom: 1.5rem;
+        }
     </style>
 </head>
 
 <body>
 
 <!-- Login Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
     <a class="navbar-brand" href="#">
       Kyla and Kyle
@@ -81,7 +80,7 @@
                 @enderror
             </div>
 
-            <button type="submit" class="btn btn-primary w-100">Login</button>
+            <button type="submit" class="btn btn-dark w-100">Login</button>
 
             <div class="mt-3 text-center">
                 <a href="#" class="btn btn-link" style="color: red;">Forgot Your Password?</a>

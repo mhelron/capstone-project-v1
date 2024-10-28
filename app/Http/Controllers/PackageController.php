@@ -43,15 +43,18 @@ class PackageController extends Controller
             'menus.*.foods.*.category' => 'required|string|max:255',
             'services' => 'required|array',
             'services.*' => 'required|string|max:255',
+            'package_type' => 'required', 'in:Not Wedding,Wedding'
         ], [
             'package_name.required' => 'Package name is required.',
             'persons.required' => 'Number of persons is required.',
             'price.required' => 'Price is required.',
-            'area_name.required' => 'Select an area.',
+            'area_name.required' => 'Please select an area.',
             'menus.*.menu_name.required' => 'Menu name is required.',
             'menus.*.foods.*.food.required' => 'Food name is required.',
-            'menus.*.foods.*.category.required' => 'Select a category.',
+            'menus.*.foods.*.category.required' => 'Please select a category.',
             'services.*.required' => 'Service is required.',
+            'package_type.required' => 'Please select if this package is for a wedding or not.',
+            'package_type.in' => 'Invalid selection. Please choose "Wedding" or "Not Wedding".',
         ]);
 
         // Remove commas from price
@@ -63,6 +66,7 @@ class PackageController extends Controller
             'persons' => $validatedData['persons'],
             'price' => $validatedData['price'],
             'area_name' => $validatedData['area_name'],
+            'package_type' => $validatedData['package_type'],
         ])->getKey();
 
         // Store each menu and its related foods and categories using indices
@@ -124,15 +128,18 @@ class PackageController extends Controller
             'menus.*.foods.*.category' => 'required|string|max:255',
             'services' => 'required|array',
             'services.*' => 'required|string|max:255',
+            'package_type' => 'required', 'in:Not Wedding,Wedding'
         ], [
             'package_name.required' => 'Package name is required.',
             'persons.required' => 'Number of persons is required.',
             'price.required' => 'Price is required.',
-            'area_name.required' => 'Select an area.',
+            'area_name.required' => 'Please select an area.',
             'menus.*.menu_name.required' => 'Menu name is required.',
             'menus.*.foods.*.food.required' => 'Food name is required.',
-            'menus.*.foods.*.category.required' => 'Select a category.',
+            'menus.*.foods.*.category.required' => 'Please select a category.',
             'services.*.required' => 'Service is required.',
+            'package_type.required' => 'Please select if this package is for a wedding or not.',
+            'package_type.in' => 'Invalid selection. Please choose "Wedding" or "Not Wedding".',
         ]);
 
         // Remove commas from the price
@@ -144,6 +151,7 @@ class PackageController extends Controller
             'persons' => $validatedData['persons'],
             'price' => $validatedData['price'],
             'area_name' => $validatedData['area_name'],
+            'package_type' => $validatedData['package_type'],
         ]);
 
         // Get the current menus to update them based on new data
@@ -169,13 +177,12 @@ class PackageController extends Controller
             }
         }
 
-        // Update services
         $servicesRef = $this->database->getReference("packages/{$packageId}/services");
         // Clear existing services before updating
         $servicesRef->remove();
-
-        foreach ($validatedData['services'] as $service) {
-            $servicesRef->push([
+        
+        foreach ($validatedData['services'] as $serviceIndex => $service) {
+            $servicesRef->getChild($serviceIndex)->set([
                 'service' => $service,
             ]);
         }

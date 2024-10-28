@@ -39,7 +39,7 @@
                             <div class="row">
                                 <!-- First Name -->
                                 <div class="form-group col-md-6 mb-3">
-                                    <label>First Name</label>
+                                    <label>First Name</label><span class="text-danger"> *</span>
                                     <input type="text" name="first_name" value="{{ old('first_name') }}" class="form-control">
                                     @if ($errors->has('first_name'))
                                         <small class="text-danger">{{ $errors->first('first_name') }}</small>
@@ -48,7 +48,7 @@
 
                                 <!-- Last Name -->
                                 <div class="form-group col-md-6 mb-3">
-                                    <label>Last Name</label>
+                                    <label>Last Name</label><span class="text-danger"> *</span>
                                     <input type="text" name="last_name" value="{{ old('last_name') }}" class="form-control">
                                     @if ($errors->has('last_name'))
                                         <small class="text-danger">{{ $errors->first('last_name') }}</small>
@@ -59,7 +59,7 @@
                             <div class="row">
                                 <!-- Phone -->
                                 <div class="form-group col-md-6 mb-3">
-                                    <label>Phone</label>
+                                    <label>Phone</label><span class="text-danger"> *</span>
                                     <input type="text" name="phone" value="{{ old('phone') }}" class="form-control">
                                     @if ($errors->has('phone'))
                                         <small class="text-danger">{{ $errors->first('phone') }}</small>
@@ -68,7 +68,7 @@
 
                                 <!-- Email -->
                                 <div class="form-group col-md-6 mb-3">
-                                    <label>Email</label>
+                                    <label>Email</label><span class="text-danger"> *</span>
                                     <input type="email" name="email" value="{{ old('email') }}" class="form-control">
                                     @if ($errors->has('email'))
                                         <small class="text-danger">{{ $errors->first('email') }}</small>
@@ -79,7 +79,7 @@
                             <div class="row">
                                 <!-- Address -->
                                 <div class="form-group col-md-12 mb-3">
-                                    <label>Address</label>
+                                    <label>Address</label><span class="text-danger"> *</span>
                                     <input type="text" name="address" value="{{ old('address') }}" class="form-control">
                                     @if ($errors->has('address'))
                                         <small class="text-danger">{{ $errors->first('address') }}</small>
@@ -90,11 +90,14 @@
                             <div class="row">
                                 <!-- Package -->
                                 <div class="form-group col-md-6 mb-3">
-                                    <label for="package_name">Package</label>
+                                <label for="package_name">Package</label>
                                     <select onchange="packageChange()" name="package_name" id="package_name" class="form-control">
                                         <option value="" disabled selected>Select a Package</option>
-                                        <!-- Add your package options here -->
+                                        @foreach ($packages as $package)
+                                            <option>{{ $package }}</option>
+                                        @endforeach
                                     </select>
+
                                     @if ($errors->has('package_name'))
                                         <small class="text-danger">{{ $errors->first('package_name') }}</small>
                                     @endif
@@ -102,7 +105,7 @@
 
                                 <!-- Date of Event -->
                                 <div class="form-group col-md-6 mb-3">
-                                    <label>Date of Event</label>
+                                    <label>Date of Event</label><span class="text-danger"> *</span>
                                     <input type="date" name="event_date" value="{{ old('event_date') }}" class="form-control">
                                     @if ($errors->has('event_date'))
                                         <small class="text-danger">{{ $errors->first('event_date') }}</small>
@@ -113,7 +116,7 @@
                             <div class="row">
                                 <!-- Number of Guests -->
                                 <div class="form-group col-md-6 mb-3">
-                                    <label>Number of Guests</label>
+                                    <label>Number of Guests</label><span class="text-danger"> *</span>
                                     <input type="number" name="guests_number" value="{{ old('guests_number') }}" class="form-control">
                                     @if ($errors->has('guests_number'))
                                         <small class="text-danger">{{ $errors->first('guests_number') }}</small>
@@ -133,7 +136,7 @@
                             <div class="row">
                                 <!-- Location or Venue -->
                                 <div class="form-group col-md-6 mb-3">
-                                    <label>Location or Venue</label>
+                                    <label>Location or Venue</label><span class="text-danger"> *</span>
                                     <input type="text" name="venue" value="{{ old('venue') }}" class="form-control">
                                     @if ($errors->has('venue'))
                                         <small class="text-danger">{{ $errors->first('venue') }}</small>
@@ -142,7 +145,7 @@
 
                                 <!-- Serving Time / Time of Event -->
                                 <div class="form-group col-md-6 mb-3">
-                                    <label>Serving Time / Time of Event</label>
+                                    <label>Serving Time / Time of Event</label><span class="text-danger"> *</span>
                                     <input type="time" name="event_time" value="{{ old('event_time') }}" class="form-control">
                                     @if ($errors->has('event_time'))
                                         <small class="text-danger">{{ $errors->first('event_time') }}</small>
@@ -153,22 +156,23 @@
                             <div class="row">
                                 <!-- Color Motif or Theme -->
                                 <div class="form-group col-md-6 mb-3">
-                                    <label>Color Motif or Theme</label>
+                                    <label>Color Motif or Theme</label><span class="text-danger"> *</span>
                                     <input type="text" name="theme" value="{{ old('theme') }}" class="form-control">
                                     @if ($errors->has('theme'))
                                         <small class="text-danger">{{ $errors->first('theme') }}</small>
                                     @endif
                                 </div>
+                            </div>
 
-                                <!-- Other Requests -->
-                                <div class="form-group col-md-6 mb-3">
+                            <div class="row">
+                                <div class="form-group col-md-12 mb-3">
                                     <label>Others (Special Request)</label>
                                     <textarea name="other_requests" class="form-control">{{ old('other_requests') }}</textarea>
                                 </div>
                             </div>
 
-                            <div class="form-group mb-3">
-                                <button type="submit" class="btn btn-primary">Add Booking</button>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary float-end">Add Booking</button>
                             </div>
                         </form>
                     </div>

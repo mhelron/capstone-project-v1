@@ -89,7 +89,11 @@
                                                     <td>{{ \Carbon\Carbon::parse($item['event_date'])->format('F j, Y') }}</td>
                                                     <td>{{ $item['package_name'] }}</td>
                                                     <td>{{ $item['guests_number'] }}</td>
-                                                    <td>{{ $item['status'] }}</td>
+                                                    <td>
+                                                        <span class="status-badge {{ strtolower($item['status']) }}">
+                                                            {{ ucfirst($item['status']) }}
+                                                        </span>
+                                                    </td>
                                                     <td>
                                                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#reservationModal{{ $key }}">
                                                             View Details
@@ -109,7 +113,7 @@
                                                                             <li><strong>Venue:</strong> {{ $item['venue'] }}</li>
                                                                             <li><strong>Event Time:</strong> {{ \Carbon\Carbon::parse($item['event_time'])->format('g:i A') }}</li>
                                                                             <li><strong>Theme:</strong> {{ $item['theme'] }}</li>
-                                                                            <li><strong>Other Requests:</strong> {{ $item['other_requests'] }}</li>
+                                                                            <li><strong>Other Requests:</strong> {{ $item['other_requests'] ?? 'No requests' }}</li>
                                                                         </ul>
                                                                     </div>
                                                                 </div>
@@ -118,7 +122,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="d-flex">
-                                                            <form action="{{url('admin/confirm-reservation/'.$key)}}" method="POST">
+                                                            <form action="{{url('admin/reservations/confirm-reservation/'.$key)}}" method="POST">
                                                             @csrf
                                                             @method('PUT')
                                                                 <button type="submit" class="btn btn-sm btn-success me-2">Confirm</button>
@@ -160,7 +164,11 @@
                                                     <td>{{ \Carbon\Carbon::parse($item['event_date'])->format('F j, Y') }}</td>
                                                     <td>{{ $item['package_name'] }}</td>
                                                     <td>{{ $item['guests_number'] }}</td>
-                                                    <td>{{ $item['status'] }}</td>
+                                                    <td>
+                                                        <span class="status-badge {{ strtolower($item['status']) }}">
+                                                            {{ ucfirst($item['status']) }}
+                                                        </span>
+                                                    </td>
                                                     <td>
                                                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#reservationModal{{ $key }}">
                                                             View Details
@@ -190,7 +198,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="d-flex">
-                                                            <form action="{{url('admin/calendar/confirm-reservation/'.$key)}}" method="POST">
+                                                            <form action="{{url('admin/reservations/finish-reservation/'.$key)}}" method="POST">
                                                             @csrf
                                                             @method('PUT')
                                                                 <button type="submit" class="btn btn-sm btn-success me-2">Finish</button>
@@ -230,7 +238,11 @@
                                                     <td>{{ $item['first_name'] }}</td>
                                                     <td>{{ $item['last_name'] }}</td>
                                                     <td>{{ $item['email'] }}</td>
-                                                    <td>{{ $item['status'] }}</td>
+                                                    <td>
+                                                        <span class="status-badge {{ strtolower($item['status']) }}">
+                                                            {{ ucfirst($item['status']) }}
+                                                        </span>
+                                                    </td>
                                                     <td>
                                                         <div class="d-flex">
                                                             <a href="{{ url('admin/services/edit-service/' . $key) }}" class="btn btn-sm btn-success mr-2">Edit</a>
@@ -269,10 +281,14 @@
                                                     <td>{{ $item['first_name'] }}</td>
                                                     <td>{{ $item['last_name'] }}</td>
                                                     <td>{{ $item['email'] }}</td>
-                                                    <td>{{ $item['status'] }}</td>
+                                                    <td>
+                                                        <span class="status-badge {{ strtolower($item['status']) }}">
+                                                            {{ ucfirst($item['status']) }}
+                                                        </span>
+                                                    </td>
                                                     <td>
                                                         <div class="d-flex">
-                                                            <a href="{{ url('admin/services/edit-service/' . $key) }}" class="btn btn-sm btn-success mr-2">Edit</a>
+                                                            <a href="{{ url('admin/services/edit-service/' . $key) }}" class="btn btn-sm btn-success me-2">Edit</a>
                                                             <a href="{{ url('admin/services/delete-service/' . $key) }}" class="btn btn-sm btn-secondary">Archive</a>
                                                         </div>
                                                     </td>
