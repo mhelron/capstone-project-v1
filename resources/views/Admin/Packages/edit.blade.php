@@ -83,10 +83,10 @@
                                                         @if ($loop->index === 0)
                                                             <div class="col-md-5">
                                                                 <select name="menus[{{ $menuIndex }}][foods][{{ $foodIndex }}][category]" class="form-control category-select" onchange="updateCategoryOptions({{ $loop->parent->index }})">
-                                                                    <option value="" disabled selected>Select Category</option>
+                                                                    <option value="" disabled selected>Select a category</option>
+                                                                    <option value="Main Course (Beef)" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Beef)' ? 'selected' : '' }}>Main Course (Beef)</option>
                                                                     <option value="Main Course (Chicken)" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Chicken)' ? 'selected' : '' }}>Main Course (Chicken)</option>
                                                                     <option value="Main Course (Pork)" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Pork)' ? 'selected' : '' }}>Main Course (Pork)</option>
-                                                                    <option value="Main Course (Beef)" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Beef)' ? 'selected' : '' }}>Main Course (Beef)</option>
                                                                     <option value="Main Course (Fish)" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Fish)' ? 'selected' : '' }}>Main Course (Fish)</option>
                                                                     <option value="Side Dish" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Side Dish' ? 'selected' : '' }}>Side Dish</option>
                                                                     <option value="Pasta" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Pasta' ? 'selected' : '' }}>Pasta</option>
@@ -107,10 +107,10 @@
                                                         @else
                                                             <div class="col-md-5">
                                                                 <select name="menus[{{ $menuIndex }}][foods][{{ $foodIndex }}][category]" class="form-control category-select" onchange="updateCategoryOptions({{ $loop->parent->index }})">
-                                                                    <option value="" disabled selected>Select Category</option>
+                                                                    <option value="" disabled selected>Select a category</option>
+                                                                    <option value="Main Course (Beef)" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Beef)' ? 'selected' : '' }}>Main Course (Beef)</option>
                                                                     <option value="Main Course (Chicken)" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Chicken)' ? 'selected' : '' }}>Main Course (Chicken)</option>
                                                                     <option value="Main Course (Pork)" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Pork)' ? 'selected' : '' }}>Main Course (Pork)</option>
-                                                                    <option value="Main Course (Beef)" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Beef)' ? 'selected' : '' }}>Main Course (Beef)</option>
                                                                     <option value="Main Course (Fish)" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Main Course (Fish)' ? 'selected' : '' }}>Main Course (Fish)</option>
                                                                     <option value="Side Dish" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Side Dish' ? 'selected' : '' }}>Side Dish</option>
                                                                     <option value="Pasta" {{ old("menus.$menuIndex.foods.$foodIndex.category", $food['category'] ?? '') == 'Pasta' ? 'selected' : '' }}>Pasta</option>
@@ -253,7 +253,6 @@
             foodRow.innerHTML = `
                 <div class="col-md-5">
                     <select name="menus[${index}][foods][${foodCount}][category]" class="form-control category-select" onchange="updateCategoryOptions(${index})">
-                        <option value="" disabled selected>Select Category</option>
                         ${generateCategoryOptions(index)}
                     </select>
                 </div>
@@ -292,28 +291,27 @@
         const selects = foodList.querySelectorAll('.category-select');
         const selectedValues = Array.from(selects).map(select => select.value).filter(value => value !== '');
 
-        // Ensure all selects are updated with new options
         selects.forEach(select => {
             const currentValue = select.value;
-            select.innerHTML = generateCategoryOptions(menuIndex, selectedValues, currentValue); // Reset options
-            select.value = currentValue; // Restore the current value if applicable
+            select.innerHTML = generateCategoryOptions(menuIndex, selectedValues, currentValue);
+            select.value = currentValue; // Keep the current selection
         });
     }
 
     function generateCategoryOptions(menuIndex, selectedValues = [], currentValue = '') {
         const categories = [
-            "Select Category", "Main Course (Chicken)", "Main Course (Pork)", "Main Course (Beef)", "Main Course (Fish)", 
+            "Select a category", "Main Course (Beef)", "Main Course (Chicken)", "Main Course (Pork)", "Main Course (Fish)", 
             "Side Dish", "Pasta", "Rice", "Dessert", "Drinks"
         ];
         const values = [
-            "", "Main Course (Chicken)", "Main Course (Pork)", "Main Course (Beef)", "Main Course (Fish)", 
+            "", "Main Course (Beef)", "Main Course (Chicken)", "Main Course (Pork)", "Main Course (Fish)", 
             "Side Dish", "Pasta", "Rice", "Dessert", "Drinks"
         ];
 
         return categories.map((category, index) => {
             const value = values[index];
-            if (category === "Select Category") {
-                return `<option value="${value}" disabled>Select Category</option>`;
+            if (category === "Select a category") {
+                return `<option value="${value}" disabled ${currentValue === '' ? 'selected' : ''}>Select a category</option>`;
             }
             if (!selectedValues.includes(value) || value === currentValue) {
                 return `<option value="${value}" ${value === currentValue ? 'selected' : ''}>${category}</option>`;
@@ -321,6 +319,8 @@
             return '';
         }).join('');
     }
+
+
 
     document.getElementById('add-menu').addEventListener('click', function() {
         const menuSection = document.getElementById('menu-section');
@@ -338,7 +338,6 @@
                     <div class="row mb-2">
                         <div class="col-md-5">
                             <select name="menus[${index}][foods][0][category]" class="form-control category-select" onchange="updateCategoryOptions(${index})">
-                                <option value="" disabled selected>Select Category</option>
                                 ${generateCategoryOptions(index)}
                             </select>
                         </div>

@@ -82,10 +82,10 @@
                                                         @if ($foodIndex === 0)
                                                             <div class="col-md-5">
                                                                 <select name="menus[{{ $index }}][foods][{{ $foodIndex }}][category]" class="form-control category-select" onchange="updateCategoryOptions({{ $index }})">
-                                                                    <option value="" disabled selected>Select category</option>
+                                                                    <option value="" disabled selected>Select a category</option>
+                                                                    <option value="Main Course (Beef)" {{ old("menus.$index.foods.$foodIndex.category") == 'Main Course (Beef)' ? 'selected' : '' }}>Main Course (Beef)</option>
                                                                     <option value="Main Course (Chicken)" {{ old("menus.$index.foods.$foodIndex.category") == 'Main Course (Chicken)' ? 'selected' : '' }}>Main Course (Chicken)</option>
                                                                     <option value="Main Course (Pork)" {{ old("menus.$index.foods.$foodIndex.category") == 'Main Course (Pork)' ? 'selected' : '' }}>Main Course (Pork)</option>
-                                                                    <option value="Main Course (Beef)" {{ old("menus.$index.foods.$foodIndex.category") == 'Main Course (Beef)' ? 'selected' : '' }}>Main Course (Beef)</option>
                                                                     <option value="Main Course (Fish)" {{ old("menus.$index.foods.$foodIndex.category") == 'Main Course (Fish)' ? 'selected' : '' }}>Main Course (Fish)</option>
                                                                     <option value="Side Dish" {{ old("menus.$index.foods.$foodIndex.category") == 'Side Dish' ? 'selected' : '' }}>Side Dish</option>
                                                                     <option value="Pasta" {{ old("menus.$index.foods.$foodIndex.category") == 'Pasta' ? 'selected' : '' }}>Pasta</option>
@@ -106,10 +106,10 @@
                                                         @else
                                                             <div class="col-md-5">
                                                                 <select name="menus[{{ $index }}][foods][{{ $foodIndex }}][category]" class="form-control category-select" onchange="updateCategoryOptions({{ $index }})">
-                                                                    <option value="" disabled selected>Select category</option>
+                                                                    <option value="" disabled selected>Select a category</option>
+                                                                    <option value="Main Course (Beef)" {{ old("menus.$index.foods.$foodIndex.category") == 'Main Course (Beef)' ? 'selected' : '' }}>Main Course (Beef)</option>
                                                                     <option value="Main Course (Chicken)" {{ old("menus.$index.foods.$foodIndex.category") == 'Main Course (Chicken)' ? 'selected' : '' }}>Main Course (Chicken)</option>
                                                                     <option value="Main Course (Pork)" {{ old("menus.$index.foods.$foodIndex.category") == 'Main Course (Pork)' ? 'selected' : '' }}>Main Course (Pork)</option>
-                                                                    <option value="Main Course (Beef)" {{ old("menus.$index.foods.$foodIndex.category") == 'Main Course (Beef)' ? 'selected' : '' }}>Main Course (Beef)</option>
                                                                     <option value="Main Course (Fish)" {{ old("menus.$index.foods.$foodIndex.category") == 'Main Course (Fish)' ? 'selected' : '' }}>Main Course (Fish)</option>
                                                                     <option value="Side Dish" {{ old("menus.$index.foods.$foodIndex.category") == 'Side Dish' ? 'selected' : '' }}>Side Dish</option>
                                                                     <option value="Pasta" {{ old("menus.$index.foods.$foodIndex.category") == 'Pasta' ? 'selected' : '' }}>Pasta</option>
@@ -239,7 +239,7 @@
                     <div class="row mb-2">
                         <div class="col-md-5">
                             <select name="menus[${index}][foods][0][category]" class="form-control category-select" onchange="updateCategoryOptions(${index})">
-                                <option value="" disabled selected>Select category</option>
+                                <option value="" disabled selected>Select a category</option>
                                 ${generateCategoryOptions()}
                             </select>
                         </div>
@@ -284,7 +284,7 @@
             <div class="row mb-2">
                 <div class="col-md-5">
                     <select name="menus[${menuIndex}][foods][${foodIndex}][category]" class="form-control category-select" onchange="updateCategoryOptions(${menuIndex})">
-                        <option value="">Select category</option>
+                        <option value="">Select a category</option>
                         ${generateCategoryOptions(getSelectedCategories(menuIndex))}
                     </select>
                 </div>
@@ -350,7 +350,7 @@
 
     function generateCategoryOptions(selectedValues = [], currentValue = "") {
         const categories = [
-            "Main Course (Chicken)", "Main Course (Pork)", "Main Course (Beef)", "Main Course (Fish)", "Side Dish",
+            "Main Course (Beef)", "Main Course (Chicken)", "Main Course (Pork)",  "Main Course (Fish)", "Side Dish",
             "Pasta", "Rice", "Dessert", "Drinks"
         ];
 
