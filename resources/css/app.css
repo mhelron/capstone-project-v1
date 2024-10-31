@@ -254,6 +254,12 @@ select.form-control {
     border-color: #007bff;
 }
 
+.status-badge.pencil {
+    color: #6c757d;
+    background-color: rgba(108, 117, 125, 0.2);
+    border-color: #6c757d;
+}
+
 .table td, .table th{
     vertical-align: middle; /* Vertically center the text in table cells */
 }

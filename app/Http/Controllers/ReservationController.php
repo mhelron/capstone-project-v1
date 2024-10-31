@@ -57,11 +57,12 @@ class ReservationController extends Controller
         return view('admin.reservation.createReservation', compact('packages', 'isExpanded'));
     }
 
-    public function create_pen(){   
+    public function createPencil(){   
         $packages = $this->database->getReference($this->packages)->getValue();
-        $packages = is_array($packages) ? $packages : [];
-    
-        return view('firebase.admin.reservation.create_pen', compact('packages'));
+        $packages = is_array($packages) ? array_map(fn($package) => $package, $packages) : [];
+
+        $isExpanded = session()->get('sidebar_is_expanded', true);    
+        return view('admin.reservation.createPencilReservation', compact('packages', 'isExpanded'));
     }
 
     public function reservation(Request $request){
@@ -137,7 +138,6 @@ class ReservationController extends Controller
             'address' => 'required',
             'phone' => 'required',
             'email' => 'required',
-            'area_name' => 'required',
             'package_name' => 'required',
             'menu_name' => 'required',
             'event_date' => 'required',
@@ -146,10 +146,27 @@ class ReservationController extends Controller
             'venue' => 'required',
             'event_time' => 'required',
             'theme' => 'required',
-            'other_requests' => 'required',
+            'other_requests' => 'nullable',
         ]);
 
-        $penData = [
+        $packages = $this->database->getReference($this->packages)->getValue();
+        $packages = is_array($packages) ? $packages : [];
+
+        $menuContent = [];
+        if (!empty($validatedData['package_name']) && !empty($validatedData['menu_name'])) {
+            foreach ($packages as $package) {
+                if ($package['package_name'] === $validatedData['package_name']) {
+                    foreach ($package['menus'] as $menu) {
+                        if ($menu['menu_name'] === $validatedData['menu_name']) {
+                            $menuContent = $menu['foods']; // Get the foods from the selected menu
+                            break 2; // Exit both loops once found
+                        }
+                    }
+                }
+            }
+        }
+
+        $reserveData = [
             'status' => '',
             'reserve_type' => 'Pencil',
             'first_name' => $validatedData['first_name'],
@@ -157,9 +174,9 @@ class ReservationController extends Controller
             'address' => $validatedData['address'],
             'phone' => $validatedData['phone'],
             'email' => $validatedData['email'],
-            'area_name' => $validatedData['area_name'],
-            'package_name' => $validatedData['package_name'],
-            'menu_name' => $validatedData['menu_name'],
+            'package_name' => $validatedData['package_name'] ?? null,
+            'menu_name' => $validatedData['menu_name'] ?? null,
+            'menu_content' => $menuContent,
             'event_date' => $validatedData['event_date'],
             'guests_number' => $validatedData['guests_number'],
             'sponsors' => $validatedData['sponsors'] ?? null,
@@ -169,12 +186,12 @@ class ReservationController extends Controller
             'other_requests' => $validatedData['other_requests'],
         ];
 
-        $postRef = $this->database->getReference($this->reservations)->push($penData);
+        $postRef = $this->database->getReference($this->reservations)->push($reserveData);
 
         if ($postRef) {
-            return redirect('admin/calendar')->with('status', 'Pencil Reservation Added');
+            return redirect('admin/reservations')->with('status', 'Reservation Added');
         } else {
-            return redirect('admin/calendar')->with('status', 'Pencil Reservation Not Added');
+            return redirect('admin/reservations')->with('status', 'Reservation Not Added');
         }
     }
 

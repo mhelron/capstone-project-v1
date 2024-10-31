@@ -21,7 +21,7 @@
             <div class="col-lg-12">
                 <div class="d-flex justify-content-end mb-2">
                     <a href="{{route('admin.reserve.addRes')}}" class="btn btn-primary me-2">Add Reservation</a>
-                    <a href="#" class="btn btn-secondary">Add Pencil Reservation</a>
+                    <a href="{{route('admin.reserve.addPen')}}" class="btn btn-secondary">Add Pencil Reservation</a>
                 </div>
 
                 <!-- Bootstrap Toast -->
@@ -427,16 +427,68 @@
  
                                             @forelse ($pencilReservations as $key => $item)
                                                 <tr>
-                                                    <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $item['first_name'] }}</td>
                                                     <td>{{ $item['last_name'] }}</td>
-                                                    <td>{{ $item['email'] }}</td>
-                                                    <td>{{ $item['reserve_type'] }}</td>
+                                                    <td>{{ \Carbon\Carbon::parse($item['event_date'])->format('F j, Y') }}</td>
+                                                    <td>{{ $item['package_name'] }}</td>
+                                                    <td>{{ $item['guests_number'] }}</td>
                                                     <td>
-                                                        <div class="d-flex">
-                                                            <a href="{{ url('admin/services/edit-service/' . $key) }}" class="btn btn-sm btn-success mr-2">Edit</a>
-                                                            <a href="{{ url('admin/services/delete-service/' . $key) }}" class="btn btn-sm btn-secondary">Archive</a>
+                                                        <span class="status-badge {{ strtolower($item['status']) }}">
+                                                            {{ ucfirst($item['status']) }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#reservationModal{{ $key }}">
+                                                            View Details
+                                                        </button>
+
+                                                        <div class="modal fade" id="reservationModal{{ $key }}" tabindex="-1" aria-labelledby="reservationModalLabel{{ $key }}" aria-hidden="true">
+                                                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="reservationModalLabel{{ $key }}">Reservation Details for {{ $item['first_name'] }}</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <ul class="list-group">
+                                                                            <li class="list-group-item"><strong>Address:</strong> {{ $item['address'] }}</li>
+                                                                            <li class="list-group-item"><strong>Phone:</strong> {{ $item['phone'] }}</li>
+                                                                            <li class="list-group-item">
+                                                                                <strong>Menu Name:</strong> 
+                                                                                <span 
+                                                                                    data-bs-toggle="tooltip" 
+                                                                                    data-bs-html="true"
+                                                                                    data-bs-placement="right"
+                                                                                    title="{{ isset($item['menu_content']) ? implode('<br>', array_column($item['menu_content'], 'food')) : 'No menu content available' }}"
+                                                                                    style="cursor: pointer;">
+                                                                                    {{ $item['menu_name'] ?? 'No Menu Selected' }}
+                                                                                </span>
+                                                                            </li>
+                                                                            <li class="list-group-item"><strong>Venue:</strong> {{ $item['venue'] }}</li>
+                                                                            @if(isset($item['package_name']) && \Illuminate\Support\Str::contains($item['package_name'], 'Wedding'))
+                                                                                <li class="list-group-item"><strong>Sponsors:</strong> {{ $item['sponsors'] ?? 'No sponsors' }}</li>
+                                                                            @endif
+                                                                            <li class="list-group-item"><strong>Event Time:</strong> {{ \Carbon\Carbon::parse($item['event_time'])->format('g:i A') }}</li>
+                                                                            <li class="list-group-item"><strong>Theme:</strong> {{ $item['theme'] }}</li>
+                                                                            <li class="list-group-item"><strong>Other Requests:</strong> {{ $item['other_requests'] ?? 'No requests' }}</li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
+                                                    </td>
+                                                    <td>
+                                                        <form action="{{url('admin/reservations/confirm-reservation/'.$key)}}" method="POST" class="me-2 d-inline">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <button type="submit" class="btn btn-sm btn-success">Confirm</button>
+                                                        </form>
+                                                        <form action="{{url('admin/reservations/cancel-reservation/'.$key)}}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <button type="submit" class="btn btn-sm btn-secondary">Cancel</button>
+                                                        </form>
                                                     </td>
                                                 </tr>
                                             @empty

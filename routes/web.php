@@ -52,6 +52,9 @@ Route::middleware([AuthMiddleware::class])->group(function () {
         Route::put('/confirm-reservation/{id}', [ReservationController::class, 'confirmReservation'])->name('admin.reserve.confirm');
         Route::put('/finish-reservation/{id}', [ReservationController::class, 'finishReservation'])->name('admin.reserve.finish');
         Route::put('/cancel-reservation/{id}', [ReservationController::class, 'cancelReservation'])->name('admin.reserve.cancel');
+        
+        Route::get('/add-pencil-reservation', [ReservationController::class, 'createPencil'])->name('admin.reserve.addPen');
+        Route::post('/add-pencil-reservation', [ReservationController::class, 'pencilReservation'])->name('admin.reserve.pencil');
     });
 
     // Reports Route
