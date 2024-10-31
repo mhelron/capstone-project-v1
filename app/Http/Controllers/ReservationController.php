@@ -51,7 +51,7 @@ class ReservationController extends Controller
 
     public function createReservation(){
         $packages = $this->database->getReference($this->packages)->getValue();
-        $packages = is_array($packages) ? array_map(fn($package) => $package['package_name'], $packages) : [];
+        $packages = is_array($packages) ? array_map(fn($package) => $package, $packages) : [];
 
         $isExpanded = session()->get('sidebar_is_expanded', true);    
         return view('admin.reservation.createReservation', compact('packages', 'isExpanded'));
@@ -72,7 +72,8 @@ class ReservationController extends Controller
             'address' => 'required',
             'phone' => 'required',
             'email' => 'required',
-            'package_name' => 'nullable',
+            'package_name' => 'required',
+            'menu_name' => 'required',
             'event_date' => 'required',
             'guests_number' => 'required',
             'sponsors' => 'nullable|integer',
@@ -81,6 +82,23 @@ class ReservationController extends Controller
             'theme' => 'required',
             'other_requests' => 'nullable',
         ]);
+
+        $packages = $this->database->getReference($this->packages)->getValue();
+        $packages = is_array($packages) ? $packages : [];
+
+        $menuContent = [];
+        if (!empty($validatedData['package_name']) && !empty($validatedData['menu_name'])) {
+            foreach ($packages as $package) {
+                if ($package['package_name'] === $validatedData['package_name']) {
+                    foreach ($package['menus'] as $menu) {
+                        if ($menu['menu_name'] === $validatedData['menu_name']) {
+                            $menuContent = $menu['foods']; // Get the foods from the selected menu
+                            break 2; // Exit both loops once found
+                        }
+                    }
+                }
+            }
+        }
 
         $reserveData = [
             'status' => 'Pending',
@@ -91,6 +109,8 @@ class ReservationController extends Controller
             'phone' => $validatedData['phone'],
             'email' => $validatedData['email'],
             'package_name' => $validatedData['package_name'] ?? null,
+            'menu_name' => $validatedData['menu_name'] ?? null,
+            'menu_content' => $menuContent,
             'event_date' => $validatedData['event_date'],
             'guests_number' => $validatedData['guests_number'],
             'sponsors' => $validatedData['sponsors'] ?? null,
@@ -103,7 +123,7 @@ class ReservationController extends Controller
         $postRef = $this->database->getReference($this->reservations)->push($reserveData);
 
         if ($postRef) {
-            return redirect('admin/reservations')->with('status', 'Reservation Added Successfully');
+            return redirect('admin/reservations')->with('status', 'Reservation Added');
         } else {
             return redirect('admin/reservations')->with('status', 'Reservation Not Added');
         }
@@ -152,9 +172,9 @@ class ReservationController extends Controller
         $postRef = $this->database->getReference($this->reservations)->push($penData);
 
         if ($postRef) {
-            return redirect('admin/calendar')->with('status', 'Reservation Added Successfully');
+            return redirect('admin/calendar')->with('status', 'Pencil Reservation Added');
         } else {
-            return redirect('admin/calendar')->with('status', 'Reservation Not Added');
+            return redirect('admin/calendar')->with('status', 'Pencil Reservation Not Added');
         }
     }
 
@@ -168,7 +188,7 @@ class ReservationController extends Controller
         $res_updated = $this->database->getReference($this->reservations. '/'.$key)->update($reserveData);
 
         if ($res_updated) {
-            return redirect('admin/reservations')->with('status', 'Reservation Confirmed Successfully');
+            return redirect('admin/reservations')->with('status', 'Reservation Confirmed');
         } else {
             return redirect('admin/reservations')->with('status', 'Reservation Not Confirmed');
         }
@@ -187,6 +207,22 @@ class ReservationController extends Controller
             return redirect('admin/reservations')->with('status', 'Reservation Finished');
         } else {
             return redirect('admin/reservations')->with('status', 'Reservation Not Finished');
+        }
+    }
+
+    public function cancelReservation($id){
+        $key = $id;
+
+        $reserveData = [
+            'status' => 'Cancelled'
+        ];
+
+        $res_updated = $this->database->getReference($this->reservations. '/'.$key)->update($reserveData);
+
+        if ($res_updated) {
+            return redirect('admin/reservations')->with('status', 'Reservation Cancelled');
+        } else {
+            return redirect('admin/reservations')->with('status', 'Reservation Not Cancelled');
         }
     }
 }
