@@ -1,0 +1,93 @@
+.custom-navbar .navbar-brand {
+    font-weight: bold;color: black;
+
+    font-size: 1.5rem; /* Make brand text slightly larger */
+}
+
+.custom-navbar .nav-link {
+    font-weight: bold;
+    font-size: 1.1rem; /* Make nav links slightly larger */
+    padding: 0.75rem 1rem; /* Adjust padding for a taller look */
+}
+
+/* Responsive Adjustment */
+@media (max-width: 992px) {
+    .custom-navbar .nav-link {
+        padding: 0.5rem 1rem; /* Adjust padding for smaller sc  reens */
+    }
+}
+
+.custom-navbar .navbar-nav .nav-link {
+    color: black !important;
+    position: relative;
+    padding-bottom: 5px;
+    transition: all 0.3s ease;
+}
+
+.custom-navbar .navbar-nav .nav-link:hover,
+.custom-navbar .navbar-nav .nav-link.active {
+    color: darkorange !important;
+}
+
+.custom-navbar .navbar-nav .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 50%; /* Start from the middle */
+    bottom: 0;
+    width: 0; /* Start with no width */
+    height: 3px; /* Thickness of the underline */
+    background-color: darkorange; /* Color of the underline */
+    transition: width 0.3s ease;
+    transform: translateX(-50%); /* Center the underline */
+}
+
+.custom-navbar .navbar-nav .nav-link:hover::after,
+.custom-navbar .navbar-nav .nav-link.active::after {
+    width: 100%; /* Full-width underline on hover and active link */
+}
+
+
+.custom-navbar {
+    background-color: #fff1e6 !important; /* Set your desired background color */
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+.custom-footer {
+    background-color: #fff1e6!important; /* Set your desired background color */
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.1); /* Shadow at the top of the footer */
+}
+
+.btn-reserve {
+    background-color: darkorange; /* Button background color */
+    color: #fff1e6 !important; /* Button text color */
+    font-size: 1.1rem; /* Match the font size with nav links */
+    font-weight: bold; /* Match font weight with nav links */
+    padding: 0.5rem 1rem; /* Padding for a smaller button size */
+    height: auto; /* Allow button to auto-adjust height */
+    display: inline-flex;
+    align-items: center; /* Vertically center text within the button */
+    justify-content: center; /* Center the text horizontally */
+    margin: 0.1rem 0 0.1rem 0.5rem; /* Adjust vertical and left spacing */
+}
+
+.btn-reserve:hover {
+    background-color: #cc8400; /* Darker shade on hover */
+    color: #fff1e6 !important;
+}
+
+.custom-navbar .navbar-nav .nav-item {
+    margin-right: 1rem; /* Add spacing between nav links */
+}
+
+/* Optional: Remove margin from the last nav item to avoid extra space after "About" */
+.custom-navbar .navbar-nav .nav-item:last-child {
+    margin-right: 0;
+}
+
+
+
+

@@ -116,7 +116,8 @@
                                                                                     data-bs-toggle="tooltip" 
                                                                                     data-bs-html="true"
                                                                                     data-bs-placement="right"
-                                                                                    title="{{ isset($item['menu_content']) ? implode('<br>', array_column($item['menu_content'], 'food')) : 'No menu content available' }}"
+                                                                                    title="{{ isset($item['menu_content']) ? implode(',<br>', array_column($item['menu_content'], 'food')) : 'No menu content available' }}"
+                                                                                    class="tooltip-text"
                                                                                     style="cursor: pointer;">
                                                                                     {{ $item['menu_name'] ?? 'No Menu Selected' }}
                                                                                 </span>
@@ -207,7 +208,7 @@
                                                                                     data-bs-toggle="tooltip" 
                                                                                     data-bs-html="true"
                                                                                     data-bs-placement="right"
-                                                                                    title="{{ isset($item['menu_content']) ? implode('<br>', array_column($item['menu_content'], 'food')) : 'No menu content available' }}"
+                                                                                    title="{{ isset($item['menu_content']) ? implode(',<br>', array_column($item['menu_content'], 'food')) : 'No menu content available' }}"
                                                                                     style="cursor: pointer;">
                                                                                     {{ $item['menu_name'] ?? 'No Menu Selected' }}
                                                                                 </span>
@@ -298,7 +299,7 @@
                                                                                     data-bs-toggle="tooltip" 
                                                                                     data-bs-html="true"
                                                                                     data-bs-placement="right"
-                                                                                    title="{{ isset($item['menu_content']) ? implode('<br>', array_column($item['menu_content'], 'food')) : 'No menu content available' }}"
+                                                                                    title="{{ isset($item['menu_content']) ? implode(',<br>', array_column($item['menu_content'], 'food')) : 'No menu content available' }}"
                                                                                     style="cursor: pointer;">
                                                                                     {{ $item['menu_name'] ?? 'No Menu Selected' }}
                                                                                 </span>
@@ -317,15 +318,10 @@
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <form action="{{url('admin/reservations/finish-reservation/'.$key)}}" method="POST" class="me-2 d-inline">
-                                                            @csrf
-                                                            @method('PUT')
-                                                            <button type="submit" class="btn btn-sm btn-success">Confirm</button>
-                                                        </form>
                                                         <form action="{{url('admin/reservations/cancel-reservation/'.$key)}}" method="POST" class="d-inline">
                                                             @csrf
                                                             @method('PUT')
-                                                            <button type="submit" class="btn btn-sm btn-secondary">Cancel</button>
+                                                            <button type="submit" class="btn btn-sm btn-secondary">Archive</button>
                                                         </form>
                                                     </td>
                                                 </tr>
@@ -371,7 +367,7 @@
                                                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#reservationModal{{ $key }}">
                                                             View Details
                                                         </button>
-                                                        
+
                                                         <div class="modal fade" id="reservationModal{{ $key }}" tabindex="-1" aria-labelledby="reservationModalLabel{{ $key }}" aria-hidden="true">
                                                             <div class="modal-dialog modal-dialog-centered modal-lg">
                                                                 <div class="modal-content">
@@ -380,13 +376,27 @@
                                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                     </div>
                                                                     <div class="modal-body">
-                                                                        <ul>
-                                                                            <li><strong>Address:</strong> {{ $item['address'] }}</li>
-                                                                            <li><strong>Phone:</strong> {{ $item['phone'] }}</li>
-                                                                            <li><strong>Venue:</strong> {{ $item['venue'] }}</li>
-                                                                            <li><strong>Event Time:</strong> {{ \Carbon\Carbon::parse($item['event_time'])->format('g:i A') }}</li>
-                                                                            <li><strong>Theme:</strong> {{ $item['theme'] }}</li>
-                                                                            <li><strong>Other Requests:</strong> {{ $item['other_requests'] ?? 'No requests' }}</li>
+                                                                        <ul class="list-group">
+                                                                            <li class="list-group-item"><strong>Address:</strong> {{ $item['address'] }}</li>
+                                                                            <li class="list-group-item"><strong>Phone:</strong> {{ $item['phone'] }}</li>
+                                                                            <li class="list-group-item">
+                                                                                <strong>Menu Name:</strong> 
+                                                                                <span 
+                                                                                    data-bs-toggle="tooltip" 
+                                                                                    data-bs-html="true"
+                                                                                    data-bs-placement="right"
+                                                                                    title="{{ isset($item['menu_content']) ? implode(',<br>', array_column($item['menu_content'], 'food')) : 'No menu content available' }}"
+                                                                                    style="cursor: pointer;">
+                                                                                    {{ $item['menu_name'] ?? 'No Menu Selected' }}
+                                                                                </span>
+                                                                            </li>
+                                                                            <li class="list-group-item"><strong>Venue:</strong> {{ $item['venue'] }}</li>
+                                                                            @if(isset($item['package_name']) && \Illuminate\Support\Str::contains($item['package_name'], 'Wedding'))
+                                                                                <li class="list-group-item"><strong>Sponsors:</strong> {{ $item['sponsors'] ?? 'No sponsors' }}</li>
+                                                                            @endif
+                                                                            <li class="list-group-item"><strong>Event Time:</strong> {{ \Carbon\Carbon::parse($item['event_time'])->format('g:i A') }}</li>
+                                                                            <li class="list-group-item"><strong>Theme:</strong> {{ $item['theme'] }}</li>
+                                                                            <li class="list-group-item"><strong>Other Requests:</strong> {{ $item['other_requests'] ?? 'No requests' }}</li>
                                                                         </ul>
                                                                     </div>
                                                                 </div>
@@ -395,7 +405,6 @@
                                                     </td>
                                                     <td>
                                                         <div class="d-flex">
-                                                            <a href="{{ url('admin/services/edit-service/' . $key) }}" class="btn btn-sm btn-success me-2">Edit</a>
                                                             <a href="{{ url('admin/services/delete-service/' . $key) }}" class="btn btn-sm btn-secondary">Archive</a>
                                                         </div>
                                                     </td>
@@ -508,6 +517,15 @@
 </div>
 
 @endsection
+
+<style>
+    .tooltip-text[data-bs-toggle="tooltip"] {
+        white-space: nowrap; /* Prevents text from wrapping */
+        overflow: hidden;    /* Ensures content overflows are hidden */
+        text-overflow: ellipsis; /* Adds ellipsis if text is too long */
+        max-width: 200px; /* Set max width for tooltip content */
+    }
+</style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

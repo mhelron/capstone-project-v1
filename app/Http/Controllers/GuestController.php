@@ -10,8 +10,8 @@ class GuestController extends Controller
         return view('guest.home.index');
     }
 
-    public function indexReservation(){
-        return view('guest.reservation.index');
+    public function indexPackages(){
+        return view('guest.packages.index');
     }
 
     public function indexCalendar(){

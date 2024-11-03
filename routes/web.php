@@ -15,7 +15,7 @@ use App\Http\Middleware\AuthMiddleware;
 
 // Guest Route
 Route::get('/', [GuestController::class, 'indexHome'])->name('guest.home');
-Route::get('/reservation', [GuestController::class, 'indexReservation'])->name('guest.reservation');
+Route::get('/packages', [GuestController::class, 'indexPackages'])->name('guest.packages');
 Route::get('/calendar', [GuestController::class, 'indexCalendar'])->name('guest.calendar');
 Route::get('/contact', [GuestController::class, 'indexContact'])->name('guest.contact');
 Route::get('/about', [GuestController::class, 'indexAbout'])->name('guest.about');

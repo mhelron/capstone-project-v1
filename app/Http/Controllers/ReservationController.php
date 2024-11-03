@@ -167,7 +167,7 @@ class ReservationController extends Controller
         }
 
         $reserveData = [
-            'status' => '',
+            'status' => 'Pencil',
             'reserve_type' => 'Pencil',
             'first_name' => $validatedData['first_name'],
             'last_name' => $validatedData['last_name'],
