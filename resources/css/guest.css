@@ -55,7 +55,7 @@
 }
 
 .custom-footer {
-    background-color: #fff!important; /* Set your desired background color */
+    background-color: #000 !important; /* Set your desired background color */
     padding-top: 1rem;
     padding-bottom: 1rem;
     box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.1); /* Shadow at the top of the footer */
