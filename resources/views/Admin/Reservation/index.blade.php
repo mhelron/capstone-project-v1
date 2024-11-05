@@ -43,7 +43,11 @@
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
 
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="pending-reservation" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab" aria-controls="pending" aria-selected="true">Pending Reservations</button>
+                                <button class="nav-link active" id="pen-book" data-bs-toggle="tab" data-bs-target="#penbook" type="button" role="tab" aria-controls="penbook" aria-selected="true">Pencil Reservations</button>
+                            </li>
+
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="pending-reservation" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab" aria-controls="pending" aria-selected="false">Pending Reservations</button>
                             </li>
 
                             <li class="nav-item" role="presentation">
@@ -58,13 +62,9 @@
                                 <button class="nav-link" id="finished-reservation" data-bs-toggle="tab" data-bs-target="#finished" type="button" role="tab" aria-controls="finished" aria-selected="false">Finished Reservations</button>
                             </li>
 
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="pen-book" data-bs-toggle="tab" data-bs-target="#penbook" type="button" role="tab" aria-controls="penbook" aria-selected="true">Pencil Reservations</button>
-                            </li>
-
                         </ul>
                         <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="pending" role="tabpanel" aria-labelledby="pending-tab">
+                            <div class="tab-pane fade" id="pending" role="tabpanel" aria-labelledby="pending-tab">
                                     <table class="table table-hover">
                                         <thead>
                                             <tr>
@@ -417,7 +417,7 @@
                                             </tbody>
                                         </table>
                             </div>
-                            <div class="tab-pane fade" id="penbook" role="tabpanel" aria-labelledby="penbook-tab">
+                            <div class="tab-pane fade show active" id="penbook" role="tabpanel" aria-labelledby="penbook-tab">
                             <table class="table table-hover">
                                         <thead>
                                             <tr>
