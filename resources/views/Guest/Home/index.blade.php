@@ -6,11 +6,11 @@
     <div class="row align-items-center min-vh-100">
         <div class="col-md-6">
        
-        <h2 style="color: solid black; font-family: 'Monaco'; border-bottom: 4px solid darkorange; padding-bottom: 3px;">Kyla and Kyle Catering Services</>
+        <h3 style="color: solid black; font-family: 'Monaco'; border-bottom: 4px solid darkorange; padding-bottom:
+        3px;">Kyla and Kyle Catering Services</>
 
-            <h1 style="font-weight: 900; font-family: 'Georgia', sans-serif; font-size: 48px; padding-top: 1px;">One of the most known Catering Services in Montalban</h1>
-
-            <style= "border-top: 3px solid darkorange;"
+            <h1 style="font-weight: 900; font-family: 'Georgia', sans-serif; font-size: 48px; padding-top: px;">One of 
+            the most known Catering Services in Montalban</h1>
             <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatem qui accusantium explicabo saepe, dignissimos incidunt ullam harum debitis assumenda eveniet sit doloremque nam quidem ex excepturi hic magnam iste quis .</p>
 
             <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatem qui accusantium explicabo saepe, dignissimos incidunt ullam harum debitis assumenda eveniet sit doloremque nam quidem ex excepturi hic magnam iste quis .</p>
@@ -35,7 +35,7 @@
                         <img src="{{ asset('images/image3.png') }}" class="d-block w-100 carousel-image" alt="Baptismal Image">
                     </div>
                     <div class="carousel-item">
-                        <img src="{{ asset('images/image4.png') }}" class="d-block w-100 carousel-image" alt="Corporate Event Image">
+                        <img src="{{ asset('images/image4.png') }}" class="d-block w-100 carousel-image" `alt="Corporate Event Image">
                     </div>
                     <div class="carousel-item">
                         <img src="{{ asset('images/image5.png') }}" class="d-block w-100 carousel-image" alt="Birthday Image">
@@ -90,12 +90,13 @@
     object-fit: cover; /* Ensures the image covers the area without stretching */
     border-top-left-radius: 0; /* No rounding on the top-left corner */
     border-bottom-right-radius: 0; /* No rounding on the bottom-right corner */
-    border: 3px solid orange; /* Thin black border around the image */
+    border: 3px solid darorange; /* Thin black border around the image */
 }
 
 /* Apply the orange shadow to the outer shadow of the carousel container */
 #imageCarousel {
-    box-shadow: 0px 0px 20px 10px rgba(255, 127, 0, 0.7); /* Orange shadow outside the container */
+    box-shadow: 0px 0px 20px 10px rgba(255, 87, 34, 0.7); /* Darker orange shadow */
+
 }
 
 /* Custom Circle Indicators */
