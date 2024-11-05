@@ -48,14 +48,14 @@
 
 
 .custom-navbar {
-    background-color: #fff1e6 !important; /* Set your desired background color */
+    background-color: #fff !important; /* Set your desired background color */
     padding-top: 1rem;
     padding-bottom: 1rem;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
 }
 
 .custom-footer {
-    background-color: #fff1e6!important; /* Set your desired background color */
+    background-color: #fff!important; /* Set your desired background color */
     padding-top: 1rem;
     padding-bottom: 1rem;
     box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.1); /* Shadow at the top of the footer */
@@ -63,7 +63,7 @@
 
 .btn-reserve {
     background-color: darkorange; /* Button background color */
-    color: #fff1e6 !important; /* Button text color */
+    color: #fff !important; /* Button text color */
     font-size: 1.1rem; /* Match the font size with nav links */
     font-weight: bold; /* Match font weight with nav links */
     padding: 0.5rem 1rem; /* Padding for a smaller button size */
@@ -75,17 +75,33 @@
 }
 
 .btn-reserve:hover {
-    background-color: #cc8400; /* Darker shade on hover */
-    color: #fff1e6 !important;
+    background-color: #e67e00;
+    color: #fff !important;
 }
 
 .custom-navbar .navbar-nav .nav-item {
     margin-right: 1rem; /* Add spacing between nav links */
 }
 
-/* Optional: Remove margin from the last nav item to avoid extra space after "About" */
 .custom-navbar .navbar-nav .nav-item:last-child {
     margin-right: 0;
+}
+
+.btn-darkorange {
+    background-color: darkorange;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-darkorange:hover {
+    background-color: #e67e00;
+    color: white;
 }
 
 
