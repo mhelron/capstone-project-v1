@@ -3,7 +3,7 @@
         <div class="row align-items-center">
             <!-- Logo Section -->
             <div class="col-md-4 text-center text-md-start" style="display: flex; align-items: center;">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo" style="width: 100px; height: auto; margin-right: 10px;">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" style="width: 75px; height: auto; margin-right: 10px;">
                 <h5 style="margin: 0; font-weight: bold; color: white; ">Kyla and Kyle</h5> <!-- Title beside the logo -->
             </div>
 

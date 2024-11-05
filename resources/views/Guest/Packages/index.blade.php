@@ -5,14 +5,17 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h1>Packages</h1>
+        <h3 style="text-align: center; font-weight: bolder; font-family: ''; padding-top: 10px; border-bottom: 4px solid darkorange;">LOCATIONS WE SERVE</h3>
+
+
         </div>
     </div>
 
     <div class="row mt-4">
         <!-- Marikina Card -->
+    
         <div class="col-md-4">
-            <div class="card">
+            <div class="card" style="box-shadow: 0px 0px 20px 5px rgba(255, 127, 0, 0.7); border: 1px solid rgba(255, 127, 0, 0.7);">
                 <img src="https://via.placeholder.com/300x200.png?text=Marikina+Package" class="card-img-top" alt="Marikina Package Image">
                 <div class="card-body text-center">
                     <h5 class="card-title">Marikina</h5>
@@ -25,7 +28,7 @@
 
         <!-- San Mateo Card -->
         <div class="col-md-4">
-            <div class="card">
+            <div class="card" style="box-shadow: 0px 0px 20px 5px rgba(255, 127, 0, 0.7); border: 1px solid rgba(255, 127, 0, 0.7);">
                 <img src="https://via.placeholder.com/300x200.png?text=San+Mateo+Package" class="card-img-top" alt="San Mateo Package Image">
                 <div class="card-body text-center">
                     <h5 class="card-title">San Mateo</h5>
@@ -38,7 +41,7 @@
 
         <!-- Montalban Card -->
         <div class="col-md-4">
-            <div class="card">
+            <div class="card" style="box-shadow: 0px 0px 20px 5px rgba(255, 127, 0, 0.7); border: 1px solid rgba(255, 127, 0, 0.7);">
                 <img src="https://via.placeholder.com/300x200.png?text=Montalban+Package" class="card-img-top" alt="Montalban Package Image">
                 <div class="card-body text-center">
                     <h5 class="card-title">Montalban</h5>
@@ -50,5 +53,11 @@
         </div>
     </div>
 </div>
+
+<style>
+    .card-spacing {
+        margin-left: 20px; /* Adjust the margin value as needed */
+    }
+</style>
 
 @endsection

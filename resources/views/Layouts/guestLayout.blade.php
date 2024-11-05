@@ -27,7 +27,7 @@
 
         <!-- Main content -->
         <div class="main p-3 flex-grow-1" style="background-color: #f4f6f9;">
-            @yield('content')
+            @yield(section: 'content')
         </div>
 
         <div class="custom-footer">
