@@ -24,6 +24,7 @@
     .card-link {
         text-decoration: none; /* Removes underline */
         color: inherit; /* Inherit the text color from the card */
+
     }
 
     .card-link:hover {

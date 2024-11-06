@@ -32,7 +32,7 @@
             </form>
         </div>
         
-        <div class="col-md-6">
+        <div class="col-md-6" style="padding-top: 5px;">
             <h2>Find Us Here</h2>
             <div class="map-container">
                 <iframe 
@@ -55,24 +55,59 @@
         </div>
     </div>
 
-                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; "padding-top: 5px;">
                     <h2>Contact Us</h2>
                         <p>Have questions or need a quote? We’re here to assist you! Reach out to us, and our team will guide you through everything, from menu selection to event planning.<br> You can contact us through the following methods:</p>
 
-                        <div style="display: flex; justify-content: center; gap: 50px;">
-                            <div style="flex: 1; text-align: left;">
-                                <ul style="list-style-type: none; padding: 0; line-height: 1.8;">
+                        <div class="container">
+                        <div class="container">
+                        <div class="row text-center">
+                            <!-- First Pair (Phone and Email) -->
+                            <div class="col-12 col-md-6 text-start">
+                                <ul class="list-unstyled">
                                     <li><strong>Phone:</strong> Call us to start our conversation.</li>
                                     <li><strong>Email:</strong> For inquiries, kindly direct to our Email Account.</li>
                                 </ul>
                             </div>
-                            <div style="flex: 1; text-align: left;">
-                                <ul style="list-style-type: none; padding: 0; line-height: 1.8;">
-                                    <li style="white-space: nowrap;"><strong>Form:</strong> Fill out the form above, and we’ll get back to you ASAP.</li>
+
+                            <!-- Second Pair (Form and Visit Us) -->
+                            <div class="col-12 col-md-6 text-start">
+                                <ul class="list-unstyled">
+                                    <li><strong>Form:</strong> Fill out the form above, and we’ll get back to you ASAP.</li>
                                     <li><strong>Visit Us:</strong> Stop by our location.</li>
                                 </ul>
                             </div>
                         </div>
+                    </div>
+
+
+
+                        <style>
+                            /* Responsive styling for mobile */
+                            @media (max-width: 768px) {
+                                div[style*="display: flex; justify-content: center; gap: 50px;"] {
+                                    flex-direction: column;
+                                    align-items: center;
+                                    gap: 0; /* Removes the gap between items */
+                                }
+
+                                /* Adjust gap and alignment for mobile view */
+                                div[style*="display: flex; justify-content: center; gap: 50px;"] > div {
+                                    text-align: center;
+                                    min-width: 100%;
+                                    margin-bottom: 0; /* Removes bottom margin to avoid extra space */
+                                }
+                            }
+
+                            /* Ensure consistent font style for all items */
+                            ul li {
+                                font-family: inherit; /* Use the same inherited font for consistency */
+                                font-size: inherit;   /* Inherit font size to keep it consistent */
+                                font-weight: normal;  /* Remove any bold styling unless specified in <strong> */
+                            }
+                        </style>
+
+
 
 
                         <p>We look forward to hearing from you and making your next event unforgettable!</p>

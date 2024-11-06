@@ -9,7 +9,7 @@
         <h3 style="color: solid black; font-family: 'Monaco'; border-bottom: 4px solid darkorange; padding-bottom:
         3px;">Kyla and Kyle Catering Services</>
 
-            <h1 style="font-weight: 900; font-family: 'Georgia', sans-serif; font-size: 48px; padding-top: px;">One of 
+            <h1 style="font-weight: 900; font-family: 'Georgia', sans-serif; font-size: 48px; padding-top: 5px;">One of 
             the most known Catering Services in Montalban</h1>
             <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatem qui accusantium explicabo saepe, dignissimos incidunt ullam harum debitis assumenda eveniet sit doloremque nam quidem ex excepturi hic magnam iste quis .</p>
 
@@ -91,7 +91,7 @@
     object-fit: cover; /* Ensures the image covers the area without stretching */
     border-top-left-radius: 0; /* No rounding on the top-left corner */
     border-bottom-right-radius: 0; /* No rounding on the bottom-right corner */
-    border: 3px solid darorange; /* Thin black border around the image */
+    border: 3px solid darkorange; /* Thin black border around the image */
 }
 
 /* Apply the orange shadow to the outer shadow of the carousel container */
