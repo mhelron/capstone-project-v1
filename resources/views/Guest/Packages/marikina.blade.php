@@ -5,26 +5,28 @@
         <h2 class="text-center">Packages in Marikina</h2>
         <div class="row">
             @foreach($packages as $id => $package)
-                <div class="col-md-4 mb-4">
-                    <!-- Make the entire card clickable by wrapping it in a <a> tag -->
-                    <a href="{{ route('package.show', ['id' => $id]) }}" class="card-link">
-                        <div class="card text-center h-100">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ $package['package_name'] }}</h5>
+                @if(isset($package['is_displayed']) && $package['is_displayed'] === true)
+                    <div class="col-md-4 mb-4">
+                        <!-- Make the entire card clickable by wrapping it in a <a> tag -->
+                        <a href="{{ route('package.show', ['id' => $id]) }}" class="card-link">
+                            <div class="card text-center h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ $package['package_name'] }}</h5>
+                                </div>
                             </div>
-                        </div>
-                    </a>
-                </div>
+                        </a>
+                    </div>
+                @endif
             @endforeach
         </div>
     </div>
 @endsection
 
+
 <style>
     .card-link {
         text-decoration: none; /* Removes underline */
         color: inherit; /* Inherit the text color from the card */
-
     }
 
     .card-link:hover {

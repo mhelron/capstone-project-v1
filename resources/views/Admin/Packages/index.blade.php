@@ -144,7 +144,18 @@
                                         <td>
                                             <div class="d-flex">
                                                 <a href="{{ url('admin/packages/edit-package/' . $key) }}" class="btn btn-sm btn-success me-2">Edit</a>
-                                                <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#archiveModal" data-id="{{ $key }}" data-name="{{ $item['package_name'] }}">Archive</button>
+                                                <button type="button" class="btn btn-sm btn-danger me-2" data-bs-toggle="modal" data-bs-target="#archiveModal" data-id="{{ $key }}" data-name="{{ $item['package_name'] }}">Archive</button>
+                                                @if (isset($item['is_displayed']) && $item['is_displayed'])
+                                                    <form action="{{ route('admin.packages.toggleDisplay', ['packageId' => $key]) }}" method="POST">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-secondary btn-sm">Hide</button>
+                                                    </form>
+                                                @else
+                                                    <form action="{{ route('admin.packages.toggleDisplay', ['packageId' => $key]) }}" method="POST">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-primary btn-sm">Show</button>
+                                                    </form>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>

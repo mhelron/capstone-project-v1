@@ -67,6 +67,7 @@ class PackageController extends Controller
             'price' => $validatedData['price'],
             'area_name' => $validatedData['area_name'],
             'package_type' => $validatedData['package_type'],
+            'is_displayed' => true,
         ])->getKey();
 
         // Store each menu and its related foods and categories using indices
@@ -206,4 +207,20 @@ class PackageController extends Controller
             return redirect('admin/packages')->with('status', 'Package Not Archived');
         }
     }
+
+    public function toggleDisplay($packageId)
+{
+    $packageRef = $this->database->getReference("packages/{$packageId}");
+    $package = $packageRef->getValue();
+
+    if ($package) {
+        $currentStatus = $package['is_displayed'] ?? false;
+        // Toggle the display status
+        $packageRef->update(['is_displayed' => !$currentStatus]);
+
+        return redirect()->back()->with('status', 'Package display status updated successfully!');
+    } else {
+        return redirect()->back()->with('status', 'Package not found.');
+    }
+}
 }

@@ -47,6 +47,7 @@ Route::middleware([AuthMiddleware::class])->group(function () {
         Route::get('/edit-package/{id}', [PackageController::class, 'edit'])->name('admin.packages.edit');
         Route::put('/update-package/{id}', [PackageController::class, 'update'])->name('admin.packages.update');
         Route::get('/archive-package/{id}', [PackageController::class, 'destroy'])->name('admin.packages.delete');
+        Route::post('admin/packages/toggle-display/{packageId}', [PackageController::class, 'toggleDisplay'])->name('admin.packages.toggleDisplay');
     });
 
     // Reservation Route 
