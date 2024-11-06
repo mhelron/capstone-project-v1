@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="container">
-    <div class="row align-items-center min-vh-100">
+    <div class="row align-items-center pt-5">
         <div class="col-md-6">
        
         <h3 style="color: solid black; font-family: 'Monaco'; border-bottom: 4px solid darkorange; padding-bottom:

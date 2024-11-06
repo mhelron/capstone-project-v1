@@ -1,6 +1,6 @@
 .custom-navbar .navbar-brand {
-    font-weight: bold;color: black;
-
+    font-weight: bold;
+    color: black;
     font-size: 1.5rem; /* Make brand text slightly larger */
 }
 
@@ -13,7 +13,7 @@
 /* Responsive Adjustment */
 @media (max-width: 992px) {
     .custom-navbar .nav-link {
-        padding: 0.5rem 1rem; /* Adjust padding for smaller sc  reens */
+        padding: 0.5rem 1rem; /* Adjust padding for smaller screens */
     }
 }
 
@@ -29,23 +29,10 @@
     color: darkorange !important;
 }
 
-.custom-navbar .navbar-nav .nav-link::after {
-    content: "";
-    position: absolute;
-    left: 50%; /* Start from the middle */
-    bottom: 0;
-    width: 0; /* Start with no width */
-    height: 3px; /* Thickness of the underline */
-    background-color: darkorange; /* Color of the underline */
-    transition: width 0.3s ease;
-    transform: translateX(-50%); /* Center the underline */
-}
-
 .custom-navbar .navbar-nav .nav-link:hover::after,
 .custom-navbar .navbar-nav .nav-link.active::after {
     width: 100%; /* Full-width underline on hover and active link */
 }
-
 
 .custom-navbar {
     background-color: #fff !important; /* Set your desired background color */
@@ -104,6 +91,69 @@
     color: white;
 }
 
+/* Ensure the dropdown behaves like a regular nav link */
+.nav-item.dropdown {
+    position: relative; /* Necessary for positioning the dropdown correctly */
+    margin-left: auto;
+    margin-right: auto; /* Centers the dropdown within the navbar */
+}
 
+/* Center the dropdown toggle (Packages) */
+.nav-item.dropdown .dropdown-toggle {
+    text-decoration: none; /* Remove any text decoration */
+    color: inherit; /* Inherit the color from parent */
+    padding: 0.75rem 1rem; /* Same padding as other nav links */
+    font-weight: bold;
+    font-size: 1.1rem;
+    position: relative; /* Necessary for the underline to appear */
+    display: block; /* Make the dropdown toggle behave like a block-level element */
+    text-align: center; /* Center the text of the dropdown */
+}
 
+/* Underline effect for dropdown toggle */
+.nav-item.dropdown .dropdown-toggle:hover {
+    text-decoration: none; /* No underline on hover */
+    color: darkorange; /* Change color to darkorange */
+}
 
+.nav-item.dropdown .dropdown-toggle::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 0; /* Start with no width */
+    background-color: darkorange; /* Color of the underline */
+    transition: width 0.3s ease;
+    transform: translateX(-50%); /* Center the underline */
+}
+
+.nav-item.dropdown .dropdown-toggle:hover::after {
+    width: 100%; /* Full-width underline on hover */
+}
+
+/* Dropdown items styling (make them same as nav links) */
+.nav-item.dropdown .dropdown-menu .dropdown-item {
+    font-family: inherit; /* Inherit the font family from the parent (navbar) */
+    font-size: 0.80rem; /* Match the font size with nav links */
+    font-weight: bold; /* Match the font weight with nav links */
+    padding: 0.75rem 1rem; /* Same padding as nav links */
+}
+
+/* Remove the underline effect from the dropdown items */
+.nav-item.dropdown .dropdown-menu .dropdown-item:hover {
+    text-decoration: none; /* Remove underline on hover */
+    color: darkorange; /* Optional: still want to keep the color change */
+}
+
+/* Change the color of the dropdown item when clicked (active state) */
+.nav-item.dropdown .dropdown-menu .dropdown-item:active,
+.nav-item.dropdown .dropdown-menu .dropdown-item:focus {
+    color: darkorange; /* Change color to darkorange when active or focused */
+    background-color: transparent; /* Optional: prevent the default background change */
+}
+
+/* Ensure dropdown items are aligned under the dropdown toggle */
+.nav-item.dropdown .dropdown-menu {
+    left: 50%;
+    transform: translateX(-50%); /* Centers the dropdown menu */
+}

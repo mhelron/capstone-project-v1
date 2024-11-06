@@ -24,7 +24,7 @@
                 <div class="card-body text-center">
                     <h5 class="card-title" style="font-family: 'Arial'; font-weight: bolder">MONTALBAN</h5>
                     <p class="card-text">Details about the Montalban package go here.</p>
-                    <a href="#" class="btn btn-darkorange">View Package</a>
+                    <a href="{{route('guest.packages.montalban')}}" class="btn btn-darkorange">View Package</a>
                 </div>
             </div>
         </div>
@@ -36,7 +36,7 @@
                 <div class="card-body text-center">
                     <h5 class="card-title" style="font-family: 'Arial'; font-weight: bolder">MARIKINA</h5>
                     <p class="card-text">Details about the Marikina package go here.</p>
-                    <a href="#" class="btn btn-darkorange">View Package</a>
+                    <a href="{{route('guest.packages.marikina')}}" class="btn btn-darkorange">View Package</a>
                 </div>
             </div>
         </div>
@@ -48,7 +48,7 @@
                 <div class="card-body text-center">
                     <h5 class="card-title" style="font-family: 'Arial'; font-weight: bolder">SAN MATEO</h5>
                     <p class="card-text">Details about the San Mateo package go here.</p>
-                    <a href="#" class="btn btn-darkorange">View Package</a>
+                    <a href="{{route('guest.packages.sanmateo')}}" class="btn btn-darkorange">View Package</a>
                 </div>
             </div>
         </div>
