@@ -26,6 +26,8 @@
                     </ul>
                 </li>
 
+                
+
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('guest.calendar') ? 'active' : '' }}" href="{{ route('guest.calendar') }}">Calendar</a>
                 </li>
@@ -49,5 +51,111 @@
         display: none;
     }
 
-</style>
+    /* Custom navbar adjustments */
+    @media (max-width: 768px) {
 
+    /* Style the navbar-toggler button */
+    .navbar-toggler {
+        width: 100%; /* Full width */
+        height: auto;
+        position: relative;
+        background: none; /* Remove default background */
+        border: 2px solid black; /* Add border around the hamburger */
+        border-radius: 5px; /* Optional: Add rounded corners */
+        padding: 8px; /* Add padding for spacing inside the border */
+    }
+
+    /* Custom hamburger icon lines */
+    .navbar-toggler::before,
+    .navbar-toggler::after,
+    .navbar-toggler div {
+        content: '';
+        display: block;
+        background-color: black; /* Color of the lines */
+        margin: 5px auto; /* Space between lines and center align */
+    }
+
+    /* Center the brand */
+    .navbar-brand {
+        text-align: center;
+        width: 100%;
+    }
+
+        /* Center the hamburger button */
+    .navbar-toggler {
+            display: block;
+            margin: 10px auto;  /* Center and add margin */
+        }
+        
+    /* Ensure navbar items are stacked and centered */
+    .navbar-collapse {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        align-items: center; /* Align items to the center */
+    }
+
+    .navbar-nav {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .nav-item {
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Adjust dropdown to stay inline */
+        .dropdown-menu {
+            position: static;
+            float: none;
+            width: auto;  /* Let dropdown take its content's width */
+            padding: 5px 0;  /* Reduce padding for compactness */
+            font-size: 0.8rem;  /* Make the font smaller */
+            border-radius: 5px;  /* Optional: Add rounded corners */
+            box-shadow: none; /* Optional: Remove shadow for cleaner look */
+            background-color: white;  /* Set a background color */
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .dropdown-toggle {
+            display: inline-block;  /* Make dropdown behave like a regular nav link */
+        }
+        .dropdown-menu {
+    position: right;
+    width: 10px;              /* Set to 'auto' or use a max-width */
+    max-width: 50px;         /* Restrict the width */
+    text-align: right;         /* Align text to the left for a more compact look */
+  
+}
+
+    /* Center dropdown items */
+    .dropdown-item {
+        text-align: right;
+        font-size: 1rem;
+    }
+
+        /* Button adjustments for consistency on mobile */
+        .btn-reserve {
+            width: 90%;  /* Make the Reserve button slightly smaller */
+            text-align: center;
+            font-size: 1rem;
+            padding: 10px 15px;
+            background-color: darkorange;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            margin: 0 auto;
+        }
+
+        .btn-reserve:hover {
+            background-color: #0056b3;
+        }
+    }
+</style>
