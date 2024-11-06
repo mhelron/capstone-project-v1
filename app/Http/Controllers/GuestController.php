@@ -25,4 +25,8 @@ class GuestController extends Controller
     public function indexAbout(){
         return view('guest.about.index');
     }
+
+    public function indexGallery(){
+        return view('guest.gallery.index');
+    }
 }

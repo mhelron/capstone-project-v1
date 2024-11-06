@@ -184,6 +184,44 @@ a.sidebar-link:hover {
     transition: all .2s ease-out;
 }
 
+/* Adjust for mobile view */
+@media (max-width: 768px) {
+    #sidebar {
+        width: 0;
+        min-width: 0;   
+    }
+    #sidebar.expand {
+        width: 260px;
+        min-width: 260px;
+    }
+
+    #sidebar:not(.expand) .sidebar-link i {
+        display: none; /* Hide icons when collapsed */
+    }
+}
+
+/* Default toggle button style for mobile view */
+@media (max-width: 768px) {
+    .toggle-btn {
+        background-color: transparent;
+    }
+    .toggle-btn i {
+        color: black; /* Icon color change for expanded state */
+    }
+}
+
+/* Expanded state - change background and icon color */
+@media (max-width: 768px) {
+    .toggle-btn.expanded {
+        color: black; /* Change text and icon to white on expansion */
+    }
+
+    .toggle-btn.expanded i {
+        color: white; /* Icon color change for expanded state */
+    }
+
+}
+
 /* Added Dropdown Icon sa Select */
 select.form-control {
     appearance: auto;

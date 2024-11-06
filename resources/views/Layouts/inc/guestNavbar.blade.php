@@ -27,6 +27,10 @@
                 </li>
 
                 <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('guest.gallery') ? 'active' : '' }}" href="{{ route('guest.gallery') }}">Gallery</a>
+                </li>
+
+                <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('guest.calendar') ? 'active' : '' }}" href="{{ route('guest.calendar') }}">Calendar</a>
                 </li>
                 <li class="nav-item">

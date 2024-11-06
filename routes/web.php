@@ -21,6 +21,7 @@ Route::get('/packages/markina', [ListPackageController::class, 'marikina'])->nam
 Route::get('/packages/san-mateo', [ListPackageController::class, 'sanmateo'])->name('guest.packages.sanmateo');
 Route::get('/packages/motalban', [ListPackageController::class, 'montalban'])->name('guest.packages.montalban');
 Route::get('/package/{id}', [ListPackageController::class, 'show'])->name('package.show');
+Route::get('/gallery', [GuestController::class, 'indexGallery'])->name('guest.gallery');
 Route::get('/calendar', [GuestController::class, 'indexCalendar'])->name('guest.calendar');
 Route::get('/contact', [GuestController::class, 'indexContact'])->name('guest.contact');
 Route::get('/about', [GuestController::class, 'indexAbout'])->name('guest.about');

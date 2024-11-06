@@ -7,7 +7,7 @@
 	<div class="container-fluid">
         <div class="row mb-2">
 			<div class="col-sm-6">
-				<h1 class="m-0">Edit User</h1>
+				<h1 class="m-0" style="padding-top: 35px;">Edit User</h1>
 			</div>
         </div>
      </div>

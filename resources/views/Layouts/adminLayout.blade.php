@@ -30,6 +30,7 @@
   
 </head>
     <body>
+
         <div class="wrapper">
             <aside class="{{ $isExpanded ? 'expand' : '' }}" id="sidebar">
                 <div class="d-flex">
@@ -93,6 +94,7 @@
                         </ul>
                     </li>
                 </ul>
+
                 <div class="sidebar-footer">
                     <a href="#" class="sidebar-link" id="logout-link" data-bs-toggle="modal" data-bs-target="#logoutModal">
                         <i class='bx bx-log-out'></i>
@@ -154,4 +156,17 @@
 
     <!-- Calendar JS -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleButton = document.getElementById('toggleSidebar');
+            const sidebar = document.getElementById('sidebar');
+
+            toggleButton.addEventListener('click', function () {
+                sidebar.classList.toggle('expand');
+            });
+        });
+    </script>
 </html>
