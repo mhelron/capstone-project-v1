@@ -10,12 +10,16 @@ use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GuestController;
+use App\Http\Controllers\ListPackageController;
 
 use App\Http\Middleware\AuthMiddleware;
 
 // Guest Route
 Route::get('/', [GuestController::class, 'indexHome'])->name('guest.home');
 Route::get('/packages', [GuestController::class, 'indexPackages'])->name('guest.packages');
+Route::get('/packages/markina', [ListPackageController::class, 'marikina'])->name('guest.packages.marikina');
+Route::get('/packages/san-mateo', [ListPackageController::class, 'sanmateo'])->name('guest.packages.sanmateo');
+Route::get('/packages/motalban', [ListPackageController::class, 'montalban'])->name('guest.packages.motalban');
 Route::get('/calendar', [GuestController::class, 'indexCalendar'])->name('guest.calendar');
 Route::get('/contact', [GuestController::class, 'indexContact'])->name('guest.contact');
 Route::get('/about', [GuestController::class, 'indexAbout'])->name('guest.about');

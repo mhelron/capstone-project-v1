@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="container">
-    <div class="row align-items-center min-vh-100">
+    <div class="row align-items-center pt-5">
         <div class="col-md-6">
        
         <h3 style="color: solid black; font-family: 'Monaco'; border-bottom: 4px solid darkorange; padding-bottom:
@@ -90,7 +90,6 @@
     object-fit: cover; /* Ensures the image covers the area without stretching */
     border-top-left-radius: 0; /* No rounding on the top-left corner */
     border-bottom-right-radius: 0; /* No rounding on the bottom-right corner */
-    border: 3px solid darorange; /* Thin black border around the image */
 }
 
 /* Apply the orange shadow to the outer shadow of the carousel container */
