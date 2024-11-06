@@ -4,6 +4,18 @@
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kyla and Kyle</title>
+
+    <!-- Favicon for Browsers -->
+    <link rel="icon" href="{{ asset('images/icons/favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('images/icons/favicon-16x16.png') }}" sizes="16x16">
+    <link rel="icon" href="{{ asset('images/icons/favicon-32x32.png') }}" sizes="32x32">
+
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="{{ asset('images/icons/apple-touch-icon.png') }}">
+
+    <!-- Android Chrome Icons -->
+    <link rel="icon" href="{{ asset('images/icons/android-chrome-192x192.png') }}" sizes="192x192">
+    <link rel="icon" href="{{ asset('images/icons/android-chrome-512x512.png') }}" sizes="512x512">
     
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">

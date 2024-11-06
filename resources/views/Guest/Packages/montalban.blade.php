@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container mt-2">
-        <h2 class="text-center">Packages in Montalban</h2>
+        <h2 class="text-left">Packages in Montalban</h2>
         <div class="row">
             @foreach($packages as $id => $package)
                 @if(isset($package['is_displayed']) && $package['is_displayed'] === true)
