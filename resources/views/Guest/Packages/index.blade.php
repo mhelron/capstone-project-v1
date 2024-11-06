@@ -27,18 +27,19 @@
                 </div>
             </div>
         </div>
-
+        
         <!-- Marikina Card -->
-        <div class="col-md-4">
-            <div class="card" style="border: 3px solid rgba(255, 87, 34, 0.7);">
-                <img src="https://via.placeholder.com/300x200.png?text=Marikina+Package" class="card-img-top" alt="Marikina Package Image">
-                <div class="card-body text-center">
-                    <h5 class="card-title" style="font-family: 'Arial'; font-weight: bolder">MARIKINA</h5>
-                    <p class="card-text">Details about the Marikina package go here.</p>
-                    <a href="#" class="btn btn-darkorange">View Package</a>
-                </div>
-            </div>
+<div class="col-md-4">
+    <div class="card" style="border: 3px solid rgba(255, 87, 34, 0.7); box-shadow: inset 0 0 10px rgba(255, 87, 34, 0.7);">
+        <img src="https://via.placeholder.com/300x200.png?text=Marikina+Package" class="card-img-top" alt="Marikina Package Image" >
+        <div class="card-body text-center">
+            <h5 class="card-title" style="font-family: 'Arial'; font-weight: bolder">MARIKINA</h5>
+            <p class="card-text">Details about the Marikina package go here.</p>
+            <a href="#" class="btn btn-darkorange">View Package</a>
         </div>
+    </div>
+</div>
+
 
         <!-- San Mateo Card -->
         <div class="col-md-4">

@@ -74,6 +74,38 @@
     border-bottom-left-radius: 100px; /* Rounded bottom-left corner */
     border-top-left-radius: 0; /* Normal top-left corner */
     border-bottom-right-radius: 0; /* Normal bottom-right corner */
+    border: 2px solid darkorange; /* Thick orange border */
+}
+
+/* Make carousel responsive */
+@media (max-width: 768px) {
+    #imageCarousel {
+        border-radius: 20px; /* Smaller radius for mobile */
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* Slightly softer shadow */
+    }
+
+    .carousel-inner {
+        height: 300px; /* Adjust height on mobile */
+    }
+
+    .carousel-item img {
+        object-fit: cover;
+        height: 100%; /* Make image cover the full area */
+        width: 100%;
+    }
+
+    .carousel-indicators-container {
+        bottom: 15px; /* Move indicators down a little */
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+/* Adjustments for very small screens (extra small devices) */
+@media (max-width: 480px) {
+    .carousel-inner {
+        height: 250px; /* Adjust height even further on very small screens */
+    }
 }
 
 /* Create a wrapper for the image that clips the shadow around the rounded corners */
