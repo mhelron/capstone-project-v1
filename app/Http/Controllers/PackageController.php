@@ -30,36 +30,47 @@ class PackageController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'package_name' => 'required|string|max:255',
-            'persons' => 'required|integer|min:1',
-            'price' => 'required|numeric|min:0',
-            'area_name' => 'required|string|max:255',
-            'menus' => 'required|array',
-            'menus.*.menu_name' => 'required|string|max:255',
-            'menus.*.foods' => 'required|array',
-            'menus.*.foods.*.food' => 'required|string|max:255',
-            'menus.*.foods.*.category' => 'required|string|max:255',
-            'services' => 'required|array',
-            'services.*' => 'required|string|max:255',
-            'package_type' => 'required', 'in:Not Wedding,Wedding'
-        ], [
-            'package_name.required' => 'Package name is required.',
-            'persons.required' => 'Number of persons is required.',
-            'price.required' => 'Price is required.',
-            'area_name.required' => 'Please select an area.',
-            'menus.*.menu_name.required' => 'Menu name is required.',
-            'menus.*.foods.*.food.required' => 'Food name is required.',
-            'menus.*.foods.*.category.required' => 'Please select a category.',
-            'services.*.required' => 'Service is required.',
-            'package_type.required' => 'Please select if this package is for a wedding or not.',
-            'package_type.in' => 'Invalid selection. Please choose "Wedding" or "Not Wedding".',
-        ]);
+{
+    // Validate the request data
+    $validatedData = $request->validate([
+        'package_name' => 'required|string|max:255',
+        'persons' => 'required|integer|min:1',
+        'price' => 'required|numeric|min:0',
+        'area_name' => 'required|string|max:255',
+        'menus' => 'required|array',
+        'menus.*.menu_name' => 'required|string|max:255',
+        'menus.*.foods' => 'required|array',
+        'menus.*.foods.*.food' => 'required|string|max:255',
+        'menus.*.foods.*.category' => 'required|string|max:255',
+        'services' => 'required|array',
+        'services.*' => 'required|string|max:255',
+        'package_type' => 'required|in:Not Wedding,Wedding',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:40960',
+    ], [
+        'package_name.required' => 'Package name is required.',
+        'persons.required' => 'Number of persons is required.',
+        'price.required' => 'Price is required.',
+        'area_name.required' => 'Please select an area.',
+        'menus.*.menu_name.required' => 'Menu name is required.',
+        'menus.*.foods.*.food.required' => 'Food name is required.',
+        'menus.*.foods.*.category.required' => 'Please select a category.',
+        'services.*.required' => 'Service is required.',
+        'package_type.required' => 'Please select if this package is for a wedding or not.',
+        'package_type.in' => 'Invalid selection. Please choose "Wedding" or "Not Wedding".',
+    ]);
 
-        // Remove commas from price
-        $validatedData['price'] = str_replace(',', '', $validatedData['price']);
+    // Remove commas from price
+    $validatedData['price'] = str_replace(',', '', $validatedData['price']);
 
+    if ($request->hasFile('image')) {
+        // Store the image in the correct public directory
+        $imagePath = $request->file('image')->store('packages/images', 'public');
+        $imageUrl = str_replace('public/', 'storage/', $imagePath); // Create relative path for the image
+    } else {
+        $imageUrl = null; // No image uploaded
+    }
+
+    try {
         // Store the package details
         $packageId = $this->database->getReference('packages')->push([
             'package_name' => $validatedData['package_name'],
@@ -68,11 +79,11 @@ class PackageController extends Controller
             'area_name' => $validatedData['area_name'],
             'package_type' => $validatedData['package_type'],
             'is_displayed' => true,
+            'image_url' => $imageUrl,
         ])->getKey();
 
-        // Store each menu and its related foods and categories using indices
+        // Store each menu and its related foods and categories
         foreach ($validatedData['menus'] as $menuIndex => $menu) {
-            // Use the index for the menu instead of pushing to get a unique key
             $menuRef = $this->database->getReference("packages/{$packageId}/menus/{$menuIndex}");
             $menuRef->set([
                 'menu_name' => $menu['menu_name'],
@@ -86,7 +97,7 @@ class PackageController extends Controller
             }
         }
 
-        // Store services using the same pattern
+        // Store services
         foreach ($validatedData['services'] as $serviceIndex => $service) {
             $this->database->getReference("packages/{$packageId}/services/{$serviceIndex}")->set([
                 'service' => $service,
@@ -94,7 +105,10 @@ class PackageController extends Controller
         }
 
         return redirect()->route('admin.packages')->with('status', 'Package created successfully!');
+    } catch (\Exception $e) {
+        return redirect()->back()->withErrors(['error' => 'An error occurred: ' . $e->getMessage()]);
     }
+}
 
 
     public function edit($packageId)
@@ -129,7 +143,8 @@ class PackageController extends Controller
             'menus.*.foods.*.category' => 'required|string|max:255',
             'services' => 'required|array',
             'services.*' => 'required|string|max:255',
-            'package_type' => 'required', 'in:Not Wedding,Wedding'
+            'package_type' => 'required', 'in:Not Wedding,Wedding',
+            'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ], [
             'package_name.required' => 'Package name is required.',
             'persons.required' => 'Number of persons is required.',
@@ -141,10 +156,20 @@ class PackageController extends Controller
             'services.*.required' => 'Service is required.',
             'package_type.required' => 'Please select if this package is for a wedding or not.',
             'package_type.in' => 'Invalid selection. Please choose "Wedding" or "Not Wedding".',
+            'image.image' => 'The uploaded file must be an image (jpg, jpeg, png, gif).',
+            'image.mimes' => 'The image must be one of the following types: jpg, jpeg, png, gif.',
+            'image.max' => 'The image size cannot exceed 2MB.',
         ]);
 
         // Remove commas from the price
         $validatedData['price'] = str_replace(',', '', $validatedData['price']);
+
+        // Handle the image upload
+        $imageUrl = $validatedData['image_url'] ?? null;
+        if ($request->hasFile('image_url')) {
+            $image = $request->file('image_url');
+            $imageUrl = $image->store('images/packages', 'public');
+        }
 
         // Update package details
         $this->database->getReference("packages/{$packageId}")->update([
@@ -153,6 +178,7 @@ class PackageController extends Controller
             'price' => $validatedData['price'],
             'area_name' => $validatedData['area_name'],
             'package_type' => $validatedData['package_type'],
+            'image_url' => $imageUrl, // Update the image URL
         ]);
 
         // Get the current menus to update them based on new data

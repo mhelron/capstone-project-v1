@@ -22,7 +22,7 @@
 
                 <div class="card">
                     <div class="card-body form-container">
-                        <form action="{{ route('admin.packages.add') }}" method="POST" id="package-form">
+                        <form action="{{ route('admin.packages.add') }}" method="POST" id="package-form" enctype="multipart/form-data">
                             @csrf
 
                             <div class="row mb-3">
@@ -202,6 +202,14 @@
                                         </label>
                                     </div>
                                     @error('package_type')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="image">Upload Package Image</label>
+                                    <input type="file" class="form-control" name="image" id="image" accept="image/*">
+                                    @error('image')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
