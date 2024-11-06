@@ -1,9 +1,9 @@
-@extends('layouts.guestLayout')
+@extends('layouts.guestlayout')
 
 @section('content')
 
 <div class="container">
-    <div class="row align-items-center pt-5">
+    <div class="row align-items-center pt-4">
         <div class="col-md-6">
        
         <h3 style="color: solid black; font-family: 'Monaco'; border-bottom: 4px solid darkorange; padding-bottom:
@@ -22,7 +22,7 @@
         </div>
 
         <!-- Image Carousel with Fade Effect -->
-        <div class="col-md-6 mt-4 mb-4">
+        <div class="col-md-6 mt-4 mb-5">
             <div id="imageCarousel" class="carousel slide carousel-fade overflow-hidden" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active">

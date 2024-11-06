@@ -23,7 +23,7 @@
 <div class="col-md-12">
     <div class="wrapper d-flex flex-column min-vh-100">
         <!-- Navbar -->
-        @include('layouts.inc.guestNavbar')
+        @include('layouts.inc.guestnavbar')
 
         <!-- Main content -->
         <div class="main p-3 flex-grow-1" style="background-color: #f4f6f9;">
@@ -31,7 +31,7 @@
         </div>
 
         <div class="custom-footer">
-            @include('layouts.inc.guestFooter')
+            @include('layouts.inc.guestfooter')
         </div>
     </div>
 </div>

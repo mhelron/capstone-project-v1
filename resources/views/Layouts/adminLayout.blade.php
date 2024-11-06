@@ -121,8 +121,8 @@
 
     @vite('resources/js/app.js')
     @vite('resources/js/logout.js')
-    @vite('resources/js/toggleSidebar.js')
-    @vite('resources/js/priceInput.js')
+    @vite('resources/js/togglesidebar.js')
+    @vite('resources/js/priceinput.js')
 
     @if (session('status'))
         <script>

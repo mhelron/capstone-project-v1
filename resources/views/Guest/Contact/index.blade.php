@@ -55,11 +55,10 @@
         </div>
     </div>
 
-                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; "padding-top: 5px;">
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding-top: 5px;">
                     <h2>Contact Us</h2>
                         <p>Have questions or need a quote? We’re here to assist you! Reach out to us, and our team will guide you through everything, from menu selection to event planning.<br> You can contact us through the following methods:</p>
 
-                        <div class="container">
                         <div class="container">
                         <div class="row text-center">
                             <!-- First Pair (Phone and Email) -->

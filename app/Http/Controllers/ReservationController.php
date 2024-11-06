@@ -54,7 +54,7 @@ class ReservationController extends Controller
         $packages = is_array($packages) ? array_map(fn($package) => $package, $packages) : [];
 
         $isExpanded = session()->get('sidebar_is_expanded', true);    
-        return view('admin.reservation.createReservation', compact('packages', 'isExpanded'));
+        return view('admin.reservation.createreservation', compact('packages', 'isExpanded'));
     }
 
     public function createPencil(){   
@@ -62,7 +62,7 @@ class ReservationController extends Controller
         $packages = is_array($packages) ? array_map(fn($package) => $package, $packages) : [];
 
         $isExpanded = session()->get('sidebar_is_expanded', true);    
-        return view('admin.reservation.createPencilReservation', compact('packages', 'isExpanded'));
+        return view('admin.reservation.createpencilreservation', compact('packages', 'isExpanded'));
     }
 
     public function reservation(Request $request){
