@@ -22,7 +22,7 @@
 
                 <div class="card">
                     <div class="card-body form-container">
-                        <form action="{{ route('admin.packages.update', $packageId) }}" method="POST" id="package-form">
+                        <form action="{{ route('admin.packages.update', $packageId) }}" method="POST" id="package-form" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
 
@@ -210,15 +210,18 @@
                                     @enderror
                                 </div>
 
-                                <!-- Image Upload Field -->
                                 <div class="col-md-6">
                                     <label for="image">Upload Package Image</label>
                                     <input type="file" class="form-control" name="image" id="image" accept="image/*">
-                                    
-                                    <!-- Display the current image if available -->
-                                    @if(isset($package['image_url']) && !empty($package['image_url']))
-                                        <div class="mt-2">
-                                            <img src="{{ asset($package['image_url']) }}" alt="Current Package Image" class="img-fluid" style="max-height: 150px;">
+                                    @error('image')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+
+                                    <!-- Display Current Image if Exists -->
+                                    @if(!empty($package['image_url']))
+                                        <div class="mt-3">
+                                            <label>Current Image:</label>
+                                            <img src="{{ asset('storage/' . $package['image_url']) }}" alt="Current Package Image" class="img-thumbnail" style="max-width: 150px;">
                                         </div>
                                     @endif
                                 </div>
