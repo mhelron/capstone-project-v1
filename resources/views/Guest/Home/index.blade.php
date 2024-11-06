@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="container">
-    <div class="row align-items-center pt-5">
+    <div class="row align-items-center min-vh-100">
         <div class="col-md-6">
        
         <h3 style="color: solid black; font-family: 'Monaco'; border-bottom: 4px solid darkorange; padding-bottom:
@@ -15,14 +15,14 @@
 
             <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatem qui accusantium explicabo saepe, dignissimos incidunt ullam harum debitis assumenda eveniet sit doloremque nam quidem ex excepturi hic magnam iste quis .</p>
             
-            <div class="d-flex mt-4">
+            <div class="d-flex mt-4 mb-4">
                 <a href="#" class="btn btn-darkorange me-3">Reserve</a>
                 <a href="#" class="btn btn-darkorange">View Status</a>
             </div>
         </div>
 
         <!-- Image Carousel with Fade Effect -->
-        <div class="col-md-6">
+        <div class="col-md-6 mt-4 mb-4">
             <div id="imageCarousel" class="carousel slide carousel-fade overflow-hidden" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
@@ -71,41 +71,10 @@
     position: relative;
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); /* Dark shadow for outer box */
     border-top-right-radius: 100px; /* Rounded top-right corner */
-    border-bottom-left-radius: 100px; /* Rounded bottom-left corner */
+    border-bottom-left-radius: 100px; /* Rounded bottom-left corner */  
     border-top-left-radius: 0; /* Normal top-left corner */
     border-bottom-right-radius: 0; /* Normal bottom-right corner */
-    border: 2px solid darkorange; /* Thick orange border */
-}
-
-/* Make carousel responsive */
-@media (max-width: 768px) {
-    #imageCarousel {
-        border-radius: 20px; /* Smaller radius for mobile */
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* Slightly softer shadow */
-    }
-
-    .carousel-inner {
-        height: 300px; /* Adjust height on mobile */
-    }
-
-    .carousel-item img {
-        object-fit: cover;
-        height: 100%; /* Make image cover the full area */
-        width: 100%;
-    }
-
-    .carousel-indicators-container {
-        bottom: 15px; /* Move indicators down a little */
-        left: 50%;
-        transform: translateX(-50%);
-    }
-}
-
-/* Adjustments for very small screens (extra small devices) */
-@media (max-width: 480px) {
-    .carousel-inner {
-        height: 250px; /* Adjust height even further on very small screens */
-    }
+    border: px solid darkorange; /* Thick orange border */
 }
 
 /* Create a wrapper for the image that clips the shadow around the rounded corners */
@@ -122,6 +91,7 @@
     object-fit: cover; /* Ensures the image covers the area without stretching */
     border-top-left-radius: 0; /* No rounding on the top-left corner */
     border-bottom-right-radius: 0; /* No rounding on the bottom-right corner */
+    border: 3px solid darorange; /* Thin black border around the image */
 }
 
 /* Apply the orange shadow to the outer shadow of the carousel container */

@@ -5,62 +5,50 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+
             <!-- LOCATIONS WE SERVE header with orange lines on both sides -->
-            <p style="text-align: center; font-weight: bolder; font-family: 'Times New Roman'; font-size: 25px; 
-                      padding-top: 20px; position: relative; color: black;">
-                <span style="border-top: 4px solid darkorange; width: 475px; position: absolute; left: 0; top: 50%;"></span>
+            <p class="locations-header">
+                <span class="border-line left-border"></span>
                 LOCATIONS WE SERVE
-                <span style="border-top: 4px solid darkorange; width: 475px; position: absolute; right: 0; top: 50%;"></span>
+                <span class="border-line right-border"></span>
             </p>
+
         </div>
     </div>
 
     <div class="row mt-4">
         <!-- Montalban Card -->
-        <div class="col-md-4">
+        <div class="col-md-4 mb-4">
             <div class="card" style="border: 3px solid rgba(255, 87, 34, 0.7);">
                 <img src="https://via.placeholder.com/300x200.png?text=Montalban+Package" class="card-img-top" alt="Montalban Package Image">
                 <div class="card-body text-center">
-                    <h5 class="card-title" style="font-family: 'Arial'; font-weight: bolder">Marikina</h5>
+                    <h5 class="card-title" style="font-family: 'Arial'; font-weight: bolder">MONTALBAN</h5>
                     <p class="card-text">Details about the Montalban package go here.</p>
-                    <a href="{{route('guest.packages.marikina')}}" class="btn btn-darkorange">View Package</a>
+                    <a href="#" class="btn btn-darkorange">View Package</a>
                 </div>
             </div>
         </div>
-        
+
         <!-- Marikina Card -->
-<<<<<<< HEAD
-        <div class="col-md-4">
-            <div class="card" style="border: 3px solid rgba(255, 87, 34, 0.7);">
+        <div class="col-md-4 mb-4">
+            <div class="card" style="border: 3px solid rgba(255, 87, 34, 0.7); box-shadow: inset 0 0 10px rgba(255, 87, 34, 0.7);">
                 <img src="https://via.placeholder.com/300x200.png?text=Marikina+Package" class="card-img-top" alt="Marikina Package Image">
                 <div class="card-body text-center">
-                    <h5 class="card-title" style="font-family: 'Arial'; font-weight: bolder">San Mateo</h5>
+                    <h5 class="card-title" style="font-family: 'Arial'; font-weight: bolder">MARIKINA</h5>
                     <p class="card-text">Details about the Marikina package go here.</p>
-                    <a href="{{route('guest.packages.sanmateo')}}" class="btn btn-darkorange">View Package</a>
+                    <a href="#" class="btn btn-darkorange">View Package</a>
                 </div>
             </div>
-=======
-<div class="col-md-4">
-    <div class="card" style="border: 3px solid rgba(255, 87, 34, 0.7); box-shadow: inset 0 0 10px rgba(255, 87, 34, 0.7);">
-        <img src="https://via.placeholder.com/300x200.png?text=Marikina+Package" class="card-img-top" alt="Marikina Package Image" >
-        <div class="card-body text-center">
-            <h5 class="card-title" style="font-family: 'Arial'; font-weight: bolder">MARIKINA</h5>
-            <p class="card-text">Details about the Marikina package go here.</p>
-            <a href="#" class="btn btn-darkorange">View Package</a>
->>>>>>> f39fec89b22259aa0dd7611838d2fa6c781764f6
         </div>
-    </div>
-</div>
-
 
         <!-- San Mateo Card -->
         <div class="col-md-4">
             <div class="card" style="border: 3px solid rgba(255, 87, 34, 0.7);">
                 <img src="https://via.placeholder.com/300x200.png?text=San+Mateo+Package" class="card-img-top" alt="San Mateo Package Image">
                 <div class="card-body text-center">
-                    <h5 class="card-title" style="font-family: 'Arial'; font-weight: bolder">Montalban</h5>
+                    <h5 class="card-title" style="font-family: 'Arial'; font-weight: bolder">SAN MATEO</h5>
                     <p class="card-text">Details about the San Mateo package go here.</p>
-                    <a href="{{route('guest.packages.motalban')}}" class="btn btn-darkorange">View Package</a>
+                    <a href="#" class="btn btn-darkorange">View Package</a>
                 </div>
             </div>
         </div>
@@ -75,5 +63,65 @@
         </h5>
     </div>
 </div>
+
+<style>
+    /* Default styling for desktop view */
+    .locations-header {
+        text-align: center;
+        font-weight: bolder;
+        font-family: 'Times New Roman';
+        font-size: 25px;
+        padding-top: 20px;
+        position: relative;
+        color: black;
+    }
+
+    .border-line {
+        border-top: 4px solid darkorange;
+        position: absolute;
+        top: 65%;
+    }
+
+    .left-border {
+        width: 475px;
+        left: 0;
+    }
+
+    .right-border {
+        width: 475px;
+        right: 0;
+    }
+
+    /* Styling for mobile view */
+    @media (max-width: 767px) {
+        .locations-header {
+            font-size: 20px; /* Adjust font size for mobile */
+            padding-top: 10px;
+        }
+
+        .border-line {
+            width: 100px; /* Reduce border width for mobile */
+        }
+
+        .left-border {
+            left: 10%;
+        }
+
+        .right-border {
+            right: 10%;
+        }
+    }
+
+    /* Styling for very small screens */
+    @media (max-width: 480px) {
+        .locations-header {
+            font-size: 18px; /* Further reduce font size */
+        }
+
+        .border-line {
+            display: none; /* Hide borders on very small screens */
+        }
+    }
+</style>
 
 @endsection
