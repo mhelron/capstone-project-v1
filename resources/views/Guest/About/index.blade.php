@@ -6,25 +6,25 @@
     <div class="row">
         <div class="col-md-12">
             <h1>About Us</h1>
-            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam eius architecto excepturi ut accusamus minus nesciunt veniam, tenetur, facilis reiciendis enim mollitia! Libero qui suscipit consequatur maxime, vitae quibusdam quae!</p>
+            <p>At Kyla and Kyle Catering Services, we’re here to make your event truly special. From weddings and corporate gatherings to family celebrations, our goal is to handle every detail so you can enjoy the day. Known for our friendly service and high-quality food, we’re dedicated to bringing your vision to life and creating a memorable experience for you and your guests. Let us take care of everything so you can focus on making memories.</p>
         </div>
     </div>
     
     <div class="row mt-4">
         <div class="col-md-6">
             <h2>Our History</h2>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio, in. Laborum nostrum, facilis deleniti maxime velit asperiores voluptatum aut consectetur error? Esse eius consequuntur tempora quaerat dolores sunt, aliquam aspernatur.</p>
+            <p> Kyla and Kyle Catering Services began over a decade ago as a small family eatery in the heart of Montalban, Rizal. Founded on the values of quality humility, and a deep connection to the community, we’ve grown into one of Rodriguez’s leading catering providers, known for bringing each client’s vision to life with exceptional service and a personal touch. What started as a small team has now blossomed into a full-service catering company committed to making every celebration memorable, beautiful, and worry-free</p>
         </div>
         <div class="col-md-6">
             <h2>Our Mission</h2>
-            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laborum cum laboriosam, consequatur et facere voluptates harum quia sit tempore eum esse ipsum, vel nesciunt maxime? Eos consectetur ex nulla pariatur?</p>
+            <p> To make every event unforgettable. At Kyla and Kyle Catering Services, we are dedicated to bringing your vision to life. We handle every detail, from designing and setting up the venue to catering and serving our carefully crafted menu selected by you. Our goal is to create a seamless, memorable experience perfectly tailored to your needs</p>
         </div>
     </div>
 
     <div class="row mt-4">
         <div class="col-md-12">
             <h2>Meet the Team</h2>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus, cum quae tempora commodi adipisci suscipit nostrum blanditiis corporis sit nesciunt necessitatibus, nobis, deserunt itaque eius exercitationem debitis inventore dolor sunt!</p>
+            <p>The people behind your celebrations. Our team of skilled chefs, friendly waiters, dedicated support staff, and reliable drivers work together to provide professional, attentive service at every event. We’re proud to be recognized for our warm and dependable approach, making your occasion truly unforgettable</p>
         </div>
     </div>
 
@@ -32,10 +32,11 @@
         <div class="col-md-12">
             <h2>Our Values</h2>
             <ul>
-                <li>Quality: We use only the freshest ingredients and strive for excellence in every dish.</li>
-                <li>Integrity: We are committed to honesty and transparency in our services.</li>
-                <li>Customer Satisfaction: Our clients are our top priority, and we go above and beyond to meet their needs.</li>
-                <li>Innovation: We are always looking for new ideas and ways to enhance our catering services.</li>
+                <li> <strong>Quality First:</strong> We’re all about great food and reliable service, no matter the event.</li>
+                <li> <strong>Customer Care:</strong> Our clients are like family. We’re here to make your vision come to life.</li>
+                <li> <strong>Honesty & Openness:</strong> We believe in clear communication and keeping things transparent from start to finish.</li>
+                <li> <strong>Community Connection:</strong> We’re proud to support our local community and give back whenever we can..</li>
+                <li> <strong>Visible Progress:</strong> We keep learning and growing to make each event better than the last.</li>
             </ul>
         </div>
     </div>
