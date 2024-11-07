@@ -7,16 +7,16 @@
         <div class="col-md-6">
        
         <h3 style="color: solid black; font-family: 'Monaco'; border-bottom: 4px solid darkorange; padding-bottom:
-        3px;">Kyla and Kyle Catering Services</>
+        3px;">Kyla and Kyle Catering Services</h3>
 
             <h1 style="font-weight: 900; font-family: 'Georgia', sans-serif; font-size: 48px; padding-top: 5px;">One of 
             the most known Catering Services in Montalban</h1>
-            <p>At Kyla and Kyle Catering Services, we bring people together through great food and exceptional service. Based in Rodriguez, Rizal, we specialize in creating unforgettable experiences for every occasion, from weddings and corporate events to family celebrations. </p>
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatem qui accusantium explicabo saepe, dignissimos incidunt ullam harum debitis assumenda eveniet sit doloremque nam quidem ex excepturi hic magnam iste quis .</p>
 
-            <p>With our skilled team and attention to detail, we handle everything from venue setup to delicious, carefully prepared meals. Let us bring your vision to life and make your next event truly special</p>
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatem qui accusantium explicabo saepe, dignissimos incidunt ullam harum debitis assumenda eveniet sit doloremque nam quidem ex excepturi hic magnam iste quis .</p>
             
             <div class="d-flex mt-4 mb-4">
-                <a href="#" class="btn btn-darkorange me-3">Reserve</a>
+                <a href="{{route('guest.reserve')}}" class="btn btn-darkorange me-3">Reserve</a>
                 <a href="#" class="btn btn-darkorange">View Status</a>
             </div>
         </div>
@@ -26,19 +26,19 @@
             <div id="imageCarousel" class="carousel slide carousel-fade overflow-hidden" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img src="{{ asset('images/Home/Wedding.png') }}" class="d-block w-100 carousel-image" alt="Wedding Image">
+                        <img src="{{ asset('images/image1.png') }}" class="d-block w-100 carousel-image" alt="Wedding Image">
                     </div>
                     <div class="carousel-item">
-                        <img src="{{ asset('images/Home/Style.png') }}" class="d-block w-100 carousel-image" alt="Venue Design Image">
+                        <img src="{{ asset('images/image2.png') }}" class="d-block w-100 carousel-image" alt="Debut Image">
                     </div>
                     <div class="carousel-item">
-                    <img src="{{ asset('images/Home/Debut.png') }}" class="d-block w-100 carousel-image" alt="Debut Image">
+                        <img src="{{ asset('images/image3.png') }}" class="d-block w-100 carousel-image" alt="Baptismal Image">
                     </div>
                     <div class="carousel-item">
-                        <img src="{{ asset('images/Home/Catering.png') }}" class="d-block w-100 carousel-image" `alt="Food Catering Image">
+                        <img src="{{ asset('images/image4.png') }}" class="d-block w-100 carousel-image" `alt="Corporate Event Image">
                     </div>
                     <div class="carousel-item">
-                        <img src="{{ asset('images/Home/Birthday.png') }}" class="d-block w-100 carousel-image" alt="Regular Birthday Image">
+                        <img src="{{ asset('images/image5.png') }}" class="d-block w-100 carousel-image" alt="Birthday Image">
                     </div>
                 </div>
 
