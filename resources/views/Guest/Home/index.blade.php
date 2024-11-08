@@ -26,19 +26,19 @@
             <div id="imageCarousel" class="carousel slide carousel-fade overflow-hidden" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img src="{{ asset('images/image1.png') }}" class="d-block w-100 carousel-image" alt="Wedding Image">
+                        <img src="{{ asset('images/Home/image1.png') }}" class="d-block w-100 carousel-image" alt="Wedding Image">
                     </div>
                     <div class="carousel-item">
-                        <img src="{{ asset('images/image2.png') }}" class="d-block w-100 carousel-image" alt="Debut Image">
+                        <img src="{{ asset('images/Home/image2.png') }}" class="d-block w-100 carousel-image" alt="Debut Image">
                     </div>
                     <div class="carousel-item">
-                        <img src="{{ asset('images/image3.png') }}" class="d-block w-100 carousel-image" alt="Baptismal Image">
+                        <img src="{{ asset('images/Home/image3.png') }}" class="d-block w-100 carousel-image" alt="Baptismal Image">
                     </div>
                     <div class="carousel-item">
-                        <img src="{{ asset('images/image4.png') }}" class="d-block w-100 carousel-image" `alt="Corporate Event Image">
+                        <img src="{{ asset('images/Home/image4.png') }}" class="d-block w-100 carousel-image" `alt="Corporate Event Image">
                     </div>
                     <div class="carousel-item">
-                        <img src="{{ asset('images/image5.png') }}" class="d-block w-100 carousel-image" alt="Birthday Image">
+                        <img src="{{ asset('images/Home/image5.png') }}" class="d-block w-100 carousel-image" alt="Birthday Image">
                     </div>
                 </div>
 
@@ -74,7 +74,6 @@
     border-bottom-left-radius: 100px; /* Rounded bottom-left corner */  
     border-top-left-radius: 0; /* Normal top-left corner */
     border-bottom-right-radius: 0; /* Normal bottom-right corner */
-    border: px solid darkorange; /* Thick orange border */
 }
 
 /* Create a wrapper for the image that clips the shadow around the rounded corners */
@@ -91,12 +90,12 @@
     object-fit: cover; /* Ensures the image covers the area without stretching */
     border-top-left-radius: 0; /* No rounding on the top-left corner */
     border-bottom-right-radius: 0; /* No rounding on the bottom-right corner */
-    border: 3px solid darkorange; /* Thin black border around the image */
+    border: 2px solid darkorange; /* Thin black border around the image */
 }
 
 /* Apply the orange shadow to the outer shadow of the carousel container */
 #imageCarousel {
-    box-shadow: 0px 0px 20px 10px rgba(255, 87, 34, 0.7); /* Darker orange shadow */
+    box-shadow: 0px 0px 10px 5px rgba(255, 87, 34, 0.7); /* Darker orange shadow */
 
 }
 

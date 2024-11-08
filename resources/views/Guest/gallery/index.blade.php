@@ -355,37 +355,6 @@
     </div>
 </div>
 
-<!-- Include Bootstrap JS and Popper if not already included -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
-
-<script>
-    // Get the modal and nav elements
-    var imageModal = document.getElementById('imageModal');
-    var navBar = document.querySelector('.scroll-nav');  // The navigation bar
-
-    // When the modal is about to be shown
-    imageModal.addEventListener('show.bs.modal', function (event) {
-        // Hide the navbar when the modal is opened
-        navBar.style.display = 'none';  // Or add a class to hide it (e.g., navBar.classList.add('hidden');)
-    });
-
-    // When the modal is hidden
-    imageModal.addEventListener('hidden.bs.modal', function (event) {
-        // Show the navbar when the modal is closed
-        navBar.style.display = 'flex';  // Or add a class to show it (e.g., navBar.classList.remove('hidden');)
-    });
-
-    // Set the image source in the modal based on the clicked image's data attribute
-    imageModal.addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget; // Button that triggered the modal
-        var imageSrc = button.getAttribute('data-bs-image'); // Get the data-bs-image attribute value
-        var modalImage = imageModal.querySelector('#modalImage');
-        modalImage.src = imageSrc; // Set the src of the modal image
-    });
-</script>
-
-
 <style>
       
     .gallery-image {
@@ -495,7 +464,7 @@
         }
 
 
-        /* Gallery Button Style */
+        /* Gallery Button Style with hiding mode */
         .scroll-nav {
             position: fixed;
             bottom: 0px;
@@ -506,6 +475,13 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             z-index: 9999;
             border-radius: 5px;
+            box-shadow: 0px 0px 5px 3px rgba(255, 87, 34, 0.7); /* Darker orange shadow */
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; /* Smooth transition */
+        }
+
+        .scroll-nav.hidden {
+            opacity: 0; /* Hide the scroll-nav */
+            transform: translateX(-50%) translateY(100%); /* Slide it out of view */
         }
 
         .scroll-nav ul {
@@ -527,15 +503,14 @@
 
         /* Hover effect for changing the color to orange */
         .scroll-nav .nav-link:hover {
-            background-color: orange;
-            color: white; /* Change text color to white when hovered */
+            color: darkorange; /* Change text color to dark orange when hovered */
             border-radius: 3px;
         }
 
         /* Active link style */
         .scroll-nav .nav-link.active {
             background-color: orange;
-            color: orange;
+            color: white;
             border-radius: 3px;
         }
 </style>
