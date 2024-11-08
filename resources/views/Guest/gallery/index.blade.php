@@ -527,15 +527,15 @@
 
         /* Hover effect for changing the color to orange */
         .scroll-nav .nav-link:hover {
-            background-color: orange;
+            background-color: darkorange;
             color: white; /* Change text color to white when hovered */
             border-radius: 3px;
         }
 
         /* Active link style */
         .scroll-nav .nav-link.active {
-            background-color: orange;
-            color: orange;
+            background-color: darkorange;
+            color: darkorange;
             border-radius: 3px;
         }
 </style>
