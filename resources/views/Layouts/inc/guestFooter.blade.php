@@ -10,7 +10,7 @@
             </div>
 
             <!-- Contact Information Section -->
-            <div class="col-md-4 text-center">
+            <div class="col-md-4 text-center mt-3">
                 <p style="margin: 0; font-weight: bold; color: white;">
                     <i class="bi bi-geo-alt-fill" style="color: darkorange;"></i> 428 Cacho St. Brgy Balite Rodriguez Rizal
                 </p>

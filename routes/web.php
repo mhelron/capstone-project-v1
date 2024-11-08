@@ -11,20 +11,35 @@ use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\ListPackageController;
+use App\Http\Controllers\GuestReservationController;
 
 use App\Http\Middleware\AuthMiddleware;
 
 // Guest Route
+//Home
 Route::get('/', [GuestController::class, 'indexHome'])->name('guest.home');
+
+//Packages
 Route::get('/packages', [GuestController::class, 'indexPackages'])->name('guest.packages');
 Route::get('/packages/markina', [ListPackageController::class, 'marikina'])->name('guest.packages.marikina');
 Route::get('/packages/san-mateo', [ListPackageController::class, 'sanmateo'])->name('guest.packages.sanmateo');
 Route::get('/packages/motalban', [ListPackageController::class, 'montalban'])->name('guest.packages.montalban');
 Route::get('/package/{id}', [ListPackageController::class, 'show'])->name('package.show');
+
+//Gallery
 Route::get('/gallery', [GuestController::class, 'indexGallery'])->name('guest.gallery');
+
+//Calendar
 Route::get('/calendar', [GuestController::class, 'indexCalendar'])->name('guest.calendar');
+
+//Contact
 Route::get('/contact', [GuestController::class, 'indexContact'])->name('guest.contact');
+
+//About
 Route::get('/about', [GuestController::class, 'indexAbout'])->name('guest.about');
+
+//Reservation
+Route::get('/reserve', [GuestReservationController::class, 'index'])->name('guest.reserve');
 
 // Login Route
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');

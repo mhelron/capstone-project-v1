@@ -5,6 +5,11 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding-top: 5px;">
+            <h2>Contact Us</h2>
+            <p>Have questions or need a quote? We’re here to assist you! Reach out to us, and our team will guide you through everything, from menu selection to event planning.<br> You can contact us through the following methods:</p>
+        </div>
             
 
     <div class="row mt-4">
@@ -42,27 +47,16 @@
                     allowfullscreen="" 
                     loading="lazy" 
                     referrerpolicy="no-referrer-when-downgrade">
-    </iframe>
-        </div>
-            <style>
-            /* Map container style with dark orange border */
-            .map-container {
-                border: 3px solid darkorange; /* Dark orange border */
-                border-radius: 5px; /* Optional: rounded corners */
-                overflow: hidden; /* Clips any overflow from the iframe */
-            }
-            </style>
+                </iframe>
+            </div>
         </div>
     </div>
 
                 <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding-top: 5px;">
-                    <h2>Contact Us</h2>
-                        <p>Have questions or need a quote? We’re here to assist you! Reach out to us, and our team will guide you through everything, from menu selection to event planning.<br> You can contact us through the following methods:</p>
-
                         <div class="container">
                         <div class="row text-center">
                             <!-- First Pair (Phone and Email) -->
-                            <div class="col-12 col-md-6 text-start">
+                            <div class="col-12 col-md-6 text-start mt-3">
                                 <ul class="list-unstyled">
                                     <li><strong>Phone:</strong> Call us to start our conversation.</li>
                                     <li><strong>Email:</strong> For inquiries, kindly direct to our Email Account.</li>
@@ -70,7 +64,7 @@
                             </div>
 
                             <!-- Second Pair (Form and Visit Us) -->
-                            <div class="col-12 col-md-6 text-start">
+                            <div class="col-12 col-md-6 text-start mt-3">
                                 <ul class="list-unstyled">
                                     <li><strong>Form:</strong> Fill out the form above, and we’ll get back to you ASAP.</li>
                                     <li><strong>Visit Us:</strong> Stop by our location.</li>
@@ -78,7 +72,14 @@
                             </div>
                         </div>
                     </div>
-
+                    <style>
+                    /* Map container style with dark orange border */
+                    .map-container {
+                        border: 3px solid darkorange; /* Dark orange border */
+                        border-radius: 5px; /* Optional: rounded corners */
+                        overflow: hidden; /* Clips any overflow from the iframe */
+                    }
+                    </style>
 
 
                         <style>
