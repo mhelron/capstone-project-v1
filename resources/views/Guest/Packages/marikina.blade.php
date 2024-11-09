@@ -11,7 +11,7 @@
                 <div class="col-md-4 mb-4 d-flex align-items-stretch">
                     <!-- Make the entire card clickable by wrapping it in a <a> tag -->
                     <a href="{{ route('package.show', ['id' => $id]) }}" class="card-link">
-                        <div class="card text-center h-100 card-border position-relative">
+                        <div class="card text-center h-100 card-border position-relative" style="border: 2px solid darkorange;">
                             <!-- Add the image dynamically from the admin input -->
                             @if(isset($package['image_url']) && !empty($package['image_url']))
                                 <img src="{{ asset('storage/' . $package['image_url']) }}" class="card-img-top" alt="{{ $package['package_name'] }} Image">
