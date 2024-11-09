@@ -3,24 +3,25 @@
 @section('content')
 
 <!-- Carousel Section -->
-<div id="backgroundContainer">
-    <div id="textOnlyCarousel" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            <!-- First Item -->
-            <div class="carousel-item active">
-                <div class="carousel-content">
-                    <h5>About Us</h5>
-                    <p>At Kyla and Kyle Catering Services, we’re here to make your event truly special. From weddings and corporate gatherings to family celebrations, our goal is to handle every detail so you can enjoy the day. Known for our friendly service and high-quality food, we’re dedicated to bringing your vision to life and creating a memorable experience for you and your guests. Let us take care of everything so you can focus on making memories.</p>
+<div class="container">
+    <div id="backgroundContainer">
+        <div id="textOnlyCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <!-- First Item -->
+                <div class="carousel-item active">
+                    <div class="carousel-content">
+                        <h5>About Us</h5>
+                        <p>At Kyla and Kyle Catering Services, we’re here to make your event truly special. From weddings and corporate gatherings to family celebrations, our goal is to handle every detail so you can enjoy the day. Known for our friendly service and high-quality food, we’re dedicated to bringing your vision to life and creating a memorable experience for you and your guests. Let us take care of everything so you can focus on making memories.</p>
+                    </div>
                 </div>
-            </div>
-            <!-- Second Item -->
-            <div class="carousel-item">
-                <div class="carousel-content">
-                    <h5>Our History</h5>
-                    <p>Kyla and Kyle Catering Services began over a decade ago as a small family eatery in the heart of Montalban, Rizal. Founded on the values of quality, humility, and a deep connection to the community, we’ve grown into one of Rodriguez’s leading catering providers, known for bringing each client’s vision to life with exceptional service and a personal touch. What started as a small team has now blossomed into a full-service catering company committed to making every celebration memorable, beautiful, and worry-free.</p>
+                <!-- Second Item -->
+                <div class="carousel-item">
+                    <div class="carousel-content">
+                        <h5>Our History</h5>
+                        <p>Kyla and Kyle Catering Services began over a decade ago as a small family eatery in the heart of Montalban, Rizal. Founded on the values of quality, humility, and a deep connection to the community, we’ve grown into one of Rodriguez’s leading catering providers, known for bringing each client’s vision to life with exceptional service and a personal touch. What started as a small team has now blossomed into a full-service catering company committed to making every celebration memorable, beautiful, and worry-free.</p>
+                    </div>
                 </div>
-            </div>
-            <!-- Third Item -->
+                <!-- Third Item -->
             <div class="carousel-item">
                 <div class="carousel-content">
                     <h5>Our Mission</h5>
@@ -41,7 +42,100 @@
     </div>
 </div>
 
-<!-- CSS Styling -->
+<!-- _________________________________________________________________________________________________________- -->
+
+<!-- _________________________________________________________________________________________________________- -->
+
+
+    <!-- Meet the Team Section -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h2 class="text-center">Meet the Team</h2>
+        </div>
+
+   <!-- Carousel -->
+<div class="col-md-12">
+    <div id="imageCarousel" class="carousel slide carousel-fade overflow-hidden" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            @foreach(['team1.png', 'team2.png', 'team3.png', 'team4.png', 'team5.png'] as $index => $image)
+                <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                    <div class="carousel-image-container">
+                        <img src="{{ asset('images/MyTeam/' . $image) }}" class="d-block w-100 carousel-image" alt="Team Image">
+                        <!-- Dark overlay background for text readability -->
+                        <div class="carousel-overlay"></div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        <!-- Carousel Arrows -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+
+        <!-- Circle Indicators -->
+        <div class="carousel-indicators-container">
+            @foreach(['0', '1', '2', '3', '4'] as $index)
+                <div class="carousel-indicator" data-bs-target="#imageCarousel" data-bs-slide-to="{{ $index }}"></div>
+            @endforeach
+        </div>
+    </div>
+</div>
+
+    </div>
+</div>
+
+
+<div class="row mt-3 text-center">
+        <h2>Our Values</h2>
+    </div>
+    
+ <!--Service Cards Section .-->
+<div class="row mt-3 justify-content-center">
+    <div class="col-md-2 mb-3">
+        <div class="service-card" style="background-image: url('{{ asset('images/About/OurValues/qualityfirst.png') }}');">
+            <div class="overlay">
+                <h2>Quality First</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 mb-3">
+        <div class="service-card" style="background-image: url('{{ asset('images/About/OurValues/customercare.png') }}');">
+            <div class="overlay">
+                <h2>Customer Care</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 mb-3">
+        <div class="service-card" style="background-image: url('{{ asset('images/About/OurValues/honestyopeness.png') }}');">
+            <div class="overlay">
+                <h2>Honesty & Openness</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 mb-3">
+        <div class="service-card" style="background-image: url('{{ asset('images/About/OurValues/communityconnection.png') }}');">
+            <div class="overlay">
+                <h2>Community Connection</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 mb-3">
+        <div class="service-card" style="background-image: url('{{ asset('images/About/OurValues/visibleprogress.png') }}');">
+            <div class="overlay">
+                <h2>Visible Progress</h2>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- CSS first part-->
 <style>
 /* Ensure the background takes full width and height */
 #backgroundContainer {
@@ -101,56 +195,7 @@
 }
 </style>
 
-<!-- Bootstrap CSS & JS (CDN) -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- _________________________________________________________________________________________________________- -->
-
-    <div class="row mt-3 text-center">
-        <h2>Our Values</h2>
-    </div>
-    
- <!--Service Cards Section .-->
-<div class="row mt-3 justify-content-center">
-    <div class="col-md-2 mb-3">
-        <div class="service-card" style="background-image: url('{{ asset('images/About/OurValues/qualityfirst.png') }}');">
-            <div class="overlay">
-                <h2>Quality First</h2>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2 mb-3">
-        <div class="service-card" style="background-image: url('{{ asset('images/About/OurValues/customercare.png') }}');">
-            <div class="overlay">
-                <h2>Customer Care</h2>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2 mb-3">
-        <div class="service-card" style="background-image: url('{{ asset('images/About/OurValues/honestyopeness.png') }}');">
-            <div class="overlay">
-                <h2>Honesty & Openness</h2>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2 mb-3">
-        <div class="service-card" style="background-image: url('{{ asset('images/About/OurValues/communityconnection.png') }}');">
-            <div class="overlay">
-                <h2>Community Connection</h2>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2 mb-3">
-        <div class="service-card" style="background-image: url('{{ asset('images/About/OurValues/visibleprogress.png') }}');">
-            <div class="overlay">
-                <h2>Visible Progress</h2>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- CSS for Layout and Effects -->
+<!-- CSS for Layout and Effects 2nd part-->
 <style>
     @media (max-width: 767px) {
     .service-card {
@@ -207,61 +252,14 @@
 
 </style>
 
-<!-- _________________________________________________________________________________________________________- -->
-
-
-    <!-- Meet the Team Section -->
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <h2 class="text-center">Meet the Team</h2>
-        </div>
-
-   <!-- Carousel -->
-<div class="col-md-12">
-    <div id="imageCarousel" class="carousel slide carousel-fade overflow-hidden" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            @foreach(['team1.png', 'team2.png', 'team3.png', 'team4.png', 'team5.png'] as $index => $image)
-                <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                    <div class="carousel-image-container">
-                        <img src="{{ asset('images/MyTeam/' . $image) }}" class="d-block w-100 carousel-image" alt="Team Image">
-                        <!-- Dark overlay background for text readability -->
-                        <div class="carousel-overlay"></div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-
-        <!-- Carousel Arrows -->
-        <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-
-        <!-- Circle Indicators -->
-        <div class="carousel-indicators-container">
-            @foreach(['0', '1', '2', '3', '4'] as $index)
-                <div class="carousel-indicator" data-bs-target="#imageCarousel" data-bs-slide-to="{{ $index }}"></div>
-            @endforeach
-        </div>
-    </div>
-</div>
-
-    </div>
-</div>
-
 <style>   
 
-/* Style for the images inside the carousel */
+/* Style for the images inside the carousel 3rd part */
 .carousel-image {
     width: 100%;        /* Ensure image takes up the full width of the carousel container */
     height: 100%;       /* Ensure image takes up the full height of the carousel container */
     object-fit: fill;   /* Stretch or squeeze the image to fit the container */
     border-radius: 20px;
-    border: 2px solid darkorange;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     margin: auto;       /* Center the image inside the carousel item */
 }
@@ -332,5 +330,7 @@
     
     
 </script>
+
+
 
 @endsection
