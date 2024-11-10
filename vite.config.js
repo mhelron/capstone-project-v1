@@ -12,7 +12,8 @@ export default defineConfig({
 				'resources/js/app.js',
 				'resources/js/logout.js',
 				'resources/js/priceinput.js',
-				'resources/js/togglesidebar.js'
+				'resources/js/togglesidebar.js',
+				'resources/js/guestreservation.js',
 			],
             refresh: true,
         }),

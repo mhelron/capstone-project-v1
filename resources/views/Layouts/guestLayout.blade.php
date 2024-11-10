@@ -38,7 +38,7 @@
         @include('layouts.inc.guestnavbar')
 
         <!-- Main content -->
-        <div class="main p-3 flex-grow-1" style="background-color: #f4f6f9;">
+        <div class="main p-3 flex-grow-1" style="background-color: #f4f6f9;"><!-- #FFE9E2 -->
             @yield(section: 'content')
         </div>
 

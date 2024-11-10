@@ -34,7 +34,7 @@
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                        <label class="form-label">Is this a Reservation or Pencil Book?<span class="text-danger">*</span></label>
+                                        <label class="form-label">Is this a Reservation or Pencil Book? <span class="text-danger">*</span></label>
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="reserve_type" id="reservation" value="Reserve" {{ old('reserve_type') == 'Reserve' ? 'checked' : '' }}>
                                             <label class="form-check-label" for="reservation">
@@ -104,28 +104,27 @@
                                 </div>
                             </div>
 
+                            <!-- Package and Menu Selection -->
                             <div class="row">
-                                <!-- Package -->
                                 <div class="form-group col-md-6 mb-3">
                                     <label for="package_name">Package</label>
-                                    <select onchange="packageChange()" name="package_name" id="package_name" class="form-control">
+                                    <select onchange="change()" name="package_name" id="package_name" class="form-control">
                                         <option value="" disabled {{ old('package_name') ? '' : 'selected' }}>Select a Package</option>
                                         @foreach ($packages as $package)
-                                            <option value="{{ $package['package_name'] }}" {{ old('package_name') == $package['package_name'] ? 'selected' : '' }}>
+                                            <option value="{{ $package['package_name'] }}" data-persons="{{ $package['persons'] }}"
+                                                    {{ old('package_name') == $package['package_name'] ? 'selected' : '' }}>
                                                 {{ $package['package_name'] }}
                                             </option>
                                         @endforeach
                                     </select>
-
                                     @if ($errors->has('package_name'))
                                         <small class="text-danger">{{ $errors->first('package_name') }}</small>
                                     @endif
                                 </div>
-
                                 <div class="form-group col-md-6 mb-3">
                                     <label>Menu</label>
-                                    <select name="menu_name" class="form-select" disabled>
-                                        <option value=""></option>
+                                    <select name="menu_name" class="form-select" id="menu_name" disabled>
+                                        <option value="">Select a Menu</option>
                                     </select>
                                 </div>
                             </div>
@@ -134,7 +133,7 @@
                                 <!-- Number of Guests -->
                                 <div class="form-group col-md-6 mb-3">
                                     <label>Number of Guests</label><span class="text-danger"> *</span>
-                                    <input type="number" name="guests_number" value="{{ old('guests_number') }}" class="form-control">
+                                    <input type="number" name="guests_number" class="form-control" id="guests_number" min="1">
                                     @if ($errors->has('guests_number'))
                                         <small class="text-danger">{{ $errors->first('guests_number') }}</small>
                                     @endif
@@ -197,6 +196,35 @@
                                 </div>
                             </div>
 
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-3">
+
+                                </div>
+
+                                <!-- Color Motif or Theme -->
+                                <div class="form-group col-md-6">
+                                    <h4>Total Breakdown</h4>
+                                    <p class="d-flex justify-content-between">
+                                        <strong>Additional Persons:</strong>
+                                        <span id="total-additional-persons">0</span> 
+                                        <span>x</span> 
+                                        <span id="price-per-package-head">₱0.00</span>
+                                    </p>
+                                    <p class="d-flex justify-content-between">
+                                        <strong>Total Additional Person Price: </strong>
+                                        <span id="total-additional-person-price">₱0.00</span>
+                                    </p>
+                                    <p class="d-flex justify-content-between">
+                                        <strong>Package Price: </strong>
+                                        <span id="total-package-price">₱0.00</span>
+                                    </p>
+                                    <p class="d-flex justify-content-between">
+                                        <strong>Total: </strong>
+                                        <span id="total-price">₱0.00</span>
+                                    </p>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <button type="submit" class="btn btn-primary float-end">Submit</button>
                             </div>
@@ -205,13 +233,17 @@
                 </div>
             </div>
             <div class="col-lg-4">
-                <div class="card" id="package-preview" style="display: none;">
-                        <div class="card-body form-container">
-                            <h5>Package Details</h5>
-                            <p><strong>Package Name:</strong> <span id="preview-package-name"></span></p>
-                            <p><strong>Package Type:</strong> <span id="preview-package-type"></span></p>
-                            <h6>Menus:</h6>
-                            <ul id="preview-menus"></ul>
+                <div class="card blank-card">
+                    <div class="card-body">
+                        <div id="package-preview" style="display:none;">
+                            <h4>Package Preview</h4>
+                            <p><strong>Package Name: </strong><span id="preview-package-name"></span></p>
+                            <p><strong>Package Price: </strong><span id="preview-package-price"></span></p>
+                            <p><strong>Package Pax: </strong><span id="preview-package-pax"></span></p>
+                            <p><h4>Services</h4><span id="preview-package-services"></span></p>
+                            <p><h4>Menu</h4></p>
+                            <p><span id="preview-menu-items"></span></p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -224,135 +256,76 @@
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-<!-- HTML for the Number of Guests Field -->
-<div class="form-group col-md-6 mb-3">
-    <label>Number of Guests</label><span class="text-danger"> *</span>
-    <input type="text" name="guests" id="guests" value="{{ old('guests') }}" class="form-control" readonly>
-</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     var packages = [];
 
     <?php 
-        foreach($packages as $package) {
-            echo 'packages.push({
-                "package_name": "'. addslashes($package['package_name']) .'",
-                "package_type": "'. addslashes($package['package_type']) .'",
-                "persons": "'. addslashes($package['persons']) .'",
-                "menus": [';        
-            foreach($package['menus'] as $menu) {
+    foreach($packages as $package) {
+        echo 'packages.push({
+            "package_name": "'. addslashes($package['package_name']) .'", 
+            "package_type": "'. addslashes($package['package_type']) .'", 
+            "persons": "'. addslashes($package['persons']) .'", 
+            "price": "'. addslashes($package['price']) .'", 
+            "menus": [';
+
+        foreach($package['menus'] as $menu) {
+            echo '{
+                    "menu_name": "'. addslashes($menu['menu_name']) .'", 
+                    "foods": [';
+
+            foreach($menu['foods'] as $food) {
                 echo '{
-                    "menu_name": "'. addslashes($menu['menu_name']) .'",
-                    "foods": [';                
-                foreach($menu['foods'] as $food) {
-                    echo '{
-                        "category": "'. addslashes($food['category']) .'",
-                        "food": "'. addslashes($food['food']) .'"
-                    },';
-                }                
-                echo ']
+                    "category": "'. addslashes($food['category']) .'", 
+                    "food": "'. addslashes($food['food']) .'"
                 },';
             }
-            echo ']});';
+            // Remove trailing comma and close the foods array
+            echo ']},';
         }
-    ?>
+        // Remove trailing comma and close the menus array
+        echo '], 
+        "services": [';
 
-    function packageChange() {
-        const selectedPackageName = $('#package_name').val();
-        const menuDropdown = document.querySelector('select[name="menu_name"]');
-        const guestsInput = document.getElementById('guests');
-        const previewSection = $('#package-preview');
-        const packageNameSpan = $('#preview-package-name');
-        const packageTypeSpan = $('#preview-package-type');
-        const menusList = $('#preview-menus');
-
-        // Reset the menu dropdown
-        menuDropdown.innerHTML = '<option value="">Select a Menu</option>';
-        guestsInput.value = '';  // Reset the guests field
-
-        if (selectedPackageName) {
-            const selectedPackage = packages.find(pkg => pkg.package_name === selectedPackageName);
-
-            if (selectedPackage) {
-                // Enable the menu dropdown
-                menuDropdown.disabled = false;
-                
-                // Populate the menu dropdown options
-                selectedPackage.menus.forEach(menu => {
-                    const option = document.createElement('option');
-                    option.value = menu.menu_name;
-                    option.textContent = menu.menu_name;
-                    menuDropdown.appendChild(option);
-                });
-
-                // Populate guests input with the package's persons value
-                guestsInput.value = selectedPackage.persons;
-
-                // Populate package preview details
-                packageNameSpan.text(selectedPackage.package_name);
-                packageTypeSpan.text(selectedPackage.package_type);
-                menusList.empty();
-
-                selectedPackage.menus.forEach(menu => {
-                    const menuItem = $('<li>').text(menu.menu_name);
-
-                    // Add foods under each menu item
-                    const foodList = $('<ul>');
-                    menu.foods.forEach(food => {
-                        foodList.append($('<li>').text(`${food.category}: ${food.food}`));
-                    });
-
-                    menuItem.append(foodList);
-                    menusList.append(menuItem);
-                });
-
-                // Show the preview section
-                previewSection.show();
-            } else {
-                console.error("Selected package not found.");
-                previewSection.hide();
-            }
-        } else {
-            // Hide the preview if no package is selected
-            menuDropdown.disabled = true;
-            previewSection.hide();
+        // Add services to the package
+        foreach($package['services'] as $service) {
+            echo '{
+                "service": "'. addslashes($service['service']) .'"
+            },';
         }
+
+        // Remove trailing comma and close the services array
+        echo ']
+        });';
     }
-
-    $(document).ready(function() {
-        packageChange();
-        $('#package_name').on('change', packageChange);
-
-        // Initialize tooltips for the menu dropdown
-        $('select[name="menu_name"]').tooltip({
-            content: function() {
-                return $(this).find('option:selected').attr('title');
-            },
-            items: "> option",
-            track: true,
-            tooltipClass: "custom-tooltip"
-        });
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize Flatpickr for the date input
-        flatpickr("#event_date", {
-            dateFormat: "Y-m-d", // Format of the date to send to the server
-            minDate: "today",    // Prevent past dates
-        });
-
-        // Initialize Flatpickr for the time input with AM/PM option
-        flatpickr("#event_time", {
-            enableTime: true,    // Enable time selection
-            noCalendar: true,     // Disable calendar (only time)
-            dateFormat: "h:i K",  // Format of the time to send to the server (12-hour format with AM/PM)
-            time_24hr: false,     // Use 12-hour format
-        });
-    });
+?>
 </script>
+
+@vite('resources/js/guestreservation.js')
+
+
+<style>
+.row .card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.blank-card {
+    background-color: #fff; /* Light background for the blank card */
+    display: flex;
+    justify-content: center;  /* Horizontally center the content */
+    align-items: center;      /* Vertically center the content */
+}
+
+.card-body {
+    flex-grow: 1; /* Allow the body to take up available space */
+    display: flex;
+    flex-direction: column;
+}
+</style>
 
 
 @endsection

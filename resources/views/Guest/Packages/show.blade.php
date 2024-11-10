@@ -7,7 +7,7 @@
         <div class="row mb-4">
             <!-- Back Button (Floating Left) -->
             <div class="col">
-                <a href="{{ url()->previous() }}" class="btn btn-danger float-start">Back</a>
+                <a href="{{ route('guest.packages.marikina')}}" class="btn btn-danger float-start">Back</a>
             </div>
             <!-- Reserve Button -->
             <div class="col text-end">
@@ -18,7 +18,7 @@
         <div class="row mb-4">
             <div class="col-lg-12">
             <h3 class="text-left mb-4">Package Details</h3>
-                <div class="card shadow-sm" style="border: 2px solid black;">
+                <div class="card shadow-sm" style="border: 2px solid #FF5D29;">
                     <div class="card-body">
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore id, fugit laudantium rerum praesentium officiis impedit odit ex maiores minima, dolores deserunt ad sint, excepturi nemo ducimus! Sed, similique illo!</p>
                         <p>The ideal catering package for events with a minimum of <strong>{{ $package['persons'] }}</strong> guests.</p>
@@ -32,7 +32,7 @@
             <!-- Column 2: Package Details and Services (Right Side) -->
             <div class="col-lg-12 mx-auto mb-4"> <!-- Add mx-auto to center the column -->
                 <h3 class="text-left mb-4">Services</h3>
-                <div class="card shadow-sm" style="border: 2px solid black;">
+                <div class="card shadow-sm" style="border: 2px solid #FF5D29;">
                     <div class="card-body">
                         <div class="row">
                             @php
@@ -64,7 +64,7 @@
                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-4">
                     @foreach($package['menus'] as $menu)
                         <div class="col d-flex">
-                            <div class="card shadow-sm flex-fill" style="border: 2px solid black;">
+                            <div class="card shadow-sm flex-fill" style="border: 2px solid #FF5D29;">
                                 <div class="card-body d-flex flex-column">
                                     <h5 class="card-title text-center text-darkorange">{{ $menu['menu_name'] }}</h5>
                                     <ul class="list-unstyled flex-grow-1">
@@ -92,14 +92,12 @@
         transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
         display: flex;
         flex-direction: column;
-        /* Removed height: 100% */
     }
 
     .card-body {
         padding: 1.5rem;
         display: flex;
         flex-direction: column;
-        /* Removed height: 100% to allow the card to size according to content */
     }
 
     .card-title {
