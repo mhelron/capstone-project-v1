@@ -77,6 +77,7 @@
 
 
                         <style>
+                          
                             /* Responsive styling for mobile */
                             @media (max-width: 768px) {
                                 div[style*="display: flex; justify-content: center; gap: 50px;"] {

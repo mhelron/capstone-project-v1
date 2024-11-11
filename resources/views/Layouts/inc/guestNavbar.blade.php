@@ -81,7 +81,7 @@
         background: none; /* Remove default background */
         border: 2px solid black; /* Add border around the hamburger */
         border-radius: 5px; /* Optional: Add rounded corners */
-        padding: 8px; /* Add padding for spacing inside the border */
+        
     }
 
     /* Custom hamburger icon lines */

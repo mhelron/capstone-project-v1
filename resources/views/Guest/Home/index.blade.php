@@ -2,7 +2,7 @@
 
 @section('content')
 
-<<<<<<< HEAD
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,9 +14,9 @@
 </head>
 
 <div class="container">
-=======
+
 <div class="container" style="padding-top: 50px;">
->>>>>>> 4c42e76aa49bb1b5c055058ffe2264db1771c833
+
     <div class="row align-items-center pt-4">
         <div class="col-md-6">
        
@@ -119,6 +119,8 @@
 </div>
 
 <style>
+
+  
 /* The carousel container */
 #imageCarousel {
     position: relative;
@@ -184,6 +186,7 @@
 }
 
 /* Chatbot Bubble Styles */
+        /* Chatbot Bubble Styles */
         .start-conversation-btn {
             background-color: transparent; /* Transparent background */
             color: #ff5722; /* Orange text color */
@@ -199,6 +202,7 @@
             margin-left: auto;
             margin-right: auto;
         }
+
         /* Hover Effect for Start Conversation button */
         .start-conversation-btn:hover {
             background-color: #ff5722; /* Orange background on hover */
@@ -316,7 +320,8 @@
         /* Buttons in Footer (Restart and Send) */
         .chatbox-restart-back {
             display: flex;
-            justify-content: space-between; /* Space between the buttons */
+            flex-direction: column; /* Stack buttons vertically on mobile */
+            gap: 10px; /* Add space between the buttons */
             margin-bottom: 10px; /* Space between Back/Restart and Send button */
         }
 
@@ -327,7 +332,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            width: 45%; /* Make both buttons equally wide */
+            width: 100%; /* Make both buttons take up full width */
             font-size: 14px;
             font-weight: bold;
             transition: background-color 0.3s ease;
@@ -340,13 +345,14 @@
         /* Input Field and Send Button */
         .chatbox-send {
             display: flex;
+            flex-direction: column; /* Stack input and send button vertically */
             justify-content: space-between;
             align-items: center;
             gap: 10px;
         }
 
         .chatbox-send input {
-            flex: 1;
+            width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -368,16 +374,14 @@
             font-size: 14px;
             font-weight: bold;
             transition: background-color 0.3s ease;
+            width: 100%; /* Ensure send button also takes full width */
         }
 
         .chatbox-send button:hover {
             background-color: #ff3d00;
         }
 
-        /* Styling for chat messages */
-        .chatbox-body p {
-            margin: 8px 0;
-        }
+       
 
         /* Mobile Responsiveness */
         @media (max-width: 576px) {
@@ -396,6 +400,11 @@
 
             .chatbox-restart-back button {
                 font-size: 12px;
+            }
+
+            /* Stack footer buttons vertically */
+            .chatbox-footer {
+                flex-direction: column; /* Stack footer buttons on top of each other */
             }
         }
 

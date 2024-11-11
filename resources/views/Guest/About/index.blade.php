@@ -24,18 +24,18 @@
                         <p><strong>Kyla and Kyle Catering Services began over a decade ago as a small family eatery in the heart of Montalban, Rizal. Founded on the values of quality, humility, and a deep connection to the community, we’ve grown into one of Rodriguez’s leading catering providers, known for bringing each client’s vision to life with exceptional service and a personal touch. What started as a small team has now blossomed into a full-service catering company committed to making every celebration memorable, beautiful, and worry-free.</strong></p>
                     </div>
                 </div>
-        </div>
-        
+            </div>
 
-        <!-- Carousel Controls -->
-        <button class="carousel-control-prev" type="button" data-bs-target="#textOnlyCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#textOnlyCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
+            <!-- Carousel Controls -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#textOnlyCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#textOnlyCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
     </div>
 </div>
 
@@ -215,6 +215,8 @@
             align-items: center;
         }
 
+      
+
         /* Adjust text size and layout for smaller screens */
 @media (max-width: 767px) {
     #backgroundContainer {
@@ -278,46 +280,43 @@
                 object-fit: contain; /* Ensure image doesn't overflow */
             }
 
-            /* Optional: For responsiveness, you can adjust the size for smaller screens */
-            @media (max-width: 767px) {
-                .gallery-image {
-                    width: 150px; /* Smaller width for mobile screens */
-                    height: 100px; /* Smaller height for mobile screens */
-                }
-            }
-
-    /* Transparent Gray Modal Background */
             
-            .modal-backdrop {
-                background-color: rgba(255, 255, 255, 0.7); /* White with transparency */
-            }
 
-            /* Make the modal content semi-transparent white */
-            .modal-content {
-                background-color: rgba(255, 255, 255, 0.9); /* White with transparency */
-                border-radius: 10px;
-                border: none;
-            }
+            /* Optional: For responsiveness, you can adjust the size for smaller screens */
+            @media (max-width: 768px) {
+    .modal-content {
+        width: 95%; /* Modal should take 95% of the width on smaller screens */
+        margin-top: 10px; /* Add some margin for top space */
+        margin-bottom: 10px; /* Margin for bottom space */
+    }
 
-            /* Modal header and footer transparency */
-            .modal-header, .modal-footer {
-                background-color: rgba(255, 255, 255, 0.9); /* White with transparency */
-                border-bottom: none;
-                border-radius: 10px;
-            }
+    .modal-body {
+        padding: 10px; /* Reduce padding on mobile */
+    }
 
-            /* Optional: For a more transparent effect on the image inside modal */
-            .modal-body img {
-                max-width: 100%; /* Ensure the image is responsive */
-                border-radius: 10px;
-            }
+    .modal-header, .modal-footer {
+        padding: 10px; /* Reduce padding for header and footer */
+    }
 
-            /* Ensure the close button is visible and black */
-            .btn-close {
-                color: black; /* Make the close button color black */
-                opacity: 1;   /* Ensure the close button is fully opaque */
-                filter: none; /* Remove any color inversion (optional) */
-            }
+    /* Optional: Reduce size of close button on mobile */
+    .btn-close {
+        font-size: 1.2rem; /* Make close button smaller */
+    }
+}
+
+/* Additional Styles for Mobile */
+@media (max-width: 576px) {
+    .modal-content {
+        width: 100%; /* Full width on extremely small screens */
+        margin-top: 20px; /* Adjust margin */
+    }
+
+    /* Adjust image size in smaller modals */
+    .modal-body img {
+        width: 100%;
+        height: auto;
+    }
+}
 
     </style>
 

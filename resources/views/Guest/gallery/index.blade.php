@@ -489,66 +489,90 @@
         }
 
     /* Scroll Navigation Style */
-        .scroll-nav {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 10px 20px;
-            z-index: 9999;
-            border-radius: 5px;
-            box-shadow: 0px 0px 5px 3px rgba(255, 87, 34, 0.7);
-            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; /* Add a smooth transition */
-        }
+.scroll-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 10px 20px;
+    z-index: 9999;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px 3px rgba(255, 87, 34, 0.7);
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    display: flex;
+    justify-content: center; /* Center the nav links horizontally */
+}
 
-        /* Hidden state for the scroll-nav */
-        .scroll-nav.hidden {
-            transform: translate(-50%, 100%); /* Slide down out of view */
-            opacity: 0; /* Hide opacity */
-        }
+/* Hidden state for the scroll-nav */
+.scroll-nav.hidden {
+    transform: translate(-50%, 100%); /* Slide down out of view */
+    opacity: 0; /* Hide opacity */
+}
 
-        /* Show and slide up effect */
-        .scroll-nav.show {
-            transform: translate(-50%, 0); /* Slide up into view */
-            opacity: 1;
-        }
+/* Show and slide up effect */
+.scroll-nav.show {
+    transform: translate(-50%, 0); /* Slide up into view */
+    opacity: 1;
+}
 
-        .scroll-nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            justify-content: space-around;
-        }
+.scroll-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
 
-        .scroll-nav .nav-link {
-            text-decoration: none;
-            color: black;
-            font-size: 15px;
-            font-weight: bold; /* Makes the text bold */
-            padding: 8px 15px;
-            transition: background-color 0.3s, color 0.3s; /* Added transition for color change */
-        }
+.scroll-nav .nav-link {
+    text-decoration: none;
+    color: black;
+    font-size: 15px;
+    font-weight: bold; /* Makes the text bold */
+    padding: 8px 15px;
+    transition: background-color 0.3s, color 0.3s; /* Added transition for color change */
+}
 
-        /* Hover effect for changing the color to orange */
-        .scroll-nav .nav-link:hover {
-            color: darkorange; /* Change text color to dark orange when hovered */
-            border-radius: 3px;
-        }
+/* Hover effect for changing the color to orange */
+.scroll-nav .nav-link:hover {
+    color: darkorange; /* Change text color to dark orange when hovered */
+    border-radius: 3px;
+}
 
-        /* Active link style */
-        .scroll-nav .nav-link.active {
-            background-color: orange;
-            color: white;
-            border-radius: 3px;
-        }
+/* Active link style */
+.scroll-nav .nav-link.active {
+    background-color: orange;
+    color: white;
+    border-radius: 3px;
+}
 
-        .hidden {
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-        }
+/* Mobile Responsiveness */
+@media (max-width: 576px) {
+    /* Adjust the scroll-nav for mobile */
+    .scroll-nav {
+        padding: 10px 10px; /* Less padding on mobile */
+        width: 100%;
+    }
+
+    /* Stack the links vertically on smaller screens */
+    .scroll-nav ul {
+        flex-direction: column; /* Stack links vertically */
+        align-items: center; /* Center the links */
+        gap: 10px; /* Add some space between the links */
+    }
+
+    .scroll-nav .nav-link {
+        font-size: 14px; /* Slightly smaller font size */
+        padding: 10px 20px; /* Adjust padding for mobile */
+    }
+
+    /* Optional: make the navigation bar occupy the full width on mobile */
+    .scroll-nav .nav-link.active {
+        background-color: darkorange;
+    }
+}
+
     
 </style>
 

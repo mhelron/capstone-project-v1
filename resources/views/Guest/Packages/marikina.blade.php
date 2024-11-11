@@ -2,8 +2,8 @@
 @extends('layouts.guestlayout')
 
 @section('content')
-<div class="container mt-2">
-    <h2 class="text-center pb-2" style="padding-top: 75px;">Packages in Marikina</h2>
+<div class="container mt-2" >
+    <h2 class="text-center pb-2">Packages in Marikina</h2>
 
     <div class="row justify-content-center cards-container">
         @foreach($packages as $id => $package)
