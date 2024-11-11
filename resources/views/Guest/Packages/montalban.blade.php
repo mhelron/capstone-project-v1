@@ -2,7 +2,7 @@
 @extends('layouts.guestlayout')
 
 @section('content')
-<div class="container mt-2">
+<div class="container mt-2" style="padding-top: 10px;">
     <h2 class="text-left pb-2">Packages in Montalban</h2>
 
     <div class="row justify-content-center cards-container">

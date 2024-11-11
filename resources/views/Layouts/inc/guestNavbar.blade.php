@@ -1,6 +1,6 @@
 @vite('resources/css/guest.css')
 
-<nav class="navbar navbar-expand-lg navbar-light custom-navbar">
+<nav class="navbar navbar-expand-lg navbar-light custom-navbar" id="navbar">
     <div class="container">
         <a class="navbar-brand" href="{{ route('guest.home') }}">
             <span style="color: darkorange;">Kyla</span> and <span style="color: red;">Kyle</span>
@@ -31,7 +31,6 @@
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('guest.gallery') ? 'active' : '' }}" href="{{ route('guest.gallery') }}">Gallery</a>
                 </li>
-
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('guest.calendar') ? 'active' : '' }}" href="{{ route('guest.calendar') }}">Calendar</a>
                 </li>
@@ -50,6 +49,22 @@
 </nav>
 
 <style>
+    /* Existing CSS for navbar and responsive styles */
+    /* You can keep the styles you already have here */
+    
+    /* Add transition to the navbar for smooth hide/show effect */
+    #navbar {
+        transition: top 0.3s ease-in-out;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000; /* Ensure it's on top of other content */
+    }
+
+    /* Optional: Add a shadow when the navbar becomes fixed */
+    #navbar.fixed {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
     /* Remove the dropdown arrow */
     .nav-item.dropdown .dropdown-toggle::after {
         display: none;
@@ -163,3 +178,23 @@
         }
     }
 </style>
+<script>
+    // Variables to store scroll position
+    let lastScrollTop = 0;
+    const navbar = document.getElementById('navbar');
+    
+    window.addEventListener('scroll', () => {
+        let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // Check if the user is scrolling up or down
+        if (currentScroll > lastScrollTop) {
+            // Scroll Down - Hide navbar
+            navbar.style.top = "-80px";  // Adjust this value based on navbar height
+        } else {
+            // Scroll Up - Show navbar
+            navbar.style.top = "0";
+        }
+        
+        lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // Prevent negative scroll
+    });
+</script>

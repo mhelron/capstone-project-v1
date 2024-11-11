@@ -4,7 +4,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12" style="padding-top: 50px;">
 
             <!-- LOCATIONS WE SERVE header with orange lines on both sides -->
             <p class="locations-header">
