@@ -2,6 +2,9 @@
 
 @section('content')
 
+<meta name="robots" content="noindex, nofollow">
+
+
 <!-- Carousel Section -->
 <div class="container">
     <div id="backgroundContainer">

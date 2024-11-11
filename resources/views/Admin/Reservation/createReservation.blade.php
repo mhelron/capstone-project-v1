@@ -106,10 +106,13 @@
                                 </div>
 
                                 <div class="form-group col-md-6 mb-3">
-                                    <label>Menu</label>
-                                    <select name="menu_name" class="form-select" disabled>
-                                        <option value=""></option>
+                                    <label for="menu_name">Menu</label>
+                                    <select name="menu_name" class="form-control" id="menu_name" {{ old('menu_name') ? '' : 'disabled' }}>
+                                        <option value="" disabled {{ old('menu_name') ? '' : 'selected' }}>Select a Menu</option>
+                                        <!-- Dynamic options will be inserted here by JavaScript -->
                                     </select>
+
+                                    <small id="menu_name_error" class="text-danger" style="display:none;"></small>
                                 </div>
                             </div>
 
@@ -193,101 +196,160 @@
 </div>
 <!-- /.content -->
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
-    var packages = [];
+ var packages = [];
 
-    <?php 
-        foreach($packages as $package) {
-            echo 'packages.push({
-                "package_name": "'. addslashes($package['package_name']) .'",
-                "package_type": "'. addslashes($package['package_type']) .'",
-                "menus": [';        
-            foreach($package['menus'] as $menu) {
+<?php 
+    foreach($packages as $package) {
+        echo 'packages.push({
+            "package_name": "'. addslashes($package['package_name']) .'",
+            "package_type": "'. addslashes($package['package_type']) .'",
+            "menus": [';        
+        foreach($package['menus'] as $menu) {
+            echo '{
+                "menu_name": "'. addslashes($menu['menu_name']) .'",
+                "foods": [';                
+            foreach($menu['foods'] as $food) {
                 echo '{
-                    "menu_name": "'. addslashes($menu['menu_name']) .'",
-                    "foods": [';                
-                foreach($menu['foods'] as $food) {
-                    echo '{
-                        "category": "'. addslashes($food['category']) .'",
-                        "food": "'. addslashes($food['food']) .'"
-                    },';
-                }                
-                echo ']
+                    "category": "'. addslashes($food['category']) .'",
+                    "food": "'. addslashes($food['food']) .'"
                 },';
-            }
-            echo ']});';
+            }                
+            echo ']
+            },';
         }
-    ?>
+        echo ']});';
+    }
+?>
 
-    function packageChange() {
-        const selectedPackageName = $('#package_name').val();
-        const menuDropdown = document.querySelector('select[name="menu_name"]');
+function packageChange() {
+    const selectedPackageName = $('#package_name').val(); // Get the selected package
+    const menuDropdown = document.querySelector('select[name="menu_name"]');
+    const sponsorsField = document.getElementById('sponsors');
+    const menuError = document.getElementById('menu_name_error'); // Get the error message element
 
-        if (selectedPackageName) {
-            const selectedPackage = packages.find(pkg => pkg.package_name === selectedPackageName);
+    // Reset the menu select field when changing package
+    menuDropdown.value = ''; // Reset the menu dropdown value to empty
 
-            if (selectedPackage) {
+    if (selectedPackageName) {
+        const selectedPackage = packages.find(pkg => pkg.package_name === selectedPackageName);
+
+        if (selectedPackage) {
+            // Enable the menu dropdown if package has menus
+            if (selectedPackage.menus && selectedPackage.menus.length > 0) {
                 menuDropdown.disabled = false;
-                document.getElementById('sponsors').disabled = (selectedPackage.package_type !== 'Wedding');
+                menuDropdown.required = true; // Make the menu field required
 
-                // Clear existing options and add options for the selected package's menus
-                menuDropdown.innerHTML = '<option value="">Select a Menu</option>';
+                // Clear previous options but keep placeholder
+                const placeholderOption = menuDropdown.querySelector('option[value=""]');
+                menuDropdown.innerHTML = ''; // Remove all options
+                menuDropdown.appendChild(placeholderOption); // Add back placeholder option
+
+                // Add the new menu options for the selected package
                 selectedPackage.menus.forEach(menu => {
                     const option = document.createElement('option');
                     option.value = menu.menu_name;
                     option.textContent = menu.menu_name;
 
-                    // Get only the food names for the tooltip
+                    // Tooltip for food items under each menu
                     const foodsList = menu.foods.map(food => food.food).join('\n');
                     option.title = foodsList || "No foods available";
-
                     menuDropdown.appendChild(option);
                 });
+
+                // Hide the error message when the menu is enabled
+                menuError.style.display = 'none';
             } else {
-                console.error("Selected package not found.");
+                // If no menus exist for this package, disable the menu dropdown
+                menuDropdown.disabled = true;
+                menuDropdown.required = false;
+                menuError.style.display = 'none'; // Hide any error message
             }
+
+            // Disable sponsors field if it's not a wedding package
+            sponsorsField.disabled = (selectedPackage.package_type !== 'Wedding');
         } else {
-            menuDropdown.disabled = true;
+            console.error("Selected package not found.");
         }
+    } else {
+        // If no package is selected, reset everything
+        menuDropdown.disabled = true;
+        menuDropdown.required = false; // Remove the required attribute when no package is selected
+        menuDropdown.value = ''; // Reset the menu field value to empty
+        menuError.style.display = 'none'; // Hide the error message when no package is selected
+    }
+}
+
+
+
+$(document).ready(function() {
+    packageChange();
+    $('#package_name').on('change', packageChange);
+
+    // Initialize tooltips for the menu dropdown
+    $('select[name="menu_name"]').tooltip({
+        content: function() {
+            return $(this).find('option:selected').attr('title');
+        },
+        items: "> option",
+        track: true,
+        tooltipClass: "custom-tooltip"
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Flatpickr for the date input
+    flatpickr("#event_date", {
+        dateFormat: "Y-m-d", // Format of the date to send to the server
+        minDate: "today",    // Prevent past dates
+    });
+
+    // Initialize Flatpickr for the time input with AM/PM option
+    flatpickr("#event_time", {
+        enableTime: true,    // Enable time selection
+        noCalendar: true,    // Disable calendar (only time)
+        dateFormat: "h:i K", // Format of the time to send to the server (12-hour format with AM/PM)
+        time_24hr: false,    // Use 12-hour format
+    });
+});
+
+// Ensure `menu_name` gets an empty value when the field is disabled
+document.getElementById('package_name').addEventListener('change', function() {
+    const menuField = document.getElementById('menu_name');
+    
+    if (this.value) {
+        menuField.disabled = false; // Enable the menu field
+    } else {
+        menuField.disabled = true; // Disable the menu field
+        menuField.value = ''; // Reset the menu field value
+    }
+});
+
+document.getElementById('myForm').addEventListener('submit', function(event) {
+    const menuField = document.getElementById('menu_name');
+    const menuError = document.getElementById('menu_name_error'); // Get the error message element
+
+    // Reset error state before submitting
+    menuError.style.display = 'none';
+
+    // If the menu field is required and not filled, show a validation error
+    if (menuField.required && !menuField.value) {
+        event.preventDefault(); // Prevent form submission
+        menuError.style.display = 'block'; // Show error message
+        menuError.textContent = "Menu is required."; // Custom error message
     }
 
-    $(document).ready(function() {
-        packageChange();
-        $('#package_name').on('change', packageChange);
-
-        // Initialize tooltips for the menu dropdown
-        $('select[name="menu_name"]').tooltip({
-            content: function() {
-                return $(this).find('option:selected').attr('title');
-            },
-            items: "> option",
-            track: true,
-            tooltipClass: "custom-tooltip"
-        });
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize Flatpickr for the date input
-        flatpickr("#event_date", {
-            dateFormat: "Y-m-d", // Format of the date to send to the server
-            minDate: "today",    // Prevent past dates
-        });
-
-        // Initialize Flatpickr for the time input with AM/PM option
-        flatpickr("#event_time", {
-            enableTime: true,    // Enable time selection
-            noCalendar: true,     // Disable calendar (only time)
-            dateFormat: "h:i K",  // Format of the time to send to the server (12-hour format with AM/PM)
-            time_24hr: false,     // Use 12-hour format
-        });
-    });
+    if (menuField.disabled) {
+        menuField.value = ''; // Ensure menu_name is an empty string when disabled
+    }
+});
 </script>
 
 @endsection

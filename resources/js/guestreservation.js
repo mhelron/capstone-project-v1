@@ -35,7 +35,7 @@ function change() {
     guestsInput.attr('min', persons);  // Set the minimum value of the input
 
     // Reset menu dropdown and hide the preview by default
-    menuDropdown.empty().append('<option value="">Select a Menu</option>');
+    menuDropdown.empty().append('<option value="" disabled selected>Select a Menu</option>');
     previewSection.hide();
     packageServicesList.empty();
 

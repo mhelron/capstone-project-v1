@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kyla and Kyle</title>
 
+     <!-- Add the canonical link -->
+     <link rel="canonical" href="{{ url()->current() }}">
+
     <!-- Favicon for Browsers -->
     <link rel="icon" href="{{ asset('images/icons/favicon.ico') }}" type="image/x-icon">
     <link rel="icon" href="{{ asset('images/icons/favicon-16x16.png') }}" sizes="16x16">
@@ -39,7 +42,7 @@
 
         <!-- Main content -->
         <div class="main p-3 flex-grow-1" style="background-color: #f4f6f9;"><!-- #FFE9E2 -->
-            @yield(section: 'content')
+            @yield('content')
         </div>
 
         <div class="custom-footer">

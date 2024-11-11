@@ -88,10 +88,10 @@
                                                                         <tr>
                                                                             <td>{{ $menu['menu_name'] }}</td>
                                                                             <td>
-                                                                                @if (isset($menu['foods']) && count($menu['foods']) > 0)
+                                                                                @if (isset($menu) && isset($menu['foods']) && is_array($menu['foods']) && count($menu['foods']) > 0)
                                                                                     <ul class="list-unstyled">
                                                                                         @foreach ($menu['foods'] as $food)
-                                                                                            <li>{{ $food['food'] }}</li>
+                                                                                            <li>{{ $food['food'] ?? 'Unknown Food' }}</li>
                                                                                         @endforeach
                                                                                     </ul>
                                                                                 @else

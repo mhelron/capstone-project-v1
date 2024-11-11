@@ -18,7 +18,7 @@
 <div class="content pt-2">
     <div class="container">
         <div class="row d-flex justify-content-center">
-            <div class="col-lg-8">
+            <div class="col-lg-8 mb-4">
 
                 @if (session('status'))
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -226,13 +226,13 @@
                             </div>
 
                             <div class="form-group">
-                                <button type="submit" class="btn btn-primary float-end">Submit</button>
+                                <button type="submit" class="btn btn-darkorange float-end">Submit</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-4 mb-4">
                 <div class="card blank-card">
                     <div class="card-body">
                         <div id="package-preview" style="display:none;">
@@ -324,6 +324,55 @@
     flex-grow: 1; /* Allow the body to take up available space */
     display: flex;
     flex-direction: column;
+}
+
+/* Card Border */
+.card {
+    border: 2px solid darkorange; /* Add darkorange border to the card */
+    background-color: #f5f5dc; /* Light beige */
+}
+
+/* Input Field Border */
+input.form-control,
+select.form-control,
+select.form-select,
+textarea.form-control {
+    border: 2px solid darkorange; /* Add orange border to input fields */
+}
+
+/* Add focus effect for input fields to enhance visibility */
+input.form-control:focus,
+select.form-control:focus,
+select.form-select:focus,
+textarea.form-control:focus {
+    border-color: darkorange; /* Change border color to darkorange on focus */
+    box-shadow: 0 0 5px darkorange; /* Optional: add a glow effect on focus */
+}
+
+input[type="radio"].form-check-input {
+    border: 2px solid darkorange; /* Border color for the radio button */
+    border-radius: 50%; /* Circular shape */
+    width: 20px; /* Adjust the size */
+    height: 20px; /* Adjust the size */
+    appearance: none; /* Remove default browser styling */
+    outline: none; /* Remove outline */
+    transition: border-color 0.3s ease, background-color 0.3s ease; /* Smooth transition */
+}
+
+/* When the radio button is selected (checked) */
+input[type="radio"].form-check-input:checked {
+    background-color: darkorange; /* Change background color to darkorange */
+    border-color: darkorange; /* Change the border color to darkorange */
+}
+
+/* When the radio button is focused */
+input[type="radio"].form-check-input:focus {
+    box-shadow: 0 0 5px darkorange; /* Optional: add a glowing effect on focus */
+}
+
+/* Optional: add a hover effect */
+input[type="radio"].form-check-input:hover {
+    border-color: darkorange; /* Change border color on hover */
 }
 </style>
 
