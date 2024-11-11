@@ -12,12 +12,12 @@
     </ul>
 </div>
 
-<div class="container">
+<div class="container" style="padding-top: 50px;">
     <div class="row">
         <div class="col-md-12">
             <div class="container mt-4 mb-5">
         
- <!-- WEDDING GALLERY -->
+<!-- WEDDING GALLERY -->
                 <!-- Wedding Title -->
                 <h1 id="weddingGallery" class="locations-header">
                     <span class="border-line left-border"></span>
@@ -334,7 +334,7 @@
                         </a>
                     </div>
                 </div>
-
+                
             </div>
         </div>
     </div>
@@ -345,7 +345,8 @@
     <div class="modal-dialog modal-dialog-centered modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                <!-- Close button inside the modal -->
+                <button type="button" id="closeModalButton" class="btn-close position-absolute top-0 end-0 m-3" aria-label="Close"></button>
             </div>
             <div class="modal-body p-0 text-center">
                 <!-- Large Image Display -->
@@ -356,55 +357,56 @@
 </div>
 
 <style>
-      
-    .gallery-image {
-        width: 100%; /* Makes the image responsive within the column */
-        aspect-ratio: 1 / 1; /* Ensures images are square */
-        object-fit: cover; /* Maintains aspect ratio within the square */
-        border: 2px solid orange; /* Border around the image */
-        border-radius: 8px; /* Optional: Rounded corners */
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Optional: Adds shadow */
-    }
+    /*Gallery Setup */
+        .gallery-image {
+            width: 100%; /* Makes the image responsive within the column */
+            aspect-ratio: 1 / 1; /* Ensures images are square */
+            object-fit: cover; /* Maintains aspect ratio within the square */
+            border: 2px solid orange; /* Border around the image */
+            border-radius: 8px; /* Optional: Rounded corners */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Optional: Adds shadow */
+        }
 
-    /* Modal Fullscreen Image */
-    .modal-image {
-        width: 100%;
-        height: 100%;
-        object-fit: contain; /* Make the image scale while maintaining aspect ratio */
-    }
+        /* Modal Fullscreen Image */
+        .modal-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Make the image scale while maintaining aspect ratio */
+        }
 
-    /* Remove padding/margins from the modal to maximize image size */
-    .modal-body {
-        padding: 0;
-    }
+        /* Remove padding/margins from the modal to maximize image size */
+        .modal-body {
+            padding: 0;
+        }
 
-    /* Ensure the modal fills the screen */
-    .modal-dialog.modal-fullscreen {
-        max-width: 100%;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-    }
+        /* Ensure the modal fills the screen */
+        .modal-dialog.modal-fullscreen {
+            max-width: 100%;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
 
-    .modal-content {
-        height: 100%;
-        background-color: transparent; /* Set the modal background to transparent */
-        border: none; /* Remove any borders */
-    }
+        .modal-content {
+            height: 100%;
+            background-color: transparent; /* Set the modal background to transparent */
+            border: none; /* Remove any borders */
+        }
 
-    .modal-header {
-        position: relative;
-        padding: 0;
-    }
+        .modal-header {
+            position: relative;
+            padding: 0;
+        }
+        
+        .btn-close.position-absolute {
+            position: absolute;
+            top: 10px;  /* Adjust the position from the top */
+            right: 10px; /* Adjust the position from the right */
+            z-index: 1050; /* Ensure it overlaps the image */
+            background-color: transparent; /* Make the background transparent */
+            font-size: 2rem; /* Increase the size of the close button */
+        }
 
-    .btn-close.position-absolute {
-        position: absolute;
-        top: 10px;  /* Adjust the position from the top */
-        right: 10px; /* Adjust the position from the right */
-        z-index: 1050; /* Ensure it overlaps the image */
-        background-color: transparent; /* Make the background transparent */
-        font-size: 2rem; /* Increase the size of the close button */
-    }
     /* Border Design */
         .locations-header {
             text-align: center;
@@ -450,7 +452,7 @@
         .right-border {
             right: 10%;
         }
-    }
+        } 
 
     /* Styling for very small screens */
     @media (max-width: 480px) {
@@ -465,23 +467,51 @@
 
 
         /* Gallery Button Style with hiding mode */
+        /* Scroll Navigation Style */
+
+
+    /* Modal Image Customization*/
+        .modal-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Center the modal dialog */
+        .modal-dialog.modal-fullscreen {
+            max-width: 100%;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            display: flex;
+            align-items: center; /* Center vertically */
+            justify-content: center; /* Center horizontally */
+        }
+
+    /* Scroll Navigation Style */
         .scroll-nav {
             position: fixed;
-            bottom: 0px;
+            bottom: 0;
             left: 50%;
             transform: translateX(-50%);
             background-color: rgba(255, 255, 255, 0.8);
             padding: 10px 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             z-index: 9999;
             border-radius: 5px;
-            box-shadow: 0px 0px 5px 3px rgba(255, 87, 34, 0.7); /* Darker orange shadow */
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; /* Smooth transition */
+            box-shadow: 0px 0px 5px 3px rgba(255, 87, 34, 0.7);
+            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; /* Add a smooth transition */
         }
 
+        /* Hidden state for the scroll-nav */
         .scroll-nav.hidden {
-            opacity: 0; /* Hide the scroll-nav */
-            transform: translateX(-50%) translateY(100%); /* Slide it out of view */
+            transform: translate(-50%, 100%); /* Slide down out of view */
+            opacity: 0; /* Hide opacity */
+        }
+
+        /* Show and slide up effect */
+        .scroll-nav.show {
+            transform: translate(-50%, 0); /* Slide up into view */
+            opacity: 1;
         }
 
         .scroll-nav ul {
@@ -513,6 +543,87 @@
             color: white;
             border-radius: 3px;
         }
+
+        .hidden {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+    
 </style>
 
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const scrollNav = document.querySelector(".scroll-nav");
+        const footer = document.querySelector("footer");
+
+        // Function to check if the footer is in view
+        function toggleScrollNav() {
+            const footerRect = footer.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+
+            // Check if the footer is visible in the viewport
+            if (footerRect.top < windowHeight) {
+                scrollNav.classList.add("hidden");
+            } else {
+                scrollNav.classList.remove("hidden");
+            }
+        }
+
+        // Listen for scroll events
+        window.addEventListener("scroll", toggleScrollNav);
+    });
+
+    
+    
+    document.addEventListener("DOMContentLoaded", function () {
+        const galleryImages = document.querySelectorAll(".gallery-image");
+        const modalImage = document.getElementById("modalImage");
+        const modal = new bootstrap.Modal(document.getElementById("imageModal"));
+        const closeModalButton = document.getElementById("closeModalButton");
+        const scrollNav = document.querySelector(".scroll-nav");
+
+        let lastScrollPosition = 0;
+
+        // Open modal and display the clicked image
+        galleryImages.forEach(image => {
+            image.addEventListener("click", function () {
+                lastScrollPosition = window.scrollY; // Save scroll position before opening modal
+
+                modalImage.src = this.src; // Set the clicked image as the modal image
+                modal.show(); // Show modal
+
+                // Hide the scroll-nav but keep it fixed
+                scrollNav.classList.add("hidden");
+
+                // Lock scroll position and disable page scroll
+                document.body.classList.add("no-scroll");
+                document.body.style.top = `-${lastScrollPosition}px`;
+            });
+        });
+
+        // Close the modal and restore scroll position
+        closeModalButton.addEventListener("click", function () {
+            modal.hide(); // Hide modal
+
+            // Show the scroll-nav again while keeping it fixed at the bottom
+            scrollNav.classList.remove("hidden");
+
+            // Unlock scroll position and re-enable scrolling
+            document.body.classList.remove("no-scroll");
+            document.body.style.top = '';
+            window.scrollTo(0, lastScrollPosition); // Restore scroll position
+        });
+
+        // Clear the image source when the modal is hidden to free up memory (optional)
+        document.getElementById("imageModal").addEventListener("hidden.bs.modal", function () {
+            modalImage.src = ""; // Clear the image source
+            scrollNav.classList.remove("hidden"); // Ensure scroll-nav is shown when modal is hidden
+        });
+    });
+
+    
+
+</script>
 @endsection

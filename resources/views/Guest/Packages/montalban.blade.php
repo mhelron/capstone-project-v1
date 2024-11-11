@@ -2,8 +2,13 @@
 @extends('layouts.guestlayout')
 
 @section('content')
+<<<<<<< HEAD
 <div class="container mt-2">
     <h2 class="text-center pb-2">Packages in Montalban</h2>
+=======
+<div class="container mt-2" style="padding-top: 10px;">
+    <h2 class="text-left pb-2">Packages in Montalban</h2>
+>>>>>>> 4c42e76aa49bb1b5c055058ffe2264db1771c833
 
     <div class="row justify-content-center cards-container">
         @foreach($packages as $id => $package)
