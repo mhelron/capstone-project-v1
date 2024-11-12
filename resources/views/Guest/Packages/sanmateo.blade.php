@@ -3,7 +3,7 @@
 
 @section('content')
 <div class="container mt-2">
-    <h2 class="text-center pb-2">Packages in San Mateo</h2>
+    <h2 class="text-center pb-2" style="padding-top: 100px;">Packages in San Mateo</h2>
 
     <div class="row justify-content-center cards-container">
         @foreach($packages as $id => $package)
