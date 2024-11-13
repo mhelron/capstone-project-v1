@@ -4,17 +4,24 @@
 
 <meta name="robots" content="noindex, nofollow">
 
-
 <!-- Carousel Section -->
-<div class="container" style="padding-top: 120px;">
+<div class="container" style="padding-top: 100px;">
     <div id="backgroundContainer">
-        <div id="textOnlyCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div id="textOnlyCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="10000">
+            
+            <!-- Carousel Indicators -->
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#textOnlyCarousel" data-bs-slide-to="0" class="active custom-indicator" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#textOnlyCarousel" data-bs-slide-to="1" class="custom-indicator" aria-label="Slide 2"></button>
+            </div>
+
             <div class="carousel-inner">
                 <!-- First Item -->
                 <div class="carousel-item active">
                     <div class="carousel-content">
                         <h5>About Us</h5>
                         <p><strong>At Kyla and Kyle Catering Services, we’re here to make your event truly special. From weddings and corporate gatherings to family celebrations, our goal is to handle every detail so you can enjoy the day. Known for our friendly service and high-quality food, we’re dedicated to bringing your vision to life and creating a memorable experience for you and your guests. Let us take care of everything so you can focus on making memories.</strong></p>
+                        <p><br></p>
                     </div>
                 </div>
                 <!-- Second Item -->
@@ -39,8 +46,82 @@
     </div>
 </div>
 
+<!-- Container for the Two-Column Layout -->
+<div class="container" style="padding-top: 100px;">
+    <div class="row">
+        <!-- Left Column (Mission Section) -->
+        <div class="col-md-6">
+            <!-- Mission Section -->
+            <div class="row mt-3 text-center justify-content-center">
+                <div class="col-md-8">
+                    <h2>Our Mission</h2>  
+                    <div class="header-line"></div> <!-- Line below the title -->
+                    <p style="padding-top: 20px;"><strong>To make every event unforgettable. At Kyla and Kyle Catering Services, we are dedicated to bringing your vision to life. We handle every detail, from designing and setting up the venue to catering and serving our carefully crafted menu selected by you. Our goal is to create a seamless, memorable experience perfectly tailored to your needs.</strong></p>
+                </div>
+            </div>
+        </div>
 
-   <!-- Meet the Team Section -->
+        <!-- Right Column (Vision Section) -->
+        <div class="col-md-6">
+            <!-- Vision Section -->
+            <div class="row mt-3 text-center justify-content-center">
+                <div class="col-md-8">
+                    <h2>Our Vision</h2>
+                    <div class="header-line"></div> <!-- Line below the title -->
+                    <p style="padding-top: 20px;"><strong>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Our Values Section -->
+<div class="row mt-3 text-center">
+    <h2>Our Values</h2>
+    <div class="header-line"></div> <!-- Line below the title -->
+</div>
+
+<!-- Service Cards Section -->
+<div class="row mt-3 justify-content-center">
+    <div class="col-md-2 mb-3">
+        <div class="service-card" style="background-image: url('{{ asset('images/About/OurValues/qualityfirst.png') }}');">
+            <div class="overlay">
+                <h2>Quality First</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 mb-3">
+        <div class="service-card" style="background-image: url('{{ asset('images/About/OurValues/customercare.png') }}');">
+            <div class="overlay">
+                <h2>Customer Care</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 mb-3">
+        <div class="service-card" style="background-image: url('{{ asset('images/About/OurValues/honestyopeness.png') }}');">
+            <div class="overlay">
+                <h2>Honesty & Openness</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 mb-3">
+        <div class="service-card" style="background-image: url('{{ asset('images/About/OurValues/communityconnection.png') }}');">
+            <div class="overlay">
+                <h2>Community Connection</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 mb-3">
+        <div class="service-card" style="background-image: url('{{ asset('images/About/OurValues/visibleprogress.png') }}');">
+            <div class="overlay">
+                <h2>Visible Progress</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Meet the Team Section -->
 <div class="row mt-4">
     <div class="col-md-12">
         <h2 class="text-center" style="padding-top: 20px;">Meet the Team</h2>
@@ -89,65 +170,10 @@
         </div>
     </div>
 </div>
-    
-
-<div class="row mt-3 text-center">
-        <h2>Our Values</h2>
-        <div class="header-line"></div> <!-- Line below the title -->
-    </div>
- <!--Service Cards Section .-->
-<div class="row mt-3 justify-content-center">
-    <div class="col-md-2 mb-3">
-        <div class="service-card" style="background-image: url('{{ asset('images/About/OurValues/qualityfirst.png') }}');">
-            <div class="overlay">
-                <h2>Quality First</h2>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2 mb-3">
-        <div class="service-card" style="background-image: url('{{ asset('images/About/OurValues/customercare.png') }}');">
-            <div class="overlay">
-                <h2>Customer Care</h2>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2 mb-3">
-        <div class="service-card" style="background-image: url('{{ asset('images/About/OurValues/honestyopeness.png') }}');">
-            <div class="overlay">
-                <h2>Honesty & Openness</h2>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2 mb-3">
-        <div class="service-card" style="background-image: url('{{ asset('images/About/OurValues/communityconnection.png') }}');">
-            <div class="overlay">
-                <h2>Community Connection</h2>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2 mb-3">
-        <div class="service-card" style="background-image: url('{{ asset('images/About/OurValues/visibleprogress.png') }}');">
-            <div class="overlay">
-                <h2>Visible Progress</h2>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
-
-  <!-- Mission Section -->
-  <div class="row mt-3 text-center justify-content-center">
-    <div class="col-md-8">
-        <h2>Our Mission</h2>
-        <div class="header-line"></div> <!-- Line below the title -->
-        <p  style="padding-top: 20px;"><strong>To make every event unforgettable. At Kyla and Kyle Catering Services, we are dedicated to bringing your vision to life. We handle every detail, from designing and setting up the venue to catering and serving our carefully crafted menu selected by you. Our goal is to create a seamless, memorable experience perfectly tailored to your needs.</strong></p>
-    </div>
-</div>
 
 
-<!-- CSS first part Text Carousel-->
+<!-- CSS 1st part Text Carousel-->
     <style>
-
         /* Ensure the background takes full width and height */
         #backgroundContainer {
             position: relative;
@@ -158,34 +184,28 @@
             background-size: cover; /* Ensure the background image covers the entire container */
             background-position: center center; /* Center the background image */
             background-attachment: fixed; /* Make the background image fixed */
-
-            /* Add border and rounded corners */
             border: 2px solid #FF7F00; /* Orange border color */
             border-radius: 15px; /* Rounded corners */
-
-            /* Add orange box-shadow */
-            box-shadow: 0 8px 25px rgba(255, 69, 0, 0.8); /* Darker orange with wider spread */
+            box-shadow: 0 0 25px rgba(255, 69, 0, 0.8); /* Orange shadow around the border */
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-
-
 
         /* Ensure content is responsive and full width */
         #textOnlyCarousel {
-            position: absolute;
-            top: 50%; /* Position carousel vertically in the center */
-            left: 50%;
-            transform: translate(-50%, -50%); /* Center the carousel content horizontally and vertically */
+            position: relative;
             width: 100%; /* Content takes full width of the parent container */
             padding: 0 20px; /* Add some padding for better readability on smaller screens */
             box-sizing: border-box;
         }
 
-        /* Carousel content styling with light orange background and transparency */
+        /* Carousel content styling with light orange background (no transparency) */
         .carousel-content {
             padding: 40px;
             color: black;
             text-align: center;
-            background-color: rgba(255, 224, 178, 0.8); /* Light orange background with transparency */
+            background-color: #FFE0B2; /* Solid light orange background */
             width: 100%; /* Content takes the full width */
             max-width: 1200px; /* Max width for the content */
             margin: 0 auto; /* Center the content */
@@ -193,6 +213,10 @@
             border: 2px solid #FF7F00; /* Orange border color */
             border-radius: 10px; /* Rounded corners for content */
             z-index: 1; /* Ensure the content appears above the background */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         /* Title styling */
@@ -210,115 +234,116 @@
             margin: 0 auto;
         }
 
-        /* Center carousel controls vertically */
-        .carousel-control-prev, .carousel-control-next {
-            align-items: center;
+        /* Default style for the custom indicator */
+        .carousel-indicators button.custom-indicator {
+            width: 12px; /* Indicator size */
+            height: 12px; /* Indicator size */
+            background-color: darkorange; /* Dark orange color */
+            border-radius: 50%; /* Make it circular */
+            opacity: 0.6; /* Slightly transparent by default */
+            cursor: pointer; /* Show cursor on hover */
+            transition: opacity 0.3s, transform 0.3s; /* Smooth transition for opacity and scaling */
         }
 
-      
+        /* Style for the active indicator */
+        .carousel-indicators button.custom-indicator.active {
+            opacity: 1; /* Full opacity for active indicator */
+            transform: scale(1.3); /* Slightly enlarge the active indicator */
+        }
+
+        /* Style for the indicator on hover */
+        .carousel-indicators button.custom-indicator:hover {
+            opacity: 1; /* Full opacity on hover */
+            background-color: #FF7F00; /* Slightly brighter dark orange color on hover */
+        }
+
+
+        /* Add styles to make carousel control buttons stand out */
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            background-color: darkorange; /* Set icon color to dark orange */
+            border-radius: 50%;
+        }
+
+        .carousel-control-prev-icon:hover, .carousel-control-next-icon:hover {
+            background-color: #FF7F00; /* Brighter orange on hover */
+        }
+
+        /* Further styles for carousel control buttons for better visibility */
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            width: 30px; /* Increase size */
+            height: 30px;
+            border-radius: 50%;
+        }
 
         /* Adjust text size and layout for smaller screens */
-@media (max-width: 767px) {
-    #backgroundContainer {
-        height: 400px; /* Adjust height for smaller screens */
-    }
+        @media (max-width: 767px) {
+            #backgroundContainer {
+                height: 400px; /* Adjust height for smaller screens */
+            }
 
-    .carousel-content {
-        padding: 20px; /* Reduce padding on smaller screens */
-    }
+            .carousel-content {
+                padding: 15px; /* Reduce padding on smaller screens */
+                align-items: center; /* Center content horizontally on smaller screens */
+            }
 
-    .carousel-content h5 {
-        font-size: 24px; /* Smaller font size for titles on mobile */
-    }
+            .carousel-content h5 {
+                font-size: 20px; /* Smaller font size for titles on mobile */
+            }
 
-    .carousel-content p {
-        font-size: 16px; /* Smaller font size for paragraphs on mobile */
-    }
+            .carousel-content p {
+                font-size: 14px; /* Smaller font size for paragraphs on mobile */
+            }
 
-    /* Make carousel take full width on mobile */
-    #textOnlyCarousel {
-        width: 100%; /* Full width for smaller screens */
-        padding: 0 10px; /* Less padding */
-    }
+            /* Make carousel take full width on mobile */
+            #textOnlyCarousel {
+                width: 100%; /* Full width for smaller screens */
+                padding: 0 10px; /* Less padding */
+            }
 
-    .carousel-item {
-        text-align: center; /* Ensure text is centered in carousel items */
-    }
-}
+            .carousel-item {
+                text-align: center; /* Ensure text is centered in carousel items */
+            }
+        }
+
+        /* Further adjustments for very small screens */
+        @media (max-width: 480px) {
+            #backgroundContainer {
+                height: 300px; /* Further reduce height on very small screens */
+            }
+
+            .carousel-content {
+                padding: 10px; /* Even less padding on small screens */
+                align-items: center; /* Ensure content stays centered on very small screens */
+            }
+
+            .carousel-content h5 {
+                font-size: 18px; /* Smaller font size for titles */
+            }
+
+            .carousel-content p {
+                font-size: 12px; /* Smaller font size for paragraphs */
+            }
+
+            #textOnlyCarousel {
+                width: 100%; /* Ensure it uses full width on mobile */
+                padding: 0 5px; /* Minimal padding for small screens */
+            }
+        }
+
     </style>
 
-<!-- CSS second Team Gallery-->
+    <!-- CSS 2nd part Our Mission-->
     <style>
-            .header-line {
+          .header-line {
             width: 50%; /* Adjust this value to make the line wider or narrower */
             height: 5px; /* Adjust thickness of the line */
             background-color: #FF7F00; /* Dark orange color */
             margin: 20px auto; /* Center the line and add margin for spacing */
             border-radius: 25px; /* Rounded edges */
         }
-
-        /* Ensure the gallery images are smaller and fixed in size */
-        .gallery-image {
-            width: 350px; /* Fixed width for all gallery images */
-            height: 350px; /* Fixed height for all gallery images */
-            object-fit: fill; /* Stretch the image to fill the container */
-            border-radius: 10px; /* Optional: rounded corners for the images */
-            margin: 0 auto; /* Center the image within its parent div */
-            border: 2px solid #FF7F00; /* Orange border color */
-             /* Add orange box-shadow */
-             box-shadow: 0 8px 25px rgba(255, 69, 0, 0.8); /* Darker orange with wider spread */
-        }
-
-
-            /* Make modal image responsive */
-        /* Modal Image Styling */
-            .modal-body img {
-                width: 100%; /* Ensure image takes up full width inside modal */
-                max-width: 800px; /* Maximum width to avoid oversized images */
-                height: auto; /* Maintain the aspect ratio of the image */
-                border-radius: 10px; /* Rounded corners for the image */
-                object-fit: contain; /* Ensure image doesn't overflow */
-            }
-
-            
-
-            /* Optional: For responsiveness, you can adjust the size for smaller screens */
-            @media (max-width: 768px) {
-    .modal-content {
-        width: 95%; /* Modal should take 95% of the width on smaller screens */
-        margin-top: 10px; /* Add some margin for top space */
-        margin-bottom: 10px; /* Margin for bottom space */
-    }
-
-    .modal-body {
-        padding: 10px; /* Reduce padding on mobile */
-    }
-
-    .modal-header, .modal-footer {
-        padding: 10px; /* Reduce padding for header and footer */
-    }
-
-    /* Optional: Reduce size of close button on mobile */
-    .btn-close {
-        font-size: 1.2rem; /* Make close button smaller */
-    }
-}
-
-/* Additional Styles for Mobile */
-@media (max-width: 576px) {
-    .modal-content {
-        width: 100%; /* Full width on extremely small screens */
-        margin-top: 20px; /* Adjust margin */
-    }
-
-    /* Adjust image size in smaller modals */
-    .modal-body img {
-        width: 100%;
-        height: auto;
-    }
-}
-
     </style>
+
+
 
 <!-- CSS third part Image Values-->
     <style>
@@ -340,65 +365,137 @@
         }
 
 
-            /* Our Values Design*/
         .service-card {
-            position: relative;
-            height: 250px; /* Fixed height for the card */
-            width: 100%; /* Full width of the column */
-            max-width: 400px; /* Optional: Set a max-width for each card */
-            background-size: cover; /* Ensures the image covers the full card area */
-            background-position: center center; /* Keeps the image centered */
-            background-repeat: no-repeat;
-            border-radius: 10px;
-            border: 2px solid #FF7F00; /* Orange border color */
-            overflow: hidden;
-             /* Add orange box-shadow */
-             box-shadow: 0 8px 25px rgba(255, 69, 0, 0.8); /* Darker orange with wider spread */
-        }
+    position: relative;
+    height: 250px; /* Fixed height for the card */
+    width: 100%; /* Full width of the column */
+    max-width: 400px; /* Optional: Set a max-width for each card */
+    background-size: cover; /* Ensures the image covers the full card area */
+    background-position: center center; /* Keeps the image centered */
+    background-repeat: no-repeat;
+    border-radius: 10px;
+    border: 2px solid #FF7F00; /* Orange border color */
+    overflow: hidden;
+    /* Add shadow around the border */
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.8); /* Orange shadow around the border */
+}
 
-        .service-card .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
-            align-items: center; /* Vertically center the text */
-            justify-content: center; /* Horizontally center the text */
-            background-color: rgba(0, 0, 0, 0.5); /* Dark background for text readability */
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            text-transform: uppercase;
-            opacity: 0; /* Hidden by default */
-            transition: opacity 0.3s ease-in-out; /* Smooth fade-in effect */
-        }
+/* Overlay styling */
+.service-card .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center; /* Vertically center the text */
+    justify-content: center; /* Horizontally center the text */
+    background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent black background */
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+    opacity: 1; /* Content visible by default */
+    transition: opacity 0.3s ease-in-out, background-color 0.3s ease-in-out; /* Smooth transition for both content and background */
+}
 
-        .service-card:hover .overlay {
-            opacity: 1; /* Show the overlay on hover */
-        }
+/* On hover, hide content and show lighter white background */
+.service-card:hover .overlay {
+    opacity: 0; /* Hide the content */
+    background-color: rgba(255, 255, 255, 0.5); /* Lighter white overlay with 50% opacity */
+}
 
-        .service-card h2 {
-            margin: 0; /* Remove default margin */
-            text-align: center; /* Ensure text is centered */
-            font-size: 24px; /* Make font size responsive */
-        }
+/* Header text in the overlay */
+.service-card h2 {
+    margin: 0; /* Remove default margin */
+    text-align: center; /* Ensure text is centered */
+    font-size: 24px; /* Adjust font size */
+    color: orange; /* Ensure text color is white */
+}
 
+/* Mobile responsiveness */
+@media (max-width: 767px) {
+    .service-card {
+        height: 200px; /* Adjust height for mobile */
+    }
+
+    .service-card h2 {
+        font-size: 20px; /* Adjust font size on smaller screens */
+    }
+}
      </style>
 
-
-<!-- CSS fourth part Our Mission-->
-    <style>
-          .header-line {
+<!-- CSS 4th Team Gallery-->
+<style>
+            .header-line {
             width: 50%; /* Adjust this value to make the line wider or narrower */
             height: 5px; /* Adjust thickness of the line */
             background-color: #FF7F00; /* Dark orange color */
             margin: 20px auto; /* Center the line and add margin for spacing */
             border-radius: 25px; /* Rounded edges */
         }
-    </style>
+
+        /* Ensure the gallery images are smaller and fixed in size */
+        .gallery-image {
+            width: 350px; /* Fixed width for all gallery images */
+            height: 350px; /* Fixed height for all gallery images */
+            object-fit: fill; /* Stretch the image to fill the container */
+            border-radius: 10px; /* Optional: rounded corners for the images */
+            margin: 0 auto; /* Center the image within its parent div */
+            border: 2px solid #FF7F00; /* Orange border color */
+            /* Add shadow around the border */
+            box-shadow: 0 0 20px rgba(255, 69, 0, 0.8); /* Orange shadow around the border */
+        }
 
 
+            /* Make modal image responsive */
+        /* Modal Image Styling */
+            .modal-body img {
+                width: 100%; /* Ensure image takes up full width inside modal */
+                max-width: 800px; /* Maximum width to avoid oversized images */
+                height: auto; /* Maintain the aspect ratio of the image */
+                border-radius: 10px; /* Rounded corners for the image */
+                object-fit: contain; /* Ensure image doesn't overflow */
+            }
+
+            
+
+            /* Optional: For responsiveness, you can adjust the size for smaller screens */
+                    @media (max-width: 768px) {
+            .modal-content {
+                width: 95%; /* Modal should take 95% of the width on smaller screens */
+                margin-top: 10px; /* Add some margin for top space */
+                margin-bottom: 10px; /* Margin for bottom space */
+            }
+
+            .modal-body {
+                padding: 10px; /* Reduce padding on mobile */
+            }
+
+            .modal-header, .modal-footer {
+                padding: 10px; /* Reduce padding for header and footer */
+            }
+
+            /* Optional: Reduce size of close button on mobile */
+            .btn-close {
+                font-size: 1.2rem; /* Make close button smaller */
+            }
+        }
+
+        /* Additional Styles for Mobile */
+        @media (max-width: 576px) {
+            .modal-content {
+                width: 100%; /* Full width on extremely small screens */
+                margin-top: 20px; /* Adjust margin */
+            }
+
+            /* Adjust image size in smaller modals */
+            .modal-body img {
+                width: 100%;
+                height: auto;
+            }
+        }
+            </style>
 
 <!-- JavaScript for Carousel Indicator Activation -->
 <script>
