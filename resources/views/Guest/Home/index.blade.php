@@ -2,17 +2,6 @@
 
 @section('content')
 
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Add the canonical link -->
-    <link rel="canonical" href="{{ url()->current() }}">
-    
-    <!-- Other meta tags, stylesheets, etc. -->
-</head>
-
 <div class="container">
 
 <div class="container" style="padding-top: 50px;">
@@ -92,7 +81,11 @@
 </div>
 
 <style>
-
+  @media (max-width: 768px) {
+        .responsive-heading {
+            padding-top: 1000px;
+        }
+    }
   
 /* The carousel container */
 #imageCarousel {

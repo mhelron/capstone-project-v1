@@ -2,11 +2,11 @@
 
 @section('content')
 
-<div class="container" style="padding-top: 75px;">
+<div class="container">
 <div class="row mt-4">
     <!-- Left Column: Contact Us title and description -->
     <div class="col-md-6">
-    <div style="display: flex; flex-direction: column; text-align: left;">
+    <div style="display: flex; flex-direction: column; text-align: left; padding-top: 100px;">
         <h1>Contact Us</h1>
         <p style="font-size: 25px; line-height: 1.6;">Have questions or need a quote? We’re here to assist you! Reach out to us, and our team will guide you through everything, from menu selection to event planning.</p>
     </div>
@@ -14,7 +14,7 @@
 
     <!-- Right Column: Contact Methods List -->
     <div class="col-md-6">
-        <h3 style="padding-top: 10px;">You can contact us through the following methods:</h3>
+        <h3 style="padding-top: 100px;">You can contact us through the following methods:</h3>
         <ul class="list-unstyled" style="padding-top: 25px;">
             <li><strong>Phone:</strong> Call us to start our conversation.</li>
             <li><strong>Email:</strong> For inquiries, kindly direct to our Email Account.</li>
