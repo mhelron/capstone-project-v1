@@ -3,7 +3,7 @@
 @section('content')
 
 <!-- Content Header (Page header) -->
-<div class="content-header">
+<div class="content-header" style="padding-top: 100px;">
     <div class="container">
         <div class="row mb-2">
             <div class="col-sm-6">
@@ -31,27 +31,6 @@
                     <div class="card-body form-container">
                         <form id="myForm" action="{{ route('admin.reserve.reserve') }}" method="POST">
                             @csrf
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                        <label class="form-label">Is this a Reservation or Pencil Book? <span class="text-danger">*</span></label>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="reserve_type" id="reservation" value="Reserve" {{ old('reserve_type') == 'Reserve' ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="reservation">
-                                                Reservation
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="reserve_type" id="pencilbook" value="Pencil" {{ old('reserve_type') == 'Pencil' ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="pencilbook">
-                                                Pencil Book
-                                            </label>
-                                        </div>
-                                        @error('package_type')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
-                            </div>
 
                             <div class="row">
                                 <!-- First Name -->
@@ -240,9 +219,9 @@
                             <p><strong>Package Name: </strong><span id="preview-package-name"></span></p>
                             <p><strong>Package Price: </strong><span id="preview-package-price"></span></p>
                             <p><strong>Package Pax: </strong><span id="preview-package-pax"></span></p>
-                            <p><h4>Services</h4><span id="preview-package-services"></span></p>
                             <p><h4>Menu</h4></p>
                             <p><span id="preview-menu-items"></span></p>
+                            <p><h4>Services</h4><span id="preview-package-services"></span></p>
                         </div>
                     </div>
                 </div>
