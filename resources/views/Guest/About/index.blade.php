@@ -7,7 +7,7 @@
 <!-- Carousel Section -->
 <div class="container" style="padding-top: 100px;">
     <div id="backgroundContainer">
-        <div id="textOnlyCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="10000">
+        <div id="textOnlyCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
             
             <!-- Carousel Indicators -->
             <div class="carousel-indicators">
@@ -19,17 +19,17 @@
                 <!-- First Item -->
                 <div class="carousel-item active">
                     <div class="carousel-content">
-                        <h5>About Us</h5>
-                        <p><strong>At Kyla and Kyle Catering Services, we’re here to make your event truly special. From weddings and corporate gatherings to family celebrations, our goal is to handle every detail so you can enjoy the day. Known for our friendly service and high-quality food, we’re dedicated to bringing your vision to life and creating a memorable experience for you and your guests. Let us take care of everything so you can focus on making memories.</strong></p>
-                        <p><br></p>
+                    <h2>Our Mission</h2>  
+                    <p><strong>To make every event unforgettable. At Kyla and Kyle Catering Services, we are dedicated to bringing your vision to life. We handle every detail, from designing and setting up the venue to catering and serving our carefully crafted menu selected by you. Our goal is to create a seamless, memorable experience perfectly tailored to your needs.</strong></p>
                     </div>
                 </div>
                 <!-- Second Item -->
                 <div class="carousel-item">
                     <div class="carousel-content">
-                        <h5>Our History</h5>
-                        <p><strong>Kyla and Kyle Catering Services began over a decade ago as a small family eatery in the heart of Montalban, Rizal. Founded on the values of quality, humility, and a deep connection to the community, we’ve grown into one of Rodriguez’s leading catering providers, known for bringing each client’s vision to life with exceptional service and a personal touch. What started as a small team has now blossomed into a full-service catering company committed to making every celebration memorable, beautiful, and worry-free.</strong></p>
-                    </div>
+                    <h2>Our Vision</h2>
+                    <p><strong>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</strong></p>
+                    <p><br></p>
+                </div>
                 </div>
             </div>
 
@@ -47,33 +47,38 @@
 </div>
 
 <!-- Container for the Two-Column Layout -->
-<div class="container" style="padding-top: 100px;">
+<div class="container" style="padding-top: 50px;"> <!-- Light yellow background for the container -->
     <div class="row">
         <!-- Left Column (Mission Section) -->
-        <div class="col-md-6">
+        <div class="col-md-6 d-flex align-items-center justify-content-center" style="padding: 20px;"> <!-- Flexbox for centering -->
             <!-- Mission Section -->
-            <div class="row mt-3 text-center justify-content-center">
-                <div class="col-md-8">
-                    <h2>Our Mission</h2>  
-                    <div class="header-line"></div> <!-- Line below the title -->
-                    <p style="padding-top: 20px;"><strong>To make every event unforgettable. At Kyla and Kyle Catering Services, we are dedicated to bringing your vision to life. We handle every detail, from designing and setting up the venue to catering and serving our carefully crafted menu selected by you. Our goal is to create a seamless, memorable experience perfectly tailored to your needs.</strong></p>
+            <div style="background-color: rgba(255, 224, 178, 0.7); padding: 20px; border-radius: 8px; border: 2px solid #FF7F00; width: 80%; margin: 0 auto;"> <!-- Smaller width for Mission Section -->
+                <div class="row mt-3 text-center justify-content-center">
+                    <div class="col-md-8">
+                        <h2>Our History</h2>  
+                        <div class="header-line"></div> <!-- Line below the title -->
+                        <p style="padding-bottom: 12px"><strong>Kyla and Kyle Catering Services began over a decade ago as a small family eatery in the heart of Montalban, Rizal. Founded on the values of quality, humility, and a deep connection to the community, we’ve grown into one of Rodriguez’s leading catering providers, known for bringing each client’s vision to life with exceptional service and a personal touch. What started as a small team has now blossomed into a full-service catering company committed to making every celebration memorable, beautiful, and worry-free.</strong></p>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Right Column (Vision Section) -->
-        <div class="col-md-6">
+        <div class="col-md-6 d-flex align-items-center justify-content-center" style="padding: 20px;"> <!-- Flexbox for centering -->
             <!-- Vision Section -->
-            <div class="row mt-3 text-center justify-content-center">
-                <div class="col-md-8">
-                    <h2>Our Vision</h2>
-                    <div class="header-line"></div> <!-- Line below the title -->
-                    <p style="padding-top: 20px;"><strong>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</strong></p>
+            <div style="background-color: rgba(255, 224, 178, 0.7); padding: 20px; border-radius: 8px; border: 2px solid #FF7F00; width: 80%; margin: 0 auto;"> <!-- Smaller width for History Section -->
+                <div class="row mt-3 text-center justify-content-center">
+                    <div class="col-md-8">
+                        <h2>About Us</h2>  
+                        <div class="header-line"></div> <!-- Line below the title -->
+                        <p style="padding-bottom: 60px"><strong>At Kyla and Kyle Catering Services, we’re here to make your event truly special. From weddings and corporate gatherings to family celebrations, our goal is to handle every detail so you can enjoy the day. Known for our friendly service and high-quality food, we’re dedicated to bringing your vision to life and creating a memorable experience for you and your guests. Let us take care of everything so you can focus on making memories.</strong></p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 
 
 <!-- Our Values Section -->
@@ -174,175 +179,199 @@
 
 <!-- CSS 1st part Text Carousel-->
     <style>
-        /* Ensure the background takes full width and height */
-        #backgroundContainer {
-            position: relative;
-            width: 100%; /* Full width */
-            height: 600px; /* Fixed height for the background container */
-            background-color: #FFE0B2; /* Light orange background */
-            background-image: url('{{ asset('images/About/AboutUs.png') }}'); /* Path to your background image */
-            background-size: cover; /* Ensure the background image covers the entire container */
-            background-position: center center; /* Center the background image */
-            background-attachment: fixed; /* Make the background image fixed */
-            border: 2px solid #FF7F00; /* Orange border color */
-            border-radius: 15px; /* Rounded corners */
-            box-shadow: 0 0 25px rgba(255, 69, 0, 0.8); /* Orange shadow around the border */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+       /* Ensure the background takes full width and a smaller height */
+#backgroundContainer {
+    position: relative;
+    width: 100%; /* Full width */
+    height: 400px; /* Reduced height for the background container */
+    background-color: #FFE0B2; /* Light orange background */
+    padding-top: 50px;
+    background-image: url('{{ asset('images/About/AboutUs.png') }}'); /* Path to your background image */
+    background-size: cover; /* Ensure the background image covers the entire container */
+    background-position: center center; /* Center the background image */
+    background-attachment: fixed; /* Make the background image fixed */
+    border: 2px solid #FF7F00; /* Orange border color */
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 0 25px rgba(255, 69, 0, 0.8); /* Orange shadow around the border */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 50px; /* Extra space at the bottom for indicators */
+}
 
-        /* Ensure content is responsive and full width */
-        #textOnlyCarousel {
-            position: relative;
-            width: 100%; /* Content takes full width of the parent container */
-            padding: 0 20px; /* Add some padding for better readability on smaller screens */
-            box-sizing: border-box;
-        }
+/* Ensure content is responsive and full width */
+#textOnlyCarousel {
+    position: relative;
+    width: 100%; /* Content takes full width of the parent container */
+    padding: 0 20px; /* Add some padding for better readability on smaller screens */
+    box-sizing: border-box;
+}
 
-        /* Carousel content styling with light orange background (no transparency) */
-        .carousel-content {
-            padding: 40px;
-            color: black;
-            text-align: center;
-            background-color: #FFE0B2; /* Solid light orange background */
-            width: 100%; /* Content takes the full width */
-            max-width: 1200px; /* Max width for the content */
-            margin: 0 auto; /* Center the content */
-            box-sizing: border-box;
-            border: 2px solid #FF7F00; /* Orange border color */
-            border-radius: 10px; /* Rounded corners for content */
-            z-index: 1; /* Ensure the content appears above the background */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
+/* Carousel content styling with light orange background (no transparency) */
+.carousel-content {
+    padding: 40px;
+    color: black;
+    text-align: center;
+    background-color: #FFE0B2; /* Solid light orange background */
+    width: 100%; /* Content takes the full width */
+    max-width: 1200px; /* Max width for the content */
+    margin: 0 auto; /* Center the content */
+    box-sizing: border-box;
+    border: 2px solid #FF7F00; /* Orange border color */
+    border-radius: 10px; /* Rounded corners for content */
+    z-index: 1; /* Ensure the content appears above the background */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 
-        /* Title styling */
-        .carousel-content h5 {
-            font-size: 32px;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 15px;
-        }
+/* Title styling */
+.carousel-content h5 {
+    font-size: 32px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
 
-        /* Paragraph styling */
-        .carousel-content p {
-            font-size: 18px;
-            line-height: 1.6; /* Improve line spacing */
-            margin: 0 auto;
-        }
+/* Paragraph styling */
+.carousel-content p {
+    font-size: 18px;
+    line-height: 1.6; /* Improve line spacing */
+    margin: 0 auto;
+}
 
-        /* Default style for the custom indicator */
-        .carousel-indicators button.custom-indicator {
-            width: 12px; /* Indicator size */
-            height: 12px; /* Indicator size */
-            background-color: darkorange; /* Dark orange color */
-            border-radius: 50%; /* Make it circular */
-            opacity: 0.6; /* Slightly transparent by default */
-            cursor: pointer; /* Show cursor on hover */
-            transition: opacity 0.3s, transform 0.3s; /* Smooth transition for opacity and scaling */
-        }
+/* Default style for the custom indicator */
+.carousel-indicators {
+    position: absolute;
+    bottom: -25px; /* Position the indicators outside the background */
+    left: 50%;
+    transform: translateX(-50%); /* Center the indicators horizontally */
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+}
 
-        /* Style for the active indicator */
-        .carousel-indicators button.custom-indicator.active {
-            opacity: 1; /* Full opacity for active indicator */
-            transform: scale(1.3); /* Slightly enlarge the active indicator */
-        }
+.carousel-indicators button.custom-indicator {
+    width: 12px; /* Indicator size */
+    height: 12px; /* Indicator size */
+    background-color: darkorange; /* Dark orange color */
+    border-radius: 50%; /* Make it circular */
+    opacity: 0.6; /* Slightly transparent by default */
+    cursor: pointer; /* Show cursor on hover */
+    transition: opacity 0.3s, transform 0.3s; /* Smooth transition for opacity and scaling */
+}
 
-        /* Style for the indicator on hover */
-        .carousel-indicators button.custom-indicator:hover {
-            opacity: 1; /* Full opacity on hover */
-            background-color: #FF7F00; /* Slightly brighter dark orange color on hover */
-        }
+/* Style for the active indicator */
+.carousel-indicators button.custom-indicator.active {
+    opacity: 1; /* Full opacity for active indicator */
+    transform: scale(1.3); /* Slightly enlarge the active indicator */
+}
 
+/* Style for the indicator on hover */
+.carousel-indicators button.custom-indicator:hover {
+    opacity: 1; /* Full opacity on hover */
+    background-color: #FF7F00; /* Slightly brighter dark orange color on hover */
+}
 
-        /* Add styles to make carousel control buttons stand out */
-        .carousel-control-prev-icon, .carousel-control-next-icon {
-            background-color: darkorange; /* Set icon color to dark orange */
-            border-radius: 50%;
-        }
+/* Add styles to make carousel control buttons stand out */
+.carousel-control-prev-icon, .carousel-control-next-icon {
+    background-color: darkorange; /* Set icon color to dark orange */
+    border-radius: 50%;
+    opacity: 0.6; /* Set the default opacity */
+    transition: opacity 0.3s ease; /* Smooth transition for opacity */
+}
 
-        .carousel-control-prev-icon:hover, .carousel-control-next-icon:hover {
-            background-color: #FF7F00; /* Brighter orange on hover */
-        }
+/* Make the icons brighter on hover */
+.carousel-control-prev-icon:hover, .carousel-control-next-icon:hover {
+    background-color: #FF7F00; /* Brighter orange on hover */
+    opacity: 1; /* Full opacity when hovered */
+}
 
-        /* Further styles for carousel control buttons for better visibility */
-        .carousel-control-prev-icon, .carousel-control-next-icon {
-            width: 30px; /* Increase size */
-            height: 30px;
-            border-radius: 50%;
-        }
+/* Further styles for carousel control buttons for better visibility */
+.carousel-control-prev-icon, .carousel-control-next-icon {
+    width: 30px; /* Increase size */
+    height: 30px;
+    border-radius: 50%;
+}
 
-        /* Adjust text size and layout for smaller screens */
-        @media (max-width: 767px) {
-            #backgroundContainer {
-                height: 400px; /* Adjust height for smaller screens */
-            }
+/* Adjust text size and layout for smaller screens */
+@media (max-width: 767px) {
+    #backgroundContainer {
+        height: 350px; /* Adjust height for smaller screens */
+    }
 
-            .carousel-content {
-                padding: 15px; /* Reduce padding on smaller screens */
-                align-items: center; /* Center content horizontally on smaller screens */
-            }
+    .carousel-content {
+        padding: 15px; /* Reduce padding on smaller screens */
+        align-items: center; /* Center content horizontally on smaller screens */
+    }
 
-            .carousel-content h5 {
-                font-size: 20px; /* Smaller font size for titles on mobile */
-            }
+    .carousel-content h5 {
+        font-size: 20px; /* Smaller font size for titles on mobile */
+    }
 
-            .carousel-content p {
-                font-size: 14px; /* Smaller font size for paragraphs on mobile */
-            }
+    .carousel-content p {
+        font-size: 14px; /* Smaller font size for paragraphs on mobile */
+    }
 
-            /* Make carousel take full width on mobile */
-            #textOnlyCarousel {
-                width: 100%; /* Full width for smaller screens */
-                padding: 0 10px; /* Less padding */
-            }
+    /* Make carousel take full width on mobile */
+    #textOnlyCarousel {
+        width: 100%; /* Full width for smaller screens */
+        padding: 0 10px; /* Less padding */
+    }
 
-            .carousel-item {
-                text-align: center; /* Ensure text is centered in carousel items */
-            }
-        }
+    .carousel-item {
+        text-align: center; /* Ensure text is centered in carousel items */
+    }
 
-        /* Further adjustments for very small screens */
-        @media (max-width: 480px) {
-            #backgroundContainer {
-                height: 300px; /* Further reduce height on very small screens */
-            }
+    /* Adjust the position of the indicators for mobile */
+    .carousel-indicators {
+        bottom: -20px; /* Adjust the bottom space on mobile */
+    }
+}
 
-            .carousel-content {
-                padding: 10px; /* Even less padding on small screens */
-                align-items: center; /* Ensure content stays centered on very small screens */
-            }
+/* Further adjustments for very small screens */
+@media (max-width: 480px) {
+    #backgroundContainer {
+        height: 250px; /* Further reduce height on very small screens */
+    }
 
-            .carousel-content h5 {
-                font-size: 18px; /* Smaller font size for titles */
-            }
+    .carousel-content {
+        padding: 10px; /* Even less padding on small screens */
+        align-items: center; /* Ensure content stays centered on very small screens */
+    }
 
-            .carousel-content p {
-                font-size: 12px; /* Smaller font size for paragraphs */
-            }
+    .carousel-content h5 {
+        font-size: 18px; /* Smaller font size for titles */
+    }
 
-            #textOnlyCarousel {
-                width: 100%; /* Ensure it uses full width on mobile */
-                padding: 0 5px; /* Minimal padding for small screens */
-            }
-        }
+    .carousel-content p {
+        font-size: 12px; /* Smaller font size for paragraphs */
+    }
 
+    #textOnlyCarousel {
+        width: 100%; /* Ensure it uses full width on mobile */
+        padding: 0 5px; /* Minimal padding for small screens */
+    }
+
+    /* Adjust the position of the indicators for very small screens */
+    .carousel-indicators {
+        bottom: -15px; /* Further adjust bottom space */
+    }
+}
     </style>
 
-    <!-- CSS 2nd part Our Mission-->
-    <style>
-          .header-line {
-            width: 50%; /* Adjust this value to make the line wider or narrower */
-            height: 5px; /* Adjust thickness of the line */
-            background-color: #FF7F00; /* Dark orange color */
-            margin: 20px auto; /* Center the line and add margin for spacing */
-            border-radius: 25px; /* Rounded edges */
-        }
-    </style>
-
+        <!-- CSS 2nd part Our history-->
+        <style>
+            .header-line {
+                width: 50%; /* Adjust this value to make the line wider or narrower */
+                height: 5px; /* Adjust thickness of the line */
+                background-color: #FF7F00; /* Dark orange color */
+                margin: 20px auto; /* Center the line and add margin for spacing */
+                border-radius: 25px; /* Rounded edges */
+            }
+        </style>
 
 
 <!-- CSS third part Image Values-->
@@ -410,7 +439,7 @@
     margin: 0; /* Remove default margin */
     text-align: center; /* Ensure text is centered */
     font-size: 24px; /* Adjust font size */
-    color: orange; /* Ensure text color is white */
+    color: white; /* Ensure text color is white */
 }
 
 /* Mobile responsiveness */
