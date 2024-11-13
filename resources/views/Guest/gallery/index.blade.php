@@ -340,79 +340,89 @@
     </div>
 </div>
 
-<!-- Modal to show image in large size -->
-<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-fullscreen">
-        <div class="modal-content">
-            <div class="modal-header">
-                <!-- Close button inside the modal -->
-                <button type="button" id="closeModalButton" class="btn-close position-absolute top-0 end-0 m-3" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-0 text-center">
-                <!-- Large Image Display -->
-                <img src="" id="modalImage" class="modal-image" alt="Modal Image">
+    <!-- Modal to show image in large size -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!-- Close button inside the modal -->
+                    <button type="button" id="closeModalButton" class="btn-close position-absolute top-0 end-0 m-3" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0 text-center">
+                    <!-- Large Image Display -->
+                    <img src="" id="modalImage" class="modal-image" alt="Modal Image">
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 <style>
     /*Gallery Setup */
-    .gallery-image {
-        width: 100%; /* Makes the image responsive within the column */
-        aspect-ratio: 1 / 1; /* Ensures images are square */
-        object-fit: cover; /* Maintains aspect ratio within the square */
-        border: 2px solid orange; /* Border around the image */
-        border-radius: 8px; /* Optional: Rounded corners */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Adds shadow */
-    }
+        .gallery-image {
+            width: 100%; /* Makes the image responsive within the column */
+            aspect-ratio: 1 / 1; /* Ensures images are square */
+            object-fit: cover; /* Maintains aspect ratio within the square */
+            border: 2px solid orange; /* Border around the image */
+            border-radius: 8px; /* Optional: Rounded corners */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Optional: Adds shadow */
+        }
 
-    /* Modal Fullscreen Image */
-    .modal-image {
-        width: 100%;
-        height: 100%;
-        object-fit: contain; /* Make the image scale while maintaining aspect ratio */
-    }
+        /* Modal Fullscreen Image */
+        .modal-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Make the image scale while maintaining aspect ratio */
+        }
 
-    /* Remove padding/margins from the modal to maximize image size */
-    .modal-body {
-        padding: 0;
-    }
 
-    /* Ensure the modal fills the screen */
-    .modal-dialog.modal-fullscreen {
-        max-width: 100%;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-    }
+      /* Make sure the modal itself does not have a background */
+      .modal-content {
+            height: 100%;
+            background-color: transparent; /* Set the modal background to transparent */
+            border: none; /* Remove any borders */
+        }
 
-    .modal-content {
-        height: 100%;
-        background-color: transparent; /* Set the modal background to transparent */
-        border: none; /* Remove any borders */
-    }
+        .modal-dialog.modal-fullscreen {
+            background-color: transparent; /* Make the entire dialog background transparent */
+            max-width: 100%;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
 
-    .modal-header {
-        position: relative;
-        padding: 0;
-    }
+                /* Transparent background for modal sides */
+        .modal-body {
+            background-color: transparent !important;  /* Make sure the sides are transparent */
+            
+        }
 
-    .btn-close.position-absolute {
-        position: absolute;
-        top: 10px;  /* Adjust the position from the top */
-        right: 10px; /* Adjust the position from the right */
-        z-index: 1050; /* Ensure it overlaps the image */
-        background-color: transparent; /* Make the background transparent */
-        font-size: 2rem; /* Increase the size of the close button */
-    }
+        .modal-header {
+        
+            padding: 0;
+        }
 
-        /* Default Styling for the Header */
+          /* Transparent Gray Modal Background */
+            
+          .modal-backdrop {
+                background-color: rgba(255, 255, 255, 0.7); /* White with transparency */
+            }
+ 
+        
+        .btn-close.position-absolute {
+            position: absolute;
+            top: 10px;  /* Adjust the position from the top */
+            right: 10px; /* Adjust the position from the right */
+            z-index: 1050; /* Ensure it overlaps the image */
+            background-color: transparent; /* Make the background transparent */
+            font-size: 2rem; /* Increase the size of the close button */
+        }
+
+    /* Border Design */
         .locations-header {
             text-align: center;
             font-weight: bolder;
             font-family: 'Times New Roman';
-            font-size: 40px; /* Default font size for larger screens */
+            font-size: 40px;
             padding-top: 20px;
             position: relative;
             color: black;
@@ -434,33 +444,35 @@
             right: 0;
         }
 
-        /* Responsive Design for Tablets and Smaller Devices (max-width: 767px) */
-        @media (max-width: 767px) {
-            .locations-header {
-                font-size: 35px; /* Slightly smaller font size for tablets and mobile */
-                padding-top: 10px;
-            }
-
-            .border-line {
-                width: 60%; /* Adjust border width */
-            }
-
-            .left-border, .right-border {
-                width: 30%;
-                left: 10%;
-                right: 10%;
-            }
+     /* Styling for mobile view */
+     @media (max-width: 767px) {
+        .locations-header {
+            font-size: 20px; /* Adjust font size for mobile */
+            padding-top: 10px;
         }
 
-        /* Responsive Design for Very Small Screens (max-width: 480px) */
-        @media (max-width: 480px) {
-            .locations-header {
-                font-size: 28px; /* Smaller font size for very small screens */
-            }
+        .border-line {
+            width: 100px; /* Reduce border width for mobile */
+        }
 
-            .border-line {
-                display: none; /* Hide border lines on very small screens */
-            }
+        .left-border {
+            left: 10%;
+        }
+
+        .right-border {
+            right: 10%;
+        }
+        } 
+
+    /* Styling for very small screens */
+    @media (max-width: 480px) {
+        .locations-header {
+            font-size: 18px; /* Further reduce font size */
+        }
+
+        .border-line {
+            display: none; /* Hide borders on very small screens */
+        }
         }
 
 

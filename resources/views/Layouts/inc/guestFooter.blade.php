@@ -39,15 +39,16 @@
             </div>
         </div>
     
-   <!-- Modal -->
+ <!-- Modal -->
 <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="termsModalLabel">Terms and Conditions Policy</h5>
+            <div class="modal-header d-flex justify-content-center w-100">
+                <!-- Modal Title centered -->
+                <h4 class="modal-title" id="termsModalLabel"><strong>Terms and Conditions Policy</strong></h4>
             </div>
             <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
-                <h4> PLEASE READ THE FOLLOWING: </h4>
+                <h5>PLEASE READ THE FOLLOWING:</h5>
                 <h6>1. Services Provided:</h6>
                 <p>The caterer agrees to provide catering services for the event specified in the contract. Services include menu planning, food preparation, setup, service during the event, and cleanup.</p>
                 
@@ -93,65 +94,90 @@
     </div>
 </div>
 
+
     <!-- JavaScript for enabling Done button when checkbox is checked -->
     <script>
-        // Get the checkbox and button elements
-        const agreeCheckboxModal = document.getElementById('agreeCheckboxModal');
-        const doneButton = document.getElementById('modalDoneBtn');
+       // JavaScript for enabling Done button when checkbox is checked
+const agreeCheckboxModal = document.getElementById('agreeCheckboxModal');
+const doneButton = document.getElementById('modalDoneBtn');
 
-        // Function to enable/disable Done button based on checkbox state
-        agreeCheckboxModal.addEventListener('change', () => {
-            if (agreeCheckboxModal.checked) {
-                // Enable Done button
-                doneButton.disabled = false;
-                doneButton.style.backgroundColor = '#ff5722';  // Dark Orange
-                doneButton.style.color = 'white';
-            } else {
-                // Disable Done button and reset color
-                doneButton.disabled = true;
-                doneButton.style.backgroundColor = '';  // Reset to default color
-                doneButton.style.color = '';
-            }
-        });
+// Function to enable/disable Done button based on checkbox state
+agreeCheckboxModal.addEventListener('change', () => {
+    if (agreeCheckboxModal.checked) {
+        // Enable Done button
+        doneButton.disabled = false;
+        doneButton.style.backgroundColor = '#ff5722';  // Dark Orange
+        doneButton.style.color = 'white';
+    } else {
+        // Disable Done button and reset color
+        doneButton.disabled = true;
+        doneButton.style.backgroundColor = '';  // Reset to default color
+        doneButton.style.color = '';
+    }
+});
     </script>
 
     <style>
-        /* Style adjustments for larger screens */
-        @media (min-width: 768px) {
-            .col-md-4 {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-        }
+        //* On hover, hide content and show lighter white background */
+.service-card:hover .overlay {
+    opacity: 1; /* Ensure the overlay is fully visible */
+    background-color: rgba(255, 255, 255, 0.5); /* Lighter white overlay with 50% opacity */
+    position: absolute; /* Ensure it's positioned above other content */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1050; /* Ensure it appears above the content */
+}
 
-        /* Style adjustments for mobile screens */
-        @media (max-width: 768px) {
-            .social-icons {
-                gap: 10px;
-            }
+/* Ensure the modal overlay background opacity isn't affected by body opacity */
+.modal .modal-content {
+    background-color: white !important; /* Ensure the modal content has a solid white background */
+    opacity: 1 !important; /* Force the opacity to be 1 */
+}
 
-            .social-icons a {
-                font-size: 50px;
-                color: darkorange;
-                text-decoration: none;
-            }
-        }
-        
-        /* Style for the clickable Terms and Conditions link */
-        .modal-body a {
-            color: #ff5722;
-            text-decoration: none;
-        }
+/* Optional: Set a more solid background for modal backdrop */
+.modal-backdrop {
+    background-color: rgba(255, 255, 255, 0.9) !important; /* Slightly opaque white */
+    z-index: 1040 !important; /* Ensure it's behind the modal */
+}
 
-        .modal-body a:hover {
-            text-decoration: underline;
-        }
+/* Style adjustments for larger screens */
+@media (min-width: 768px) {
+    .col-md-4 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
 
-        /* Disable background close */
-        .modal-backdrop {
-            z-index: 1040 !important;
-        }
+/* Style adjustments for mobile screens */
+@media (max-width: 768px) {
+    .social-icons {
+        gap: 10px;
+    }
+
+    .social-icons a {
+        font-size: 50px;
+        color: darkorange;
+        text-decoration: none;
+    }
+}
+
+/* Style for the clickable Terms and Conditions link */
+.modal-body a {
+    color: #ff5722;
+    text-decoration: none;
+}
+
+.modal-body a:hover {
+    text-decoration: underline;
+}
+
+/* Disable background close */
+.modal-backdrop {
+    z-index: 1040 !important;
+}
     </style>
 
 </footer>
