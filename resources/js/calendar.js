@@ -21,8 +21,9 @@ document.addEventListener('DOMContentLoaded', function() {
             title: event.Event,
             start: startDateTime.toISOString(),
             end: endDateTime.toISOString(),
-            status: event.Status,
+            status: event.Status,  // Status field
         };
+
     }).filter(event => event !== null);  // Filter out invalid events
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -31,33 +32,39 @@ document.addEventListener('DOMContentLoaded', function() {
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
+            right: 'dayGridMonth,listWeek',
         },
         events: calendarEvents,
 
         eventDidMount: function(info) {
-            // Get the event status
-            const status = info.event.extendedProps.status;
-            const dot = info.el.querySelector('.fc-event-dot');  // Get the event dot
-
-            // Change the event dot color based on the event status
-            if (dot) {
-                switch (status.toLowerCase()) {
-                    case 'pending':
-                        dot.style.backgroundColor = '#ffcc00'; // Yellow for Pending
-                        break;
-                    case 'confirmed':
-                        dot.style.backgroundColor = '#28a745'; // Green for Confirmed
-                        break;
-                    case 'finished':
-                        dot.style.backgroundColor = '#6c757d'; // Gray for Finished
-                        break;
-                    case 'pencil':
-                        dot.style.backgroundColor = '#ffc107'; // Orange for Pencil
-                        break;
-                    default:
-                        dot.style.backgroundColor = ''; // Default color
-                }
+            const status = info.event.extendedProps.status; // Get the event status
+        
+            // Apply the border and background color based on the event status
+            switch (status.toLowerCase()) {
+                case 'pending':
+                    info.el.style.setProperty('--fc-event-border-color', '#ffa500'); // Set border to orange for pending     --fc-event-text-color:
+                    info.el.style.setProperty('--fc-event-bg-color', '#ffecb3'); // Set background to light orange
+                    info.el.style.setProperty('--fc-event-text-color', '#ffa500'); // Set background to light orange
+                    break;
+                case 'confirmed':
+                    info.el.style.setProperty('--fc-event-border-color', '#28a745'); // Set border to green for confirmed
+                    info.el.style.setProperty('--fc-event-bg-color', '#d4edda'); // Set background to light green
+                    info.el.style.setProperty('--fc-event-text-color', '#28a745'); // Set background to light orange
+                    break;
+                case 'finished':
+                    info.el.style.setProperty('--fc-event-border-color', '#007bff'); // Set border to blue for finished
+                    info.el.style.setProperty('--fc-event-bg-color', '#cce5ff'); // Set background to light blue
+                    info.el.style.setProperty('--fc-event-text-color', '#007bff'); // Set background to light orange
+                    break;
+                case 'pencil':
+                    info.el.style.setProperty('--fc-event-border-color', '#6c757d'); // Set border to gray for pencil
+                    info.el.style.setProperty('--fc-event-bg-color', '#e2e3e5'); // Set background to light gray
+                    info.el.style.setProperty('--fc-event-text-color', '#6c757d'); // Set background to light orange
+                    break;
+                default:
+                    info.el.style.setProperty('--fc-event-border-color', ''); // Default border color
+                    info.el.style.setProperty('--fc-event-bg-color', ''); // Default background color
+                    info.el.style.setProperty('--fc-event-text-color', ''); // Set background to light orange
             }
         },
 
@@ -72,21 +79,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 $('#eventTitle, #eventDescription, #eventTime').val('');
             } else {
                 alert("Cannot select past dates.");
-            }
-        },
-
-        dayCellDidMount: function(info) {
-            var today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            var cellDate = new Date(info.date);
-            if (cellDate.toDateString() === today.toDateString()) {
-                var dateElement = info.el.querySelector('.fc-day-number');
-                if (dateElement) {
-                    var circle = document.createElement('span');
-                    circle.classList.add('today-circle');
-                    dateElement.appendChild(circle);
-                }
             }
         },
 
