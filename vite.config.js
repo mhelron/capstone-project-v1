@@ -14,6 +14,7 @@ export default defineConfig({
 				'resources/js/priceinput.js',
 				'resources/js/togglesidebar.js',
 				'resources/js/guestreservation.js',
+				'resources/js/usersnapshot.js',
 			],
             refresh: true,
         }),

@@ -12,7 +12,6 @@
         </div>
     </div>
 </div>
-<!-- /.content-header -->
 
 <!-- Main content -->
 <div class="content">
@@ -33,7 +32,8 @@
                         </div>
                     </div>
                 @endif
-
+                
+                <!-- Add User Button -->
                 <div class="d-flex justify-content-end">
                     <a href="{{ route('admin.users.add') }}" class="btn btn-primary mb-2">Add User</a>
                 </div>
@@ -84,7 +84,6 @@
         </div>
     </div>
 </div>
-<!-- /.Main content -->
 
 <!-- Archive Confirmation Modal -->
 <div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
@@ -104,8 +103,8 @@
     </div>
 </div>
 
+<!-- Script for the Archive Button -->
 <script>
-    // Event listener for the Archive button
     const archiveButtons = document.querySelectorAll('[data-bs-target="#archiveModal"]');
     const userNameField = document.getElementById('userName');
     const confirmArchiveButton = document.getElementById('confirm-archive-btn');
@@ -123,5 +122,12 @@
         });
     });
 </script>
+
+<!-- Firebase SDK Scripts -->
+<script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
+
+<!-- Config for the Snapshot -->
+@vite('resources/js/usersnapshot.js')
 
 @endsection

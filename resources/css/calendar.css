@@ -1,8 +1,61 @@
+/* Legend Card Styles */
+.legend-card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-top: 20px;
+    background-color: #f8f9fa;
+}
+
+/* Optional: Change the font style for the legend */
+.legend-card h5 {
+    font-weight: bold;
+    color: #333;
+}
+
+/* List items */
+.list-group-item {
+    border: 1px solid #ddd;
+    font-size: 14px;
+    color: #333;
+}
+
+.status-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
 body {
     height: 100vh;            /* Make sure the body takes the full viewport height */
     margin: 0;                /* Remove default body margin */
     overflow-y: auto;         /* Allow vertical scrolling if content overflows */
 }
+
+@media (max-width: 768px) {
+    .calendar-container {
+        padding: 10px; /* Reduce padding on smaller screens */
+        width: 100%;   /* Ensure it takes full width */
+    }
+
+    #calendar {
+        max-width: 100%; /* Let the calendar take full width */
+        max-height: 70vh; /* Reduce the calendar height on smaller screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .fc-daygrid-day {
+        font-size: 0.875rem; /* Adjust font size for better legibility on small screens */
+    }
+
+    .fc-col-header-cell, .fc-daygrid-day {
+        padding: 5px; /* Adjust padding for smaller screens */
+    }
+}
+
 
 
 /* Ensure the calendar container is centered without internal scrolling */
@@ -23,8 +76,30 @@ body {
     max-width: 1200px;  /* Optional: Set a max-width to prevent the calendar from becoming too large */
 }
 
+.fc-col-header-cell{
+   background-color: #fff !important; /* Sets the day grid background to white */  
+}
+
+/* Change the background color of the FullCalendar grid */
+.fc-daygrid-day {
+    background-color: #fff !important; /* Sets the day grid background to white */
+}
+
+/* Change the borders or grid lines */
+.fc-daygrid-day-frame {
+    border-color: #ddd !important; /* Optional: Sets a light border color for day grid */
+}
+
 /* Apply black color to the weekday text (Monday, Tuesday, etc.) */
 .fc-col-header-cell-cushion {
+    color: black !important;
+}
+
+.fc-list-day-text{
+    color: black !important;
+}
+
+.fc-list-day-side-text{
     color: black !important;
 }
 

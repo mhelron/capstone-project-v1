@@ -5,14 +5,36 @@
 @vite('resources/css/calendar.css')
 
 <div>
-    <h1 style="padding-top: 35px;">Calendar</h1>
-
     <div class="content pt-2">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-lg-12">
+                <!-- Left column for calendar -->
+                <div class="col-lg-10">
                     <div class="calendar-container">
                         <div id='calendar'></div>
+                    </div>
+                </div>
+
+                <!-- Right column for legend -->
+                <div class="col-lg-2" style="padding-top:86px;">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Legend</h5>
+                            <ul class="list-unstyled">
+                                <li>
+                                    <span class="status-dot" style="background-color: #ffa500;"></span> Pending
+                                </li>
+                                <li>
+                                    <span class="status-dot" style="background-color: #28a745;"></span> Confirmed
+                                </li>
+                                <li>
+                                    <span class="status-dot" style="background-color: #007bff;"></span> Finished
+                                </li>
+                                <li>
+                                    <span class="status-dot" style="background-color: #6c757d;"></span> Pencil
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -236,5 +258,85 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<!-- Include Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+
+<script>
+  // Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyARhHx8V5F3mILZujmFXVEwZtJbUMvrHVQ",
+    authDomain: "capstone-project-v1-ddf72.firebaseapp.com",
+    databaseURL: "https://capstone-project-v1-ddf72-default-rtdb.firebaseio.com",
+    projectId: "capstone-project-v1-ddf72",
+    storageBucket: "capstone-project-v1-ddf72.appspot.com",
+    messagingSenderId: "831745544682",
+    appId: "1:831745544682:web:c2d48183143aaff9682293",
+    measurementId: "G-GWDDD0KKBH"
+  };
+
+  // Initialize Firebase
+  const app = firebase.initializeApp(firebaseConfig);
+  const analytics = firebase.analytics();
+
+  document.getElementById("eventForm").addEventListener("submit", function (event) {
+    event.preventDefault(); // Prevent form from submitting normally
+
+    // Collect form data
+    const eventData = {
+        first_name: document.querySelector("[name='first_name']").value,
+        last_name: document.querySelector("[name='last_name']").value,
+        phone: document.querySelector("[name='phone']").value,
+        email: document.querySelector("[name='email']").value,
+        address: document.querySelector("[name='address']").value,
+        package_name: document.querySelector("[name='package_name']").value,
+        menu_name: document.querySelector("[name='menu_name']").value,
+        guests_number: document.querySelector("[name='guests_number']").value,
+        sponsors: document.querySelector("[name='sponsors']").value,
+        event_date: document.querySelector("[name='event_date']").value,
+        event_time: document.querySelector("[name='event_time']").value,
+        venue: document.querySelector("[name='venue']").value,
+        theme: document.querySelector("[name='theme']").value,
+        other_requests: document.querySelector("[name='other_requests']").value
+    };
+
+    // Push data to Firebase
+    firebase.database().ref("events").push(eventData)
+        .then(() => {
+            alert("Event added successfully!");
+            // Close modal after submission
+            $('#eventModal').modal('hide');
+            // Clear the form fields
+            document.getElementById("eventForm").reset();
+        })
+        .catch((error) => {
+            console.error("Error adding event: ", error);
+            alert("Error adding event. Please try again.");
+        });
+  });
+</script>
+
+<!-- Route Fetching Script -->
+<script>
+    const reservationUrl = "{{ route('admin.calendar.reservation') }}";
+
+    // JavaScript function that uses the reservationUrl
+    function fetchReservations() {
+        fetch(reservationUrl)
+            .then(response => response.json())
+            .then(data => {
+                // Process the data
+            })
+            .catch(error => {
+                console.error("Error fetching reservation data:", error);
+            });
+    }
+
+    fetchReservations();
+</script>
+
+
 
 @endsection
