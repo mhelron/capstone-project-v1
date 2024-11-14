@@ -1,0 +1,183 @@
+body {
+    height: 100vh;            /* Make sure the body takes the full viewport height */
+    margin: 0;                /* Remove default body margin */
+    overflow-y: auto;         /* Allow vertical scrolling if content overflows */
+}
+
+/* Ensure the calendar container is centered without internal scrolling */
+.calendar-container {
+    display: flex;
+    justify-content: center;  /* Centers horizontally */
+    align-items: center;      /* Centers vertically */
+    height: 100%;             /* Ensure it takes full height of the body */
+    transition: width 0.3s ease, margin-left 0.3s ease; /* Adjust timing as desired */
+    padding: 20px;            /* Add padding for some spacing */
+}
+
+/* If you want the calendar itself to be scrollable (not the container) */
+#calendar {
+    max-height: 87vh;          /* Maximum height of the calendar */
+    overflow: auto;            /* Allow scrolling within the calendar */
+}
+    
+    #calendar .fc-daygrid-day-number,
+    #calendar .fc-daygrid-day-top,
+    #calendar .fc-daygrid-day-frame {
+        text-decoration: none;
+    }
+
+    .fc .fc-button {
+        border-radius: .375rem;
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        text-align: center;
+        color: #fff;
+    }
+
+    .fc .fc-button-primary {
+        background-color: #0d6efd;
+        border: 1px solid #0d6efd;
+    }
+
+    .fc .fc-button:not(.fc-button-primary) {
+        background-color: #e9ecef;
+        border: 1px solid #ced4da;
+        color: #495057;
+    }
+
+    .fc .fc-button-primary:hover {
+        background-color: #0b5ed7;
+        border-color: #0b5ed7;
+    }
+    
+    .fc .fc-button-primary:focus {
+        box-shadow: 0 0 0 .2rem rgba(38, 143, 255, .5);
+    }
+
+    .fc-event-title,
+    .fc-daygrid-event .fc-event-title {
+        white-space: normal !important; /* Allow line breaks in the title */
+        word-wrap: break-word;          /* Wrap long words if needed */
+    }
+
+    .fc-daygrid-event {
+        overflow: hidden;               /* Hide overflow for cleaner appearance */
+        max-height: 100px;              /* Optional: Limit the height if there are multiple lines */
+    }
+
+    #calendar {
+        width: 100%;
+        max-width: 1200px;  /* Optional: Set a max-width to prevent the calendar from becoming too large */
+    }
+
+    /* Style for past dates */
+    .past-date {
+        background-color: #f0f0f0; /* Light grey background */
+        color: #6c757d; /* Muted text color */
+        pointer-events: none; /* Make them unclickable */
+    }
+    
+    /* Optionally, add opacity to past dates */
+    .past-date.fc-daygrid-day {
+        opacity: 0.5;
+    }
+    /* Example: Custom Tooltip Style for Tippy.js */
+.tippy-box {
+    background-color: #333;
+    color: white;
+    font-size: 14px;
+    border-radius: 5px;
+    padding: 5px;
+}
+/* Ensure font color is set along with background and border */
+.fc-event.status-badge.pending {
+    color: #ffa500 !important;  /* Set font color */
+    background-color: rgba(255, 165, 0, 0.2);
+    border-color: #ffa500;
+}
+
+.fc-event.status-badge.confirmed {
+    color: #28a745 !important;  /* Set font color */
+    background-color: rgba(40, 167, 69, 0.2);
+    border-color: #28a745;
+}
+
+.fc-event.status-badge.cancelled {
+    color: #dc3545 !important;  /* Set font color */
+    background-color: rgba(220, 53, 69, 0.2);
+    border-color: #dc3545;
+}
+
+.fc-event.status-badge.finished {
+    color: #007bff !important;  /* Set font color */
+    background-color: rgba(0, 123, 255, 0.2);
+    border-color: #007bff;
+}
+
+.fc-event.status-badge.pencil {
+    color: #6c757d !important;  /* Set font color */
+    background-color: rgba(108, 117, 125, 0.2);
+    border-color: #6c757d;
+}
+
+.fc-event .fc-event-title {
+    font-family: 'Arial', sans-serif;  /* A clean, sans-serif font */
+    font-size: 14px;                   /* Adjust font size for readability */
+    font-weight: bold;                 /* Make the font bold to stand out */
+    line-height: 1.2;                  /* Improve line spacing for clarity */
+    padding: 2px 5px;                  /* Add some padding for better spacing */
+}
+
+/* Custom styles for event dots */
+.fc-event-dot.fc-pending {
+    background-color: #ffcc00; /* Yellow for Pending */
+}
+
+.fc-event-dot.fc-confirmed {
+    background-color: #28a745; /* Green for Confirmed */
+}
+
+.fc-event-dot.fc-finished {
+    background-color: #6c757d; /* Gray for Finished */
+}
+
+.fc-event-dot.fc-pencil {
+    background-color: #ffc107; /* Orange for Pencil */
+}
+
+/* Set fixed height for the day cell containing events */
+.fc-day-grid-event {
+    max-height: 100px;  /* Adjust this to set a max height */
+    overflow: hidden;   /* Hide the overflowed events */
+    position: relative; /* Ensure the "Show More" link is positioned correctly */
+}
+
+/* Style for the "Show More" link */
+.fc-more-link {
+    color: #007bff;        /* Link color */
+    cursor: pointer;       /* Make it look like a clickable link */
+    text-decoration: underline; /* Underline the "Show More" link */
+}
+
+/* Optional: Add a little padding to the events container */
+.fc-daygrid-day-top {
+    padding-bottom: 5px;
+}
+
+/* Ensure the circle wraps only the current date's text */
+.fc-day-today .fc-day-number {
+    position: relative;  /* Make sure the number is the positioning context */
+}
+
+/* Circle around today's date */
+.fc-day-today .today-circle {
+    width: 20px;           /* Circle size */
+    height: 20px;          /* Circle size */
+    border-radius: 50%;    /* Make it round */
+    background-color: #FFCDD2; /* Light red background */
+    border: 2px solid #FF1744; /* Red border for visibility */
+    position: absolute;
+    top: 50%;              /* Vertically center the circle */
+    left: 50%;             /* Horizontally center the circle */
+    transform: translate(-50%, -50%); /* Adjust to truly center the circle */
+}

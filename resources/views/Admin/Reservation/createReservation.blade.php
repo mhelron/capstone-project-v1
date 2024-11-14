@@ -306,18 +306,54 @@ $(document).ready(function() {
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Flatpickr for the date input
-    flatpickr("#event_date", {
+    const datePicker = flatpickr("#event_date", {
         dateFormat: "Y-m-d", // Format of the date to send to the server
         minDate: "today",    // Prevent past dates
+        onChange: function(selectedDates) {
+            const selectedDate = selectedDates[0];
+            const today = new Date();
+
+            // If the selected date is today, update the time picker to prevent past times
+            if (selectedDate.toDateString() === today.toDateString()) {
+                timePicker.set('minTime', getCurrentTime());  // Update time picker for today
+            } else {
+                timePicker.set('minTime', "00:00");  // Allow any time for future dates
+            }
+        }
     });
 
     // Initialize Flatpickr for the time input with AM/PM option
-    flatpickr("#event_time", {
+    const timePicker = flatpickr("#event_time", {
         enableTime: true,    // Enable time selection
         noCalendar: true,    // Disable calendar (only time)
         dateFormat: "h:i K", // Format of the time to send to the server (12-hour format with AM/PM)
-        time_24hr: false,    // Use 12-hour format
+        minTime: getCurrentTime(), // Default minTime is set when the page loads (if today)
+        onOpen: function() {
+            const selectedDate = datePicker.selectedDates[0];
+            const today = new Date();
+
+            // If the selected date is today, update minTime based on the current time
+            if (selectedDate && selectedDate.toDateString() === today.toDateString()) {
+                this.set('minTime', getCurrentTime());  // Update time picker for today
+            } else {
+                this.set('minTime', "00:00");  // Allow any time for future dates
+            }
+        }
     });
+
+    // Function to get the current time in the correct format (24-hour format)
+    function getCurrentTime() {
+        var now = new Date();
+        var hours = now.getHours();
+        var minutes = now.getMinutes();
+
+        // Ensure hours and minutes are two digits
+        hours = (hours < 10 ? '0' : '') + hours; // Two-digit hour
+        minutes = (minutes < 10 ? '0' : '') + minutes; // Two-digit minutes
+
+        // Return the formatted time string (HH:mm)
+        return hours + ':' + minutes;
+    }
 });
 
 // Ensure `menu_name` gets an empty value when the field is disabled

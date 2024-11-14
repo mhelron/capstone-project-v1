@@ -66,7 +66,7 @@ class ReservationController extends Controller
     }
 
     public function reservation(Request $request)
-{
+    {
     // Validation rules
     $validatedData = $request->validate([
         'first_name' => 'required',
