@@ -54,6 +54,7 @@ Route::middleware([AuthMiddleware::class])->group(function () {
 
     // Calendar Route
     Route::get('/admin/calendar', [CalendarController::class, 'index'])->name('admin.calendar');
+    Route::post('/admin/calendar/reserve', [CalendarController::class, 'store'])->name('admin.calendar.reservation');
 
     // Packages Route
     Route::prefix('/admin/packages')->group(function () {
