@@ -395,7 +395,6 @@
             background-color: transparent !important;  /* Make sure the sides are transparent */
             
         }
-
         .modal-header {
         
             padding: 0;
@@ -418,87 +417,112 @@
         }
 
     /* Border Design */
-        .locations-header {
-            text-align: center;
-            font-weight: bolder;
-            font-family: 'Times New Roman';
-            font-size: 40px;
-            padding-top: 20px;
-            position: relative;
-            color: black;
-        }
+      /* General header styling */
+.locations-header {
+    text-align: center;
+    font-weight: bolder;
+    font-family: 'Times New Roman', serif;
+    font-size: 40px; /* Larger size for desktop */
+    padding-top: 20px;
+    position: relative;
+    color: black;
+}
 
-        .border-line {
-            border-top: 4px solid darkorange;
-            position: absolute;
-            top: 65%;
-        }
+/* Borders on the header */
+.border-line {
+    border-top: 4px solid darkorange;
+    position: absolute;
+    top: 65%;
+}
 
-        .left-border {
-            width: 475px;
-            left: 0;
-        }
+.left-border, .right-border {
+    width: 475px;
+    position: absolute;
+    top: 65%;
+}
 
-        .right-border {
-            width: 475px;
-            right: 0;
-        }
+.left-border {
+    left: 0;
+}
 
-     /* Styling for mobile view */
-     @media (max-width: 767px) {
-        .locations-header {
-            font-size: 20px; /* Adjust font size for mobile */
-            padding-top: 10px;
-        }
+.right-border {
+    right: 0;
+}
 
-        .border-line {
-            width: 100px; /* Reduce border width for mobile */
-        }
+/* Responsive font size and border handling */
+@media (max-width: 767px) {
+    .locations-header {
+        font-size: 30px; /* Slightly smaller font size for tablets and medium screens */
+        padding-top: 15px;
+    }
 
-        .left-border {
-            left: 10%;
-        }
+    .border-line {
+        width: 200px; /* Adjust the width of the borders */
+    }
 
-        .right-border {
-            right: 10%;
-        }
-        } 
+    .left-border {
+        left: 10%; /* Adjust the left border position */
+    }
 
-    /* Styling for very small screens */
-    @media (max-width: 480px) {
-        .locations-header {
-            font-size: 18px; /* Further reduce font size */
-        }
+    .right-border {
+        right: 10%; /* Adjust the right border position */
+    }
+}
 
-        .border-line {
-            display: none; /* Hide borders on very small screens */
-        }
-        }
+/* Styling for very small screens (mobile) */
+@media (max-width: 480px) {
+    .locations-header {
+        font-size: 24px; /* Smaller font size for very small screens */
+        padding-top: 10px; /* Reduce the padding */
+    }
 
+    .border-line {
+        width: 50px; /* Reduce the width of the borders */
+        top: 55%; /* Adjust vertical position */
+    }
 
+    .left-border, .right-border {
+        width: 50px; /* Shrink the border width */
+    }
+
+    .left-border {
+        left: 0; /* Position at the edge for mobile */
+    }
+
+    .right-border {
+        right: 0; /* Position at the edge for mobile */
+    }
+}
+
+/* Optional: hide the borders entirely for very small screens */
+@media (max-width: 360px) {
+    .border-line {
+        display: none; /* Hide the borders for very small screens */
+    }
+}
         /* Gallery Button Style with hiding mode */
         /* Scroll Navigation Style */
 
 
-    /* Modal Image Customization*/
-        .modal-image {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
+    /* Modal Image Customization */
+.modal-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
 
-        /* Center the modal dialog */
-        .modal-dialog.modal-fullscreen {
-            max-width: 100%;
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            display: flex;
-            align-items: center; /* Center vertically */
-            justify-content: center; /* Center horizontally */
-        }
+/* Center the modal dialog */
+.modal-dialog.modal-fullscreen {
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    display: flex;
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+}
 
-    /* Scroll Navigation Style */
+/* Scroll Navigation Style */
 .scroll-nav {
     position: fixed;
     bottom: 0;
@@ -512,6 +536,8 @@
     transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
     display: flex;
     justify-content: center; /* Center the nav links horizontally */
+    width: auto; /* Allow the width to adjust based on content */
+    max-width: 100%; /* Ensure it doesn't overflow */
 }
 
 /* Hidden state for the scroll-nav */
@@ -526,13 +552,16 @@
     opacity: 1;
 }
 
+/* Scroll Nav Links */
 .scroll-nav ul {
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
-    justify-content: space-around;
-    width: 100%;
+    justify-content: center;
+    align-items: center; /* Center items vertically */
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+    gap: 10px; /* Add spacing between items */
 }
 
 .scroll-nav .nav-link {
@@ -557,24 +586,21 @@
     border-radius: 3px;
 }
 
-/* Mobile Responsiveness */
+/* Mobile Responsiveness for Scroll Navigation */
 @media (max-width: 576px) {
-    /* Adjust the scroll-nav for mobile */
     .scroll-nav {
         padding: 10px 10px; /* Less padding on mobile */
         width: 100%;
+        max-width: 100%;
     }
 
-    /* Stack the links vertically on smaller screens */
-    .scroll-nav ul {
-        flex-direction: column; /* Stack links vertically */
-        align-items: center; /* Center the links */
-        gap: 10px; /* Add some space between the links */
-    }
+   
 
     .scroll-nav .nav-link {
         font-size: 14px; /* Slightly smaller font size */
         padding: 10px 20px; /* Adjust padding for mobile */
+        width: 100%; /* Make the links full width on mobile */
+        text-align: center; /* Center the text in each link */
     }
 
     /* Optional: make the navigation bar occupy the full width on mobile */
@@ -582,8 +608,6 @@
         background-color: darkorange;
     }
 }
-
-    
 </style>
 
 
