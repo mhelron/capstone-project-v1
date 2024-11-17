@@ -103,6 +103,8 @@
                 </div>
             </aside>
             <div class="main p-3">
+            <nav class="navbar navbar-expand px-4 py-3 admin-nav">
+            </nav>
                 <div>
                     @yield('content')
                 </div>

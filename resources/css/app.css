@@ -301,3 +301,14 @@ select.form-control {
 .table td, .table th{
     vertical-align: middle; /* Vertically center the text in table cells */
 }
+
+.admin-nav{
+    border-bottom: 1px solid #F2F1EF; 
+    background-color: #fff; 
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    margin-top: -20px;
+    margin-right: -20px;
+    margin-left: -20px;
+    height: 60px; /* Set your desired height */
+    line-height: 60px; /* Vertically align content */
+}

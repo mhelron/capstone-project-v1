@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div style="padding-top: 35px;">
+<div class="pt-4">
     @if(session('status'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('status') }}
