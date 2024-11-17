@@ -259,84 +259,77 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-<!-- Include Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+<!-- Firebase SDK Scripts -->
+<script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
 
 <script>
-  // Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyARhHx8V5F3mILZujmFXVEwZtJbUMvrHVQ",
-    authDomain: "capstone-project-v1-ddf72.firebaseapp.com",
-    databaseURL: "https://capstone-project-v1-ddf72-default-rtdb.firebaseio.com",
-    projectId: "capstone-project-v1-ddf72",
-    storageBucket: "capstone-project-v1-ddf72.appspot.com",
-    messagingSenderId: "831745544682",
-    appId: "1:831745544682:web:c2d48183143aaff9682293",
-    measurementId: "G-GWDDD0KKBH"
-  };
-
-  // Initialize Firebase
-  const app = firebase.initializeApp(firebaseConfig);
-  const analytics = firebase.analytics();
-
-  document.getElementById("eventForm").addEventListener("submit", function (event) {
-    event.preventDefault(); // Prevent form from submitting normally
-
-    // Collect form data
-    const eventData = {
-        first_name: document.querySelector("[name='first_name']").value,
-        last_name: document.querySelector("[name='last_name']").value,
-        phone: document.querySelector("[name='phone']").value,
-        email: document.querySelector("[name='email']").value,
-        address: document.querySelector("[name='address']").value,
-        package_name: document.querySelector("[name='package_name']").value,
-        menu_name: document.querySelector("[name='menu_name']").value,
-        guests_number: document.querySelector("[name='guests_number']").value,
-        sponsors: document.querySelector("[name='sponsors']").value,
-        event_date: document.querySelector("[name='event_date']").value,
-        event_time: document.querySelector("[name='event_time']").value,
-        venue: document.querySelector("[name='venue']").value,
-        theme: document.querySelector("[name='theme']").value,
-        other_requests: document.querySelector("[name='other_requests']").value
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyARhHx8V5F3mILZujmFXVEwZtJbUMvrHVQ",
+        authDomain: "capstone-project-v1-ddf72.firebaseapp.com",
+        databaseURL: "https://capstone-project-v1-ddf72-default-rtdb.firebaseio.com",
+        projectId: "capstone-project-v1-ddf72",
+        storageBucket: "capstone-project-v1-ddf72.appspot.com",
+        messagingSenderId: "831745544682",  
+        appId: "1:831745544682:web:c2d48183143aaff9682293",
+        measurementId: "G-GWDDD0KKBH"
     };
 
-    // Push data to Firebase
-    firebase.database().ref("events").push(eventData)
-        .then(() => {
-            alert("Event added successfully!");
-            // Close modal after submission
-            $('#eventModal').modal('hide');
-            // Clear the form fields
-            document.getElementById("eventForm").reset();
-        })
-        .catch((error) => {
-            console.error("Error adding event: ", error);
-            alert("Error adding event. Please try again.");
-        });
-  });
-</script>
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const database = firebase.database(app);
 
-<!-- Route Fetching Script -->
-<script>
-    const reservationUrl = "{{ route('admin.calendar.reservation') }}";
+    // Form submission handler
+    document.getElementById('eventForm').addEventListener('submit', function(event) {
+        event.preventDefault();  // Prevent default form submission
 
-    // JavaScript function that uses the reservationUrl
-    function fetchReservations() {
-        fetch(reservationUrl)
-            .then(response => response.json())
-            .then(data => {
-                // Process the data
+        // Get form data
+        const firstName = document.getElementById('first_name').value;
+        const lastName = document.getElementById('last_name').value;
+        const phone = document.getElementById('phone').value;
+        const email = document.getElementById('email').value;
+        const address = document.getElementById('address').value;
+        const packageName = document.getElementById('package_name').value;
+        const menuName = document.getElementById('menu_name').value;
+        const guestsNumber = document.getElementById('guests_number').value;
+        const sponsors = document.getElementById('sponsors').value;
+        const eventDate = document.getElementById('event_date').value;
+        const eventTime = document.getElementById('event_time').value;
+        const venue = document.getElementById('venue').value;
+        const theme = document.getElementById('theme').value;
+        const specialRequests = document.getElementById('other_requests').value;
+
+        // Create an object to store form data
+        const reservationData = {
+            first_name: firstName,
+            last_name: lastName,
+            phone: phone,
+            email: email,
+            address: address,
+            package_name: packageName,
+            menu_name: menuName,
+            guests_number: guestsNumber,
+            sponsors: sponsors,
+            event_date: eventDate,
+            event_time: eventTime,
+            venue: venue,
+            theme: theme,
+            other_requests: specialRequests
+        };
+
+        // Push the form data to Firebase Realtime Database
+        const reservationRef = database.ref('reservations');  // Reference to the reservations node
+        reservationRef.push(reservationData)
+            .then(() => {
+                alert("Reservation added successfully!");
+                document.getElementById('eventForm').reset(); // Reset form
             })
-            .catch(error => {
-                console.error("Error fetching reservation data:", error);
+            .catch((error) => {
+                console.error("Error adding reservation: ", error);
+                alert("Error adding reservation, please try again.");
             });
-    }
-
-    fetchReservations();
+    });
 </script>
-
-
 
 @endsection

@@ -1,8 +1,7 @@
 function formatPriceCustom(price) {
     // Add currency symbol, e.g., PHP or USD
-    const currencySymbol = '₱';  // or '$' for USD
     // Format number with commas (e.g., 1000000 becomes 1,000,000)
-    return currencySymbol + price.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return price.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 function change() {
@@ -163,7 +162,7 @@ $('#guests_number').on('input', function() {
         }
 
         // Determine the price per additional person based on the package type
-        const pricePerAdditionalPerson = selectedPackage.package_type === 'Wedding' ? 400 : 350;
+        const pricePerAdditionalPerson = selectedPackage?.package_type === 'Wedding' ? 400 : 350;
 
         // Calculate additional guests and price
         const additionalGuests = Math.max(0, currentGuests - baseGuests);
@@ -188,52 +187,56 @@ $('#guests_number').on('input', function() {
 
 
 $(document).ready(function() {
-    $('#package_name').on('change', change);
+    $('#package_name').on('change', change); // Ensures change() is bound after DOM is ready
 });
 
 document.addEventListener("DOMContentLoaded", function() {
-    const packageSelect = document.getElementById('package_name'); // Get package select element
-    const guestsNumberInput = document.getElementById('guests_number'); // Get guests input element
+    const packageSelect = document.getElementById('package_name'); // Package select element
+    const guestsNumberInput = document.getElementById('guests_number'); // Guests input element
     const totalPackagePriceSpan = document.getElementById("preview-package-price"); // Package price span
     const additionalPersonsSpan = document.getElementById("total-additional-persons"); // Additional persons span
     const totalPriceSpan = document.getElementById("total-price"); // Total price span
+    const totalPriceInput = document.getElementById("total_price"); // Hidden input for total price
 
-    // Initialize default package price
     let packagePrice = 0;
     let packagePersons = 0;
     const pricePerAdditionalPerson = 500; // Price for each additional person
 
     // Function to update the total breakdown
     function updateTotal() {
-        const additionalGuests = Math.max(0, guestsNumberInput.value - packagePersons);
+        const additionalGuests = Math.max(0, parseInt(guestsNumberInput.value, 10) - packagePersons);
         const additionalPrice = additionalGuests * pricePerAdditionalPerson;
-        const totalPrice = packagePrice + additionalPrice;
-
-        totalPackagePriceSpan.innerText = `₱${packagePrice.toFixed(2)}`;
+        const totalPrice = (parseFloat(packagePrice) || 0) + additionalPrice;
+    
+        // Update visible breakdown
+        totalPackagePriceSpan.innerText = `₱${(parseFloat(packagePrice) || 0).toFixed(2)}`;
         additionalPersonsSpan.innerText = additionalGuests;
         totalPriceSpan.innerText = `₱${totalPrice.toFixed(2)}`;
+    
+        // Update hidden input field for total price without formatting
+        totalPriceInput.value = totalPrice.toFixed(2);
     }
 
     // When the package is selected
     packageSelect.addEventListener("change", function() {
         const selectedPackageName = packageSelect.value;
         const selectedPackage = packages.find(pkg => pkg.package_name === selectedPackageName);
-
+    
         if (selectedPackage) {
             packagePrice = selectedPackage.price;
             packagePersons = selectedPackage.persons;
-
-            // Enable the menu selection dropdown
-            const menuSelect = document.getElementById("menu_name");
-            menuSelect.disabled = false;
-
-            updateTotal();  // Update the total when a package is selected
+            updateTotal(); // Update breakdown and hidden input
         }
     });
 
     // When the number of guests changes
     guestsNumberInput.addEventListener("input", function() {
-        updateTotal();  // Update the total when the number of guests changes
+        updateTotal(); // Update breakdown and hidden input
+    });
+
+    packageForm.addEventListener('submit', function () {
+        // Ensure commas are removed from the hidden input field before submission
+        totalPriceInput.value = totalPriceInput.value.replace(/,/g, '');
     });
 
     // Initialize the total when the page is loaded, in case a default package is selected
@@ -248,4 +251,5 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-
+console.log("Total Price:", totalPrice);
+console.log("Hidden Input Value:", totalPriceInput.value);

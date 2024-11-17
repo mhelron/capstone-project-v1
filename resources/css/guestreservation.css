@@ -1,0 +1,67 @@
+.row .card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.blank-card {
+    background-color: #fff; /* Light background for the blank card */
+    display: flex;
+    justify-content: center;  /* Horizontally center the content */
+    align-items: center;      /* Vertically center the content */
+}
+
+.card-body {
+    flex-grow: 1; /* Allow the body to take up available space */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Card Border */
+.card {
+    border: 2px solid darkorange; /* Add darkorange border to the card */
+    background-color: #f5f5dc; /* Light beige */
+}
+
+/* Input Field Border */
+input.form-control,
+select.form-control,
+select.form-select,
+textarea.form-control {
+    border: 2px solid darkorange; /* Add orange border to input fields */
+}
+
+/* Add focus effect for input fields to enhance visibility */
+input.form-control:focus,
+select.form-control:focus,
+select.form-select:focus,
+textarea.form-control:focus {
+    border-color: darkorange; /* Change border color to darkorange on focus */
+    box-shadow: 0 0 5px darkorange; /* Optional: add a glow effect on focus */
+}
+
+input[type="radio"].form-check-input {
+    border: 2px solid darkorange; /* Border color for the radio button */
+    border-radius: 50%; /* Circular shape */
+    width: 20px; /* Adjust the size */
+    height: 20px; /* Adjust the size */
+    appearance: none; /* Remove default browser styling */
+    outline: none; /* Remove outline */
+    transition: border-color 0.3s ease, background-color 0.3s ease; /* Smooth transition */
+}
+
+/* When the radio button is selected (checked) */
+input[type="radio"].form-check-input:checked {
+    background-color: darkorange; /* Change background color to darkorange */
+    border-color: darkorange; /* Change the border color to darkorange */
+}
+
+/* When the radio button is focused */
+input[type="radio"].form-check-input:focus {
+    box-shadow: 0 0 5px darkorange; /* Optional: add a glowing effect on focus */
+}
+
+/* Optional: add a hover effect */
+input[type="radio"].form-check-input:hover {
+    border-color: darkorange; /* Change border color on hover */
+}

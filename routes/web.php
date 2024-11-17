@@ -40,6 +40,7 @@ Route::get('/about', [GuestController::class, 'indexAbout'])->name('guest.about'
 
 //Reservation
 Route::get('/reserve', [GuestReservationController::class, 'index'])->name('guest.reserve');
+Route::post('/reserve', [GuestReservationController::class, 'store'])->name('guest.reserve.add');
 
 // Login Route
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');

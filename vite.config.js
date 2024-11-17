@@ -7,6 +7,9 @@ export default defineConfig({
             input: [
 				'resources/css/app.css',
 				'resources/css/guest.css',
+				'resources/css/guestreservation.css',
+				'resources/css/calendar.css',
+
 				'resources/js/app.js',
 				'resources/js/bootstrap.js',
 				'resources/js/app.js',

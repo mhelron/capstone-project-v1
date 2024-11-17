@@ -2,6 +2,8 @@
 
 @section('content')
 
+@vite('resources/css/guestreservation.css')
+
 <!-- Content Header (Page header) -->
 <div class="content-header" style="padding-top: 100px;">
     <div class="container">
@@ -29,7 +31,7 @@
 
                 <div class="card">
                     <div class="card-body form-container">
-                        <form id="myForm" action="{{ route('admin.reserve.reserve') }}" method="POST">
+                        <form id="myForm" action="{{ route('guest.reserve.add') }}" method="POST">
                             @csrf
 
                             <div class="row">
@@ -184,25 +186,30 @@
                                 <div class="form-group col-md-6">
                                     <h4>Total Breakdown</h4>
                                     <p class="d-flex justify-content-between">
-                                        <strong>Additional Persons:</strong>
+                                        <strong>Additional Persons: </strong>
                                         <span id="total-additional-persons">0</span> 
                                         <span>x</span> 
-                                        <span id="price-per-package-head">₱0.00</span>
+                                        <span id="price-per-package-head">0.00</span>
                                     </p>
                                     <p class="d-flex justify-content-between">
                                         <strong>Total Additional Person Price: </strong>
-                                        <span id="total-additional-person-price">₱0.00</span>
+                                        <span id="total-additional-person-price">0.00</span>
                                     </p>
                                     <p class="d-flex justify-content-between">
                                         <strong>Package Price: </strong>
-                                        <span id="total-package-price">₱0.00</span>
+                                        <span id="total-package-price">0.00</span>
                                     </p>
                                     <p class="d-flex justify-content-between">
-                                        <strong>Total: </strong>
-                                        <span id="total-price">₱0.00</span>
+                                        <strong>Total:</strong>
+                                        <span id="total-price">0.00</span>
                                     </p>
                                 </div>
                             </div>
+
+                            <input type="hidden" id="total_price" name="total_price" value="">
+                            @if ($errors->has('total_price'))
+                                <small class="text-danger">{{ $errors->first('total_price') }}</small>
+                            @endif
 
                             <div class="form-group">
                                 <button type="submit" class="btn btn-darkorange float-end">Submit</button>
@@ -283,77 +290,5 @@
 </script>
 
 @vite('resources/js/guestreservation.js')
-
-
-<style>
-.row .card {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.blank-card {
-    background-color: #fff; /* Light background for the blank card */
-    display: flex;
-    justify-content: center;  /* Horizontally center the content */
-    align-items: center;      /* Vertically center the content */
-}
-
-.card-body {
-    flex-grow: 1; /* Allow the body to take up available space */
-    display: flex;
-    flex-direction: column;
-}
-
-/* Card Border */
-.card {
-    border: 2px solid darkorange; /* Add darkorange border to the card */
-    background-color: #f5f5dc; /* Light beige */
-}
-
-/* Input Field Border */
-input.form-control,
-select.form-control,
-select.form-select,
-textarea.form-control {
-    border: 2px solid darkorange; /* Add orange border to input fields */
-}
-
-/* Add focus effect for input fields to enhance visibility */
-input.form-control:focus,
-select.form-control:focus,
-select.form-select:focus,
-textarea.form-control:focus {
-    border-color: darkorange; /* Change border color to darkorange on focus */
-    box-shadow: 0 0 5px darkorange; /* Optional: add a glow effect on focus */
-}
-
-input[type="radio"].form-check-input {
-    border: 2px solid darkorange; /* Border color for the radio button */
-    border-radius: 50%; /* Circular shape */
-    width: 20px; /* Adjust the size */
-    height: 20px; /* Adjust the size */
-    appearance: none; /* Remove default browser styling */
-    outline: none; /* Remove outline */
-    transition: border-color 0.3s ease, background-color 0.3s ease; /* Smooth transition */
-}
-
-/* When the radio button is selected (checked) */
-input[type="radio"].form-check-input:checked {
-    background-color: darkorange; /* Change background color to darkorange */
-    border-color: darkorange; /* Change the border color to darkorange */
-}
-
-/* When the radio button is focused */
-input[type="radio"].form-check-input:focus {
-    box-shadow: 0 0 5px darkorange; /* Optional: add a glowing effect on focus */
-}
-
-/* Optional: add a hover effect */
-input[type="radio"].form-check-input:hover {
-    border-color: darkorange; /* Change border color on hover */
-}
-</style>
-
 
 @endsection
