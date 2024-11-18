@@ -56,5 +56,15 @@
 
 <!-- PopperJS -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+
+    @if (session('status'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            });
+        </script>
+    @endif
 </body>
 </html>

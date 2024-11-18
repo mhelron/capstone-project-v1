@@ -7,7 +7,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0" style="padding-top: 35px;">Add Reservation</h1>
+                <h1 class="m-0 pt-4">Add Reservation</h1>
             </div>
         </div>
     </div>
@@ -111,8 +111,9 @@
                                         <option value="" disabled {{ old('menu_name') ? '' : 'selected' }}>Select a Menu</option>
                                         <!-- Dynamic options will be inserted here by JavaScript -->
                                     </select>
-
-                                    <small id="menu_name_error" class="text-danger" style="display:none;"></small>
+                                    @if ($errors->has('menu_name') && !is_null(old('package_name')))
+                                        <small class="text-danger">{{ $errors->first('menu_name') }}</small>
+                                    @endif
                                 </div>
                             </div>
 
@@ -245,7 +246,6 @@ function packageChange() {
             // Enable the menu dropdown if package has menus
             if (selectedPackage.menus && selectedPackage.menus.length > 0) {
                 menuDropdown.disabled = false;
-                menuDropdown.required = true; // Make the menu field required
 
                 // Clear previous options but keep placeholder
                 const placeholderOption = menuDropdown.querySelector('option[value=""]');
@@ -353,37 +353,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Return the formatted time string (HH:mm)
         return hours + ':' + minutes;
-    }
-});
-
-// Ensure `menu_name` gets an empty value when the field is disabled
-document.getElementById('package_name').addEventListener('change', function() {
-    const menuField = document.getElementById('menu_name');
-    
-    if (this.value) {
-        menuField.disabled = false; // Enable the menu field
-    } else {
-        menuField.disabled = true; // Disable the menu field
-        menuField.value = ''; // Reset the menu field value
-    }
-});
-
-document.getElementById('myForm').addEventListener('submit', function(event) {
-    const menuField = document.getElementById('menu_name');
-    const menuError = document.getElementById('menu_name_error'); // Get the error message element
-
-    // Reset error state before submitting
-    menuError.style.display = 'none';
-
-    // If the menu field is required and not filled, show a validation error
-    if (menuField.required && !menuField.value) {
-        event.preventDefault(); // Prevent form submission
-        menuError.style.display = 'block'; // Show error message
-        menuError.textContent = "Menu is required."; // Custom error message
-    }
-
-    if (menuField.disabled) {
-        menuField.value = ''; // Ensure menu_name is an empty string when disabled
     }
 });
 </script>

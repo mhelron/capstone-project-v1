@@ -36,12 +36,12 @@ class GuestReservationController extends Controller
             'menu_name' => 'required',
             'event_date' => 'required',
             'guests_number' => 'required',
-            'sponsors' => 'nullable|integer',
+            'sponsors' => 'nullable',
             'venue' => 'required',
             'event_time' => 'required',
             'theme' => 'required',
             'other_requests' => 'nullable',
-            'total_price' => 'required|numeric'
+            'total_price' => 'nullable|numeric'
         ], [
             'menu_name.required_if' => 'You must select a menu when a package is selected.',
         ]);
@@ -71,7 +71,7 @@ class GuestReservationController extends Controller
         // Prepare reservation data
         $reserveData = [
             'status' => 'Pencil',
-            'reserve_type' => 'Reserve',
+            'reserve_type' => 'Pencil',
             'first_name' => $validatedData['first_name'],
             'last_name' => $validatedData['last_name'],
             'address' => $validatedData['address'],
@@ -87,7 +87,7 @@ class GuestReservationController extends Controller
             'event_time' => $validatedData['event_time'],
             'theme' => $validatedData['theme'],
             'other_requests' => $validatedData['other_requests'],
-            'total_price' => $validatedData['total_price'],
+            'total_price' => $validatedData['total_price'] ?? null,
         ];
     
         Log::info('Total price included in reserveData', ['reserveData' => $reserveData]);

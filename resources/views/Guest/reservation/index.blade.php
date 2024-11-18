@@ -89,7 +89,7 @@
                             <div class="row">
                                 <div class="form-group col-md-6 mb-3">
                                     <label for="package_name">Package</label>
-                                    <select onchange="change()" name="package_name" id="package_name" class="form-control">
+                                    <select name="package_name" id="package_name" class="form-control">
                                         <option value="" disabled {{ old('package_name') ? '' : 'selected' }}>Select a Package</option>
                                         @foreach ($packages as $package)
                                             <option value="{{ $package['package_name'] }}" data-persons="{{ $package['persons'] }}"
@@ -104,9 +104,15 @@
                                 </div>
                                 <div class="form-group col-md-6 mb-3">
                                     <label>Menu</label>
-                                    <select name="menu_name" class="form-select" id="menu_name" disabled>
+                                    <select name="menu_name" class="form-select" id="menu_name" {{ old('package_name') ? '' : 'disabled' }}>
                                         <option value="">Select a Menu</option>
+                                        @if(old('menu_name'))
+                                            <option value="{{ old('menu_name') }}" selected>{{ old('menu_name') }}</option>
+                                        @endif
                                     </select>
+                                    @if ($errors->has('menu_name') && !is_null(old('package_name')))
+                                        <small class="text-danger">{{ $errors->first('menu_name') }}</small>
+                                    @endif
                                 </div>
                             </div>
 
@@ -114,17 +120,25 @@
                                 <!-- Number of Guests -->
                                 <div class="form-group col-md-6 mb-3">
                                     <label>Number of Guests</label><span class="text-danger"> *</span>
-                                    <input type="number" name="guests_number" class="form-control" id="guests_number" min="1">
+                                    <input type="number" name="guests_number" value="{{ old('guests_number') }}" class="form-control" id="guests_number" min="1">
                                     @if ($errors->has('guests_number'))
                                         <small class="text-danger">{{ $errors->first('guests_number') }}</small>
                                     @endif
                                 </div>
 
-                                <!-- Number of Sponsors -->
                                 <div class="form-group col-md-6 mb-3">
                                     <label>Number of Principal Sponsors (Ninong, Ninang & Parents)</label>
-                                    <input type="number" id="sponsors" name="sponsors" value="{{ old('sponsors') }}" class="form-control" disabled>
-                                    @if ($errors->has('sponsors'))
+                                    <input 
+                                        type="number" 
+                                        id="sponsors" 
+                                        name="sponsors" 
+                                        value="{{ old('sponsors') }}" 
+                                        class="form-control" 
+                                        @if(old('package_type', $packageType ?? '') !== 'Wedding') disabled @endif>
+
+                                    <input type="hidden" id="package_type" name="package_type" value="{{ old('package_type', $packageType ?? '') }}">
+                                    
+                                    @if ($errors->has('sponsors') && old('package_name', $packageType ?? '') === 'Wedding')
                                         <small class="text-danger">{{ $errors->first('sponsors') }}</small>
                                     @endif
                                 </div>
@@ -206,10 +220,7 @@
                                 </div>
                             </div>
 
-                            <input type="hidden" id="total_price" name="total_price" value="">
-                            @if ($errors->has('total_price'))
-                                <small class="text-danger">{{ $errors->first('total_price') }}</small>
-                            @endif
+                            <input type="hidden" id="total_price" name="total_price" value="{{ old('total_price') }}">
 
                             <div class="form-group">
                                 <button type="submit" class="btn btn-darkorange float-end">Submit</button>

@@ -157,3 +157,24 @@
     left: 50%;
     transform: translateX(-50%); /* Centers the dropdown menu */
 }
+
+/* Custom Styles sa Toast */
+.custom-toast-size {
+    width: 350px;
+    max-width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    border-radius: 8px;
+}
+
+.toast-body {
+    font-size: 16px;
+}
+
+.toast-container {
+    z-index: 1055;
+}
+
+.btn-close {
+    font-size: 20px;
+}

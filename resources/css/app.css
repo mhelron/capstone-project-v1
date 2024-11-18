@@ -252,7 +252,7 @@ select.form-control {
 
 /* Added Scroll in the forms */
 .form-container {
-    max-height: 800px;
+    max-height: 700px;
     overflow-y: auto;
     margin-bottom: 15px;
 }

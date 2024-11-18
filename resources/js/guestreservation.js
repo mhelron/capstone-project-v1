@@ -1,9 +1,3 @@
-function formatPriceCustom(price) {
-    // Add currency symbol, e.g., PHP or USD
-    // Format number with commas (e.g., 1000000 becomes 1,000,000)
-    return price.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
 function change() {
     const selectedPackageName = $('#package_name').val();
     const menuDropdown = $('#menu_name');
@@ -14,50 +8,56 @@ function change() {
     const packagePaxSpan = $('#preview-package-pax');
     const packageServicesList = $('#preview-package-services');
     const menuItemsList = $('#preview-menu-items');
-    const additionalPersonsSpan = $("#total-additional-persons"); // Additional persons
-    const totalPriceSpan = $("#total-price"); // Total price
-    const totalPackagePriceSpan = $("#total-package-price"); // Total package price (for the first section)
-    const pricePerPackageHeadSpan = $('#price-per-package-head'); // Price per head element
+    const additionalPersonsSpan = $("#total-additional-persons");
+    const totalPriceSpan = $("#total-price");
+    const totalPackagePriceSpan = $("#total-package-price");
+    const pricePerPackageHeadSpan = $('#price-per-package-head');
+    const sponsorField = $('#sponsors');  // Sponsor field element
 
     let packageSelect = document.getElementById('package_name');
     let selectedPackage = packageSelect.options[packageSelect.selectedIndex];
+    let oldMenuValue = menuDropdown.find('option:selected').val(); // Store the old menu value
 
-    // Get the persons value from the selected option's data-persons attribute
     let persons = selectedPackage.getAttribute('data-persons');
 
-    // Update the guests_number input with the persons value
-    if (persons) {
-        guestsInput.val(persons);  // Set the value of the guests input field
+    if (selectedPackage.package_type === 'Wedding') {
+        sponsorField.prop('disabled', false);  // Enable sponsor field for wedding packages
+    } else {
+        sponsorField.prop('disabled', true);   // Disable sponsor field for other packages
+        sponsorField.val('');  // Optionally clear the value if not enabled
     }
 
-    // Restrict the guest input to not go below the persons value
-    guestsInput.attr('min', persons);  // Set the minimum value of the input
+    if (persons) {
+        // Set the value if it's not already populated
+        if (!guestsInput.val() || guestsInput.val() < persons) {
+            guestsInput.val(persons); // Set the value to the default persons number
+        }
+    }
 
-    // Reset menu dropdown and hide the preview by default
+    guestsInput.attr('min', persons); // Ensure the minimum value is always the default
+
     menuDropdown.empty().append('<option value="" disabled selected>Select a Menu</option>');
     previewSection.hide();
     packageServicesList.empty();
 
-    // Ensure the selected package name is not empty
     if (selectedPackageName) {
-        // Find the selected package
         const selectedPackage = packages.find(pkg => pkg.package_name === selectedPackageName);
 
-        // Ensure the selected package exists and has menus
         if (selectedPackage) {
-            // Enable the menu dropdown and populate it with options
             menuDropdown.prop('disabled', false);
             selectedPackage.menus.forEach(menu => {
-                menuDropdown.append(new Option(menu.menu_name, menu.menu_name));
+                const option = new Option(menu.menu_name, menu.menu_name);
+                if (menu.menu_name === oldMenuValue) {
+                    option.selected = true;
+                }
+                menuDropdown.append(option);
             });
 
-            // Populate preview section with package details
             packageNameSpan.text(selectedPackage.package_name);
-            const formattedPrice = formatPriceCustom(parseFloat(selectedPackage.price));
-            packagePriceSpan.text(formattedPrice);
+            const basePrice = parseInt(selectedPackage.price, 10); // Ensure it's a whole number
+            packagePriceSpan.text(basePrice);
             packagePaxSpan.text(selectedPackage.persons);
 
-            // Handle services
             packageServicesList.empty();
             if (selectedPackage.services && selectedPackage.services.length > 0) {
                 selectedPackage.services.forEach(service => {
@@ -67,53 +67,46 @@ function change() {
                 packageServicesList.append('<li>No services available</li>');
             }
 
-            // Calculate and update the total price
-            const basePrice = parseFloat(selectedPackage.price); // Base price for the selected package
-            const baseGuests = selectedPackage.persons; // Base number of guests
-            let pricePerAdditionalPerson = 350; // Default price per additional guest
+            const baseGuests = selectedPackage.persons;
+            let pricePerAdditionalPerson = 350;
 
-            // Check the package type and set the price per head accordingly
             if (selectedPackage.package_type === 'Wedding') {
-                pricePerAdditionalPerson = 400; // Wedding package has a higher price per person
+                pricePerAdditionalPerson = 400;
+                sponsorField.prop('disabled', false);  // Enable sponsor field for wedding packages
+            } else {
+                sponsorField.prop('disabled', true);  // Disable sponsor field for other packages
             }
 
-            // Display price per head
-            pricePerPackageHeadSpan.text(formatPriceCustom(pricePerAdditionalPerson)); // Show price per additional person
+            pricePerPackageHeadSpan.text(pricePerAdditionalPerson); // Price per head
 
-            // Ensure guests input doesn't go below the base number of guests
-            let currentGuests = Math.max(baseGuests, guestsInput.val()); // Capture the updated number of guests
-            guestsInput.val(currentGuests); // Update the value in the input field
+            let currentGuests = Math.max(baseGuests, guestsInput.val());
+            guestsInput.val(currentGuests);
 
-            // Calculate additional guests and total price
             const additionalGuests = Math.max(0, currentGuests - baseGuests);
             const additionalPrice = additionalGuests * pricePerAdditionalPerson;
             const totalPrice = basePrice + additionalPrice;
 
-            // Update price breakdown on the UI
-            additionalPersonsSpan.text(additionalGuests); // Show number of additional guests
-            totalPriceSpan.text(formatPriceCustom(totalPrice)); // Update the total price
-
-            // Update the total package price in the first section
-            totalPackagePriceSpan.text(formatPriceCustom(basePrice)); // Show base package price
-
-            // Clear menu details
+            additionalPersonsSpan.text(additionalGuests);
+            totalPriceSpan.text(totalPrice);
+            totalPackagePriceSpan.text(basePrice);
             menuItemsList.empty();
 
-            // Show the preview section
+            if (oldMenuValue) {
+                $('#menu_name').trigger('change');
+            }
+
             previewSection.show();
         } else {
             console.error("Selected package not found or has no menus.");
         }
     } else {
-        // If no package is selected, hide the preview
         menuDropdown.prop('disabled', true);
         previewSection.hide();
     }
 }
 
 
-// Update preview content based on menu selection
-$('#menu_name').change(function() {
+$('#menu_name').change(function () {
     const selectedMenuName = $(this).val();
     const selectedPackageName = $('#package_name').val();
     const selectedPackage = packages.find(pkg => pkg.package_name === selectedPackageName);
@@ -133,21 +126,70 @@ $('#menu_name').change(function() {
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Flatpickr for the date input
-    flatpickr("#event_date", {
+    const eventDatePicker = flatpickr("#event_date", {
         dateFormat: "Y-m-d", // Format of the date to send to the server
         minDate: "today",    // Prevent past dates
+        onChange: function(selectedDates) {
+            const selectedDate = selectedDates[0];
+            const today = new Date();
+
+            // If the selected date is today, update the time picker to not allow past times
+            if (selectedDate.toDateString() === today.toDateString()) {
+                const currentTime = getCurrentTime();
+                // Only update the minTime for the eventTimePicker if it's different from the current value
+                if (eventTimePicker.config.minTime !== currentTime) {
+                    eventTimePicker.set('minTime', currentTime); // Set minTime to current time if today
+                }
+            } else {
+                // Otherwise, allow any time for future dates
+                if (eventTimePicker.config.minTime !== "00:00") {
+                    eventTimePicker.set('minTime', "00:00");
+                }
+            }
+        }
     });
 
     // Initialize Flatpickr for the time input with AM/PM option
-    flatpickr("#event_time", {
+    const eventTimePicker = flatpickr("#event_time", {
         enableTime: true,    // Enable time selection
-        noCalendar: true,     // Disable calendar (only time)
-        dateFormat: "h:i K",  // Format of the time to send to the server (12-hour format with AM/PM)
-        time_24hr: false,     // Use 12-hour format
+        noCalendar: true,    // Disable calendar (only time)
+        dateFormat: "h:i K", // Format of the time to send to the server (12-hour format with AM/PM)
+        time_24hr: false,    // Use 12-hour format
+        minTime: getCurrentTime(), // Default minTime is set when the page loads (if today)
+        onOpen: function() {
+            const selectedDate = eventDatePicker.selectedDates[0];
+            const today = new Date();
+
+            // If the selected date is today, update minTime dynamically based on the current time
+            if (selectedDate && selectedDate.toDateString() === today.toDateString()) {
+                this.set('minTime', getCurrentTime()); // Set minTime to current time
+            } else {
+                this.set('minTime', "00:00"); // Allow any time for future dates
+            }
+        }
     });
+
+    // Function to get the current time in the correct format (24-hour format)
+    function getCurrentTime() {
+        var now = new Date();
+        var hours = now.getHours();
+        var minutes = now.getMinutes();
+
+        // Ensure hours and minutes are two digits
+        hours = (hours < 10 ? '0' : '') + hours; // Two-digit hour
+        minutes = (minutes < 10 ? '0' : '') + minutes; // Two-digit minutes
+
+        // Return the formatted time string (HH:mm)
+        return hours + ':' + minutes;
+    }
 });
 
-$('#guests_number').on('input', function() {
+let isUpdatingGuests = false; // Add a flag to prevent infinite loop
+
+$('#guests_number').on('input', function () {
+    if (isUpdatingGuests) return; // Prevent nested calls
+    isUpdatingGuests = true;
+
     const selectedPackageName = $('#package_name').val();
     const selectedPackage = packages.find(pkg => pkg.package_name === selectedPackageName);
 
@@ -155,39 +197,42 @@ $('#guests_number').on('input', function() {
         const baseGuests = selectedPackage.persons;
         let currentGuests = $(this).val();
 
-        // Ensure that the number of guests does not go below the base guests
         if (currentGuests < baseGuests) {
             $(this).val(baseGuests);
-            currentGuests = baseGuests; // Set to the base number of guests if less than base
+            currentGuests = baseGuests;
         }
 
-        // Determine the price per additional person based on the package type
         const pricePerAdditionalPerson = selectedPackage?.package_type === 'Wedding' ? 400 : 350;
-
-        // Calculate additional guests and price
         const additionalGuests = Math.max(0, currentGuests - baseGuests);
         const additionalPrice = additionalGuests * pricePerAdditionalPerson;
-
-        // Calculate the total additional person price (1 x price per person)
-        const totalAdditionalPersonPrice = additionalGuests * pricePerAdditionalPerson; // Here is the 1 x per person price calculation
-
-        // Calculate the base price and the total price (base + additional persons)
-        const basePrice = parseFloat(selectedPackage.price);
+        const basePrice = parseInt(selectedPackage.price, 10); // Ensure it's a whole number
         const totalPrice = basePrice + additionalPrice;
 
-        // Update the UI elements
-        $('#total-additional-persons').text(additionalGuests); // Show number of additional guests
-        $('#price-per-package-head').text(formatPriceCustom(pricePerAdditionalPerson)); // Show price per additional person
-        $('#total-additional-person-price').text(formatPriceCustom(totalAdditionalPersonPrice)); // Show the total additional person price
-        $('#total-price').text(formatPriceCustom(totalPrice)); // Show the total price with additional guests
-        $('#total-package-price').text(formatPriceCustom(basePrice)); // Show the base package price
+        $('#total-additional-persons').text(additionalGuests);
+        $('#price-per-package-head').text(pricePerAdditionalPerson);
+        $('#total-price').text(totalPrice);  // Ensure it's a whole number
+        $('#total-package-price').text(basePrice);
     }
+
+    isUpdatingGuests = false; // Reset the flag
 });
 
+$(document).ready(function () {
+    $('#package_name').on('change', change);
 
+    // Run the change function when the page loads, and set default value for guests
+    if ($('#package_name').val()) {
+        change();
 
-$(document).ready(function() {
-    $('#package_name').on('change', change); // Ensures change() is bound after DOM is ready
+        // Set the default guests value if not already set
+        if ($('#guests_number').val() === '') {
+            $('#guests_number').val($('#package_name option:selected').data('persons'));
+        }
+
+        if ($('#guests_number').val()) {
+            $('#guests_number').trigger('input');
+        }
+    }
 });
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -197,59 +242,78 @@ document.addEventListener("DOMContentLoaded", function() {
     const additionalPersonsSpan = document.getElementById("total-additional-persons"); // Additional persons span
     const totalPriceSpan = document.getElementById("total-price"); // Total price span
     const totalPriceInput = document.getElementById("total_price"); // Hidden input for total price
+    const pricePerPackageHeadSpan = document.getElementById('price-per-package-head'); // Define pricePerPackageHeadSpan
 
     let packagePrice = 0;
     let packagePersons = 0;
-    const pricePerAdditionalPerson = 500; // Price for each additional person
+    let selectedPackage = null; // Add selectedPackage as a global variable
 
     // Function to update the total breakdown
-    function updateTotal() {
-        const additionalGuests = Math.max(0, parseInt(guestsNumberInput.value, 10) - packagePersons);
+    let totalPrice = 0; // Store the total price in a variable
+
+    // Function to update the total breakdown
+    function updateTotal(selectedPackage) {
+        console.log("Updating total...");
+        
+        // Log the selected package and the current input values
+        console.log("Selected Package:", selectedPackage);
+        const pricePerAdditionalPerson = (selectedPackage.package_type === 'Wedding') ? 400 : 350;
+        console.log("Price per Additional Person:", pricePerAdditionalPerson);
+
+        // Ensure the guests number input is never empty
+        const guestsInputValue = guestsNumberInput.value.trim() || packagePersons; // Default to packagePersons if empty
+        console.log("Guests Input Value:", guestsInputValue);
+
+        // Parse the value and handle cases for invalid or empty inputs
+        const currentGuests = parseInt(guestsInputValue, 10);
+        console.log("Parsed Guests Number:", currentGuests);
+
+        // Check for invalid input
+        if (isNaN(currentGuests) || currentGuests <= 0) {
+            console.error("Invalid guests number input:", guestsInputValue);
+            guestsNumberInput.value = packagePersons; // Reset to base number if invalid
+            return;
+        }
+
+        // The rest of your logic for calculating prices remains the same
+        const additionalGuests = Math.max(0, currentGuests - packagePersons);
         const additionalPrice = additionalGuests * pricePerAdditionalPerson;
-        const totalPrice = (parseFloat(packagePrice) || 0) + additionalPrice;
-    
-        // Update visible breakdown
-        totalPackagePriceSpan.innerText = `₱${(parseFloat(packagePrice) || 0).toFixed(2)}`;
+        totalPrice = (parseInt(packagePrice, 10) || 0) + additionalPrice;
+
+        console.log("Additional Guests:", additionalGuests);
+        console.log("Additional Price:", additionalPrice);
+        console.log("Total Price:", totalPrice);
+
+        totalPackagePriceSpan.innerText = `${parseInt(packagePrice, 10) || 0}`;
         additionalPersonsSpan.innerText = additionalGuests;
-        totalPriceSpan.innerText = `₱${totalPrice.toFixed(2)}`;
-    
-        // Update hidden input field for total price without formatting
-        totalPriceInput.value = totalPrice.toFixed(2);
+        totalPriceSpan.innerText = `${totalPrice}`;
+        pricePerPackageHeadSpan.innerText = pricePerAdditionalPerson;
+        totalPriceInput.value = totalPrice;
+
+        document.getElementById('total-additional-person-price').innerText = additionalPrice.toFixed(2);
     }
 
     // When the package is selected
     packageSelect.addEventListener("change", function() {
         const selectedPackageName = packageSelect.value;
-        const selectedPackage = packages.find(pkg => pkg.package_name === selectedPackageName);
+        selectedPackage = packages.find(pkg => pkg.package_name === selectedPackageName);
     
         if (selectedPackage) {
             packagePrice = selectedPackage.price;
             packagePersons = selectedPackage.persons;
-            updateTotal(); // Update breakdown and hidden input
+            updateTotal(selectedPackage); // Update breakdown and hidden input
         }
     });
 
     // When the number of guests changes
     guestsNumberInput.addEventListener("input", function() {
-        updateTotal(); // Update breakdown and hidden input
+        if (selectedPackage) {
+            updateTotal(selectedPackage); // Update breakdown and hidden input
+        }
     });
 
     packageForm.addEventListener('submit', function () {
         // Ensure commas are removed from the hidden input field before submission
-        totalPriceInput.value = totalPriceInput.value.replace(/,/g, '');
+        totalPriceInput.value = totalPrice; // Use the stored totalPrice
     });
-
-    // Initialize the total when the page is loaded, in case a default package is selected
-    const initialPackageName = packageSelect.value;
-    if (initialPackageName) {
-        const selectedPackage = packages.find(pkg => pkg.package_name === initialPackageName);
-        if (selectedPackage) {
-            packagePrice = selectedPackage.price;
-            packagePersons = selectedPackage.persons;
-            updateTotal();
-        }
-    }
 });
-
-console.log("Total Price:", totalPrice);
-console.log("Hidden Input Value:", totalPriceInput.value);

@@ -6,6 +6,20 @@
 
 <div class="container" style="padding-top: 50px;">
 
+    <!-- Bootstrap Toast -->
+    @if (session('status'))
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <div class="toast text-bg-light border border-dark custom-toast-size" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        {{ session('status') }}
+                    </div>
+                    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <div class="row align-items-center pt-4">
         <div class="col-md-6">
        

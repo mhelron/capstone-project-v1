@@ -55,7 +55,7 @@
                                 <!-- First Name -->
                                 <div class="form-group col-md-6 mb-3">
                                     <label>First Name</label><span class="text-danger"> *</span>
-                                    <input type="text" name="first_name" value="{{ old('first_name') }}" class="form-control">
+                                    <input type="text" id="first_name" name="first_name" value="{{ old('first_name') }}" class="form-control">
                                     @if ($errors->has('first_name'))
                                         <small class="text-danger">{{ $errors->first('first_name') }}</small>
                                     @endif
@@ -64,7 +64,7 @@
                                 <!-- Last Name -->
                                 <div class="form-group col-md-6 mb-3">
                                     <label>Last Name</label><span class="text-danger"> *</span>
-                                    <input type="text" name="last_name" value="{{ old('last_name') }}" class="form-control">
+                                    <input type="text" id="last_name" name="last_name" value="{{ old('last_name') }}" class="form-control">
                                     @if ($errors->has('last_name'))
                                         <small class="text-danger">{{ $errors->first('last_name') }}</small>
                                     @endif
@@ -75,7 +75,7 @@
                                 <!-- Phone -->
                                 <div class="form-group col-md-6 mb-3">
                                     <label>Phone</label><span class="text-danger"> *</span>
-                                    <input type="text" name="phone" value="{{ old('phone') }}" class="form-control">
+                                    <input type="text" id="phone" name="phone" value="{{ old('phone') }}" class="form-control">
                                     @if ($errors->has('phone'))
                                         <small class="text-danger">{{ $errors->first('phone') }}</small>
                                     @endif
@@ -84,7 +84,7 @@
                                 <!-- Email -->
                                 <div class="form-group col-md-6 mb-3">
                                     <label>Email</label><span class="text-danger"> *</span>
-                                    <input type="email" name="email" value="{{ old('email') }}" class="form-control">
+                                    <input type="email" id="email"  name="email" value="{{ old('email') }}" class="form-control">
                                     @if ($errors->has('email'))
                                         <small class="text-danger">{{ $errors->first('email') }}</small>
                                     @endif
@@ -95,7 +95,7 @@
                                 <!-- Address -->
                                 <div class="form-group col-md-12 mb-3">
                                     <label>Address</label><span class="text-danger"> *</span>
-                                    <input type="text" name="address" value="{{ old('address') }}" class="form-control">
+                                    <input type="text" id="address"  name="address" value="{{ old('address') }}" class="form-control">
                                     @if ($errors->has('address'))
                                         <small class="text-danger">{{ $errors->first('address') }}</small>
                                     @endif
@@ -135,7 +135,7 @@
                                 <!-- Number of Guests -->
                                 <div class="form-group col-md-6 mb-3">
                                     <label>Number of Guests</label><span class="text-danger"> *</span>
-                                    <input type="number" name="guests_number" value="{{ old('guests_number') }}" class="form-control">
+                                    <input type="number" id="guests_number" name="guests_number" value="{{ old('guests_number') }}" class="form-control">
                                     @if ($errors->has('guests_number'))
                                         <small class="text-danger">{{ $errors->first('guests_number') }}</small>
                                     @endif
@@ -175,7 +175,7 @@
                                  <!-- Location or Venue -->
                                 <div class="form-group col-md-6 mb-3">
                                     <label>Location or Venue</label><span class="text-danger"> *</span>
-                                    <input type="text" name="venue" value="{{ old('venue') }}" class="form-control">
+                                    <input type="text" id="venue" name="venue" value="{{ old('venue') }}" class="form-control">
                                     @if ($errors->has('venue'))
                                         <small class="text-danger">{{ $errors->first('venue') }}</small>
                                     @endif
@@ -184,7 +184,7 @@
                                 <!-- Color Motif or Theme -->
                                 <div class="form-group col-md-6 mb-3">
                                     <label>Color Motif or Theme</label><span class="text-danger"> *</span>
-                                    <input type="text" name="theme" value="{{ old('theme') }}" class="form-control">
+                                    <input type="text" id="theme" name="theme" value="{{ old('theme') }}" class="form-control">
                                     @if ($errors->has('theme'))
                                         <small class="text-danger">{{ $errors->first('theme') }}</small>
                                     @endif
@@ -194,7 +194,7 @@
                             <div class="row">
                                 <div class="form-group col-md-12 mb-3">
                                     <label>Others (Special Request)</label>
-                                    <textarea name="other_requests" class="form-control">{{ old('other_requests') }}</textarea>
+                                    <textarea    name="other_requests" class="form-control">{{ old('other_requests') }}</textarea>
                                 </div>
                             </div>
 
@@ -281,55 +281,110 @@
     const database = firebase.database(app);
 
     // Form submission handler
-    document.getElementById('eventForm').addEventListener('submit', function(event) {
-        event.preventDefault();  // Prevent default form submission
+    document.getElementById('eventForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
 
-        // Get form data
-        const firstName = document.getElementById('first_name').value;
-        const lastName = document.getElementById('last_name').value;
-        const phone = document.getElementById('phone').value;
-        const email = document.getElementById('email').value;
-        const address = document.getElementById('address').value;
-        const packageName = document.getElementById('package_name').value;
-        const menuName = document.getElementById('menu_name').value;
-        const guestsNumber = document.getElementById('guests_number').value;
-        const sponsors = document.getElementById('sponsors').value;
-        const eventDate = document.getElementById('event_date').value;
-        const eventTime = document.getElementById('event_time').value;
-        const venue = document.getElementById('venue').value;
-        const theme = document.getElementById('theme').value;
-        const specialRequests = document.getElementById('other_requests').value;
+        // Form validation
+        const requiredFields = [
+            'first_name', 'last_name', 'phone', 'email', 'address',
+            'package_name', 'menu_name', 'guests_number', 'event_date',
+            'event_time', 'venue', 'theme'
+        ];
 
-        // Create an object to store form data
-        const reservationData = {
-            first_name: firstName,
-            last_name: lastName,
-            phone: phone,
-            email: email,
-            address: address,
-            package_name: packageName,
-            menu_name: menuName,
-            guests_number: guestsNumber,
-            sponsors: sponsors,
-            event_date: eventDate,
-            event_time: eventTime,
-            venue: venue,
-            theme: theme,
-            other_requests: specialRequests
-        };
+        let isValid = true;
+        requiredFields.forEach(field => {
+            const element = document.getElementById(field);
+            const errorElement = document.querySelector(`.error-${field}`);
+            if (!element.value.trim()) {
+                isValid = false;
+                errorElement.textContent = 'This field is required';
+                element.classList.add('is-invalid');
+            } else {
+                errorElement.textContent = '';
+                element.classList.remove('is-invalid');
+            }
+        });
 
-        // Push the form data to Firebase Realtime Database
-        const reservationRef = database.ref('reservations');  // Reference to the reservations node
-        reservationRef.push(reservationData)
-            .then(() => {
-                alert("Reservation added successfully!");
-                document.getElementById('eventForm').reset(); // Reset form
-            })
-            .catch((error) => {
-                console.error("Error adding reservation: ", error);
-                alert("Error adding reservation, please try again.");
-            });
+        if (!isValid) {
+            alert('Please fill in all required fields');
+            return;
+        }
+
+        try {
+            // Create reservation data object
+            const formData = new FormData(event.target);
+            const reservationData = Object.fromEntries(formData.entries());
+            
+            // Add status and timestamp
+            reservationData.status = 'pending';
+            reservationData.created_at = firebase.database.ServerValue.TIMESTAMP;
+
+            // Push to Firebase
+            const reservationRef = database.ref('reservations');
+            await reservationRef.push(reservationData);
+
+            // Success handling
+            alert('Reservation added successfully!');
+            $('#eventModal').modal('hide');
+            document.getElementById('eventForm').reset();
+            
+            // Optionally reload the calendar
+            calendar.refetchEvents();
+
+        } catch (error) {
+            console.error('Error adding reservation:', error);
+            alert('Error adding reservation: ' + error.message);
+        }
     });
+
+    // Add this helper function for form validation
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+
+    // Initialize the date and time pickers
+    flatpickr("#event_date", {
+        enableTime: false,
+        dateFormat: "Y-m-d",
+        minDate: "today"
+    });
+
+    flatpickr("#event_time", {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i",
+        time_24hr: true
+    });
+
+    // Function to handle package change
+    function packageChange() {
+        const packageSelect = document.getElementById('package_name');
+        const menuSelect = document.getElementById('menu_name');
+        const sponsorsInput = document.getElementById('sponsors');
+        
+        const selectedPackage = packages.find(p => p.package_name === packageSelect.value);
+        
+        if (selectedPackage) {
+            // Enable and populate menu dropdown
+            menuSelect.disabled = false;
+            menuSelect.innerHTML = '<option value="" disabled selected>Select a Menu</option>';
+            
+            selectedPackage.menus.forEach(menu => {
+                const option = document.createElement('option');
+                option.value = menu.menu_name;
+                option.textContent = menu.menu_name;
+                menuSelect.appendChild(option);
+            });
+
+            // Enable sponsors input for wedding packages
+            sponsorsInput.disabled = selectedPackage.package_type !== 'Wedding';
+        } else {
+            menuSelect.disabled = true;
+            menuSelect.innerHTML = '<option value="" disabled selected>Select a Menu</option>';
+            sponsorsInput.disabled = true;
+        }
+    }
 </script>
 
 @endsection
