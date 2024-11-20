@@ -94,53 +94,7 @@
     </div>
 </div>
 
-
-    <!-- JavaScript for enabling Done button when checkbox is checked -->
-    <script>
-       // JavaScript for enabling Done button when checkbox is checked
-const agreeCheckboxModal = document.getElementById('agreeCheckboxModal');
-const doneButton = document.getElementById('modalDoneBtn');
-
-// Function to enable/disable Done button based on checkbox state
-agreeCheckboxModal.addEventListener('change', () => {
-    if (agreeCheckboxModal.checked) {
-        // Enable Done button
-        doneButton.disabled = false;
-        doneButton.style.backgroundColor = '#ff5722';  // Dark Orange
-        doneButton.style.color = 'white';
-    } else {
-        // Disable Done button and reset color
-        doneButton.disabled = true;
-        doneButton.style.backgroundColor = '';  // Reset to default color
-        doneButton.style.color = '';
-    }
-});
-    </script>
-
     <style>
-        //* On hover, hide content and show lighter white background */
-.service-card:hover .overlay {
-    opacity: 1; /* Ensure the overlay is fully visible */
-    background-color: rgba(255, 255, 255, 0.5); /* Lighter white overlay with 50% opacity */
-    position: absolute; /* Ensure it's positioned above other content */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1050; /* Ensure it appears above the content */
-}
-
-/* Ensure the modal overlay background opacity isn't affected by body opacity */
-.modal .modal-content {
-    background-color: white !important; /* Ensure the modal content has a solid white background */
-    opacity: 1 !important; /* Force the opacity to be 1 */
-}
-
-/* Optional: Set a more solid background for modal backdrop */
-.modal-backdrop {
-    background-color: rgba(255, 255, 255, 0.9) !important; /* Slightly opaque white */
-    z-index: 1040 !important; /* Ensure it's behind the modal */
-}
 
 /* Style adjustments for larger screens */
 @media (min-width: 768px) {
@@ -162,21 +116,6 @@ agreeCheckboxModal.addEventListener('change', () => {
         color: darkorange;
         text-decoration: none;
     }
-}
-
-/* Style for the clickable Terms and Conditions link */
-.modal-body a {
-    color: #ff5722;
-    text-decoration: none;
-}
-
-.modal-body a:hover {
-    text-decoration: underline;
-}
-
-/* Disable background close */
-.modal-backdrop {
-    z-index: 1040 !important;
 }
     </style>
 

@@ -9,6 +9,7 @@ export default defineConfig({
 				'resources/css/guest.css',
 				'resources/css/guestreservation.css',
 				'resources/css/calendar.css',
+				'resources/css/gallery.css',
 
 				'resources/js/app.js',
 				'resources/js/bootstrap.js',
@@ -18,6 +19,8 @@ export default defineConfig({
 				'resources/js/togglesidebar.js',
 				'resources/js/guestreservation.js',
 				'resources/js/usersnapshot.js',
+				'resources/js/modal.js',
+				'resources/js/gallery.js',
 			],
             refresh: true,
         }),

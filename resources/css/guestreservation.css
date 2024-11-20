@@ -63,5 +63,21 @@ input[type="radio"].form-check-input:focus {
 
 /* Optional: add a hover effect */
 input[type="radio"].form-check-input:hover {
-    border-color: darkorange; /* Change border color on hover */
+    border-color: #ff8c00; /* Change border color on hover */
+}
+
+.modal-content {
+    background-color: #ffffff !important; /* White background */
+    border-radius: 10px; /* Optional: rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: soft shadow */
+}
+
+/* If you need the modal backdrop (background behind the modal) to be consistent */
+.modal-backdrop {
+    background-color: rgba(128, 128, 128, 0.9) !important; /* Slightly opaque gray */
+
+}
+
+#modalDoneBtn:focus {
+    outline: none !important;  /* Ensure no outline */
 }
