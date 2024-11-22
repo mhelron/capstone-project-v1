@@ -179,16 +179,6 @@
 
 <!-- CSS 1st part Text Carousel-->
 <style>
-/* General Body Font */
-body {
-    font-family: 'Roboto', sans-serif; /* Clean, modern sans-serif for body text */
-    line-height: 1.6;
-    font-size: 16px;
-    color: #333; /* Dark gray for better readability */
-    margin: 0;
-    padding: 0;
-}
-
 /* Main Headings (Mission & Vision Titles) */
 h1 {
     font-family: 'Playfair Display', serif; /* Elegant font for headings */

@@ -52,136 +52,139 @@
 </nav>
 
 <style>
-    /* Existing CSS for navbar and responsive styles */
+    /* Ensure the navbar is styled independently of external styles */
     #navbar {
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 1000; /* Ensure it stays on top of other content */
-}
-
-/* Optional: Add a shadow when the navbar becomes fixed */
-#navbar.fixed {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.nav-item.dropdown .dropdown-toggle::after {
-    display: none; /* Remove the default arrow */
-}
-
-/* Custom navbar adjustments */
-@media (max-width: 768px) {
-    /* Flexbox layout to arrange navbar brand and hamburger icon */
-    .navbar-nav {
-        display: flex;
-        justify-content: space-between;
+        position: fixed;
         width: 100%;
-        flex-direction: row;
-        padding-left: 0; /* Remove default padding */
+        top: 0;
+        z-index: 1000;
+        background-color: white !important; /* Ensure navbar has a solid background */
+        box-shadow: none !important; /* Remove any external shadow that might affect navbar */
     }
 
-    /* Navbar Brand alignment */
-    .navbar-brand {
-        flex: 1;
-        text-align: center; /* Align to the center */
+    /* Optional: Add a shadow when the navbar becomes fixed */
+    #navbar.fixed {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
-    /* Move the hamburger icon to the left */
-    .navbar-toggler {
-        order: 0; /* Ensure the hamburger stays on the left */
-        background: none;
-        border: 2px solid black;
-        border-radius: 5px;
+    /* Prevent external styles from affecting the dropdown arrow */
+    .nav-item.dropdown .dropdown-toggle::after {
+        display: none !important; /* Remove the default arrow */
     }
 
-    /* Center align navbar items in collapsed state */
-    .navbar-collapse {
-        display: flex;
-        justify-content: space-between;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
+    /* Custom navbar adjustments */
+    @media (max-width: 768px) {
+        /* Flexbox layout to arrange navbar brand and hamburger icon */
+        .navbar-nav {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            flex-direction: row;
+            padding-left: 0;
+        }
+
+        /* Navbar Brand alignment */
+        .navbar-brand {
+            flex: 1;
+            text-align: center;
+        }
+
+        /* Move the hamburger icon to the left */
+        .navbar-toggler {
+            order: 0;
+            background: none;
+            border: 2px solid black;
+            border-radius: 5px;
+        }
+
+        /* Center align navbar items in collapsed state */
+        .navbar-collapse {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .navbar-nav {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .nav-item {
+            text-align: center;
+            width: 100%;
+        }
+
+        .dropdown-menu {
+            position: static;
+            float: none;
+            width: 250% !important; /* Override external width rules */
+            padding: 5px 0;
+            font-size: 0.8rem;
+            border-radius: 5px;
+            box-shadow: none;
+            background-color: white !important;
+        }
+
+        /* Dropdown items should be full width */
+        .dropdown-item {
+            width: 140% !important; /* Override any external width affecting dropdown items */
+            text-align: center;
+            padding: 10px 20px;
+        }
+
+        /* Button styling for mobile */
+        .btn-reserve {
+            width: 90%;
+            text-align: center;
+            font-size: 1rem;
+            padding: 10px 15px;
+            background-color: darkorange;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            margin: 0 auto;
+        }
+
+        .btn-reserve:hover {
+            background-color: #0056b3;
+        }
     }
 
-    .navbar-nav {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-    }
+    /* Additional styling for larger screens */
+    @media (min-width: 769px) {
+        .dropdown-menu {
+            width: auto !important;
+            background-color: #f8f9fa !important;
+        }
 
-    .nav-item {
-        text-align: center;
-        width: 100%;
+        .dropdown-item {
+            text-align: left;
+        }
     }
-
-    .dropdown-menu {
-        position: static; /* Ensure it stays within the container */
-        float: none;
-        width: 250%; /* Make the dropdown menu full width */
-        padding: 5px 0;
-        font-size: 0.8rem;
-        border-radius: 5px;
-        box-shadow: none;
-        background-color: white;
-    }
-
-    /* Dropdown items should be full width */
-    .dropdown-item {
-        width: 140%; /* Make each dropdown item fill the container */
-        text-align: center; /* Center the text of each item */
-        padding: 10px 20px; /* More padding for easier tapping */
-    }
-
-    /* Button styling for mobile */
-    .btn-reserve {
-        width: 90%;
-        text-align: center;
-        font-size: 1rem;
-        padding: 10px 15px;
-        background-color: darkorange;
-        color: white;
-        border-radius: 5px;
-        border: none;
-        cursor: pointer;
-        text-decoration: none;
-        margin: 0 auto;
-    }
-
-    .btn-reserve:hover {
-        background-color: #0056b3;
-    }
-}
-
-/* Additional styling for larger screens (optional) */
-@media (min-width: 769px) {
-    .dropdown-menu {
-        width: auto; /* Ensure the dropdown is not full width on larger screens */
-        background-color: #f8f9fa;
-    }
-
-    .dropdown-item {
-        text-align: left; /* Align text to the left for larger screens */
-    }
-}
 </style>
 
 <script>
     let lastScrollTop = 0;
-const navbar = document.getElementById('navbar');
+    const navbar = document.getElementById('navbar');
 
-// Add a smooth transition to the navbar's position in CSS
-navbar.style.transition = "top 0.3s ease"; // Smooth transition for hiding/revealing
+    // Add a smooth transition to the navbar's position in CSS
+    navbar.style.transition = "top 0.3s ease"; // Smooth transition for hiding/revealing
 
-window.addEventListener('scroll', () => {
-    let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-    
-    // Hide navbar when scrolling down
-    if (currentScroll > lastScrollTop) {
-        navbar.style.top = "-1000px"; // Adjust this to the height of your navbar
-    } else {
-        navbar.style.top = "0"; // Show the navbar when scrolling up
-    }
-    
-    lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
-});
+    window.addEventListener('scroll', () => {
+        let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+        // Hide navbar when scrolling down
+        if (currentScroll > lastScrollTop) {
+            navbar.style.top = "-1000px"; // Adjust this to the height of your navbar
+        } else {
+            navbar.style.top = "0"; // Show the navbar when scrolling up
+        }
+
+        lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+    });
 </script>
