@@ -12,6 +12,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\ListPackageController;
 use App\Http\Controllers\GuestReservationController;
+use BotMan\BotMan\BotMan;
+use App\Http\Controllers\BotmanController;
 
 use App\Http\Middleware\AuthMiddleware;
 
@@ -41,6 +43,13 @@ Route::get('/about', [GuestController::class, 'indexAbout'])->name('guest.about'
 //Reservation
 Route::get('/reserve', [GuestReservationController::class, 'index'])->name('guest.reserve');
 Route::post('/reserve', [GuestReservationController::class, 'store'])->name('guest.reserve.add');
+
+//Botman Route
+Route::match(['get', 'post'], '/botman', [BotmanController::class, 'handle']);
+
+Route::get('/botman/widget', function () {
+    return view('botman.botmanwidget');
+});
 
 // Login Route
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');

@@ -51,6 +51,7 @@
     </div>
 </div>
 
+
 <!-- Bootstrap 5 -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -66,5 +67,16 @@
             });
         </script>
     @endif
+    <script>
+        var botmanWidget = {
+            title: 'KKChatbot', 
+            introMessage: 'Hello! Type \'help\' to start our conversation!',
+            mainColor: 'darkorange', // Chat widget background color
+            bubbleBackground: 'darkorange', // Color of the bot's reply bubbles
+            placeholderText: 'Type your message here...',
+            aboutText: 'Powered by Botman',
+        }
+    </script>
+    <script src='https://cdn.jsdelivr.net/npm/botman-web-widget@latest/build/js/widget.js'></script>
 </body>
 </html>
