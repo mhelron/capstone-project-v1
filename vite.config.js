@@ -10,6 +10,7 @@ export default defineConfig({
 				'resources/css/guestreservation.css',
 				'resources/css/calendar.css',
 				'resources/css/gallery.css',
+				'resources/css/chat.css',
 
 				'resources/js/app.js',
 				'resources/js/bootstrap.js',
@@ -21,6 +22,7 @@ export default defineConfig({
 				'resources/js/usersnapshot.js',
 				'resources/js/modal.js',
 				'resources/js/gallery.js',
+				'resources/js/chat.js',
 			],
             refresh: true,
         }),

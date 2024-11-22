@@ -30,6 +30,7 @@
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
+    @vite('resources/css/chat.css')
     @vite('resources/css/guest.css')
 </head>
 <body>
@@ -68,15 +69,17 @@
         </script>
     @endif
     <script>
-        var botmanWidget = {
-            title: 'KKChatbot', 
-            introMessage: 'Hello! Type \'help\' to start our conversation!',
-            mainColor: 'darkorange', // Chat widget background color
-            bubbleBackground: 'darkorange', // Color of the bot's reply bubbles
-            placeholderText: 'Type your message here...',
-            aboutText: 'Powered by Botman',
-        }
-    </script>
+    var botmanWidget = {
+        title: 'KKChatbot', 
+        introMessage: 'Hello! Type \'help\' to start our conversation!',
+        mainColor: 'darkorange',
+        bubbleBackground: 'darkorange',
+        placeholderText: 'Type your message here...',
+        titleColor: '#ff6347',
+        aboutText: ' ',
+    };
+</script>
+
     <script src='https://cdn.jsdelivr.net/npm/botman-web-widget@latest/build/js/widget.js'></script>
 </body>
 </html>

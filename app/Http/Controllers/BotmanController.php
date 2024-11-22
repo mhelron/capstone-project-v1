@@ -400,7 +400,7 @@ class BotmanController extends Controller
         
             $question = Question::create("Here’s a question about miscellaneous inquiries:")
                 ->addButtons([
-                    Button::create('Do you provide a tasting session before the event?')->value('tasting_session'),
+                    Button::create('Do you provide a food tasting session before the event?')->value('tasting_session'),
                     Button::create('How can I contact you for more information?')->value('contact_info'),
                     Button::create('What areas do you serve?')->value('service_areas'),
                     Button::create('Where are you located?')->value('location'),
