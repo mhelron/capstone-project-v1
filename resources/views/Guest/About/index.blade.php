@@ -60,7 +60,7 @@
                     <div class="col-md-8">
                         <h1>ABOUT US</h1>  
                         <div class="header-line"></div> <!-- Line below the title -->
-                        <p style="padding-bottom: 55px;"><strong>At Kyla and Kyle Catering Services, we’re here to make your event truly special. From weddings and corporate gatherings to family celebrations, our goal is to handle every detail so you can enjoy the day. Known for our friendly service and high-quality food, we’re dedicated to bringing your vision to life and creating a memorable experience for you and your guests. Let us take care of everything so you can focus on making memories.</strong></p>
+                        <p style="padding-bottom: 25px;"><strong>At Kyla and Kyle Catering Services, we’re here to make your event truly special. From weddings and corporate gatherings to family celebrations, our goal is to handle every detail so you can enjoy the day. Known for our friendly service and high-quality food, we’re dedicated to bringing your vision to life and creating a memorable experience for you and your guests. Let us take care of everything so you can focus on making memories.</strong></p>
                     </div>
                 </div>
             </div>
@@ -138,7 +138,7 @@
         <!-- First Image -->
         <div class="col-md-4 mb-4">
             <a href="#" class="d-block" data-bs-toggle="modal" data-bs-target="#imageModal" 
-               data-bs-image="{{ asset('images/MyTeam/team1.png') }}">
+               data-bs-image="{{ asset('images/MyTeam/Team1.png') }}">
                 <img src="{{ asset('images/MyTeam/team1.png') }}" class="gallery-image" alt="Team Member 1">
             </a>
         </div>
@@ -146,7 +146,7 @@
         <!-- Second Image -->
         <div class="col-md-4 mb-4">
             <a href="#" class="d-block" data-bs-toggle="modal" data-bs-target="#imageModal" 
-               data-bs-image="{{ asset('images/MyTeam/team2.png') }}">
+               data-bs-image="{{ asset('images/MyTeam/Team2.png') }}">
                 <img src="{{ asset('images/MyTeam/team2.png') }}" class="gallery-image" alt="Team Member 2">
             </a>
         </div>
@@ -154,7 +154,7 @@
         <!-- Third Image -->
         <div class="col-md-4 mb-4">
             <a href="#" class="d-block" data-bs-toggle="modal" data-bs-target="#imageModal" 
-               data-bs-image="{{ asset('images/MyTeam/team3.png') }}">
+               data-bs-image="{{ asset('images/MyTeam/Team3.png') }}">
                 <img src="{{ asset('images/MyTeam/team3.png') }}" class="gallery-image" alt="Team Member 3">
             </a>
         </div>
@@ -179,6 +179,16 @@
 
 <!-- CSS 1st part Text Carousel-->
 <style>
+/* General Body Font */
+body {
+    font-family: 'Roboto', sans-serif; /* Clean, modern sans-serif for body text */
+    line-height: 1.6;
+    font-size: 16px;
+    color: #333; /* Dark gray for better readability */
+    margin: 0;
+    padding: 0;
+}
+
 /* Main Headings (Mission & Vision Titles) */
 h1 {
     font-family: 'Playfair Display', serif; /* Elegant font for headings */
@@ -558,117 +568,109 @@ p {
 }
      </style>
 
-<!-- CSS for image gallery and modal as before -->
+<!-- CSS 4th Team Gallery-->
 <style>
-    .header-line {
-        width: 50%; /* Adjust this value to make the line wider or narrower */
-        height: 5px; /* Adjust thickness of the line */
-        background-color: #FF7F00; /* Dark orange color */
-        margin: 20px auto; /* Center the line and add margin for spacing */
-        border-radius: 25px; /* Rounded edges */
+            .header-line {
+    width: 50%; /* Adjust this value to make the line wider or narrower */
+    height: 5px; /* Adjust thickness of the line */
+    background-color: #FF7F00; /* Dark orange color */
+    margin: 20px auto; /* Center the line and add margin for spacing */
+    border-radius: 25px; /* Rounded edges */
+}
+
+/* Ensure the gallery images are smaller, responsive, and centered */
+.gallery-image {
+    width: 100%; /* Make images take up 100% of their container's width */
+    max-width: 350px; /* Limit max-width of images */
+    height: auto; /* Allow the height to scale proportionally */
+    object-fit: cover; /* Make sure the image is cropped correctly without distorting */
+    border-radius: 10px; /* Optional: rounded corners for the images */
+    border: 2px solid #FF7F00; /* Orange border color */
+    /* Add shadow around the border */
+    box-shadow: 0 0 20px rgba(255, 69, 0, 0.8); /* Orange shadow around the border */
+}
+
+/* Flexbox adjustments to center images inside columns */
+.row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap; /* Allow for wrapping on smaller screens */
+}
+
+
+/* Make modal image responsive */
+.modal-body img {
+    width: 100%; /* Ensure image takes up full width inside modal */
+    max-width: 800px; /* Maximum width to avoid oversized images */
+    height: auto; /* Maintain the aspect ratio of the image */
+    border-radius: 10px; /* Rounded corners for the image */
+    object-fit: contain; /* Ensure image doesn't overflow */
+}
+
+/* Optional: For responsiveness, you can adjust the size for smaller screens */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%; /* Modal should take 95% of the width on smaller screens */
+        margin-top: 10px; /* Add some margin for top space */
+        margin-bottom: 10px; /* Margin for bottom space */
     }
 
-    /* Ensure the gallery images are smaller, responsive, and centered */
-    .gallery-image {
-        width: 100%; /* Make images take up 100% of their container's width */
-        max-width: 350px; /* Limit max-width of images */
-        height: auto; /* Allow the height to scale proportionally */
-        object-fit: cover; /* Make sure the image is cropped correctly without distorting */
-        border-radius: 10px; /* Optional: rounded corners for the images */
-        border: 2px solid #FF7F00; /* Orange border color */
-        box-shadow: 0 0 20px rgba(255, 69, 0, 0.8); /* Orange shadow around the border */
+    .modal-body {
+        padding: 10px; /* Reduce padding on mobile */
     }
 
-    /* Flexbox adjustments to center images inside columns */
-    .row {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-wrap: wrap; /* Allow for wrapping on smaller screens */
+    .modal-header, .modal-footer {
+        padding: 10px; /* Reduce padding for header and footer */
     }
 
-    /* Make modal image responsive */
+    /* Optional: Reduce size of close button on mobile */
+    .btn-close {
+        font-size: 1.2rem; /* Make close button smaller */
+    }
+}
+
+/* Additional Styles for Mobile */
+@media (max-width: 576px) {
+    .modal-content {
+        width: 100%; /* Full width on extremely small screens */
+        margin-top: 20px; /* Adjust margin */
+    }
+
+    /* Adjust image size in smaller modals */
     .modal-body img {
-        width: 100%; /* Ensure image takes up full width inside modal */
-        max-width: 800px; /* Maximum width to avoid oversized images */
-        height: auto; /* Maintain the aspect ratio of the image */
-        border-radius: 10px; /* Rounded corners for the image */
-        object-fit: contain; /* Ensure image doesn't overflow */
+        width: 100%;
+        height: auto;
     }
+}
+            </style>
 
-    /* Optional: For responsiveness, you can adjust the size for smaller screens */
-    @media (max-width: 768px) {
-        .modal-content {
-            width: 95%; /* Modal should take 95% of the width on smaller screens */
-            margin-top: 10px; /* Add some margin for top space */
-            margin-bottom: 10px; /* Margin for bottom space */
-        }
-
-        .modal-body {
-            padding: 10px; /* Reduce padding on mobile */
-        }
-
-        .modal-header, .modal-footer {
-            padding: 10px; /* Reduce padding for header and footer */
-        }
-
-        /* Optional: Reduce size of close button on mobile */
-        .btn-close {
-            font-size: 1.2rem; /* Make close button smaller */
-        }
-    }
-
-    /* Additional Styles for Mobile */
-    @media (max-width: 576px) {
-        .modal-content {
-            width: 100%; /* Full width on extremely small screens */
-            margin-top: 20px; /* Adjust margin */
-        }
-
-        /* Adjust image size in smaller modals */
-        .modal-body img {
-            width: 100%;
-            height: auto;
-        }
-    }
-</style>
-
-<!-- JavaScript for Carousel Indicator Activation and Modal Image Handling -->
+<!-- JavaScript for Carousel Indicator Activation -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        var imageModal = document.getElementById('imageModal');
-        var modalImage = document.getElementById('modalImage');
-
-        // Disable page scrolling when modal is shown
-        imageModal.addEventListener('show.bs.modal', function () {
-            document.body.style.overflow = 'hidden'; // Disable scrolling
-        });
-
-        // Enable page scrolling when modal is hidden
-        imageModal.addEventListener('hidden.bs.modal', function () {
-            document.body.style.overflow = ''; // Enable scrolling again
-        });
-
-        // Image modal setup (same as before)
-        imageModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget;
-            var imageSrc = button.getAttribute('data-bs-image'); // Get the image source
-            modalImage.src = imageSrc; // Set the image source in the modal
-        });
-
-        // Event listener for all team images
-        const teamImages = document.querySelectorAll('[data-bs-toggle="modal"]');
-        
-        teamImages.forEach(function (image) {
-            image.addEventListener('click', function (event) {
-                // Get the image source from the clicked element's data-bs-image attribute
-                const imageSrc = event.target.closest('a').getAttribute('data-bs-image');
-                modalImage.src = imageSrc;  // Update the modal image
-            });
-        });
+    var imageModal = document.getElementById('imageModal');
+    
+    // Disable page scrolling when modal is shown
+    imageModal.addEventListener('show.bs.modal', function () {
+        document.body.style.overflow = 'hidden'; // Disable scrolling
     });
-</script>
+    
+    // Enable page scrolling when modal is hidden
+    imageModal.addEventListener('hidden.bs.modal', function () {
+        document.body.style.overflow = ''; // Enable scrolling again
+    });
 
+    // Image modal setup (same as before)
+    imageModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var imageSrc = button.getAttribute('data-bs-image'); // Get the image source
+        var modalImage = document.getElementById('modalImage');
+        modalImage.src = imageSrc; // Set the image source in the modal
+    });
+});
+
+
+</script>
 
 
 
