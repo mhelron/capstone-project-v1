@@ -7,18 +7,14 @@
         <div class="row mb-4">
             <!-- Back Button (Floating Left) -->
             <div class="col">
-                <a href="{{ route('guest.packages.marikina')}}" class="btn btn-danger float-start">Back</a>
-            </div>
-            <!-- Reserve Button -->
-            <div class="col text-end">
-            <button class="btn btn-darkorange">Reserve Your Catering Now</button>
+                <a href="{{ route('guest.packages.marikina')}}" class="btn btn-darkorange float-start">Back</a>
             </div>
         </div>
 
         <div class="row mb-4">
             <div class="col-lg-12">
             <h3 class="text-left mb-4">Package Details</h3>
-                <div class="card shadow-sm" style="border: 2px solid #FF5D29;">
+                <div class="card shadow-sm" style="border: 2px solid darkorange;">
                     <div class="card-body">
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore id, fugit laudantium rerum praesentium officiis impedit odit ex maiores minima, dolores deserunt ad sint, excepturi nemo ducimus! Sed, similique illo!</p>
                         <p>The ideal catering package for events with a minimum of <strong>{{ $package['persons'] }}</strong> guests.</p>
@@ -29,6 +25,28 @@
         </div>
 
         <div class="row mb-4">
+            <div class="col-lg-12 mb-4">
+                <h3 class="text-left mb-4">Menus</h3><p style="font-style: italic; color: red;">Please select a menu to proceed in the reservation form *</p>
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-4">
+                        @foreach($package['menus'] as $menu)
+                            <div class="col d-flex">
+                                <div class="card shadow-sm flex-fill" style="border: 2px solid darkorange;">
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title text-center text-darkorange">{{ $menu['menu_name'] }}</h5>
+                                        <ul class="list-unstyled flex-grow-1">
+                                            @foreach($menu['foods'] as $food)
+                                                <li>
+                                                    <span style="font-weight: bold;">{{ $food['category'] }}</span> : 
+                                                    {{ $food['food'] }}
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
             <!-- Column 2: Package Details and Services (Right Side) -->
             <div class="col-lg-12 mx-auto mb-4"> <!-- Add mx-auto to center the column -->
                 <h3 class="text-left mb-4">Services</h3>
@@ -59,28 +77,6 @@
                 </div>
             </div>
             <!-- Column 1: Menus (Left Side) -->
-            <div class="col-lg-12 mb-4">
-            <h3 class="text-left mb-4">Menus</h3>
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-4">
-                    @foreach($package['menus'] as $menu)
-                        <div class="col d-flex">
-                            <div class="card shadow-sm flex-fill" style="border: 2px solid #FF5D29;">
-                                <div class="card-body d-flex flex-column">
-                                    <h5 class="card-title text-center text-darkorange">{{ $menu['menu_name'] }}</h5>
-                                    <ul class="list-unstyled flex-grow-1">
-                                        @foreach($menu['foods'] as $food)
-                                            <li>
-                                                <span style="font-weight: bold;">{{ $food['category'] }}</span> : 
-                                                {{ $food['food'] }}
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
         </div>
     </div>
 @endsection
@@ -97,6 +93,7 @@
     .card-body {
         padding: 1.5rem;
         display: flex;
+        background-color: #f5f5dc; /* Light beige */
         flex-direction: column;
     }
 

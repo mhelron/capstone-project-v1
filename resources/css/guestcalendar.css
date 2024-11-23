@@ -1,0 +1,133 @@
+.fc-col-header-cell{
+    background-color: #fff !important; /* Sets the day grid background to white */  
+ }
+ 
+ /* Change the background color of the FullCalendar grid */
+ .fc-daygrid-day {
+     background-color: #fff !important; /* Sets the day grid background to white */
+ }
+ 
+ /* Change the borders or grid lines */
+ .fc-daygrid-day-frame {
+     border-color: #ddd !important; /* Optional: Sets a light border color for day grid */
+ }
+ 
+ /* Apply black color to the weekday text (Monday, Tuesday, etc.) */
+ .fc-col-header-cell-cushion {
+     color: darkorange !important;
+     text-decoration: none;
+ }
+ 
+ .fc-list-day-text{
+     color: black !important;
+ }
+ 
+ .fc-list-day-side-text{
+     color: black !important;
+ }
+ 
+ .fc-event-title,
+ .fc-daygrid-event .fc-event-title {
+     white-space: normal !important; /* Allow line breaks in the title */
+     word-wrap: break-word;          /* Wrap long words if needed */
+ }
+ 
+ /* Optionally, add opacity to past dates */
+ .past-date.fc-daygrid-day {
+     opacity: 0.5;
+ }
+ 
+ .fc-day-today {
+     background-color: rgba(255, 220, 40, .15) !important; /* Change to your desired color */
+ }
+ 
+ .fc-event-title {
+     color: black !important; /* Change to your desired color */
+ }
+ 
+ .fc-event-time {
+     color: black !important; /* Change to your desired color */
+ }
+     
+ #calendar .fc-daygrid-day-number,
+ #calendar .fc-daygrid-day-top,
+ #calendar .fc-daygrid-day-frame {
+     text-decoration: none;
+     color: black !important;
+ }
+ 
+ /* Style for the Month, Week, and List view buttons */
+ .fc .fc-button-group {
+     margin-right: 10px; /* Add some spacing between buttons */
+ }
+ 
+ .fc .fc-button {
+     padding: 0.5rem 1rem; /* Adjust the padding for buttons */
+     font-size: 1rem; /* Font size for better readability */
+     text-align: center; /* Center the text in the button */
+     border-radius: 5px; /* Optional: Rounded corners for buttons */
+     background-color: darkorange; /* Black background */
+     color: #fff; /* White text */
+     transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for hover effect */
+ }
+ 
+ 
+ /* Style for the active (selected) view button (Month, Week, List) */
+ .fc .fc-button.fc-button-active {
+     background-color: #e67e00; /* White background for active button */
+     color: #fff; /* Black text */
+ }
+
+ .fc .fc-button-primary:not(:disabled).fc-button-active,
+ .fc .fc-button-primary:not(:disabled):active,
+ .fc .fc-button-primary[aria-pressed="true"] {
+     background-color: #e67e00; /* Desired background color */
+     border-color: #2c3e50; /* Desired border color */
+     color: #fff; /* Desired text color */
+ }
+
+ .fc-button-active-bg-color{
+    background-color: #e67e00; /* White background for active button */
+    color: #fff; /* Black text */
+ }
+ 
+ /* Style for buttons when hovering */
+ .fc .fc-button:hover {
+     background-color: #e67e00; /* Light black background on hover */
+     color: #ffff   ; /* White text on hover */
+ }
+ 
+ /* Style for disabled buttons (e.g., if a view is unavailable) */
+ .fc .fc-button:disabled {
+     background-color: #e9ecef; /* Light grey background for disabled */
+     color: #aaa; /* Muted text for disabled buttons */
+     border-color: #ccc; /* Grey border for disabled */
+     cursor: not-allowed; /* Change cursor to indicate disabled state */
+ }
+ 
+ /* Optional: Change font size and weight for Month, Week, List text */
+ .fc .fc-button-month,
+ .fc .fc-button-week,
+ .fc .fc-button-listWeek {
+     font-weight: bold;
+ }
+ 
+ /* Optional: Space between buttons */
+ .fc .fc-button-group button {
+     margin-right: 10px;
+ }
+ 
+ /* Style for past dates */
+ .past-date {
+     background-color: #f0f0f0 !important; /* Light grey background */
+     color: #6c757d !important; /* Muted text color */
+     pointer-events: none; /* Make them unclickable */
+     opacity: 0.5; /* Add opacity for visual effect */
+     cursor: not-allowed; /* Change cursor to indicate disabled state */
+ }
+ 
+ /* Optionally, add opacity to past dates */
+ .past-date.fc-daygrid-day {
+     opacity: 0.5;
+     cursor: not-allowed; /* Show the disabled cursor */
+ }

@@ -190,6 +190,7 @@ body {
     color: #6c757d !important; /* Muted text color */
     pointer-events: none; /* Make them unclickable */
     opacity: 0.5; /* Add opacity for visual effect */
+    cursor: not-allowed;
 }
 
 /* Optionally, add opacity to past dates */

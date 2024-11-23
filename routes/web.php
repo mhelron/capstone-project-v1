@@ -23,10 +23,10 @@ Route::get('/', [GuestController::class, 'indexHome'])->name('guest.home');
 
 //Packages
 Route::get('/packages', [GuestController::class, 'indexPackages'])->name('guest.packages');
+Route::get('/package/{id}', [ListPackageController::class, 'show'])->name('package.show');
 Route::get('/packages/markina', [ListPackageController::class, 'marikina'])->name('guest.packages.marikina');
 Route::get('/packages/san-mateo', [ListPackageController::class, 'sanmateo'])->name('guest.packages.sanmateo');
 Route::get('/packages/motalban', [ListPackageController::class, 'montalban'])->name('guest.packages.montalban');
-Route::get('/package/{id}', [ListPackageController::class, 'show'])->name('package.show');
 
 //Gallery
 Route::get('/gallery', [GuestController::class, 'indexGallery'])->name('guest.gallery');

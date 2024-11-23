@@ -45,7 +45,8 @@ class AuthController extends Controller
         try {
             $signInResult = $this->auth->signInWithEmailAndPassword($request->email, $request->password);
             $idTokenString = $signInResult->idToken();
-            
+            $refreshToken = $signInResult->refreshToken();  // Get the refresh token
+
             $verifiedIdToken = $this->auth->verifyIdToken($idTokenString, self::TOKEN_LEEWAY);
             $uid = $verifiedIdToken->claims()->get('sub');
             $user = $this->auth->getUser($uid);
@@ -55,16 +56,16 @@ class AuthController extends Controller
             if ($expirationTime instanceof DateTimeImmutable) {
                 $expirationTime = $expirationTime->getTimestamp();
             }
-            
-            // Store token and expiration
+
+            // Store token, refresh token, and expiration
             Session::put([
                 'firebase_user' => $user,
                 'firebase_id_token' => $idTokenString,
+                'firebase_refresh_token' => $refreshToken,  // Store refresh token
                 'token_expiration' => $expirationTime
             ]);
 
             return redirect()->route('admin.dashboard')->with('status', 'Logged in successfully!');
-
         } catch (\Exception $e) {
             Log::error('Login error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Authentication failed. Please try again.');
@@ -80,9 +81,44 @@ class AuthController extends Controller
     protected function verifyStoredToken()
     {
         $token = Session::get('firebase_id_token');
-        if (!$token) {
-            throw new \Exception('No token found');
+        $tokenExpiration = Session::get('token_expiration');
+        $currentTime = Carbon::now()->timestamp;
+
+        // If token has expired, refresh it
+        if (!$token || $currentTime >= $tokenExpiration) {
+            return $this->refreshIdToken();  // Refresh the token
         }
+
         return $this->auth->verifyIdToken($token, self::TOKEN_LEEWAY);
+    }
+
+    protected function refreshIdToken()
+    {
+        $refreshToken = Session::get('firebase_refresh_token');
+        if (!$refreshToken) {
+            throw new \Exception('No refresh token found');
+        }
+
+        try {
+            $signInResult = $this->auth->signInWithRefreshToken($refreshToken);
+            $idTokenString = $signInResult->idToken();
+
+            // Verify the new ID token
+            $verifiedIdToken = $this->auth->verifyIdToken($idTokenString, self::TOKEN_LEEWAY);
+            $expirationTime = $verifiedIdToken->claims()->get('exp');
+            if ($expirationTime instanceof DateTimeImmutable) {
+                $expirationTime = $expirationTime->getTimestamp();
+            }
+
+            // Update session with the new ID token and expiration time
+            Session::put([
+                'firebase_id_token' => $idTokenString,
+                'token_expiration' => $expirationTime
+            ]);
+
+            return $verifiedIdToken;
+        } catch (\Exception $e) {
+            throw new \Exception('Failed to refresh token: ' . $e->getMessage());
+        }
     }
 }
