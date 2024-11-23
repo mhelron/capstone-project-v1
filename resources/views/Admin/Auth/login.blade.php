@@ -91,7 +91,7 @@
             <button type="submit" class="btn btn-dark w-100">Login</button>
 
             <div class="mt-3 text-center">
-                <a href="#" class="btn btn-link" style="color: red;">Forgot Your Password?</a>
+                <a href="{{ route('password.reset.form') }}" class="btn btn-link" style="color: red;">Forgot Your Password?</a>
             </div>
         </form>
     </div>

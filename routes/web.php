@@ -12,10 +12,14 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\ListPackageController;
 use App\Http\Controllers\GuestReservationController;
-use BotMan\BotMan\BotMan;
+use App\Http\Controllers\EmailController;
+use App\Http\Controllers\PasswordResetController;
+
 use App\Http\Controllers\BotmanController;
 
 use App\Http\Middleware\AuthMiddleware;
+
+Route::get('/send-email', [EmailController::class, 'sendEmail']);
 
 // Guest Route
 //Home
@@ -36,6 +40,7 @@ Route::get('/calendar', [GuestController::class, 'indexCalendar'])->name('guest.
 
 //Contact
 Route::get('/contact', [GuestController::class, 'indexContact'])->name('guest.contact');
+Route::post('/contact-us', [EmailController::class, 'sendContactus'])->name('contactus.send');
 
 //About
 Route::get('/about', [GuestController::class, 'indexAbout'])->name('guest.about');
@@ -55,6 +60,12 @@ Route::get('/botman/widget', function () {
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login'])->name('firebase.login');
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+
+// Password reset form
+Route::get('/password/reset', [PasswordResetController::class, 'showResetForm'])->name('password.reset.form');
+
+// Send reset password link
+Route::post('/password/reset', [PasswordResetController::class, 'sendResetLink'])->name('password.reset.send');
 
 // Auth Middleware
 Route::middleware([AuthMiddleware::class])->group(function () {

@@ -4,6 +4,15 @@
 
 <div class="container">
 <div class="row mt-4">
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
     <!-- Left Column: Contact Us title and description -->
     <div class="col-md-6">
     <div style="display: flex; flex-direction: column; text-align: left; padding-top: 100px;">
@@ -28,15 +37,15 @@
     <div class="row mt-4">
         <div class="col-md-6">
             <h2>Contact Form</h2>
-            <form action="#" method="POST">
+            <form action="{{ route('contactus.send') }}" method="POST">
                 @csrf
                 <div class="mb-3">
                     <label for="name" style="color: solid black; font-family: 'Arial'; font-weight: bolder;" class="form-label">Name</label>  
                     <input type="text" class="form-control" style="border: 3px solid darkorange;" id="name" name="name" placeholder="Enter your Full Name">
                 </div>
                 <div class="mb-3">
-                    <label for="phonenum" style="color: solid black; font-family: 'Arial'; font-weight: bolder;" class="form-label">Phone Number</label>
-                    <input type="phonenum" class="form-control"  style="border: 3px solid darkorange;" id="email" name="email" placeholder="Enter your Contact Number">
+                    <label for="phone" style="color: solid black; font-family: 'Arial'; font-weight: bolder;" class="form-label">Phone Number</label>
+                    <input type="phone" class="form-control"  style="border: 3px solid darkorange;" id="phone" name="phone" placeholder="Enter your Contact Number">
                 </div>
                 <div class="mb-3">
                     <label for="email" style="color: solid black; font-family: 'Arial'; font-weight: bolder;" class="form-label">Email</label>
