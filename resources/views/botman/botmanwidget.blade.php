@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>Botman Widget</title>
-    </style>
 </head>
 <body>
     <script>
