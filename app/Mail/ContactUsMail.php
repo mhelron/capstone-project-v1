@@ -36,7 +36,8 @@ class ContactUsMail extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.contactus')
+        return $this->mailer('admin')  // Use the 'admin' mailer
+                    ->view('emails.contactus')
                     ->with([
                         'name' => $this->name,
                         'phone' => $this->phone,

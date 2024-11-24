@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Kreait\Firebase\Contract\Database;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Mail\PencilConfirmationMail;
+use Illuminate\Support\Facades\Mail;
 
 class GuestReservationController extends Controller
 {
@@ -94,16 +96,38 @@ class GuestReservationController extends Controller
         ];
     
         try {
+            Log::info('Saving reservation to Firebase...', ['reservation_data' => $reserveData]);
+        
+            // Save to Firebase
             $postRef = $this->database->getReference($this->reservations)->push($reserveData);
-            
+        
             if ($postRef->getKey()) {
-                return redirect()->route('guest.payment', ['reservation_id' => $postRef->getKey()])->with('status', 'Reservation Added');
+                Log::info('Reservation saved to Firebase', ['reservation_id' => $postRef->getKey()]);
+        
+                // Queue confirmation email
+                try {
+                    Mail::mailer('clients')  // Specify 'admin' mailer here
+                        ->to($validatedData['email'])
+                        ->send(new PencilConfirmationMail($reserveData));
+                    Log::info('Confirmation email queued for user', ['email' => $validatedData['email']]);
+                } catch (\Exception $mailException) {
+                    Log::error('Error queuing confirmation email', ['error' => $mailException->getMessage()]);
+                    // Optionally, you can redirect with an error if email queuing fails
+                    return redirect()->route('guest.payment', ['reservation_id' => $postRef->getKey()])
+                                     ->with('status', 'Reservation Added, but email failed to send');
+                }
+        
+                return redirect()->route('guest.payment', ['reservation_id' => $postRef->getKey()])
+                                 ->with('status', 'Reservation Added');
             } else {
+                Log::warning('Reservation not added to Firebase - postRef has no key');
                 return redirect('/reserve')->with('status', 'Reservation Not Added');
             }
         } catch (\Exception $e) {
+            Log::error('Error saving reservation to Firebase', ['error' => $e->getMessage()]);
             return redirect()->back()->with('error', 'There was an error saving the reservation: ' . $e->getMessage());
         }
+        
     }
 
     public function payment($reservation_id)

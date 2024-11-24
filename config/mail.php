@@ -49,6 +49,36 @@ return [
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
         ],
 
+        'admin' => [
+        'transport' => 'smtp',
+        'host' => env('MAIL_HOST', 'smtp.hostinger.com'),
+        'port' => env('MAIL_PORT', 465),
+        'encryption' => env('MAIL_ENCRYPTION', 'ssl'),
+        'username' => env('MAIL_ADMIN_USERNAME'),
+        'password' => env('MAIL_ADMIN_PASSWORD'),
+        'timeout' => null,
+        'auth_mode' => null,
+        'from' => [
+            'address' => env('MAIL_ADMIN_FROM_ADDRESS', 'admin@kylaandkylecatering.com'),
+            'name' => env('MAIL_ADMIN_FROM_NAME', 'Kyla and Kyle Catering Services'),
+            ],
+        ],
+
+        'clients' => [
+            'transport' => 'smtp',
+            'host' => env('MAIL_HOST', 'smtp.hostinger.com'),
+            'port' => env('MAIL_PORT', 465),
+            'encryption' => env('MAIL_ENCRYPTION', 'ssl'),
+            'username' => env('MAIL_CLIENTS_USERNAME'),
+            'password' => env('MAIL_CLIENTS_PASSWORD'),
+            'timeout' => null,
+            'auth_mode' => null,
+            'from' => [
+                'address' => env('MAIL_CLIENTS_FROM_ADDRESS', 'no-reply@kylaandkylecatering.com'),
+                'name' => env('MAIL_CLIENTS_FROM_NAME', 'Kyla and Kyle Catering Services'),
+            ],
+        ],
+
         'ses' => [
             'transport' => 'ses',
         ],
