@@ -13,6 +13,7 @@ export default defineConfig({
 				'resources/css/guestreservation.css',
 				'resources/css/guestcalendar.css',
 
+				'resources/js/adminreservation.js',
 				'resources/js/app.js',
 				'resources/js/bootstrap.js',
 				'resources/js/calendar.js',

@@ -66,9 +66,12 @@ class AuthController extends Controller
             ]);
 
             return redirect()->route('admin.dashboard')->with('status', 'Logged in successfully!');
-        } catch (\Exception $e) {
+        } catch (\Kreait\Firebase\Auth\SignIn\FailedToSignIn $e) {
             Log::error('Login error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Authentication failed. Please try again.');
+            return redirect()->back()->with(['error' => 'Invalid Credentials! Please Check Your Email or Password']);
+        } catch (\Exception $e) {
+            Log::error('Login error: ' . $e->getMessage() . ' | Exception class: ' . get_class($e));
+            return redirect()->back()->with(['error' => 'Authentication failed. Please try again.']);
         }
     }
 

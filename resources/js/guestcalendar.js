@@ -3,22 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var calendarEl = document.getElementById('calendar');
     var calendarEvents = events.map(function(event) {
-        let startDateTimeStr = `${event.Date}T${convertTo24Hour(event.Time)}`;
-        let startDateTime = new Date(startDateTimeStr);
-
-        if (isNaN(startDateTime.getTime())) {
-            console.error(`Invalid date for event: ${event.Event} on ${event.Date} at ${event.Time}`);
-            return null;
-        }
-
-        let endDateTime = new Date(startDateTime);
-        endDateTime.setHours(endDateTime.getHours() + 5);
-
         return {
             title: event.Event,
-            start: startDateTime.toISOString(),
-            end: endDateTime.toISOString(),
-            status: event.Status,
+            start: event.Date,
         };
     }).filter(event => event !== null);
 
@@ -26,11 +13,23 @@ document.addEventListener('DOMContentLoaded', function() {
         initialView: 'dayGridMonth',
         aspectRatio: 1.5,
         headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,listWeek',
+            left: 'title',
+            right: 'prev,next today',
         },
         events: calendarEvents,
+        eventColor: '#ff8c00',
+        eventContent: function(arg) {
+            // Custom rendering for events
+            let eventDiv = document.createElement('div');
+            eventDiv.classList.add('fc-event-content');
+            eventDiv.innerText = arg.event.title;
+
+            // Wrap in a container for proper positioning
+            let wrapper = document.createElement('div');
+            wrapper.appendChild(eventDiv);
+            return { domNodes: [wrapper] };
+        },
+        height: 'auto', // Let FullCalendar adjust height automatically
 
         dateClick: function(info) {
             const selectedDate = new Date(info.dateStr);

@@ -44,7 +44,7 @@
                     <a class="nav-link {{ request()->routeIs('guest.about') ? 'active' : '' }}" href="{{ route('guest.about') }}">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="btn btn-reserve" href="#">Reserve</a>
+                    <a class="btn btn-reserve" href="{{route('guest.reserve')}}">Reserve</a>
                 </li>
             </ul>
         </div>

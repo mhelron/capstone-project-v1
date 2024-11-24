@@ -21,6 +21,7 @@ class GuestReservationController extends Controller
 
         return view('guest.reservation.index', compact('packages'));
     }
+
     public function store(Request $request)
     {
         Log::info('Form submission started');
@@ -88,23 +89,86 @@ class GuestReservationController extends Controller
             'theme' => $validatedData['theme'],
             'other_requests' => $validatedData['other_requests'],
             'total_price' => $validatedData['total_price'] ?? null,
+            'payment_proof' => null, // Initialize payment_proof as null
+            'payment_status' => 'pending' // Add payment status
         ];
     
-        Log::info('Total price included in reserveData', ['reserveData' => $reserveData]);
-    
-        // Push reservation data to Firebase
         try {
             $postRef = $this->database->getReference($this->reservations)->push($reserveData);
-    
-            if ($postRef) {
-                return redirect('/')->with('status', 'Reservation Added');
+            
+            if ($postRef->getKey()) {
+                return redirect()->route('guest.payment', ['reservation_id' => $postRef->getKey()])->with('status', 'Reservation Added');
             } else {
-                return redirect('/')->with('status', 'Reservation Not Added');
+                return redirect('/reserve')->with('status', 'Reservation Not Added');
             }
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'There was an error saving the reservation: ' . $e->getMessage());
         }
     }
-    
 
+    public function payment($reservation_id)
+    {
+        // Fetch the reservation details
+        $reservation = $this->database->getReference($this->reservations)->getChild($reservation_id)->getValue();
+        
+        if (!$reservation) {
+            return redirect()->route('guest.reserve')->with('error', 'Reservation not found.');
+        }
+
+        return view('guest.reservation.payment', compact('reservation', 'reservation_id'));
+    }
+
+    public function storePaymentProof(Request $request, $reservation_id)
+    {
+        Log::info('Payment proof upload started', ['reservation_id' => $reservation_id]);
+
+        // Validate the request
+        $request->validate([
+            'payment_proof' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+
+        try {
+            // Get the reservation reference
+            $reservationRef = $this->database->getReference($this->reservations)->getChild($reservation_id);
+            
+            // Check if reservation exists
+            if (!$reservationRef->getValue()) {
+                return redirect()->back()->with('error', 'Reservation not found.');
+            }
+
+            if ($request->hasFile('payment_proof')) {
+                // Store the payment proof in storage/app/public/payment_proofs
+                $paymentProofPath = $request->file('payment_proof')->store('payment_proofs', 'public');
+                $paymentProofUrl = str_replace('public/', 'storage/', $paymentProofPath);
+                
+                // Update the reservation with payment proof details
+                $updates = [
+                    'reserve_type' => 'Reserve',
+                    'status' => 'Pending',
+                    'payment_proof' => $paymentProofUrl,
+                    'payment_status' => 'proof_submitted',
+                    'payment_submitted_at' => date('Y-m-d H:i:s')
+                ];
+                
+                $reservationRef->update($updates);
+
+                Log::info('Payment proof uploaded successfully', [
+                    'reservation_id' => $reservation_id,
+                    'path' => $paymentProofUrl
+                ]);
+
+                return redirect()->route('guest.home')->with('status', 'Payment uploaded successfully. We will verify your payment shortly.');
+            }
+
+            return redirect()->back()->with('error', 'No file uploaded.');
+
+        } catch (\Exception $e) {
+            Log::error('Error uploading payment proof', [
+                'reservation_id' => $reservation_id,
+                'error' => $e->getMessage()
+            ]);
+
+            return redirect()->back()->with('error', 'There was an error uploading your payment proof. Please try again.');
+        }
+    }
 }

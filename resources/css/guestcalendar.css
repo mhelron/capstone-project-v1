@@ -42,7 +42,7 @@
  }
  
  .fc-event-title {
-     color: black !important; /* Change to your desired color */
+     color: white !important; /* Change to your desired color */
  }
  
  .fc-event-time {
@@ -130,4 +130,12 @@
  .past-date.fc-daygrid-day {
      opacity: 0.5;
      cursor: not-allowed; /* Show the disabled cursor */
+ }
+
+ .fc-event-content{
+    text-align: center;
+ }
+
+ .fc-daygrid-day{
+    height: 150px;
  }

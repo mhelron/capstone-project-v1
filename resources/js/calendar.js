@@ -2,25 +2,36 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log(events);
 
     var calendarEl = document.getElementById('calendar');
-    var calendarEvents = events.map(function(event) {
-        let startDateTimeStr = `${event.Date}T${convertTo24Hour(event.Time)}`;
-        let startDateTime = new Date(startDateTimeStr);
+    var calendarEvents = events
+        .map(function(event) {
+            let startDateTimeStr = `${event.Date}T${convertTo24Hour(event.Time)}`;
+            let startDateTime = new Date(startDateTimeStr);
 
-        if (isNaN(startDateTime.getTime())) {
-            console.error(`Invalid date for event: ${event.Event} on ${event.Date} at ${event.Time}`);
-            return null;
-        }
+            if (isNaN(startDateTime.getTime())) {
+                console.error(`Invalid date for event: ${event.Event} on ${event.Date} at ${event.Time}`);
+                return null;
+            }
 
-        let endDateTime = new Date(startDateTime);
-        endDateTime.setHours(endDateTime.getHours() + 5);
+            // Calculate end time
+            let endDateTime = new Date(startDateTime);
+            endDateTime.setHours(endDateTime.getHours() + 5); // Add 5 hours as an example duration
 
-        return {
-            title: event.Event,
-            start: startDateTime.toISOString(),
-            end: endDateTime.toISOString(),
-            status: event.Status,
-        };
-    }).filter(event => event !== null);
+            // Ensure end time doesn't extend to the next day
+            let maxEndDateTime = new Date(startDateTime);
+            maxEndDateTime.setHours(23, 59, 59); // Set to 11:59:59 PM of the same day
+
+            if (endDateTime > maxEndDateTime) {
+                endDateTime = maxEndDateTime; // Clamp the end time to the same day
+            }
+
+            return {
+                title: event.Event,
+                start: startDateTime.toISOString(),
+                end: endDateTime.toISOString(),
+                status: event.Status,
+            };
+        })
+        .filter(event => event !== null && event.status.toLowerCase() !== 'cancelled'); // Exclude cancelled events
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',

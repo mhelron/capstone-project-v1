@@ -76,6 +76,7 @@
                                                 <th scope="col">Pax</th>
                                                 <th scope="col">Status</th>
                                                 <th scope="col">Details</th>
+                                                <th scope="col">Payment</th>
                                                 <th scope="col">Options</th>
                                             </tr>
                                         </thead>
@@ -134,6 +135,40 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                    </td>
+                                                    <!-- Separate Image Modal Trigger -->
+                                                    <td>
+                                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#imageModal{{ $key }}">
+                                                            View Payment
+                                                        </button>
+
+                                                        <!-- Image Modal -->
+                                                        <div class="modal fade" id="imageModal{{ $key }}" tabindex="-1" aria-labelledby="imageModalLabel{{ $key }}" aria-hidden="true">
+                                                            <div class="modal-dialog modal-dialog-centered">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="imageModalLabel{{ $key }}">Payment Details for {{ $item['first_name'] }}</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <!-- Display Payment Proof Image -->
+                                                                        @if(isset($item['payment_proof']) && !empty($item['payment_proof']))
+                                                                            <img src="{{ asset('storage/'.$item['payment_proof']) }}" alt="Payment Proof" class="img-fluid mb-3">
+                                                                        @else
+                                                                            <p>No payment details available.</p>
+                                                                        @endif
+
+                                                                        <!-- Check if 'payment_submitted_at' exists and display it -->
+                                                                        @if(isset($item['payment_submitted_at']) && !empty($item['payment_submitted_at']))
+                                                                            <p><strong>Submitted At:</strong> {{ \Carbon\Carbon::parse($item['payment_submitted_at'])->format('F j, Y, g:i A') }}</p>
+                                                                        @else
+                                                                            <p><strong>Submitted At:</strong> Not Available</p>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
                                                     </td>
                                                     <td>
                                                         <form action="{{url('admin/reservations/confirm-reservation/'.$key)}}" method="POST" class="me-2 d-inline">
@@ -318,10 +353,17 @@
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <form action="{{url('admin/reservations/cancel-reservation/'.$key)}}" method="POST" class="d-inline">
+                                                        <!-- Form -->
+                                                        <form id="archiveForm" action="{{ url('admin/reservations/archive-reservation'. $key) }}" method="POST" class="d-inline">
                                                             @csrf
                                                             @method('PUT')
-                                                            <button type="submit" class="btn btn-sm btn-secondary">Archive</button>
+                                                            <button type="button" class="btn btn-sm btn-secondary" 
+                                                                    data-bs-toggle="modal" 
+                                                                    data-bs-target="#archiveModal" 
+                                                                    data-id="{{ $key }}" 
+                                                                    data-name="{{ $item['package_name'] }}">
+                                                                Archive
+                                                            </button>
                                                         </form>
                                                     </td>
                                                 </tr>
@@ -332,6 +374,26 @@
                                                 @endforelse
                                             </tbody>
                                         </table>
+
+                           <!-- Modal -->
+                            <div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="archiveModalLabel">Confirm Archive</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to archive <strong id="userName"></strong>?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <!-- Confirm button with explicit form submission -->
+                                            <button type="button" class="btn btn-danger" id="confirmArchiveButton">Archive</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             </div>
                             <div class="tab-pane fade" id="finished" role="tabpanel" aria-labelledby="finished-tab">
                             <table class="table table-hover">
@@ -405,7 +467,17 @@
                                                     </td>
                                                     <td>
                                                         <div class="d-flex">
-                                                            <a href="{{ url('admin/services/delete-service/' . $key) }}" class="btn btn-sm btn-secondary">Archive</a>
+                                                        <form id="archiveFormFinished" action="{{ url('admin/reservations/archive-reservation/' . $key) }}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <button type="button" class="btn btn-sm btn-secondary" 
+                                                                    data-bs-toggle="modal" 
+                                                                    data-bs-target="#archiveModalFinished" 
+                                                                    data-id="{{ $key }}" 
+                                                                    data-name="{{ $item['package_name'] }}">
+                                                                Archive
+                                                            </button>
+                                                        </form>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -416,7 +488,25 @@
                                                 @endforelse
                                             </tbody>
                                         </table>
-                            </div>
+                                        <!-- Modal for Finished Reservation -->
+                                    <div class="modal fade" id="archiveModalFinished" tabindex="-1" aria-labelledby="archiveModalLabelFinished" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="archiveModalLabelFinished">Confirm Archive</h5>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Are you sure you want to archive <strong id="userNameFinished"></strong>?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                    <!-- Confirm button with explicit form submission -->
+                                                    <button type="button" class="btn btn-danger" id="confirmArchiveButtonFinished">Archive</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             <div class="tab-pane fade show active" id="penbook" role="tabpanel" aria-labelledby="penbook-tab">
                             <table class="table table-hover">
                                         <thead>
@@ -433,10 +523,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
- 
                                             @forelse ($pencilReservations as $key => $item)
                                                 <tr>
-                                                <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $item['first_name'] }}</td>
                                                     <td>{{ $item['last_name'] }}</td>
                                                     <td>{{ \Carbon\Carbon::parse($item['event_date'])->format('F j, Y') }}</td>
@@ -448,10 +537,12 @@
                                                         </span>
                                                     </td>
                                                     <td>
+                                                        <!-- Reservation Modal Trigger -->
                                                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#reservationModal{{ $key }}">
                                                             View Details
                                                         </button>
 
+                                                        <!-- Reservation Modal -->
                                                         <div class="modal fade" id="reservationModal{{ $key }}" tabindex="-1" aria-labelledby="reservationModalLabel{{ $key }}" aria-hidden="true">
                                                             <div class="modal-dialog modal-dialog-centered modal-lg">
                                                                 <div class="modal-content">
@@ -463,21 +554,8 @@
                                                                         <ul class="list-group">
                                                                             <li class="list-group-item"><strong>Address:</strong> {{ $item['address'] }}</li>
                                                                             <li class="list-group-item"><strong>Phone:</strong> {{ $item['phone'] }}</li>
-                                                                            <li class="list-group-item">
-                                                                                <strong>Menu Name:</strong> 
-                                                                                <span 
-                                                                                    data-bs-toggle="tooltip" 
-                                                                                    data-bs-html="true"
-                                                                                    data-bs-placement="right"
-                                                                                    title="{{ isset($item['menu_content']) ? implode('<br>', array_column($item['menu_content'], 'food')) : 'No menu content available' }}"
-                                                                                    style="cursor: pointer;">
-                                                                                    {{ $item['menu_name'] ?? 'No Menu Selected' }}
-                                                                                </span>
-                                                                            </li>
+                                                                            <li class="list-group-item"><strong>Menu Name:</strong> {{ $item['menu_name'] ?? 'No Menu Selected' }}</li>
                                                                             <li class="list-group-item"><strong>Venue:</strong> {{ $item['venue'] }}</li>
-                                                                            @if(isset($item['package_name']) && \Illuminate\Support\Str::contains($item['package_name'], 'Wedding'))
-                                                                                <li class="list-group-item"><strong>Sponsors:</strong> {{ $item['sponsors'] ?? 'No sponsors' }}</li>
-                                                                            @endif
                                                                             <li class="list-group-item"><strong>Event Time:</strong> {{ \Carbon\Carbon::parse($item['event_time'])->format('g:i A') }}</li>
                                                                             <li class="list-group-item"><strong>Theme:</strong> {{ $item['theme'] }}</li>
                                                                             <li class="list-group-item"><strong>Other Requests:</strong> {{ $item['other_requests'] ?? 'No requests' }}</li>
@@ -488,12 +566,12 @@
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <form action="{{url('admin/reservations/confirm-reservation/'.$key)}}" method="POST" class="me-2 d-inline">
+                                                        <form action="{{url('admin/reservations/confirm-pencil/'.$key)}}" method="POST" class="me-2 d-inline">
                                                             @csrf
                                                             @method('PUT')
                                                             <button type="submit" class="btn btn-sm btn-success">Confirm</button>
                                                         </form>
-                                                        <form action="{{url('admin/reservations/cancel-reservation/'.$key)}}" method="POST" class="d-inline">
+                                                        <form action="{{url('admin/reservations/cancel-pencil/'.$key)}}" method="POST" class="d-inline">
                                                             @csrf
                                                             @method('PUT')
                                                             <button type="submit" class="btn btn-sm btn-secondary">Cancel</button>
@@ -503,9 +581,10 @@
                                             @empty
                                                 <tr>
                                                     <td colspan="3">No Pencil Reservation Found</td>
-                                                    </tr>
-                                                @endforelse
-                                            </tbody>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+
                                         </table>
                             </div>
                         </div>
@@ -515,8 +594,6 @@
         </div>
     </div>
 </div>
-
-@endsection
 
 <style>
     .tooltip-text[data-bs-toggle="tooltip"] {
@@ -542,3 +619,64 @@
         })
     });
 </script>
+
+<!-- Script for the Archive Button -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const archiveButtons = document.querySelectorAll('[data-bs-target="#archiveModal"]');
+    const userNameField = document.getElementById('userName');
+    const archiveForm = document.getElementById('archiveForm');
+    const confirmArchiveButton = document.getElementById('confirmArchiveButton');
+
+    // Update modal data when clicking the Archive button
+    archiveButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const userName = this.getAttribute('data-name'); // Get package name
+            const reservationID = this.getAttribute('data-id'); // Get reservation ID
+            
+            // Populate modal with package name
+            userNameField.textContent = userName;
+
+            // Update form action URL
+            archiveForm.action = `{{ url('admin/reservations/archive-reservation') }}/${reservationID}`;
+        });
+    });
+
+    // Submit form when Confirm button is clicked
+    confirmArchiveButton.addEventListener('click', function () {
+        archiveForm.submit();
+    });
+});
+</script>
+
+<!-- Script for the Archive Button -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const archiveButtonsFinished = document.querySelectorAll('[data-bs-target="#archiveModalFinished"]');
+    const userNameFieldFinished = document.getElementById('userNameFinished');
+    const archiveFormFinished = document.getElementById('archiveFormFinished');
+    const confirmArchiveButtonFinished = document.getElementById('confirmArchiveButtonFinished');
+
+    // Update modal data when clicking the Archive button
+    archiveButtonsFinished.forEach(button => {
+        button.addEventListener('click', function () {
+            const userName = this.getAttribute('data-name'); // Get package name
+            const reservationID = this.getAttribute('data-id'); // Get reservation ID
+            
+            // Populate modal with package name
+            userNameFieldFinished.textContent = userName;
+
+            // Update form action URL
+            archiveFormFinished.action = `{{ url('admin/reservations/archive-reservation') }}/${reservationID}`;
+        });
+    });
+
+    // Submit form when Confirm button is clicked
+    confirmArchiveButtonFinished.addEventListener('click', function () {
+        archiveFormFinished.submit();
+    });
+});
+
+</script>
+
+@endsection

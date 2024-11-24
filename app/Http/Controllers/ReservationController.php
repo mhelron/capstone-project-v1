@@ -202,6 +202,40 @@ class ReservationController extends Controller
         }
     }
 
+    public function confirmPencil($id){
+        $key = $id;
+
+        $reserveData = [
+            'status' => 'Pending',
+            'reserve_type' => 'Reserve'
+        ];
+
+        $res_updated = $this->database->getReference($this->reservations. '/'.$key)->update($reserveData);
+
+        if ($res_updated) {
+            return redirect('admin/reservations')->with('status', 'Pencil Confirmed');
+        } else {
+            return redirect('admin/reservations')->with('status', 'Pencil Not Confirmed');
+        }
+    }
+
+    public function cancelPencil($id){
+        $key = $id;
+
+        $reserveData = [
+            'status' => 'Cancelled',
+            'reserve_type' => 'Reserve'
+        ];
+
+        $res_updated = $this->database->getReference($this->reservations. '/'.$key)->update($reserveData);
+
+        if ($res_updated) {
+            return redirect('admin/reservations')->with('status', 'Pencil Cancelled');
+        } else {
+            return redirect('admin/reservations')->with('status', 'Pencil Not Cancelled');
+        }
+    }
+
     public function confirmReservation($id){
         $key = $id;
 
@@ -247,6 +281,23 @@ class ReservationController extends Controller
             return redirect('admin/reservations')->with('status', 'Reservation Cancelled');
         } else {
             return redirect('admin/reservations')->with('status', 'Reservation Not Cancelled');
+        }
+    }
+
+    public function destroy($id)
+    {
+        $key = $id;
+
+        $reservations_data = $this->database->getReference($this->reservations.'/'.$key)->getValue();
+
+        $archive_data = $this->database->getReference($this->archived_reservations.'/'.$key)->set($reservations_data);
+
+        $del_data = $this->database->getReference($this->reservations.'/'.$key)->remove();
+
+        if ($del_data && $archive_data) {
+            return redirect('admin/reservations')->with('status', 'Reservation Archived Successfully');
+        } else {
+            return redirect('admin/reservations')->with('status', 'Reservation Not Archived');
         }
     }
 }

@@ -187,9 +187,8 @@
 
     <?php 
         foreach($reservations as $reservation){
-            echo 'events.push({"Event": "'. addslashes($reservation['package_name']) .'", 
+            echo 'events.push({"Event": "Reserved", 
             "Date": "'. addslashes($reservation['event_date']) .'",
-            "Time": "'. addslashes($reservation['event_time']) .'", 
             "Status": "'. addslashes($reservation['status']) .'"});';
         }
     ?>

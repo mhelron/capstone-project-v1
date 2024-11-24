@@ -19,9 +19,11 @@ use App\Http\Controllers\BotmanController;
 
 use App\Http\Middleware\AuthMiddleware;
 
+// Sample
 Route::get('/send-email', [EmailController::class, 'sendEmail']);
 
 // Guest Route
+
 //Home
 Route::get('/', [GuestController::class, 'indexHome'])->name('guest.home');
 
@@ -48,13 +50,16 @@ Route::get('/about', [GuestController::class, 'indexAbout'])->name('guest.about'
 //Reservation
 Route::get('/reserve', [GuestReservationController::class, 'index'])->name('guest.reserve');
 Route::post('/reserve', [GuestReservationController::class, 'store'])->name('guest.reserve.add');
+Route::get('/payment/{reservation_id}', [GuestReservationController::class, 'payment'])->name('guest.payment');
+Route::post('/payment/{reservation_id}/proof', [GuestReservationController::class, 'storePaymentProof'])->name('guest.payment.proof');
 
 //Botman Route
 Route::match(['get', 'post'], '/botman', [BotmanController::class, 'handle']);
-
 Route::get('/botman/widget', function () {
     return view('botman.botmanwidget');
-});
+}); 
+
+// Admin Route
 
 // Login Route
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -93,12 +98,14 @@ Route::middleware([AuthMiddleware::class])->group(function () {
         Route::get('/', [ReservationController::class, 'index'])->name('admin.reservation');
         Route::get('/add-reservation', [ReservationController::class, 'createReservation'])->name('admin.reserve.addRes');
         Route::post('/add-reservation', [ReservationController::class, 'reservation'])->name('admin.reserve.reserve');
+        Route::get('/add-pencil-reservation', [ReservationController::class, 'createPencil'])->name('admin.reserve.addPen');
+        Route::post('/add-pencil-reservation', [ReservationController::class, 'pencilReservation'])->name('admin.reserve.pencil');
+        Route::put('/confirm-pencil/{id}', [ReservationController::class, 'confirmPencil'])->name('admin.pencil.confirm');
+        Route::put('/cancel-pencil/{id}', [ReservationController::class, 'cancelPencil'])->name('admin.pencil.cancel');
         Route::put('/confirm-reservation/{id}', [ReservationController::class, 'confirmReservation'])->name('admin.reserve.confirm');
         Route::put('/finish-reservation/{id}', [ReservationController::class, 'finishReservation'])->name('admin.reserve.finish');
         Route::put('/cancel-reservation/{id}', [ReservationController::class, 'cancelReservation'])->name('admin.reserve.cancel');
-        
-        Route::get('/add-pencil-reservation', [ReservationController::class, 'createPencil'])->name('admin.reserve.addPen');
-        Route::post('/add-pencil-reservation', [ReservationController::class, 'pencilReservation'])->name('admin.reserve.pencil');
+        Route::put('/archive-reservation/{id}', [ReservationController::class, 'destroy'])->name('admin.reserve.archive');
     });
 
     // Reports Route

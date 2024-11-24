@@ -32,7 +32,7 @@
                     <a href="https://facebook.com/KylaandKyleCS" style="color: darkorange; margin-right: 10px; text-decoration: none;">
                         <i class="bx bxl-facebook-circle" style="font-size: 50px;"></i>
                     </a>
-                    <a href="mailto:mc_aguirre12@yahoo.com.ph" style="color: darkorange; text-decoration: none;">
+                    <a href="mailto:contactus@kylaandkylecatering.com" style="color: darkorange; text-decoration: none;">
                         <i class="bx bxl-gmail" style="font-size: 50px;"></i>
                     </a>
                 </div>

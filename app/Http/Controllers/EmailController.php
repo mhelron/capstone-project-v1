@@ -29,9 +29,8 @@ class EmailController extends Controller
             'message' => 'required|string',
         ]);
 
-        $email = 'Mhelron6@gmail.com';
+        $email = 'contactus@kylaandkylecatering.com';
 
-        // Pass the validated data directly to the ContactUsMail class
         Mail::to($email)->send(new ContactUsMail($validatedData));
 
         return back()->with('status', 'Message sent successfully!');
