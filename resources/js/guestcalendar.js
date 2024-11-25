@@ -6,8 +6,9 @@ document.addEventListener('DOMContentLoaded', function() {
         return {
             title: event.Event,
             start: event.Date,
+            status: event.Status,
         };
-    }).filter(event => event !== null);
+    }).filter(event => event !== null && !['pencil', 'pending', 'cancelled', 'finished'].includes(event.status.toLowerCase())); // Exclude cancelled events
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
