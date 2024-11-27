@@ -59,7 +59,7 @@ class PencilConfirmationMail extends Mailable
                         'status' => $this->reservation['status'],
                         'total_price' => $this->reservation['total_price'] ?? '0.00',
                     ])
-                    ->subject('Your Reservation Confirmation');
+                    ->subject('Your Pencil Reservation Confirmation');
     }
 
 }

@@ -109,7 +109,11 @@
         </tr>
         <tr>
             <th>Event Date:</th>
-            <td>{{ $event_date }}</td>
+            <td>{{ \Carbon\Carbon::parse($item['event_date'])->format('F j, Y') }}</td>
+        </tr>
+        <tr>
+            <th>Event Time:</th>
+            <td>{{ $event_time }}</td>
         </tr>
         <tr>
             <th>Guests:</th>
@@ -122,10 +126,6 @@
         <tr>
             <th>Venue:</th>
             <td>{{ $venue }}</td>
-        </tr>
-        <tr>
-            <th>Event Time:</th>
-            <td>{{ $event_time }}</td>
         </tr>
         <tr>
             <th>Theme:</th>

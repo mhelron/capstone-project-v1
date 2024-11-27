@@ -44,6 +44,6 @@ class ContactUsMail extends Mailable
                         'email' => $this->email,
                         'messageContent' => $this->userMessage,  // Pass as messageContent to the view
                     ])
-                    ->subject('New Contact Form Submission');
+                    ->subject('New Contact Us Inquiry!');
     }
 }

@@ -2,12 +2,25 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log(events);
 
     var calendarEl = document.getElementById('calendar');
+    
+    // Get today's date in the correct format for comparison
+    var today = new Date();
+    today.setHours(0, 0, 0, 0); // Set time to midnight to ignore time during comparison
+
     var calendarEvents = events.map(function(event) {
-        return {
-            title: event.Event,
-            start: event.Date,
-            status: event.Status,
-        };
+        // Convert event date to a Date object
+        var eventDate = new Date(event.Date);
+
+        // Only include events that are on or after today
+        if (eventDate >= today) {
+            return {
+                title: event.Event,
+                start: event.Date,
+                status: event.Status,
+            };
+        } else {
+            return null; // Exclude past events
+        }
     }).filter(event => event !== null && !['pencil', 'pending', 'cancelled', 'finished'].includes(event.status.toLowerCase())); // Exclude cancelled events
 
     var calendar = new FullCalendar.Calendar(calendarEl, {

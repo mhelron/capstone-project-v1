@@ -104,6 +104,7 @@ Route::middleware([AuthMiddleware::class])->group(function () {
         Route::put('/cancel-pencil/{id}', [ReservationController::class, 'cancelPencil'])->name('admin.pencil.cancel');
         Route::put('/confirm-reservation/{id}', [ReservationController::class, 'confirmReservation'])->name('admin.reserve.confirm');
         Route::put('/finish-reservation/{id}', [ReservationController::class, 'finishReservation'])->name('admin.reserve.finish');
+        Route::put('/admin/reservations/{id}/finish', [ReservationController::class, 'finishReservationAuto']);
         Route::put('/cancel-reservation/{id}', [ReservationController::class, 'cancelReservation'])->name('admin.reserve.cancel');
         Route::put('/archive-reservation/{id}', [ReservationController::class, 'destroy'])->name('admin.reserve.archive');
     });

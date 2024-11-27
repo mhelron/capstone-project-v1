@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log(events);
 
     var calendarEl = document.getElementById('calendar');
+    var today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize the time to midnight for accurate comparison
+
     var calendarEvents = events
         .map(function(event) {
             let startDateTimeStr = `${event.Date}T${convertTo24Hour(event.Time)}`;
@@ -76,8 +79,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         dateClick: function(info) {
             const selectedDate = new Date(info.dateStr);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
 
             if (selectedDate >= today) {
                 $('#eventModal').modal('show');
@@ -95,6 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     calendar.render();
 
+    // Function to convert 12-hour format to 24-hour format
     function convertTo24Hour(timeStr) {
         const [time, modifier] = timeStr.split(' ');
         let [hours, minutes] = time.split(':');
@@ -105,10 +107,8 @@ document.addEventListener('DOMContentLoaded', function() {
         return `${hours}:${minutes}:00`;
     }
 
+    // Function to highlight past dates
     function highlightPastDates() {
-        var today = new Date();
-        today.setHours(0, 0, 0, 0);
-
         document.querySelectorAll('.fc-daygrid-day').forEach(function(dayCell) {
             var cellDate = new Date(dayCell.getAttribute('data-date'));
             if (cellDate < today) {

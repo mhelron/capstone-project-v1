@@ -28,8 +28,10 @@
     </style>
 </head>
 <body>
-    <h2>New Contact Form Submission</h2>
+    <h2>New Contact Us Inquiry!</h2>
     
+    <p><strong>Hey, there's a new inquiry submission! Please see the details below:</strong></p>
+
     <div class="message-container">
         <div class="field">
             <strong>Name:</strong> {{ $name }}
@@ -45,7 +47,7 @@
         
         <div class="field">
             <strong>Message:</strong><br>
-            {{ $messageContent }}  <!-- Changed from $message to $messageContent -->
+            {{ $messageContent }}
         </div>
     </div>
 </body>

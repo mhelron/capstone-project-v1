@@ -216,12 +216,20 @@
 
     <?php 
         foreach($reservations as $reservation){
-            echo 'events.push({"Event": "'. addslashes($reservation['package_name']) .'", 
-            "Date": "'. addslashes($reservation['event_date']) .'",
-            "Time": "'. addslashes($reservation['event_time']) .'", 
-            "Status": "'. addslashes($reservation['status']) .'"});';
+            // Generate a unique key by combining relevant fields, e.g., event_date, event_time, package_name
+            $uniqueKey = $reservation['event_date'] . "_" . $reservation['event_time'] . "_" . $reservation['package_name'];
+            
+            echo 'events.push({
+                "id": "'. addslashes($uniqueKey) .'",  // Generate a unique key
+                "Event": "'. addslashes($reservation['package_name']) .'", 
+                "Date": "'. addslashes($reservation['event_date']) .'", 
+                "Time": "'. addslashes($reservation['event_time']) .'", 
+                "Status": "'. addslashes($reservation['status']) .'"
+            });';
         }
     ?>
+    
+    console.log(events)
 
     var packages = [];
 
