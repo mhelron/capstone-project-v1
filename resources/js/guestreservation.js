@@ -124,12 +124,19 @@ $('#menu_name').change(function () {
     }
 });
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+    // Function to calculate the minimum date (three days from today)
+    function calculateMinDate() {
+        const today = new Date();
+        today.setDate(today.getDate() + 3); // Add 3 days to the current date
+        return today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+    }
+
     // Initialize Flatpickr for the date input
     const eventDatePicker = flatpickr("#event_date", {
         dateFormat: "Y-m-d", // Format of the date to send to the server
-        minDate: "today",    // Prevent past dates
-        onChange: function(selectedDates) {
+        minDate: calculateMinDate(), // Set minDate to three days from today
+        onChange: function (selectedDates) {
             const selectedDate = selectedDates[0];
             const today = new Date();
 
@@ -156,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
         dateFormat: "h:i K", // Format of the time to send to the server (12-hour format with AM/PM)
         time_24hr: false,    // Use 12-hour format
         minTime: getCurrentTime(), // Default minTime is set when the page loads (if today)
-        onOpen: function() {
+        onOpen: function () {
             const selectedDate = eventDatePicker.selectedDates[0];
             const today = new Date();
 
@@ -171,9 +178,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to get the current time in the correct format (24-hour format)
     function getCurrentTime() {
-        var now = new Date();
-        var hours = now.getHours();
-        var minutes = now.getMinutes();
+        const now = new Date();
+        let hours = now.getHours();
+        let minutes = now.getMinutes();
 
         // Ensure hours and minutes are two digits
         hours = (hours < 10 ? '0' : '') + hours; // Two-digit hour

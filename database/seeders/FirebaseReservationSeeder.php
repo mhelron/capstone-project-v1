@@ -148,6 +148,8 @@ class FirebaseReservationSeeder extends Seeder
             $today = new DateTime();
             $eventDate = $this->faker->dateTimeBetween($startDate, $endDate);
 
+            $createdAt = $this->faker->dateTimeBetween('-3 months', $eventDate->format('Y-m-d'));
+
             $status = $eventDate < $today 
             ? 'Finished'  // Only Finished status for past dates
             : $this->faker->randomElement(['Pending', 'Confirmed', 'Cancelled', 'Pencil']); // All except Finished for future
@@ -169,7 +171,8 @@ class FirebaseReservationSeeder extends Seeder
                 'venue' => $this->faker->company . ' Hall',
                 'event_time' => $this->faker->time('H:00'),
                 'theme' => $this->faker->randomElement($themes),
-                'other_requests' => $this->faker->optional(0.7)->sentence
+                'other_requests' => $this->faker->optional(0.7)->sentence,
+                'created_at' => $createdAt->getTimestamp() * 1000 
             ];
         }
 

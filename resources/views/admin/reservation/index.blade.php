@@ -65,6 +65,30 @@
                         </ul>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade" id="pending" role="tabpanel" aria-labelledby="pending-tab">
+                                <!-- Filter Controls Template - Will be duplicated for each tab -->
+                                <div class="filter-controls mb-3 mt-3">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label class="form-label">Sort By</label>
+                                            <select class="form-select date-filter">
+                                                <option value="all">All Events</option>
+                                                <option value="upcoming">Upcoming Events</option>
+                                                <option value="newest">Newly Added</option>
+                                                <option value="ascending">Date (Ascending)</option>
+                                                <option value="descending">Date (Descending)</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Filter by Location</label>
+                                            <select class="form-select venue-filter">
+                                                <option value="all">All Locations</option>
+                                                <option value="marikina">Marikina</option>
+                                                <option value="san mateo">San Mateo</option>
+                                                <option value="montalban">Montalban</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                                     <table class="table table-hover">
                                         <thead>
                                             <tr>
@@ -83,7 +107,11 @@
                                         <tbody>
  
                                             @forelse ($pendingReservations as $key => $item)
-                                                <tr>
+                                                <tr data-location="{{ Str::contains($item['package_name'], 'Marikina') ? 'marikina' : 
+                                                    (Str::contains($item['package_name'], 'San Mateo') ? 'san mateo' : 
+                                                    (Str::contains($item['package_name'], 'Montalban') ? 'montalban' : '')) }}"
+                                                    data-event-date="{{ \Carbon\Carbon::parse($item['event_date'])->format('Y-m-d') }}"
+                                                    data-created="{{ isset($item['created_at']) ? \Carbon\Carbon::createFromTimestamp($item['created_at']/1000)->format('Y-m-d H:i:s') : '' }}">
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $item['first_name'] }}</td>
                                                     <td>{{ $item['last_name'] }}</td>
@@ -192,6 +220,30 @@
                                         </table>
                             </div>
                             <div class="tab-pane fade" id="confirmed" role="tabpanel" aria-labelledby="confirmed-tab">
+                                <!-- Filter Controls Template - Will be duplicated for each tab -->
+                                <div class="filter-controls mb-3 mt-3">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label class="form-label">Sort By</label>
+                                            <select class="form-select date-filter">
+                                                <option value="all">All Events</option>
+                                                <option value="upcoming">Upcoming Events</option>
+                                                <option value="newest">Newly Added</option>
+                                                <option value="ascending">Date (Ascending)</option>
+                                                <option value="descending">Date (Descending)</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Filter by Location</label>
+                                            <select class="form-select venue-filter">
+                                                <option value="all">All Locations</option>
+                                                <option value="marikina">Marikina</option>
+                                                <option value="san mateo">San Mateo</option>
+                                                <option value="montalban">Montalban</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             <table class="table table-hover">
                                         <thead>
                                             <tr>
@@ -209,7 +261,11 @@
                                         <tbody>
  
                                             @forelse ($confirmedReservations as $key => $item)
-                                                <tr>
+                                                <tr data-location="{{ Str::contains($item['package_name'], 'Marikina') ? 'marikina' : 
+                                                    (Str::contains($item['package_name'], 'San Mateo') ? 'san mateo' : 
+                                                    (Str::contains($item['package_name'], 'Montalban') ? 'montalban' : '')) }}"
+                                                    data-event-date="{{ \Carbon\Carbon::parse($item['event_date'])->format('Y-m-d') }}"
+                                                    data-created="{{ isset($item['created_at']) ? \Carbon\Carbon::createFromTimestamp($item['created_at']/1000)->format('Y-m-d H:i:s') : '' }}">
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $item['first_name'] }}</td>
                                                     <td>{{ $item['last_name'] }}</td>
@@ -283,6 +339,28 @@
                                         </table>
                             </div>
                             <div class="tab-pane fade" id="cancelled" role="tabpanel" aria-labelledby="cancelled-tab">
+                                <!-- Filter Controls Template - Will be duplicated for each tab -->
+                                <div class="filter-controls mb-3 mt-3">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label class="form-label">Sort By</label>
+                                            <select class="form-select date-filter">
+                                                <option value="all">All Events</option>
+                                                <option value="ascending">Date (Ascending)</option>
+                                                <option value="descending">Date (Descending)</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Filter by Location</label>
+                                            <select class="form-select venue-filter">
+                                                <option value="all">All Locations</option>
+                                                <option value="marikina">Marikina</option>
+                                                <option value="san mateo">San Mateo</option>
+                                                <option value="montalban">Montalban</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             <table class="table table-hover">
                                         <thead>
                                             <tr>
@@ -300,7 +378,11 @@
                                         <tbody>
  
                                             @forelse ($cancelledReservations as $key => $item)
-                                                <tr>
+                                                <tr data-location="{{ Str::contains($item['package_name'], 'Marikina') ? 'marikina' : 
+                                                    (Str::contains($item['package_name'], 'San Mateo') ? 'san mateo' : 
+                                                    (Str::contains($item['package_name'], 'Montalban') ? 'montalban' : '')) }}"
+                                                    data-event-date="{{ \Carbon\Carbon::parse($item['event_date'])->format('Y-m-d') }}"
+                                                    data-created="{{ isset($item['created_at']) ? \Carbon\Carbon::createFromTimestamp($item['created_at']/1000)->format('Y-m-d H:i:s') : '' }}">
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $item['first_name'] }}</td>
                                                     <td>{{ $item['last_name'] }}</td>
@@ -396,6 +478,28 @@
 
                             </div>
                             <div class="tab-pane fade" id="finished" role="tabpanel" aria-labelledby="finished-tab">
+                                <!-- Filter Controls Template - Will be duplicated for each tab -->
+                                <div class="filter-controls mb-3 mt-3">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label class="form-label">Sort By</label>
+                                            <select class="form-select date-filter">
+                                                <option value="all">All Events</option>
+                                                <option value="ascending">Date (Ascending)</option>
+                                                <option value="descending">Date (Descending)</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Filter by Location</label>
+                                            <select class="form-select venue-filter">
+                                                <option value="all">All Locations</option>
+                                                <option value="marikina">Marikina</option>
+                                                <option value="san mateo">San Mateo</option>
+                                                <option value="montalban">Montalban</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             <table class="table table-hover">
                                         <thead>
                                             <tr>
@@ -413,7 +517,11 @@
                                         <tbody>
  
                                             @forelse ($finishedReservations as $key => $item)
-                                                <tr>
+                                                <tr data-location="{{ Str::contains($item['package_name'], 'Marikina') ? 'marikina' : 
+                                                    (Str::contains($item['package_name'], 'San Mateo') ? 'san mateo' : 
+                                                    (Str::contains($item['package_name'], 'Montalban') ? 'montalban' : '')) }}"
+                                                    data-event-date="{{ \Carbon\Carbon::parse($item['event_date'])->format('Y-m-d') }}"
+                                                    data-created="{{ isset($item['created_at']) ? \Carbon\Carbon::createFromTimestamp($item['created_at']/1000)->format('Y-m-d H:i:s') : '' }}">
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $item['first_name'] }}</td>
                                                     <td>{{ $item['last_name'] }}</td>
@@ -508,6 +616,30 @@
                                     </div>
                                 </div>
                             <div class="tab-pane fade show active" id="penbook" role="tabpanel" aria-labelledby="penbook-tab">
+                                <!-- Filter Controls Template - Will be duplicated for each tab -->
+                                <div class="filter-controls mb-3 mt-3">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label class="form-label">Sort By</label>
+                                            <select class="form-select date-filter">
+                                                <option value="all">All Events</option>
+                                                <option value="upcoming">Upcoming Events</option>
+                                                <option value="newest">Newly Added</option>
+                                                <option value="ascending">Date (Ascending)</option>
+                                                <option value="descending">Date (Descending)</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Filter by Location</label>
+                                            <select class="form-select venue-filter">
+                                                <option value="all">All Locations</option>
+                                                <option value="marikina">Marikina</option>
+                                                <option value="san mateo">San Mateo</option>
+                                                <option value="montalban">Montalban</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             <table class="table table-hover">
                                         <thead>
                                             <tr>
@@ -524,7 +656,11 @@
                                         </thead>
                                         <tbody>
                                             @forelse ($pencilReservations as $key => $item)
-                                                <tr>
+                                                <tr data-location="{{ Str::contains($item['package_name'], 'Marikina') ? 'marikina' : 
+                                                    (Str::contains($item['package_name'], 'San Mateo') ? 'san mateo' : 
+                                                    (Str::contains($item['package_name'], 'Montalban') ? 'montalban' : '')) }}"
+                                                    data-event-date="{{ \Carbon\Carbon::parse($item['event_date'])->format('Y-m-d') }}"
+                                                    data-created="{{ isset($item['created_at']) ? \Carbon\Carbon::createFromTimestamp($item['created_at']/1000)->format('Y-m-d H:i:s') : '' }}">
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $item['first_name'] }}</td>
                                                     <td>{{ $item['last_name'] }}</td>
@@ -677,6 +813,195 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+</script>
+
+<style>
+.filter-controls {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.filter-controls select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.tooltip-text[data-bs-toggle="tooltip"] {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.875rem;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+
+    // Store original rows for each table
+    const tableOriginalRows = {};
+
+    // Function to filter and sort table rows
+    function filterTable(tableId) {
+        console.log('Filtering table:', tableId);
+
+        const table = document.querySelector(`#${tableId} table`);
+        if (!table) {
+            console.error('Table not found:', tableId);
+            return;
+        }
+
+        const tbody = table.querySelector('tbody');
+        if (!tbody) {
+            console.error('Tbody not found:', tableId);
+            return;
+        }
+
+        const dateFilter = document.querySelector(`#${tableId} .date-filter`);
+        const venueFilter = document.querySelector(`#${tableId} .venue-filter`);
+
+        if (!dateFilter || !venueFilter) {
+            console.error('Filters not found for table:', tableId);
+            return;
+        }
+
+        // Initialize original rows if not already stored
+        if (!tableOriginalRows[tableId]) {
+            tableOriginalRows[tableId] = Array.from(tbody.querySelectorAll('tr'));
+        }
+
+        const dateValue = dateFilter.value;
+        const locationValue = venueFilter.value;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        console.log('Current filter values:', { dateValue, locationValue });
+
+        // Work with a copy of the original rows
+        const rows = [...tableOriginalRows[tableId]];
+        
+        // Get all rows that will be visible after filtering
+        const visibleRows = rows.filter(row => {
+            if (row.querySelector('td[colspan]')) return false;
+
+            const location = row.getAttribute('data-location');
+            const eventDate = row.getAttribute('data-event-date');
+            const createdDate = row.getAttribute('data-created');
+
+            // Location filter
+            if (locationValue !== 'all' && (!location || location.toLowerCase() !== locationValue.toLowerCase())) {
+                return false;
+            }
+
+            // Date filter
+            if (dateValue === 'upcoming') {
+                if (!eventDate) return false;
+                const eventDateTime = new Date(eventDate);
+                eventDateTime.setHours(0, 0, 0, 0);
+                return eventDateTime >= today;
+            }
+
+            return true;
+        });
+
+        // Sort visible rows
+        if (dateValue !== 'all') {
+            visibleRows.sort((a, b) => {
+                switch (dateValue) {
+                    case 'newest':
+                        // Sort by created date
+                        const createdA = new Date(a.getAttribute('data-created') || '');
+                        const createdB = new Date(b.getAttribute('data-created') || '');
+                        return createdB - createdA;
+                    
+                    case 'upcoming':
+                        // Sort by upcoming event date
+                        const upcomingDateA = new Date(a.getAttribute('data-event-date'));
+                        const upcomingDateB = new Date(b.getAttribute('data-event-date'));
+                        return upcomingDateA - upcomingDateB;
+                    
+                    case 'ascending':
+                        // Sort by event date ascending (earliest first)
+                        const ascDateA = new Date(a.getAttribute('data-event-date'));
+                        const ascDateB = new Date(b.getAttribute('data-event-date'));
+                        return ascDateA - ascDateB;
+                    
+                    case 'descending':
+                        // Sort by event date descending (latest first)
+                        const descDateA = new Date(a.getAttribute('data-event-date'));
+                        const descDateB = new Date(b.getAttribute('data-event-date'));
+                        return descDateB - descDateA;
+                    
+                    default:
+                        return 0;
+                }
+            });
+        }
+
+        // Clear tbody
+        tbody.innerHTML = '';
+
+        // Handle no results or repopulate tbody
+        if (visibleRows.length === 0) {
+            const colspan = table.querySelector('thead tr').children.length;
+            tbody.innerHTML = `<tr><td colspan="${colspan}" class="text-center">No reservations found matching the selected filters</td></tr>`;
+        } else {
+            // Clone and reappend rows in sorted order
+            visibleRows.forEach((row, index) => {
+                const clonedRow = row.cloneNode(true);
+                const firstCell = clonedRow.querySelector('td:first-child');
+                if (firstCell) {
+                    firstCell.textContent = (index + 1).toString();
+                }
+                tbody.appendChild(clonedRow);
+            });
+        }
+    }
+
+    // Add event listeners to filter controls in each tab
+    const tabPanes = ['penbook', 'pending', 'confirmed', 'cancelled', 'finished'];
+    
+    tabPanes.forEach(paneId => {
+        const dateFilter = document.querySelector(`#${paneId} .date-filter`);
+        const venueFilter = document.querySelector(`#${paneId} .venue-filter`);
+
+        if (dateFilter) {
+            dateFilter.addEventListener('change', () => filterTable(paneId));
+        }
+
+        if (venueFilter) {
+            venueFilter.addEventListener('change', () => filterTable(paneId));
+        }
+    });
+
+    // Handle tab changes
+    const tabLinks = document.querySelectorAll('[data-bs-toggle="tab"]');
+    tabLinks.forEach(tab => {
+        tab.addEventListener('shown.bs.tab', function (e) {
+            const targetId = e.target.getAttribute('data-bs-target').replace('#', '');
+            filterTable(targetId);
+        });
+    });
+
+    // Initial filter on page load
+    tabPanes.forEach(paneId => {
+        filterTable(paneId);
+    });
+});
 </script>
 
 @endsection
