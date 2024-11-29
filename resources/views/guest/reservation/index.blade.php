@@ -141,7 +141,7 @@
                             <div class="row">
                                 <!-- Street, Building, House Number -->
                                 <div class="form-group col-md-6 mb-3">
-                                    <label>Street, Building, House Number</label><span class="text-danger"> *</span>
+                                    <label>House Number, Building, Street</label><span class="text-danger"> *</span>
                                     <input type="text" name="street_houseno" value="{{ old('street_houseno') }}" class="form-control" style="text-transform: uppercase;">
                                     @if ($errors->has('street_houseno'))
                                         <small class="text-danger">{{ $errors->first('street_houseno') }}</small>
@@ -251,7 +251,7 @@
 
                                 <!-- Color Motif or Theme -->
                                 <div class="form-group col-md-6 mb-3">
-                                    <label>Color Motif or Theme</label><span class="text-danger"> *</span>
+                                    <label>Color Motif or/and Theme</label><span class="text-danger"> *</span>
                                     <input type="text" name="theme" value="{{ old('theme') }}" class="form-control">
                                     @if ($errors->has('theme'))
                                         <small class="text-danger">{{ $errors->first('theme') }}</small>
