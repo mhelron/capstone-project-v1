@@ -79,7 +79,7 @@
     <h1>Pending Reservation</h1>
 
     <p>Dear {{ $first_name }} {{ $last_name }},</p>
-    <p>We have received your payment proof for your reservation. Our team will verify your payment shortly.</p>
+    <p>We have received your payment for your reservation. Our team will verify your payment shortly.</p>
     <p>Thank you for reserving with Kyla and Kyle Catering Services! Here are your reservation details:</p>
 
     <table>

@@ -79,7 +79,9 @@
     <h1>Pencil Reservation</h1>
 
     <p>Dear {{ $first_name }} {{ $last_name }},</p>
-
+    
+    <p>We have received your reservation entry. It will be considered a pencil reservation until the reservation fee is paid.</p>
+    <p>Note that pencil reservation online last for a week./p>
     <p>Thank you for reserving with Kyla and Kyle Catering Services! Here are your reservation details:</p>
 
     <table>

@@ -132,7 +132,7 @@ class GuestReservationController extends Controller
             'other_requests' => $validatedData['other_requests'],
             'total_price' => $validatedData['total_price'] ?? null,
             'payment_proof' => 'None',
-            'payment_status' => 'Pending',
+            'payment_status' => 'Not Paid',
             'payment_submitted_at' => null,
             'created_at' => Carbon::now()->toDateTimeString(),
         ];
@@ -184,68 +184,78 @@ class GuestReservationController extends Controller
     }
 
     public function storePaymentProof(Request $request, $reservation_id)
-    {
-        Log::info('Payment proof upload started', ['reservation_id' => $reservation_id]);
+{
+    Log::info('Payment proof upload started', ['reservation_id' => $reservation_id]);
 
-        // Validate the request
-        $request->validate([
-            'payment_proof' => 'required|image|mimes:jpeg,png,jpg|max:2048'
-        ]);
+    // Validate the request
+    $request->validate([
+        'payment_proof' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+    ]);
 
-        try {
-            // Get the reservation reference
-            $reservationRef = $this->database->getReference($this->reservations)->getChild($reservation_id);
-    
-            // Check if reservation exists
-            if (!$reservationRef->getValue()) {
-                return redirect()->back()->with('error', 'Reservation not found.');
+    try {
+        // Get the reservation reference
+        $reservationRef = $this->database->getReference($this->reservations)->getChild($reservation_id);
+        $reservation = $reservationRef->getValue();
+
+        // Check if reservation exists
+        if (!$reservation) {
+            return redirect()->back()->with('error', 'Reservation not found.');
+        }
+
+        if ($request->hasFile('payment_proof')) {
+            // Store the payment proof
+            $paymentProofPath = $request->file('payment_proof')->store('payment_proofs', 'public');
+            $paymentProofUrl = str_replace('public/', 'storage/', $paymentProofPath);
+
+            // Update the reservation with payment proof details
+            $updates = [
+                'reserve_type' => 'Reserve',
+                'status' => 'Pending',
+                'payment_proof' => $paymentProofUrl,
+                'payment_status' => 'Paid',
+                'payment_submitted_at' => now()->toDateTimeString(),
+            ];
+
+            $reservationRef->update($updates);
+
+            // Merge updates into the reservation data for the email
+            $reservation = array_merge($reservation, $updates);
+
+            // Send confirmation email to the reservation email
+            if (isset($reservation['email']) && !empty($reservation['email'])) {
+                try {
+                    Mail::mailer('clients')
+                        ->to($reservation['email'])
+                        ->send(new PendingConfirmationMail($reservation));
+                    Log::info('Confirmation email sent successfully', ['email' => $reservation['email']]);
+                } catch (\Exception $mailException) {
+                    Log::error('Error sending confirmation email', [
+                        'error' => $mailException->getMessage(),
+                        'reservation_id' => $reservation_id,
+                    ]);
+                }
+            } else {
+                Log::warning('No email found in reservation data', ['reservation_id' => $reservation_id]);
             }
-    
-            if ($request->hasFile('payment_proof')) {
-                // Store the payment proof in storage/app/public/payment_proofs
-                $paymentProofPath = $request->file('payment_proof')->store('payment_proofs', 'public');
-                $paymentProofUrl = str_replace('public/', 'storage/', $paymentProofPath);
-    
-                // Update the reservation with payment proof details
-                $updates = [
-                    'reserve_type' => 'Reserve',
-                    'status' => 'Pending',
-                    'payment_proof' => $paymentProofUrl,
-                    'payment_status' => 'proof_submitted',
-                    'payment_submitted_at' => date('Y-m-d H:i:s')
-                ];
-    
-                $reservationRef->update($updates);
-    
-                // Send an email notification
-                $reservationData = [
-                    'id' => $reservation_id,
-                    'first_name' => 'John', // Replace with actual data from the reservation
-                    'status' => $updates['status'],
-                    'payment_proof_url' => $paymentProofUrl,
-                ];
-    
-                Mail::mailer('clients') // Specify the mailer configuration if needed
-                    ->to('user@example.com') // Replace with recipient email
-                    ->send(new PendingConfirmationMail($reservationData));
 
-    
-                Log::info('Payment proof uploaded successfully', [
-                    'reservation_id' => $reservation_id,
-                    'path' => $paymentProofUrl
-                ]);
-    
-                return redirect()->route('guest.home')->with('status', 'Payment uploaded successfully. We will verify your payment shortly.');
-            }
-    
-            return redirect()->back()->with('error', 'No file uploaded.');
-        } catch (\Exception $e) {
-            Log::error('Error uploading payment proof', [
+            Log::info('Payment proof uploaded successfully', [
                 'reservation_id' => $reservation_id,
-                'error' => $e->getMessage()
+                'path' => $paymentProofUrl,
             ]);
 
-            return redirect()->back()->with('error', 'There was an error uploading your payment proof. Please try again.');
+            return redirect()->route('guest.home')->with('status', 'Payment uploaded successfully. We will verify your payment shortly.');
         }
+
+        return redirect()->back()->with('error', 'No file uploaded.');
+    } catch (\Exception $e) {
+        Log::error('Error uploading payment proof', [
+            'reservation_id' => $reservation_id,
+            'error' => $e->getMessage(),
+        ]);
+
+        return redirect()->back()->with('error', 'There was an error uploading your payment proof. Please try again.');
     }
+}
+
+    
 }
