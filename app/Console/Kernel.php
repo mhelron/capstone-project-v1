@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('reservations:auto-finish')->dailyAt('23:59');
+        $schedule->command('reservations:auto-finish')->daily();
     }
 
     protected function commands()

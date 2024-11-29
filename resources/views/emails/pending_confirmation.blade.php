@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pencil Reservation</title>
+    <title>Pending Reservation</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -76,10 +76,10 @@
     </style>
 </head>
 <body>
-    <h1>Pencil Reservation</h1>
+    <h1>Pending Reservation</h1>
 
     <p>Dear {{ $first_name }} {{ $last_name }},</p>
-
+    <p>We have received your payment proof for your reservation. Our team will verify your payment shortly.</p>
     <p>Thank you for reserving with Kyla and Kyle Catering Services! Here are your reservation details:</p>
 
     <table>

@@ -6,6 +6,7 @@ use Kreait\Firebase\Contract\Database;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Mail\PencilConfirmationMail;
+use App\Mail\PendingConfirmationMail;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 
@@ -130,15 +131,15 @@ class GuestReservationController extends Controller
             'theme' => $validatedData['theme'],
             'other_requests' => $validatedData['other_requests'],
             'total_price' => $validatedData['total_price'] ?? null,
-            'payment_proof' => null,
-            'payment_status' => 'pending',
+            'payment_proof' => 'None',
+            'payment_status' => 'Pending',
+            'payment_submitted_at' => null,
             'created_at' => Carbon::now()->toDateTimeString(),
         ];
     
         try {
             Log::info('Saving reservation to Firebase...', ['reservation_data' => $reserveData]);
         
-            // Save to Firebase
             $postRef = $this->database->getReference($this->reservations)->push($reserveData);
         
             if ($postRef->getKey()) {
@@ -194,17 +195,17 @@ class GuestReservationController extends Controller
         try {
             // Get the reservation reference
             $reservationRef = $this->database->getReference($this->reservations)->getChild($reservation_id);
-            
+    
             // Check if reservation exists
             if (!$reservationRef->getValue()) {
                 return redirect()->back()->with('error', 'Reservation not found.');
             }
-
+    
             if ($request->hasFile('payment_proof')) {
                 // Store the payment proof in storage/app/public/payment_proofs
                 $paymentProofPath = $request->file('payment_proof')->store('payment_proofs', 'public');
                 $paymentProofUrl = str_replace('public/', 'storage/', $paymentProofPath);
-                
+    
                 // Update the reservation with payment proof details
                 $updates = [
                     'reserve_type' => 'Reserve',
@@ -213,19 +214,31 @@ class GuestReservationController extends Controller
                     'payment_status' => 'proof_submitted',
                     'payment_submitted_at' => date('Y-m-d H:i:s')
                 ];
-                
+    
                 $reservationRef->update($updates);
+    
+                // Send an email notification
+                $reservationData = [
+                    'id' => $reservation_id,
+                    'first_name' => 'John', // Replace with actual data from the reservation
+                    'status' => $updates['status'],
+                    'payment_proof_url' => $paymentProofUrl,
+                ];
+    
+                Mail::mailer('clients') // Specify the mailer configuration if needed
+                    ->to('user@example.com') // Replace with recipient email
+                    ->send(new PendingConfirmationMail($reservationData));
 
+    
                 Log::info('Payment proof uploaded successfully', [
                     'reservation_id' => $reservation_id,
                     'path' => $paymentProofUrl
                 ]);
-
+    
                 return redirect()->route('guest.home')->with('status', 'Payment uploaded successfully. We will verify your payment shortly.');
             }
-
+    
             return redirect()->back()->with('error', 'No file uploaded.');
-
         } catch (\Exception $e) {
             Log::error('Error uploading payment proof', [
                 'reservation_id' => $reservation_id,
