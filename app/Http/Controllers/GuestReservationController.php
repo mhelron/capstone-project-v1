@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Mail\PencilConfirmationMail;
 use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
 
 class GuestReservationController extends Controller
 {
@@ -21,7 +22,9 @@ class GuestReservationController extends Controller
         $packages = $this->database->getReference($this->packages)->getValue();
         $packages = is_array($packages) ? array_map(fn($package) => $package, $packages) : [];
 
-        return view('guest.reservation.index', compact('packages'));
+        $addressData = json_decode(file_get_contents(public_path('address_ph.json')), true);
+
+        return view('guest.reservation.index', compact('packages', 'addressData'));
     }
 
     public function store(Request $request)
@@ -32,10 +35,15 @@ class GuestReservationController extends Controller
         $validatedData = $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
-            'address' => 'required',
             'phone' => 'required',
             'email' => 'required',
-            'package_name' => 'required', // Ensure package is selected
+            'region' => 'required',
+            'province' => 'required',
+            'city' => 'required',
+            'barangay' => 'required',
+            'street_houseno' => 'required',
+            'package_name' => 'required',
+            'event_title' => 'required',
             'menu_name' => 'required',
             'event_date' => 'required',
             'guests_number' => 'required',
@@ -63,7 +71,6 @@ class GuestReservationController extends Controller
                     foreach ($package['menus'] as $menu) {
                         if ($menu['menu_name'] === $validatedData['menu_name']) {
                             $menuContent = $menu['foods']; // Get the foods from the selected menu
-                            Log::info('Menu content found', ['menuContent' => $menuContent]);
                             break 2; // Exit both loops once found
                         }
                     }
@@ -77,22 +84,28 @@ class GuestReservationController extends Controller
             'reserve_type' => 'Pencil',
             'first_name' => $validatedData['first_name'],
             'last_name' => $validatedData['last_name'],
-            'address' => $validatedData['address'],
             'phone' => $validatedData['phone'],
             'email' => $validatedData['email'],
+            'region' => $validatedData['region'],
+            'province' => $validatedData['province'],
+            'city' => $validatedData['city'],
+            'barangay' => $validatedData['barangay'],
+            'street_houseno' => strtoupper($validatedData['street_houseno']),
             'package_name' => $validatedData['package_name'] ?? null,
+            'event_title' => $validatedData['event_title'],
             'menu_name' => $validatedData['menu_name'] ?? null,
             'menu_content' => $menuContent,
-            'event_date' => $validatedData['event_date'],
             'guests_number' => $validatedData['guests_number'],
             'sponsors' => $validatedData['sponsors'] ?? null,
-            'venue' => $validatedData['venue'],
+            'event_date' => $validatedData['event_date'],
             'event_time' => $validatedData['event_time'],
+            'venue' => $validatedData['venue'],
             'theme' => $validatedData['theme'],
             'other_requests' => $validatedData['other_requests'],
             'total_price' => $validatedData['total_price'] ?? null,
-            'payment_proof' => null, // Initialize payment_proof as null
-            'payment_status' => 'pending' // Add payment status
+            'payment_proof' => null,
+            'payment_status' => 'pending',
+            'created_at' => Carbon::now()->toDateTimeString(),
         ];
     
         try {

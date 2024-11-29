@@ -65,9 +65,12 @@ class AuthController extends Controller
                 'token_expiration' => $expirationTime
             ]);
 
+            Log::info("User '{$user->email}' successfully logged in.");
+
+
             return redirect()->route('admin.dashboard')->with('status', 'Logged in successfully!');
         } catch (\Kreait\Firebase\Auth\SignIn\FailedToSignIn $e) {
-            Log::error('Login error: ' . $e->getMessage());
+            Log::error('Someone tries to login.');
             return redirect()->back()->with(['error' => 'Invalid Credentials! Please Check Your Email or Password']);
         } catch (\Exception $e) {
             Log::error('Login error: ' . $e->getMessage() . ' | Exception class: ' . get_class($e));
@@ -77,6 +80,11 @@ class AuthController extends Controller
 
     public function logout()
     {
+        $user = Session::get('firebase_user');
+
+        Log::info("User '{$user->email}' successfully logged out.");
+
+
         Session::flush();
         return redirect()->route('login')->with('status', 'Logged out successfully!');
     }

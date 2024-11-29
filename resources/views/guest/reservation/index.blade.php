@@ -4,6 +4,8 @@
 
 @vite('resources/css/guestreservation.css')
 
+<meta charset="UTF-8">
+
 <!-- Content Header (Page header) -->
 <div class="content-header" style="padding-top: 100px;">
     <div class="container">
@@ -75,18 +77,78 @@
                             </div>
 
                             <div class="row">
-                                <!-- Address -->
-                                <div class="form-group col-md-12 mb-3">
-                                    <label>Address</label><span class="text-danger"> *</span>
-                                    <input type="text" name="address" value="{{ old('address') }}" class="form-control">
-                                    @if ($errors->has('address'))
-                                        <small class="text-danger">{{ $errors->first('address') }}</small>
+                                <!-- Region Dropdown -->
+                                <div class="form-group col-md-6 mb-3">
+                                    <label for="region">Region</label>
+                                    <select name="region" id="region" class="form-control">
+                                        <option value="" disabled selected>Select a Region</option>
+                                            @foreach ($addressData as $region)
+                                                <option value="{{ $region['id'] }}" {{ old('region') == $region['id'] ? 'selected' : '' }}>
+                                                    {{ $region['name'] }}
+                                                </option>
+                                            @endforeach
+                                    </select>
+                                    @if ($errors->has('region'))
+                                        <small class="text-danger">{{ $errors->first('region') }}</small>
+                                    @endif
+                                </div>
+
+                                <!-- Province Dropdown -->
+                                <div class="form-group col-md-6 mb-3">
+                                    <label for="province">Province</label>
+                                    <select name="province" id="province" class="form-control" disabled>
+                                    <option value="">Select a Province</option>
+                                        @if(old('province'))
+                                            <option value="{{ old('province') }}" selected>{{ old('province') }}</option>
+                                        @endif
+                                    </select>
+                                    @if ($errors->has('province') && !is_null(old('region')))
+                                        <small class="text-danger">{{ $errors->first('province') }}</small>
                                     @endif
                                 </div>
                             </div>
 
-                            <!-- Package and Menu Selection -->
                             <div class="row">
+                                <!-- City Dropdown -->
+                                <div class="form-group col-md-6 mb-3">
+                                    <label for="city">City</label>
+                                    <select name="city" id="city" class="form-control" disabled>
+                                    <option value="">Select a City</option>
+                                        @if(old('city'))
+                                            <option value="{{ old('city') }}" selected>{{ old('city') }}</option>
+                                        @endif
+                                    </select>
+                                    @if ($errors->has('city') && !is_null(old('province')))
+                                        <small class="text-danger">{{ $errors->first('city') }}</small>
+                                    @endif
+                                </div>
+
+                                <!-- Barangay Dropdown -->
+                                <div class="form-group col-md-6 mb-3">
+                                    <label for="barangay">Barangay</label>
+                                    <select name="barangay" id="barangay" class="form-control" disabled>
+                                        <option value="">Select a Barangay</option>
+                                        @if(old('barangay'))
+                                            <option value="{{ old('barangay') }}" selected>{{ old('barangay') }}</option>
+                                        @endif
+                                    </select>
+                                    @if ($errors->has('barangay') && !is_null(old('city')))
+                                        <small class="text-danger">{{ $errors->first('barangay') }}</small>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Street, Building, House Number -->
+                                <div class="form-group col-md-6 mb-3">
+                                    <label>Street, Building, House Number</label><span class="text-danger"> *</span>
+                                    <input type="text" name="street_houseno" value="{{ old('street_houseno') }}" class="form-control" style="text-transform: uppercase;">
+                                    @if ($errors->has('street_houseno'))
+                                        <small class="text-danger">{{ $errors->first('street_houseno') }}</small>
+                                    @endif
+                                </div>
+
+                                <!-- Package Selection -->
                                 <div class="form-group col-md-6 mb-3">
                                     <label for="package_name">Package</label>
                                     <select name="package_name" id="package_name" class="form-control">
@@ -102,6 +164,19 @@
                                         <small class="text-danger">{{ $errors->first('package_name') }}</small>
                                     @endif
                                 </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Title of the Event -->
+                                <div class="form-group col-md-6 mb-3">
+                                    <label>Title of the Event</label><span class="text-danger"> *</span>
+                                    <input type="text" name="event_title" value="{{ old('event_title') }}" class="form-control">
+                                    @if ($errors->has('event_title'))
+                                        <small class="text-danger">{{ $errors->first('event_title') }}</small>
+                                    @endif
+                                </div>
+                                
+                                 <!-- Menu Selection -->
                                 <div class="form-group col-md-6 mb-3">
                                     <label>Menu</label>
                                     <select name="menu_name" class="form-select" id="menu_name" {{ old('package_name') ? '' : 'disabled' }}>
@@ -197,7 +272,7 @@
                                 </div>
 
                                 <!-- Color Motif or Theme -->
-                                <div class="form-group col-md-6">
+                             <div class="form-group col-md-6">
                                     <h4>Total Breakdown</h4>
                                     <p class="d-flex justify-content-between">
                                         <strong>Additional Persons: </strong>
@@ -358,8 +433,11 @@
         });';
     }
 ?>
+
+const addressData = <?php echo json_encode($addressData); ?>;
 </script>
 
+@vite('resources/js/address.js')
 @vite('resources/js/guestreservation.js')
 @vite('resources/js/modal.js')
 

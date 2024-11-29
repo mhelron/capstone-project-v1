@@ -52,6 +52,12 @@
     </div>
 </div>
 
+<style>
+    #botmanWidgetRoot header span {
+    color: white !important;
+}
+</style>
+
 
 <!-- Bootstrap 5 -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -69,16 +75,17 @@
         </script>
     @endif
     <script>
-    var botmanWidget = {
-        title: 'KKChatbot', 
-        introMessage: 'Hello! Type \'help\' to start our conversation!',
-        mainColor: 'darkorange',
-        bubbleBackground: 'darkorange',
-        placeholderText: 'Type your message here...',
-        titleColor: '#ff6347',
-        aboutText: ' ',
-    };
-</script>
+        var botmanWidget = {
+            title: 'KKChatbot', 
+            introMessage: 'Hello! Type \'help\' to start our conversation!',
+            mainColor: 'darkorange',
+            bubbleBackground: 'darkorange',
+            placeholderText: 'Type your message here...',
+            bubbleAvatarUrl:'images/bubble.png',
+            aboutText: ' ',
+            headerTextColor: '#ffffff'
+        };
+    </script>
 
     
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>

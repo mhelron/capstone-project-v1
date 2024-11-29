@@ -660,7 +660,7 @@
                                                     (Str::contains($item['package_name'], 'San Mateo') ? 'san mateo' : 
                                                     (Str::contains($item['package_name'], 'Montalban') ? 'montalban' : '')) }}"
                                                     data-event-date="{{ \Carbon\Carbon::parse($item['event_date'])->format('Y-m-d') }}"
-                                                    data-created="{{ isset($item['created_at']) ? \Carbon\Carbon::createFromTimestamp($item['created_at']/1000)->format('Y-m-d H:i:s') : '' }}">
+                                                    data-created="{{ isset($item['created_at']) ? \Carbon\Carbon::parse($item['created_at'])->format('Y-m-d H:i:s') : '' }}">
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $item['first_name'] }}</td>
                                                     <td>{{ $item['last_name'] }}</td>
@@ -688,7 +688,7 @@
                                                                     </div>
                                                                     <div class="modal-body">
                                                                         <ul class="list-group">
-                                                                            <li class="list-group-item"><strong>Address:</strong> {{ $item['address'] }}</li>
+                                                                            <li class="list-group-item"><strong>Address:</strong> {{ $item['street_houseno'] ?? 'No Menu Selected'}}, {{ $item['barangay'] ?? 'No Menu Selected'}}, {{ $item['city'] ?? 'No Menu Selected'}}, {{ $item['province'] ?? 'No Menu Selected'}}, {{ $item['region'] ?? 'No Menu Selected'}}</li>
                                                                             <li class="list-group-item"><strong>Phone:</strong> {{ $item['phone'] }}</li>
                                                                             <li class="list-group-item"><strong>Menu Name:</strong> {{ $item['menu_name'] ?? 'No Menu Selected' }}</li>
                                                                             <li class="list-group-item"><strong>Venue:</strong> {{ $item['venue'] }}</li>
