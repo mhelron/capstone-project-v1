@@ -256,6 +256,4 @@ class GuestReservationController extends Controller
         return redirect()->back()->with('error', 'There was an error uploading your payment proof. Please try again.');
     }
 }
-
-    
 }
