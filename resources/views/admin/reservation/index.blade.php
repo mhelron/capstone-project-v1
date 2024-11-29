@@ -111,7 +111,7 @@
                                                     (Str::contains($item['package_name'], 'San Mateo') ? 'san mateo' : 
                                                     (Str::contains($item['package_name'], 'Montalban') ? 'montalban' : '')) }}"
                                                     data-event-date="{{ \Carbon\Carbon::parse($item['event_date'])->format('Y-m-d') }}"
-                                                    data-created="{{ isset($item['created_at']) ? \Carbon\Carbon::createFromTimestamp($item['created_at']/1000)->format('Y-m-d H:i:s') : '' }}">
+                                                    data-created="{{ isset($item['created_at']) ? \Carbon\Carbon::parse($item['created_at'])->format('Y-m-d H:i:s') : '' }}">
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $item['first_name'] }}</td>
                                                     <td>{{ $item['last_name'] }}</td>
@@ -265,7 +265,7 @@
                                                     (Str::contains($item['package_name'], 'San Mateo') ? 'san mateo' : 
                                                     (Str::contains($item['package_name'], 'Montalban') ? 'montalban' : '')) }}"
                                                     data-event-date="{{ \Carbon\Carbon::parse($item['event_date'])->format('Y-m-d') }}"
-                                                    data-created="{{ isset($item['created_at']) ? \Carbon\Carbon::createFromTimestamp($item['created_at']/1000)->format('Y-m-d H:i:s') : '' }}">
+                                                   data-created="{{ isset($item['created_at']) ? \Carbon\Carbon::parse($item['created_at'])->format('Y-m-d H:i:s') : '' }}">
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $item['first_name'] }}</td>
                                                     <td>{{ $item['last_name'] }}</td>
@@ -382,7 +382,7 @@
                                                     (Str::contains($item['package_name'], 'San Mateo') ? 'san mateo' : 
                                                     (Str::contains($item['package_name'], 'Montalban') ? 'montalban' : '')) }}"
                                                     data-event-date="{{ \Carbon\Carbon::parse($item['event_date'])->format('Y-m-d') }}"
-                                                    data-created="{{ isset($item['created_at']) ? \Carbon\Carbon::createFromTimestamp($item['created_at']/1000)->format('Y-m-d H:i:s') : '' }}">
+                                                    data-created="{{ isset($item['created_at']) ? \Carbon\Carbon::parse($item['created_at'])->format('Y-m-d H:i:s') : '' }}">
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $item['first_name'] }}</td>
                                                     <td>{{ $item['last_name'] }}</td>
@@ -521,7 +521,7 @@
                                                     (Str::contains($item['package_name'], 'San Mateo') ? 'san mateo' : 
                                                     (Str::contains($item['package_name'], 'Montalban') ? 'montalban' : '')) }}"
                                                     data-event-date="{{ \Carbon\Carbon::parse($item['event_date'])->format('Y-m-d') }}"
-                                                    data-created="{{ isset($item['created_at']) ? \Carbon\Carbon::createFromTimestamp($item['created_at']/1000)->format('Y-m-d H:i:s') : '' }}">
+                                                    data-created="{{ isset($item['created_at']) ? \Carbon\Carbon::parse($item['created_at'])->format('Y-m-d H:i:s') : '' }}">
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $item['first_name'] }}</td>
                                                     <td>{{ $item['last_name'] }}</td>
