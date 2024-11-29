@@ -20,6 +20,7 @@ export default defineConfig({
 				'resources/js/calendar.js',
 				'resources/js/calendarreservation.js',
 				'resources/js/chat.js',
+				'resources/js/filter.js',
 				'resources/js/gallery.js',
 				'resources/js/guestcalendar.js',
 				'resources/js/guestcalendarreservations.js',
