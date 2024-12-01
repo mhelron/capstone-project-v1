@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use App\Mail\PencilConfirmationMail;
 use App\Mail\PendingConfirmationMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class GuestReservationController extends Controller
@@ -26,6 +27,23 @@ class GuestReservationController extends Controller
         $addressData = json_decode(file_get_contents(public_path('address_ph.json')), true);
 
         return view('guest.reservation.index', compact('packages', 'addressData'));
+    }
+
+    private function generateUniqueReferenceNumber()
+    {
+        do {
+            // Generate a random 12-character string with numbers and uppercase letters
+            $reference = strtoupper(Str::random(6)) . rand(100000, 999999);
+            
+            // Check if this reference number already exists in Firebase
+            $existingReservation = $this->database->getReference($this->reservations)
+                ->orderByChild('reference_number')
+                ->equalTo($reference)
+                ->getValue();
+                
+        } while (!empty($existingReservation));
+        
+        return $reference;
     }
 
     public function store(Request $request)
@@ -86,6 +104,9 @@ class GuestReservationController extends Controller
         ]);
     
         Log::info('Validation passed', ['validatedData' => $validatedData]);
+
+        // Generate unique reference number
+        $reference_number = $this->generateUniqueReferenceNumber();
     
         // Fetch packages from Firebase
         $packages = $this->database->getReference($this->packages)->getValue();
@@ -108,6 +129,7 @@ class GuestReservationController extends Controller
     
         // Prepare reservation data
         $reserveData = [
+            'reference_number' => $reference_number,
             'status' => 'Pencil',
             'reserve_type' => 'Pencil',
             'first_name' => $validatedData['first_name'],
@@ -135,6 +157,8 @@ class GuestReservationController extends Controller
             'payment_status' => 'Not Paid',
             'payment_submitted_at' => null,
             'created_at' => Carbon::now()->toDateTimeString(),
+            'cancellation_reason' => null,
+            'cancelled_at' => null,
         ];
     
         try {
@@ -184,76 +208,145 @@ class GuestReservationController extends Controller
     }
 
     public function storePaymentProof(Request $request, $reservation_id)
-{
-    Log::info('Payment proof upload started', ['reservation_id' => $reservation_id]);
+    {
+        Log::info('Payment proof upload started', ['reservation_id' => $reservation_id]);
 
-    // Validate the request
-    $request->validate([
-        'payment_proof' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-    ]);
-
-    try {
-        // Get the reservation reference
-        $reservationRef = $this->database->getReference($this->reservations)->getChild($reservation_id);
-        $reservation = $reservationRef->getValue();
-
-        // Check if reservation exists
-        if (!$reservation) {
-            return redirect()->back()->with('error', 'Reservation not found.');
-        }
-
-        if ($request->hasFile('payment_proof')) {
-            // Store the payment proof
-            $paymentProofPath = $request->file('payment_proof')->store('payment_proofs', 'public');
-            $paymentProofUrl = str_replace('public/', 'storage/', $paymentProofPath);
-
-            // Update the reservation with payment proof details
-            $updates = [
-                'reserve_type' => 'Reserve',
-                'status' => 'Pending',
-                'payment_proof' => $paymentProofUrl,
-                'payment_status' => 'Paid',
-                'payment_submitted_at' => now()->toDateTimeString(),
-            ];
-
-            $reservationRef->update($updates);
-
-            // Merge updates into the reservation data for the email
-            $reservation = array_merge($reservation, $updates);
-
-            // Send confirmation email to the reservation email
-            if (isset($reservation['email']) && !empty($reservation['email'])) {
-                try {
-                    Mail::mailer('clients')
-                        ->to($reservation['email'])
-                        ->send(new PendingConfirmationMail($reservation));
-                    Log::info('Confirmation email sent successfully', ['email' => $reservation['email']]);
-                } catch (\Exception $mailException) {
-                    Log::error('Error sending confirmation email', [
-                        'error' => $mailException->getMessage(),
-                        'reservation_id' => $reservation_id,
-                    ]);
-                }
-            } else {
-                Log::warning('No email found in reservation data', ['reservation_id' => $reservation_id]);
-            }
-
-            Log::info('Payment proof uploaded successfully', [
-                'reservation_id' => $reservation_id,
-                'path' => $paymentProofUrl,
-            ]);
-
-            return redirect()->route('guest.home')->with('status', 'Payment uploaded successfully. We will verify your payment shortly.');
-        }
-
-        return redirect()->back()->with('error', 'No file uploaded.');
-    } catch (\Exception $e) {
-        Log::error('Error uploading payment proof', [
-            'reservation_id' => $reservation_id,
-            'error' => $e->getMessage(),
+        // Validate the request
+        $request->validate([
+            'payment_proof' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        return redirect()->back()->with('error', 'There was an error uploading your payment proof. Please try again.');
+        try {
+            // Get the reservation reference
+            $reservationRef = $this->database->getReference($this->reservations)->getChild($reservation_id);
+            $reservation = $reservationRef->getValue();
+
+            // Check if reservation exists
+            if (!$reservation) {
+                return redirect()->back()->with('error', 'Reservation not found.');
+            }
+
+            if ($request->hasFile('payment_proof')) {
+                // Store the payment proof
+                $paymentProofPath = $request->file('payment_proof')->store('payment_proofs', 'public');
+                $paymentProofUrl = str_replace('public/', 'storage/', $paymentProofPath);
+
+                // Update the reservation with payment proof details
+                $updates = [
+                    'reserve_type' => 'Reserve',
+                    'status' => 'Pending',
+                    'payment_proof' => $paymentProofUrl,
+                    'payment_status' => 'Paid',
+                    'payment_submitted_at' => now()->toDateTimeString(),
+                ];
+
+                $reservationRef->update($updates);
+
+                // Merge updates into the reservation data for the email
+                $reservation = array_merge($reservation, $updates);
+
+                // Send confirmation email to the reservation email
+                if (isset($reservation['email']) && !empty($reservation['email'])) {
+                    try {
+                        Mail::mailer('clients')
+                            ->to($reservation['email'])
+                            ->send(new PendingConfirmationMail($reservation));
+                        Log::info('Confirmation email sent successfully', ['email' => $reservation['email']]);
+                    } catch (\Exception $mailException) {
+                        Log::error('Error sending confirmation email', [
+                            'error' => $mailException->getMessage(),
+                            'reservation_id' => $reservation_id,
+                        ]);
+                    }
+                } else {
+                    Log::warning('No email found in reservation data', ['reservation_id' => $reservation_id]);
+                }
+
+                Log::info('Payment proof uploaded successfully', [
+                    'reservation_id' => $reservation_id,
+                    'path' => $paymentProofUrl,
+                ]);
+
+                return redirect()->route('guest.home')->with('status', 'Payment uploaded successfully. We will verify your payment shortly.');
+            }
+
+            return redirect()->back()->with('error', 'No file uploaded.');
+        } catch (\Exception $e) {
+            Log::error('Error uploading payment proof', [
+                'reservation_id' => $reservation_id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return redirect()->back()->with('error', 'There was an error uploading your payment proof. Please try again.');
+        }
     }
-}
+
+    public function showCheckStatus()
+    {
+        return view('guest.reservation.checkstatus');  // This just shows the form
+    }
+
+    public function checkStatus(Request $request)
+    {
+        $request->validate([
+            'reference_number' => 'required|string|size:12'
+        ]);
+    
+        $reservation = $this->database->getReference($this->reservations)
+            ->orderByChild('reference_number')
+            ->equalTo($request->reference_number)
+            ->getValue();
+    
+        if (empty($reservation)) {
+            return back()->withInput()->with('error', 'No reservation found with this reference number.');
+        }
+
+        // Get the first reservation and its key
+        $reservationKey = array_key_first($reservation);
+        $reservationData = array_values($reservation)[0];
+        
+        // Add the Firebase key to the reservation data
+        $reservationData['reservation_id'] = $reservationKey;
+        
+        return view('guest.reservation.checkstatus', ['reservation' => $reservationData]);
+    }
+    public function cancelReservation($reservation_id, Request $request)
+    {
+        try {
+            $cancellationReason = $request->cancellation_reason;
+            if ($cancellationReason === 'other') {
+                $cancellationReason = $request->other_reason;
+            }
+
+            $this->database->getReference($this->reservations . '/' . $reservation_id)
+                ->update([
+                    'status' => 'Cancelled',
+                    'cancellation_reason' => $cancellationReason,
+                    'cancelled_at' => Carbon::now()->toDateTimeString()
+                ]);
+                    
+            return redirect()->route('guest.check')
+                ->with('success', 'Reservation has been cancelled successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('guest.check')
+                ->with('error', 'Failed to cancel reservation. Please try again.');
+        }
+    }
+
+    public function edit($reservation_id){
+
+        $packages = $this->database->getReference($this->packages)->getValue();
+        $packages = is_array($packages) ? array_map(fn($package) => $package, $packages) : [];
+
+        $addressData = json_decode(file_get_contents(public_path('address_ph.json')), true);
+        
+        $editdata = $this->database->getReference($this->reservations)->getChild($reservation_id)->getValue();
+
+        $isExpanded = session()->get('sidebar_is_expanded', true);
+        if($editdata){
+            return view('guest.reservation.edit', compact('editdata', 'isExpanded', 'packages', 'addressData'));
+        } else {
+            return redirect('/check-status')->with('status', 'User ID Not Found');
+        }
+    }
 }

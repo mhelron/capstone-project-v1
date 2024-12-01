@@ -40,7 +40,7 @@
             
             <div class="d-flex mt-4 mb-4">
                 <a href="{{route('guest.reserve')}}" class="btn btn-darkorange me-3">Reserve</a>
-                <a href="#" class="btn btn-darkorange">View Status</a>
+                <a href="{{route('guest.check')}}" class="btn btn-darkorange">View Status</a>
             </div>
         </div>
 

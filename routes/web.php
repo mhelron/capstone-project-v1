@@ -52,6 +52,10 @@ Route::get('/reserve', [GuestReservationController::class, 'index'])->name('gues
 Route::post('/reserve', [GuestReservationController::class, 'store'])->name('guest.reserve.add');
 Route::get('/payment/{reservation_id}', [GuestReservationController::class, 'payment'])->name('guest.payment');
 Route::post('/payment/{reservation_id}/proof', [GuestReservationController::class, 'storePaymentProof'])->name('guest.payment.proof');
+Route::get('/check-status', [GuestReservationController::class, 'showCheckStatus'])->name('guest.check');
+Route::post('/check-status', [GuestReservationController::class, 'checkStatus'])->name('guest.check.submit');
+Route::delete('/reservation/{reservation_id}/cancel', [GuestReservationController::class, 'cancelReservation'])->name('reservation.cancel');
+Route::get('/edit-reserve/{reservation_id}', [GuestReservationController::class, 'edit'])->name('guest.reserve.edit');
 
 //Botman Route
 Route::match(['get', 'post'], '/botman', [BotmanController::class, 'handle']);
