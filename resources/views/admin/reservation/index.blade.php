@@ -137,8 +137,13 @@
                                                                     </div>
                                                                     <div class="modal-body">
                                                                         <ul class="list-group">
-                                                                            <li class="list-group-item"><strong>Address:</strong> {{ $item['address'] }}</li>
-                                                                            <li class="list-group-item"><strong>Phone:</strong> {{ $item['phone'] }}</li>
+                                                                            <li class="list-group-item"><strong>Address:</strong> 
+                                                                                {{ $item['street_houseno'] ?? 'No Street/House No.' }}, 
+                                                                                {{ $item['barangay'] ?? 'No Barangay' }}, 
+                                                                                {{ $item['city'] ?? 'No City' }}, 
+                                                                                {{ $item['province'] ?? 'No Province' }}, 
+                                                                                {{ $item['region'] ?? 'No Region' }}
+                                                                            </li>
                                                                             <li class="list-group-item">
                                                                                 <strong>Menu Name:</strong> 
                                                                                 <span 
@@ -291,7 +296,13 @@
                                                                     </div>
                                                                     <div class="modal-body">
                                                                         <ul class="list-group">
-                                                                            <li class="list-group-item"><strong>Address:</strong> {{ $item['address'] }}</li>
+                                                                            <li class="list-group-item"><strong>Address:</strong> 
+                                                                                {{ $item['street_houseno'] ?? 'No Street/House No.' }}, 
+                                                                                {{ $item['barangay'] ?? 'No Barangay' }}, 
+                                                                                {{ $item['city'] ?? 'No City' }}, 
+                                                                                {{ $item['province'] ?? 'No Province' }}, 
+                                                                                {{ $item['region'] ?? 'No Region' }}
+                                                                            </li>
                                                                             <li class="list-group-item"><strong>Phone:</strong> {{ $item['phone'] }}</li>
                                                                             <li class="list-group-item">
                                                                                 <strong>Menu Name:</strong> 
@@ -408,7 +419,13 @@
                                                                     </div>
                                                                     <div class="modal-body">
                                                                         <ul class="list-group">
-                                                                            <li class="list-group-item"><strong>Address:</strong> {{ $item['address'] }}</li>
+                                                                            <li class="list-group-item"><strong>Address:</strong> 
+                                                                                {{ $item['street_houseno'] ?? 'No Street/House No.' }}, 
+                                                                                {{ $item['barangay'] ?? 'No Barangay' }}, 
+                                                                                {{ $item['city'] ?? 'No City' }}, 
+                                                                                {{ $item['province'] ?? 'No Province' }}, 
+                                                                                {{ $item['region'] ?? 'No Region' }}
+                                                                            </li>
                                                                             <li class="list-group-item"><strong>Phone:</strong> {{ $item['phone'] }}</li>
                                                                             <li class="list-group-item">
                                                                                 <strong>Menu Name:</strong> 
@@ -547,7 +564,13 @@
                                                                     </div>
                                                                     <div class="modal-body">
                                                                         <ul class="list-group">
-                                                                            <li class="list-group-item"><strong>Address:</strong> {{ $item['address'] }}</li>
+                                                                            <li class="list-group-item"><strong>Address:</strong> 
+                                                                                {{ $item['street_houseno'] ?? 'No Street/House No.' }}, 
+                                                                                {{ $item['barangay'] ?? 'No Barangay' }}, 
+                                                                                {{ $item['city'] ?? 'No City' }}, 
+                                                                                {{ $item['province'] ?? 'No Province' }}, 
+                                                                                {{ $item['region'] ?? 'No Region' }}
+                                                                            </li>
                                                                             <li class="list-group-item"><strong>Phone:</strong> {{ $item['phone'] }}</li>
                                                                             <li class="list-group-item">
                                                                                 <strong>Menu Name:</strong> 
@@ -688,7 +711,13 @@
                                                                     </div>
                                                                     <div class="modal-body">
                                                                         <ul class="list-group">
-                                                                            <li class="list-group-item"><strong>Address:</strong> {{ $item['street_houseno'] ?? 'No Menu Selected'}}, {{ $item['barangay'] ?? 'No Menu Selected'}}, {{ $item['city'] ?? 'No Menu Selected'}}, {{ $item['province'] ?? 'No Menu Selected'}}, {{ $item['region'] ?? 'No Menu Selected'}}</li>
+                                                                            <li class="list-group-item"><strong>Address:</strong> 
+                                                                                {{ $item['street_houseno'] ?? 'No Street/House No.' }}, 
+                                                                                {{ $item['barangay'] ?? 'No Barangay' }}, 
+                                                                                {{ $item['city'] ?? 'No City' }}, 
+                                                                                {{ $item['province'] ?? 'No Province' }}, 
+                                                                                {{ $item['region'] ?? 'No Region' }}
+                                                                            </li>
                                                                             <li class="list-group-item"><strong>Phone:</strong> {{ $item['phone'] }}</li>
                                                                             <li class="list-group-item"><strong>Menu Name:</strong> {{ $item['menu_name'] ?? 'No Menu Selected' }}</li>
                                                                             <li class="list-group-item"><strong>Venue:</strong> {{ $item['venue'] }}</li>

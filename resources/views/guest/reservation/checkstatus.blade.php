@@ -5,13 +5,13 @@
     <div class="container">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">Status</h1>
+                <h1 class="m-0"></h1>
             </div>
         </div>
     </div>
 </div>
 
-<div class="container py-4">
+<div class="container py-4" style="padding-top: 80px;">
     <div class="row justify-content-center">
         <div class="col-12">
             <!-- Check Status Form -->
@@ -62,6 +62,9 @@
                         <table class="table table-bordered">
                             <tbody>
                                 <!-- Basic Info -->
+                                <tr>
+                                    <th colspan="2" class="table-light">Personal Information</th>
+                                </tr>
                                 <tr>
                                     <th width="30%">Reference Number</th>
                                     <td>{{ $reservation['reference_number'] }}</td>

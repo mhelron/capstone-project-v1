@@ -117,6 +117,9 @@ Route::middleware([AuthMiddleware::class])->group(function () {
     Route::prefix('admin/reports')->group(function () {
         Route::get('/reservation', [ReportsController::class, 'reservation'])->name('admin.reports.reservation');
         Route::get('/sales', [ReportsController::class, 'sales'])->name('admin.reports.sales');
+        Route::get('/logs', [ReportsController::class, 'showLogs'])->name('admin.reports.logs');
+        Route::get('/admin/logs/download', [ReportsController::class, 'download'])->name('admin.logs.download');
+        Route::post('/logs/remove-all', [ReportsController::class, 'removeAll'])->name('admin.logs.removeAll');
     });
 
     // Users Route

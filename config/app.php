@@ -149,6 +149,11 @@ return [
 
         App\Providers\AppServiceProvider::class,
         Kreait\Laravel\Firebase\ServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+    ],
+
+    'aliases' => [
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ]
 
 ];
