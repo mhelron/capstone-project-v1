@@ -89,7 +89,7 @@ class AuthController extends Controller
 
         Log::info('Activity Log', [
             'user' => $user->email,
-            'action' => 'Logged out'
+            'action' => 'SuccessfullyLogged out'
         ]);
 
         Session::flush();
@@ -106,6 +106,13 @@ class AuthController extends Controller
         if (!$token || $currentTime >= $tokenExpiration) {
             return $this->refreshIdToken();  // Refresh the token
         }
+
+        $user = Session::get('firebase_user');
+
+        Log::info('Activity Log', [
+            'user' => $user->email,
+            'action' => 'Session Expired'
+        ]);
 
         return $this->auth->verifyIdToken($token, self::TOKEN_LEEWAY);
     }
@@ -132,6 +139,13 @@ class AuthController extends Controller
             Session::put([
                 'firebase_id_token' => $idTokenString,
                 'token_expiration' => $expirationTime
+            ]);
+
+            $user = Session::get('firebase_user');
+
+            Log::info('Activity Log', [
+                'user' => $user->email,
+                'action' => 'Session Expired'
             ]);
 
             return $verifiedIdToken;

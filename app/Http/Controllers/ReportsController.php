@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\LogsExport;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 
 class ReportsController extends Controller
 {
@@ -88,9 +90,23 @@ class ReportsController extends Controller
         return view('admin.reports.activitylogs.logs', compact('logs', 'isExpanded'));
     }
 
-    public function download() 
+    public function download()
     {
-        return Excel::download(new LogsExport, 'Logs (' . date('F-d-Y') . ').xlsx');
+        $export = new LogsExport();
+        $logsCount = $export->collection()->count();
+        
+        if ($logsCount === 0) {
+            return redirect()->back()->with('error', 'No logs available to export');
+        }
+
+        $user = Session::get('firebase_user');
+        
+        Log::info('Activity Log', [
+            'user' => $user->email,
+            'action' => 'Successfully download activity logs.'
+        ]);
+        
+        return Excel::download($export, 'Logs (' . date('F-d-Y') . ').xlsx');
     }
 
     public function removeAll() 
@@ -102,6 +118,13 @@ class ReportsController extends Controller
             file_put_contents($logFile, '');
             return redirect()->back()->with('success', 'Successfully Removed All Logs');
         }
+
+        $user = Session::get('firebase_user');
+
+        Log::info('Activity Log', [
+            'user' => $user->email,
+            'action' => 'Successfully removed activity logs.'
+        ]);
         
         return redirect()->back()->with('error', 'Log file not found');
     }

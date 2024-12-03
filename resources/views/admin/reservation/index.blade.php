@@ -43,7 +43,7 @@
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
 
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="pen-book" data-bs-toggle="tab" data-bs-target="#penbook" type="button" role="tab" aria-controls="penbook" aria-selected="true">Pencil Reservations</button>
+                                <button class="nav-link active" id="pen-book" data-bs-toggle="tab" data-bs-target="#penbook" type="button" role="tab" aria-controls="penbook" aria-selected="false">Pencil Reservations</button>
                             </li>
 
                             <li class="nav-item" role="presentation">
@@ -107,9 +107,9 @@
                                         <tbody>
  
                                             @forelse ($pendingReservations as $key => $item)
-                                                <tr data-location="{{ Str::contains($item['package_name'], 'Marikina') ? 'marikina' : 
-                                                    (Str::contains($item['package_name'], 'San Mateo') ? 'san mateo' : 
-                                                    (Str::contains($item['package_name'], 'Montalban') ? 'montalban' : '')) }}"
+                                                <tr data-location="{{ \Illuminate\Support\Str::contains($item['package_name'], 'Marikina') ? 'marikina' : 
+                                                    (\Illuminate\Support\Str::contains($item['package_name'], 'San Mateo') ? 'san mateo' : 
+                                                    (\Illuminate\Support\Str::contains($item['package_name'], 'Montalban') ? 'montalban' : '')) }}"
                                                     data-event-date="{{ \Carbon\Carbon::parse($item['event_date'])->format('Y-m-d') }}"
                                                     data-created="{{ isset($item['created_at']) ? \Carbon\Carbon::parse($item['created_at'])->format('Y-m-d H:i:s') : '' }}">
                                                     <td>{{ $loop->iteration }}</td>
@@ -266,9 +266,9 @@
                                         <tbody>
  
                                             @forelse ($confirmedReservations as $key => $item)
-                                                <tr data-location="{{ Str::contains($item['package_name'], 'Marikina') ? 'marikina' : 
-                                                    (Str::contains($item['package_name'], 'San Mateo') ? 'san mateo' : 
-                                                    (Str::contains($item['package_name'], 'Montalban') ? 'montalban' : '')) }}"
+                                                <tr data-location="{{ \Illuminate\Support\Str::contains($item['package_name'], 'Marikina') ? 'marikina' : 
+                                                    (\Illuminate\Support\Str::contains($item['package_name'], 'San Mateo') ? 'san mateo' : 
+                                                    (\Illuminate\Support\Str::contains($item['package_name'], 'Montalban') ? 'montalban' : '')) }}"
                                                     data-event-date="{{ \Carbon\Carbon::parse($item['event_date'])->format('Y-m-d') }}"
                                                    data-created="{{ isset($item['created_at']) ? \Carbon\Carbon::parse($item['created_at'])->format('Y-m-d H:i:s') : '' }}">
                                                     <td>{{ $loop->iteration }}</td>
@@ -389,9 +389,9 @@
                                         <tbody>
  
                                             @forelse ($cancelledReservations as $key => $item)
-                                                <tr data-location="{{ Str::contains($item['package_name'], 'Marikina') ? 'marikina' : 
-                                                    (Str::contains($item['package_name'], 'San Mateo') ? 'san mateo' : 
-                                                    (Str::contains($item['package_name'], 'Montalban') ? 'montalban' : '')) }}"
+                                                <tr data-location="{{ \Illuminate\Support\Str::contains($item['package_name'], 'Marikina') ? 'marikina' : 
+                                                    (\Illuminate\Support\Str::contains($item['package_name'], 'San Mateo') ? 'san mateo' : 
+                                                    (\Illuminate\Support\Str::contains($item['package_name'], 'Montalban') ? 'montalban' : '')) }}"
                                                     data-event-date="{{ \Carbon\Carbon::parse($item['event_date'])->format('Y-m-d') }}"
                                                     data-created="{{ isset($item['created_at']) ? \Carbon\Carbon::parse($item['created_at'])->format('Y-m-d H:i:s') : '' }}">
                                                     <td>{{ $loop->iteration }}</td>
@@ -534,9 +534,9 @@
                                         <tbody>
  
                                             @forelse ($finishedReservations as $key => $item)
-                                                <tr data-location="{{ Str::contains($item['package_name'], 'Marikina') ? 'marikina' : 
-                                                    (Str::contains($item['package_name'], 'San Mateo') ? 'san mateo' : 
-                                                    (Str::contains($item['package_name'], 'Montalban') ? 'montalban' : '')) }}"
+                                                <tr data-location="{{ \Illuminate\Support\Str::contains($item['package_name'], 'Marikina') ? 'marikina' : 
+                                                    (\Illuminate\Support\Str::contains($item['package_name'], 'San Mateo') ? 'san mateo' : 
+                                                    (\Illuminate\Support\Str::contains($item['package_name'], 'Montalban') ? 'montalban' : '')) }}"
                                                     data-event-date="{{ \Carbon\Carbon::parse($item['event_date'])->format('Y-m-d') }}"
                                                     data-created="{{ isset($item['created_at']) ? \Carbon\Carbon::parse($item['created_at'])->format('Y-m-d H:i:s') : '' }}">
                                                     <td>{{ $loop->iteration }}</td>
@@ -638,7 +638,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            <div class="tab-pane fade show active" id="penbook" role="tabpanel" aria-labelledby="penbook-tab">
+                            <div class="tab-pane fade" id="penbook" role="tabpanel" aria-labelledby="penbook-tab">
                                 <!-- Filter Controls Template - Will be duplicated for each tab -->
                                 <div class="filter-controls mb-3 mt-3">
                                     <div class="row">
@@ -679,9 +679,9 @@
                                         </thead>
                                         <tbody>
                                             @forelse ($pencilReservations as $key => $item)
-                                                <tr data-location="{{ Str::contains($item['package_name'], 'Marikina') ? 'marikina' : 
-                                                    (Str::contains($item['package_name'], 'San Mateo') ? 'san mateo' : 
-                                                    (Str::contains($item['package_name'], 'Montalban') ? 'montalban' : '')) }}"
+                                                <tr data-location="{{ \Illuminate\Support\Str::contains($item['package_name'], 'Marikina') ? 'marikina' : 
+                                                    (\Illuminate\Support\Str::contains($item['package_name'], 'San Mateo') ? 'san mateo' : 
+                                                    (\Illuminate\Support\Str::contains($item['package_name'], 'Montalban') ? 'montalban' : '')) }}"
                                                     data-event-date="{{ \Carbon\Carbon::parse($item['event_date'])->format('Y-m-d') }}"
                                                     data-created="{{ isset($item['created_at']) ? \Carbon\Carbon::parse($item['created_at'])->format('Y-m-d H:i:s') : '' }}">
                                                     <td>{{ $loop->iteration }}</td>
@@ -842,6 +842,57 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const activeTab = urlParams.get('tab') || 'penbook';
+    const dateFilter = urlParams.get('date') || 'all';
+    const venueFilter = urlParams.get('venue') || 'all';
+
+    // Set initial filter values
+    document.querySelectorAll('.date-filter').forEach(filter => filter.value = dateFilter);
+    document.querySelectorAll('.venue-filter').forEach(filter => filter.value = venueFilter);
+
+    // Handle tab activation
+    document.querySelectorAll('.nav-link, .tab-pane').forEach(el => {
+        el.classList.remove('active', 'show');
+    });
+
+    // Modified tab selection logic
+    const tabId = activeTab === 'pending' ? 'pending' : 
+                 activeTab === 'confirmed' ? 'confirmed' :
+                 activeTab === 'cancelled' ? 'cancelled' :
+                 activeTab === 'finished' ? 'finished' : 'penbook';
+
+    const tabButton = document.querySelector(`#${tabId}-reservation`);
+    const tabContent = document.querySelector(`#${tabId}`);
+
+    if (tabButton && tabContent) {
+        tabButton.classList.add('active');
+        tabContent.classList.add('active', 'show');
+    }
+
+    // Update URL when tabs are clicked
+    document.querySelectorAll('.nav-link').forEach(tab => {
+        tab.addEventListener('click', function(e) {
+            const tabId = this.getAttribute('data-bs-target').replace('#', '');
+            const params = new URLSearchParams(window.location.search);
+            params.set('tab', tabId);
+            history.pushState(null, '', `?${params.toString()}`);
+        });
+    });
+
+    // Filter handling remains the same
+    document.querySelectorAll('.date-filter, .venue-filter').forEach(filter => {
+        filter.addEventListener('change', function() {
+            const params = new URLSearchParams(window.location.search);
+            params.set(this.classList.contains('date-filter') ? 'date' : 'venue', this.value);
+            history.pushState(null, '', `?${params.toString()}`);
+        });
+    });
+});
 </script>
 
 <style>

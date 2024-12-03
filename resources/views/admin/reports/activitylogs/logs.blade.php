@@ -10,11 +10,17 @@
             </div>
             <div class="col-sm-6">
                 <div class="float-end">
-                    <a href="{{ route('admin.logs.download') }}" class="btn btn-success me-2">
-                        <i class="fas fa-download"></i> Export
-                    </a>
+                    @if(count($logs) > 0)
+                        <a href="{{ route('admin.logs.download') }}" class="btn btn-success me-2">
+                            Export
+                        </a>
+                    @else
+                        <button class="btn btn-success me-2" disabled title="No logs available">
+                            Export
+                        </button>
+                    @endif
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#removeAllModal">
-                        <i class="fas fa-trash"></i> Remove All
+                        Remove All
                     </button>
                 </div>
             </div>
@@ -58,7 +64,7 @@
                                         <th>Date</th>
                                         <th>Time</th>
                                         <th>User</th>
-                                        <th>Activity</th>
+                                        <th class="activity-column">Activity</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -68,7 +74,7 @@
                                             <td>{{ Carbon\Carbon::parse($log['datetime'])->format('M d, Y') }}</td>
                                             <td>{{ Carbon\Carbon::parse($log['datetime'])->format('h:i:s A') }}</td>
                                             <td>{{ $log['user'] ?? 'N/A' }}</td>
-                                            <td>{{ $log['message'] }}</td>
+                                            <td class="activity-column">{{ $log['message'] }}</td>
                                         </tr>
                                     @empty
                                         <tr>
@@ -93,6 +99,11 @@
     .badge {
         font-size: 0.875em;
         padding: 0.5em 0.75em;
+    }
+
+    th.activity-column, td.activity-column {
+        width: 900px; /* Set a fixed width for the Activity column */
+        word-wrap: break-word; /* Wrap text if it overflows */
     }
 </style>
 

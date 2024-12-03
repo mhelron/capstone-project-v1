@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Kreait\Firebase\Contract\Auth as FirebaseAuth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class PasswordResetController extends Controller
 {
@@ -26,7 +27,11 @@ class PasswordResetController extends Controller
 
         try {
             $this->auth->sendPasswordResetLink($request->email);
-
+        
+            Log::info('Activity Log', [
+                'user' => $request->email,
+                'action' => 'Requested a password reset.'
+            ]);
             return redirect()->back()->with('status', 'Password reset email sent! Check your inbox.');
         } catch (\Exception $e) {
             Log::error('Error sending password reset email: ' . $e->getMessage());

@@ -41,6 +41,12 @@ class AuthMiddleware
             $expiration = Carbon::createFromTimestamp($expirationTime);
 
             if ($expiration->subMinutes(5)->isPast()) {
+                $user = Session::get('firebase_user');
+
+                Log::info('Activity Log', [
+                    'user' => $user->email,
+                    'action' => 'Session Expired'
+                ]);
                 return $this->clearSessionAndRedirect('Session expired. Please log in again.');
             }
 

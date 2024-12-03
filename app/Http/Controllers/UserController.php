@@ -7,6 +7,7 @@ use Kreait\Firebase\Contract\Database;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -104,6 +105,12 @@ class UserController extends Controller
             $postRef = $this->database->getReference($this->users)->push($userData);
             
             if ($postRef) {
+                $user = Session::get('firebase_user');
+                
+                Log::info('Activity Log', [
+                    'user' => $user->email,
+                    'action' => 'Added a new user: ' . $validatedData['email'] . '.'
+                ]);
                 return redirect('admin/users')->with('status', 'User Added Successfully');
             } else {
                 return redirect('admin/users')->with('status', 'User Not Added');
@@ -162,6 +169,26 @@ class UserController extends Controller
         if (!$existingUser || !isset($existingUser['firebase_uid'])) {
             return redirect('admin/users')->with('status', 'User ID or Firebase UID not found.');
         }
+
+         // Track what changed
+        $changes = [];
+
+        // Compare old and new values
+        if ($existingUser['fname'] . ' ' . $existingUser['lname'] !== $validatedData['first_name'] . ' ' . $validatedData['last_name']) {
+            $changes[] = "name from '{$existingUser['fname']} {$existingUser['lname']}' to '{$validatedData['first_name']} {$validatedData['last_name']}'";
+        }
+
+        if ($existingUser['email'] !== $validatedData['email']) {
+            $changes[] = "email from '{$existingUser['email']}' to '{$validatedData['email']}'";
+        }
+
+        if ($existingUser['user_role'] !== $validatedData['user_role']) {
+            $changes[] = "role from '{$existingUser['user_role']}' to '{$validatedData['user_role']}'";
+        }
+
+        if ($request->filled('password')) {
+            $changes[] = "password";
+        }
     
         $updateData = [
             'user_role' => $validatedData['user_role'],
@@ -194,13 +221,27 @@ class UserController extends Controller
 
             $existingUid = $existingUser['firebase_uid'];
             $currentUser = $firebaseAuth->getUser($existingUid);
-
             $sessionUid = Session::get('firebase_user')->uid;
 
-            if ($existingUid === $sessionUid) {
-                Session::put('firebase_user', $currentUser);
-            } else {
-                return redirect('admin/users')->with('status', 'User Updated Successfully');
+            // Only log if there were changes
+            if (!empty($changes)) {
+                $changesText = implode(', ', $changes);
+                
+                if ($existingUid === $sessionUid) {
+                    Session::put('firebase_user', $currentUser);
+                    $user = Session::get('firebase_user');
+                    Log::info('Activity Log', [
+                        'user' => $user->email,
+                        'action' => "Updated their own profile: Changed " . $changesText
+                    ]);
+                } else {
+                    $editor = Session::get('firebase_user');
+                    Log::info('Activity Log', [
+                        'user' => $editor->email,
+                        'action' => "Updated user {$validatedData['email']}: Changed " . $changesText . "."
+                    ]);
+                    return redirect('admin/users')->with('status', 'User Updated Successfully');
+                }
             }
 
             return redirect('admin/users')->with('status', 'User Updated Successfully');
@@ -228,6 +269,12 @@ class UserController extends Controller
                 try {
                     $firebaseAuth = app('firebase.auth');
                     $firebaseAuth->deleteUser($user_data['firebase_uid']);
+                    
+                    $user = Session::get('firebase_user');
+                    Log::info('Activity Log', [
+                        'user' => $user->email,
+                        'action' => 'Archived user: ' . $user_data['email' . '.']
+                    ]);
                     return redirect('admin/users')->with('status', 'User Archived Successfully');
                 } catch (\Exception $e) {
                     return redirect('admin/users')->with('status', 'User Archived but Failed to Remove from Authentication: ' . $e->getMessage());
