@@ -65,8 +65,15 @@
                                         <td>{{ $item['user_role'] }}</td>
                                         <td>
                                             <div class="d-flex">
-                                                <a href="{{ url('admin/users/edit-user/' . $key) }}" class="btn btn-sm btn-success me-2">Edit</a>
-                                                <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#archiveModal" data-id="{{ $key }}" data-name="{{ $item['fname'] }} {{ $item['lname'] }}">Archive</button>
+                                            @if(session('user_role') == 'Admin' && $item['user_role'] == 'Super Admin')
+                                                    <!-- Disabled buttons in the 'if' block, no href or functions -->
+                                                    <button href="#" class="btn btn-sm btn-success me-2" tabindex="-1" aria-disabled="true" disabled>Edit</button>
+                                                    <button type="button" class="btn btn-sm btn-secondary" disabled>Archive</button>
+                                                @else
+                                                    <!-- Regular buttons in the 'else' block -->
+                                                    <a href="{{ url('admin/users/edit-user/' . $key) }}" class="btn btn-sm btn-success me-2">Edit</a>
+                                                    <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#archiveModal" data-id="{{ $key }}" data-name="{{ $item['fname'] }} {{ $item['lname'] }}">Archive</button>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>

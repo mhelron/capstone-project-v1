@@ -71,10 +71,13 @@
 									<div class="form-group mb-3">
 										<label>User Role</label>
 										<select name="user_role" class="form-control">
-											<option value="Super Admin" {{ $editdata['user_role'] == 'Super Admin' ? 'selected' : '' }}>Super Admin</option>
-											<option value="Admin" {{ $editdata['user_role'] == 'Admin' ? 'selected' : '' }}>Admin</option>
-											<option value="Manager" {{ $editdata['user_role'] == 'Manager' ? 'selected' : '' }}>Manager</option>
-											<option value="Staff" {{ $editdata['user_role'] == 'Staff' ? 'selected' : '' }}>Staff</option>
+											<option value="" disabled selected>Select a role</option>
+											@if(session('user_role') != 'Admin')
+												<option value="Super Admin" {{ old('user_role') == 'Super Admin' ? 'selected' : '' }}>Super Admin</option>
+											@endif
+											<option value="Admin" {{ old('user_role') == 'Admin' ? 'selected' : '' }}>Admin</option>
+											<option value="Manager" {{ old('user_role') == 'Manager' ? 'selected' : '' }}>Manager</option>
+											<option value="Staff" {{ old('user_role') == 'Staff' ? 'selected' : '' }}>Staff</option>
 										</select>
 										@error('user_role')
 											<small class="text-danger">{{ $message }}</small>

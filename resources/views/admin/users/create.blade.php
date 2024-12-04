@@ -72,7 +72,9 @@
                                         <label>User Role <span class="text-danger"> *</span></label>
                                         <select name="user_role" class="form-control">
                                             <option value="" disabled selected>Select a role</option>
-                                            <option value="Super Admin" {{ old('user_role') == 'Super Admin' ? 'selected' : '' }}>Super Admin</option>
+                                            @if(session('user_role') != 'Admin')
+                                                <option value="Super Admin" {{ old('user_role') == 'Super Admin' ? 'selected' : '' }}>Super Admin</option>
+                                            @endif
                                             <option value="Admin" {{ old('user_role') == 'Admin' ? 'selected' : '' }}>Admin</option>
                                             <option value="Manager" {{ old('user_role') == 'Manager' ? 'selected' : '' }}>Manager</option>
                                             <option value="Staff" {{ old('user_role') == 'Staff' ? 'selected' : '' }}>Staff</option>

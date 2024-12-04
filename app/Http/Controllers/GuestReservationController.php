@@ -159,6 +159,7 @@ class GuestReservationController extends Controller
             'created_at' => Carbon::now()->toDateTimeString(),
             'cancellation_reason' => null,
             'cancelled_at' => null,
+            'read' => false,
         ];
     
         try {

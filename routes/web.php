@@ -18,6 +18,7 @@ use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\BotmanController;
 
 use App\Http\Middleware\AuthMiddleware;
+use App\Http\Middleware\RoleMiddleware;
 
 // Sample
 Route::get('/send-email', [EmailController::class, 'sendEmail']);
@@ -63,6 +64,8 @@ Route::get('/botman/widget', function () {
     return view('botman.botmanwidget');
 }); 
 
+Route::view('/unauthorized', 'unauthorized')->name('unauthorized');
+
 // Admin Route
 
 // Login Route
@@ -80,55 +83,68 @@ Route::post('/password/reset', [PasswordResetController::class, 'sendResetLink']
 Route::middleware([AuthMiddleware::class])->group(function () {
 
     // Dashboard Route
-    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::group(['middleware' => RoleMiddleware::class . ':Super Admin,Admin,Manager,Staff'], function () {
+        Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    });
 
+    Route::group(['middleware' => RoleMiddleware::class . ':Super Admin,Admin,Manager,Staff'], function () {
     // Calendar Route
-    Route::get('/admin/calendar', [CalendarController::class, 'index'])->name('admin.calendar');
-    Route::post('/admin/calendar/reserve', [CalendarController::class, 'store'])->name('admin.calendar.reservation');
-
-    // Packages Route
-    Route::prefix('/admin/packages')->group(function () {
-        Route::get('/', [PackageController::class, 'index'])->name('admin.packages');
-        Route::get('/add-package', [PackageController::class, 'create'])->name('admin.packages.add');
-        Route::post('/add-package', [PackageController::class, 'store'])->name('admin.packages.store');
-        Route::get('/edit-package/{id}', [PackageController::class, 'edit'])->name('admin.packages.edit');
-        Route::put('/update-package/{id}', [PackageController::class, 'update'])->name('admin.packages.update');
-        Route::get('/archive-package/{id}', [PackageController::class, 'destroy'])->name('admin.packages.delete');
-        Route::post('admin/packages/toggle-display/{packageId}', [PackageController::class, 'toggleDisplay'])->name('admin.packages.toggleDisplay');
+        Route::get('/admin/calendar', [CalendarController::class, 'index'])->name('admin.calendar');
+        Route::post('/admin/calendar/reserve', [CalendarController::class, 'store'])->name('admin.calendar.reservation');
     });
 
-    // Reservation Route 
-    Route::prefix('admin/reservations')->group(function () {
-        Route::get('/', [ReservationController::class, 'index'])->name('admin.reservation');
-        Route::get('/add-reservation', [ReservationController::class, 'createReservation'])->name('admin.reserve.addRes');
-        Route::post('/add-reservation', [ReservationController::class, 'reservation'])->name('admin.reserve.reserve');
-        Route::get('/add-pencil-reservation', [ReservationController::class, 'createPencil'])->name('admin.reserve.addPen');
-        Route::post('/add-pencil-reservation', [ReservationController::class, 'pencilReservation'])->name('admin.reserve.pencil');
-        Route::put('/confirm-pencil/{id}', [ReservationController::class, 'confirmPencil'])->name('admin.pencil.confirm');
-        Route::put('/cancel-pencil/{id}', [ReservationController::class, 'cancelPencil'])->name('admin.pencil.cancel');
-        Route::put('/confirm-reservation/{id}', [ReservationController::class, 'confirmReservation'])->name('admin.reserve.confirm');
-        Route::put('/finish-reservation/{id}', [ReservationController::class, 'finishReservation'])->name('admin.reserve.finish');
-        Route::put('/admin/reservations/{id}/finish', [ReservationController::class, 'finishReservationAuto']);
-        Route::put('/cancel-reservation/{id}', [ReservationController::class, 'cancelReservation'])->name('admin.reserve.cancel');
-        Route::put('/archive-reservation/{id}', [ReservationController::class, 'destroy'])->name('admin.reserve.archive');
+    Route::group(['middleware' => RoleMiddleware::class . ':Super Admin,Admin,Manager'], function () {
+        // Packages Route
+        Route::prefix('/admin/packages')->group(function () {
+            Route::get('/', [PackageController::class, 'index'])->name('admin.packages');
+            Route::get('/add-package', [PackageController::class, 'create'])->name('admin.packages.add');
+            Route::post('/add-package', [PackageController::class, 'store'])->name('admin.packages.store');
+            Route::get('/edit-package/{id}', [PackageController::class, 'edit'])->name('admin.packages.edit');
+            Route::put('/update-package/{id}', [PackageController::class, 'update'])->name('admin.packages.update');
+            Route::get('/archive-package/{id}', [PackageController::class, 'destroy'])->name('admin.packages.delete');
+            Route::post('admin/packages/toggle-display/{packageId}', [PackageController::class, 'toggleDisplay'])->name('admin.packages.toggleDisplay');
+        });
     });
 
-    // Reports Route
-    Route::prefix('admin/reports')->group(function () {
-        Route::get('/reservation', [ReportsController::class, 'reservation'])->name('admin.reports.reservation');
-        Route::get('/sales', [ReportsController::class, 'sales'])->name('admin.reports.sales');
-        Route::get('/logs', [ReportsController::class, 'showLogs'])->name('admin.reports.logs');
-        Route::get('/admin/logs/download', [ReportsController::class, 'download'])->name('admin.logs.download');
-        Route::post('/logs/remove-all', [ReportsController::class, 'removeAll'])->name('admin.logs.removeAll');
+    Route::group(['middleware' => RoleMiddleware::class . ':Super Admin,Admin,Manager,Staff'], function () {
+        // Reservation Route 
+        Route::prefix('admin/reservations')->group(function () {
+            Route::get('/', [ReservationController::class, 'index'])->name('admin.reservation');
+            Route::patch('/mark-as-read/{reservationId}', [DashboardController::class, 'markAsRead'])->name('admin.notification.markAsRead');
+            Route::get('/add-reservation', [ReservationController::class, 'createReservation'])->name('admin.reserve.addRes');
+            Route::post('/add-reservation', [ReservationController::class, 'reservation'])->name('admin.reserve.reserve');
+            Route::get('/add-pencil-reservation', [ReservationController::class, 'createPencil'])->name('admin.reserve.addPen');
+            Route::post('/add-pencil-reservation', [ReservationController::class, 'pencilReservation'])->name('admin.reserve.pencil');
+            Route::put('/confirm-pencil/{id}', [ReservationController::class, 'confirmPencil'])->name('admin.pencil.confirm');
+            Route::put('/cancel-pencil/{id}', [ReservationController::class, 'cancelPencil'])->name('admin.pencil.cancel');
+            Route::put('/confirm-reservation/{id}', [ReservationController::class, 'confirmReservation'])->name('admin.reserve.confirm');
+            Route::put('/finish-reservation/{id}', [ReservationController::class, 'finishReservation'])->name('admin.reserve.finish');
+            Route::put('/admin/reservations/{id}/finish', [ReservationController::class, 'finishReservationAuto']);
+            Route::put('/cancel-reservation/{id}', [ReservationController::class, 'cancelReservation'])->name('admin.reserve.cancel');
+            Route::put('/archive-reservation/{id}', [ReservationController::class, 'destroy'])->name('admin.reserve.archive');
+        });
     });
 
+    Route::group(['middleware' => RoleMiddleware::class . ':Super Admin'], function () {
+        // Reports Route
+        Route::prefix('admin/reports')->group(function () {
+            Route::get('/reservation', [ReportsController::class, 'reservation'])->name('admin.reports.reservation');
+            Route::get('/sales', [ReportsController::class, 'sales'])->name('admin.reports.sales');
+            Route::get('/logs', [ReportsController::class, 'showLogs'])->name('admin.reports.logs');
+            Route::get('/admin/logs/download', [ReportsController::class, 'download'])->name('admin.logs.download');
+            Route::post('/logs/remove-all', [ReportsController::class, 'removeAll'])->name('admin.logs.removeAll');
+        });
+    });
+
+    Route::group(['middleware' => RoleMiddleware::class . ':Super Admin,Admin'], function () {
     // Users Route
-    Route::prefix('admin/users')->group(function () {
-        Route::get('/', [UserController::class, 'index'])->name('admin.users');
-        Route::get('add-user', [UserController::class, 'create'])->name('admin.users.add');
-        Route::post('add-user', [UserController::class, 'store'])->name('admin.users.store');
-        Route::get('edit-user/{id}', [UserController::class, 'edit'])->name('admin.users.edit');
-        Route::put('update-user/{id}', [UserController::class, 'update'])->name('admin.users.update');
-        Route::get('delete-user/{id}', [UserController::class, 'archive'])->name('admin.users.delete');
+        Route::prefix('admin/users')->group(function () {
+            Route::get('/', [UserController::class, 'index'])->name('admin.users');
+            Route::get('add-user', [UserController::class, 'create'])->name('admin.users.add');
+            Route::post('add-user', [UserController::class, 'store'])->name('admin.users.store');
+            Route::get('edit-user/{id}', [UserController::class, 'edit'])->name('admin.users.edit');
+            Route::put('update-user/{id}', [UserController::class, 'update'])->name('admin.users.update');
+            Route::get('delete-user/{id}', [UserController::class, 'archive'])->name('admin.users.delete');
+        });
     });
 });

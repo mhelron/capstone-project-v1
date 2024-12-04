@@ -9,17 +9,21 @@ use Kreait\Firebase\Contract\Auth as FirebaseAuth;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Kreait\Firebase\Contract\Database;
 use DateTimeImmutable;
 
 
 class AuthController extends Controller
 {
-    protected $auth;
+    protected $auth, $database, $users;
+
     protected const TOKEN_LEEWAY = 300; // 5 minutes leeway
 
-    public function __construct(FirebaseAuth $auth)
+    public function __construct(FirebaseAuth $auth, Database $database)
     {
         $this->auth = $auth;
+        $this->database = $database;
+        $this->users = 'users';
     }
 
     public function showLoginForm()
@@ -43,43 +47,75 @@ class AuthController extends Controller
         ]);
 
         try {
+            // Firebase Authentication
             $signInResult = $this->auth->signInWithEmailAndPassword($request->email, $request->password);
             $idTokenString = $signInResult->idToken();
-            $refreshToken = $signInResult->refreshToken();  // Get the refresh token
-
+            $refreshToken = $signInResult->refreshToken();
+            
             $verifiedIdToken = $this->auth->verifyIdToken($idTokenString, self::TOKEN_LEEWAY);
             $uid = $verifiedIdToken->claims()->get('sub');
             $user = $this->auth->getUser($uid);
 
-            // Convert DateTimeImmutable to timestamp for Carbon
+            // Fetch user role from Realtime Database
+            $userRecord = $this->database->getReference('users')
+                ->orderByChild('email')
+                ->equalTo($request->email)
+                ->getSnapshot();
+
+            if (!$userRecord->hasChildren()) {
+                throw new \Exception('User role not found');
+            }
+
+            $userData = current($userRecord->getValue());
+            $userRole = $userData['user_role'] ?? null;
+            $fname = $userData['fname'] ?? null;
+
+            if (!$userRole) {
+                throw new \Exception('Invalid user role');
+            }
+
             $expirationTime = $verifiedIdToken->claims()->get('exp');
             if ($expirationTime instanceof DateTimeImmutable) {
                 $expirationTime = $expirationTime->getTimestamp();
             }
 
-            // Store token, refresh token, and expiration
+            // Store all necessary session data
             Session::put([
                 'firebase_user' => $user,
                 'firebase_id_token' => $idTokenString,
-                'firebase_refresh_token' => $refreshToken,  // Store refresh token
-                'token_expiration' => $expirationTime
+                'firebase_refresh_token' => $refreshToken,
+                'token_expiration' => $expirationTime,
+                'user_role' => $userRole,
+                'fname' => $fname
             ]);
 
             Log::info('Activity Log', [
                 'user' => $user->email,
+                'role' => $userRole,
                 'action' => 'User logged in.'
             ]);
 
+            return $this->roleBasedRedirect($userRole);
 
-            return redirect()->route('admin.dashboard')->with('status', 'Logged in successfully!');
-        } catch (\Kreait\Firebase\Auth\SignIn\FailedToSignIn $e) {
-            Log::info('Activity Log', [
-                'user' => strtolower($request->email),
-                'action' => 'User failed login attempt.'
-            ]);
-            return redirect()->back()->with(['error' => 'Invalid Credentials! Please Check Your Email or Password']);
         } catch (\Exception $e) {
+            Log::error('Login error: ' . $e->getMessage());
             return redirect()->back()->with(['error' => 'Authentication failed. Please try again.']);
+        }
+    }
+
+    protected function roleBasedRedirect($userRole)
+    {
+        switch ($userRole) {
+            case 'Super Admin':
+                return redirect('/admin/dashboard')->with('status', 'Logged In as ' . session('fname') . ' (Super Admin)');
+            case 'Admin':
+                return redirect('/admin/dashboard')->with('status', 'Logged In as ' . session('fname') . ' (Admin)');
+            case 'Manager':
+                return redirect('/admin/dashboard')->with('status', 'Logged In as ' . session('fname') . ' (Manager)');
+            case 'Staff':
+                return redirect('/admin/dashboard')->with('status', 'Logged In as ' . session('fname') . ' (Staff)');
+            default:
+                return redirect('login')->with('status', 'Invalid User Role');
         }
     }
 

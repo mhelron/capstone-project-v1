@@ -68,6 +68,45 @@
     .icon-finished {
         color: #007bff;  /* Color for finished icon (blue) */
     }
+
+    .notification-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.8);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .notification-item {
+        position: relative;
+    }
+
+    .spinner-border {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    /* Add styles for the view button */
+    .notification-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    .notification-info {
+        flex-grow: 1;
+    }
+
+    .btn-view {
+        min-width: 120px;
+        margin-left: 10px;
+    }
 </style>
 
 <div class="pt-4">
@@ -98,7 +137,7 @@
                     <!-- Content in the Card -->
                     <div class="row d-flex align-items-lg-center justify-content-lg-between">
                         <div class="col-md-6">
-                            <p class="text-secondary mt-2 fw-bold">Today's Pencil</p>
+                            <p class="text-secondary mt-2 fw-bold">Total</br> Pencil</p>
                         </div>
                         <div class="col-md-6 d-flex justify-content-md-end">
                             <i class="bx bx-right-arrow-alt fs-3"></i>
@@ -124,7 +163,7 @@
                     <!-- Content in the Card -->
                     <div class="row d-flex align-items-lg-center justify-content-lg-between">
                         <div class="col-md-6">
-                            <p class="text-secondary mt-2 fw-bold">Today's Pending</p>
+                            <p class="text-secondary mt-2 fw-bold">Total Pending</p>
                         </div>
                         <div class="col-md-6 d-flex justify-content-md-end">
                             <i class="bx bx-right-arrow-alt fs-3"></i>
@@ -150,7 +189,7 @@
                     <!-- Content in the Card -->
                     <div class="row d-flex align-items-lg-center justify-content-lg-between">
                         <div class="col-md-6">
-                            <p class="text-secondary mt-2 fw-bold">Today's Confirmed</p>
+                            <p class="text-secondary mt-2 fw-bold">Total Confirmed</p>
                         </div>
                         <div class="col-md-6 d-flex justify-content-md-end">
                             <i class="bx bx-right-arrow-alt fs-3"></i>
@@ -176,7 +215,7 @@
                     <!-- Content in the Card -->
                     <div class="row d-flex align-items-lg-center justify-content-lg-between">
                         <div class="col-md-6">
-                            <p class="text-secondary mt-2 fw-bold">Today's Cancelled</p>
+                            <p class="text-secondary mt-2 fw-bold">Total Cancelled</p>
                         </div>
                         <div class="col-md-6 d-flex justify-content-md-end">
                             <i class="bx bx-right-arrow-alt fs-3"></i>
@@ -202,7 +241,7 @@
                     <!-- Content in the Card -->
                     <div class="row d-flex align-items-lg-center justify-content-lg-between">
                         <div class="col-md-6">
-                            <p class="text-secondary mt-2 fw-bold">Today's Finished</p>
+                            <p class="text-secondary mt-2 fw-bold">Total Finished</p>
                         </div>
                         <div class="col-md-6 d-flex justify-content-md-end">
                             <i class="bx bx-right-arrow-alt fs-3"></i>
@@ -240,60 +279,266 @@
     </div>
 
     <div class="row pt-3">
-        <!-- Most Picked Package Chart -->
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Most Picked Package</h3>
+        <!-- Column for Notifications -->
+        <div class="col-lg-4 col-xs-6">
+            <div class="card notification-card p-3 box-shadow">
+                <div class="row mb-2">
+                    <div class="col-md-12 d-flex justify-content-md-end">
+                        <i class="bx bx-bell"></i>
+                    </div>
                 </div>
-                <div class="card-body" style="width: 50%; height: 300px;">
-                    <canvas id="mostPickedPackageChart" class="chart-size"></canvas>
+                <h1 class="text-start">New Notifications</h1>
+
+                <div class="list-group">
+                    @foreach($newNotifications as $notification)
+                        <div class="list-group-item notification-item" data-id="{{ $notification['key'] }}"
+                            data-package="{{ $notification['data']['package_name'] }}"
+                            data-date="{{ \Carbon\Carbon::parse($notification['data']['event_date'] . ' ' . $notification['data']['event_time'])->format('M d, Y - h:i A') }}">
+                            <!-- Add spinner overlay -->
+                            <div class="notification-overlay">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                            <div class="notification-content">
+                                <div class="notification-info">
+                                    <div class="d-flex justify-content-between">
+                                        <span>{{ $notification['data']['package_name'] }}</span>
+                                        <span class="badge bg-danger">New</span>
+                                    </div>
+                                    <small class="text-muted d-block">
+                                        {{ \Carbon\Carbon::parse($notification['data']['event_date'] . ' ' . $notification['data']['event_time'])->format('M d, Y - h:i A') }}
+                                    </small>
+                                </div>
+                                <div class="ms-3">
+                                    <button class="btn btn-primary btn-sm btn-view" 
+                                            data-id="{{ $notification['key'] }}"
+                                            data-redirect="{{ route('admin.reservation', ['tab' => 'penbook']) }}">
+                                        View
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
-             </div>
+
+                <!-- No new notifications message -->
+                @if(empty($newNotifications))
+                <div class="notification-content">
+                    <div class="notification-info">
+                        <small class="text-center text-muted">No new notifications.</small>
+                    </div>
+                </div>
+                @endif
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-xs-6">
+            <div class="card upcoming-events p-3 box-shadow">
+                <div class="row mb-2">
+                    <div class="col-md-12 d-flex justify-content-md-end">
+                        <i class="bx bx-calendar"></i>
+                    </div>
+                </div>
+                <h1 class="text-start">Upcoming Events</h1>
+
+                <!-- List upcoming confirmed reservations -->
+                <div class="list-group">
+                    @foreach($upcomingReservations as $reservation)
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <div class="d-flex justify-content-between">
+                                <span>{{ $reservation['package_name'] }}</span>
+                                <span class="text-muted">{{ \Carbon\Carbon::parse($reservation['event_date'] . ' ' . $reservation['event_time'])->format('M d, Y - h:i A') }}</span>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+
+                <!-- No events message if no upcoming events -->
+                @if(empty($upcomingReservations))
+                    <p class="text-center text-muted">No upcoming events.</p>
+                @endif
+            </div>
+        </div>
+
+         <!-- Most Picked Package -->
+         <div class="col-lg-4 col-xs-6">
+            <div class="card p-3 box-shadow">
+                <div class="row mb-2">
+                    <div class="col-md-12 d-flex justify-content-md-end">
+                        <i class="bx bx-trophy"></i>
+                    </div>
+                </div>
+                <h1 class="text-start">Top 10 Packages</h1>
+
+                <!-- List of top 5 packages -->
+                <div class="list-group">
+                    @foreach($topPackages as $packageName => $count)
+                        <div class="list-group-item list-group-item-action">
+                            <div class="d-flex justify-content-between">
+                                <span>{{ $packageName }}</span>
+                                <span class="badge bg-primary">{{ $count }} times</span>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- ChartJS -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div class="modal fade" id="confirmReadModal" tabindex="-1" aria-labelledby="confirmReadModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmReadModalLabel">Mark as Read</h5>
+            </div>
+            <div class="modal-body">
+                <p class="fw-bold">Are you sure you want to mark this notification as read?</p>
+                <p id="notificationDetails"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmMarkAsRead">Mark as Read</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-    // Function to generate a random color
-    function randomColor() {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
+document.addEventListener('DOMContentLoaded', function() {
+    let currentNotificationElement = null;
+    const modalElement = document.getElementById('confirmReadModal');
+    const modal = new bootstrap.Modal(modalElement);
 
-    // Get the canvas element for the chart
-    var ctx = document.getElementById('mostPickedPackageChart').getContext('2d');
+    // Handle View button clicks
+    document.querySelectorAll('.btn-view').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const notificationItem = this.closest('.notification-item');
+            const redirectUrl = this.getAttribute('data-redirect');
+            const reservationId = this.getAttribute('data-id');
+            
+            // Show spinner
+            const overlay = notificationItem.querySelector('.notification-overlay');
+            overlay.style.display = 'flex';
 
-    // Prepare the chart data
-    var mostPickedPackageChart = new Chart(ctx, {
-        type: 'bar',  // You can change this to 'line', 'pie', etc.
-        data: {
-            labels:<?php echo json_encode(array_keys($topPackages))?>,  // Labels (Package names)
-            datasets: [{
-                label: 'Number of Times Picked',
-                data: <?php echo json_encode(array_values($topPackages))?>,  // Data (Package counts)
-                backgroundColor: function(context) {
-                    // Generate a random color for each bar
-                    const index = context.dataIndex;
-                    return randomColor();  // Apply random color to each bar
+            // Mark as read and then redirect
+            fetch(`/admin/reservations/mark-as-read/${reservationId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
                 },
-                borderColor: function(context) {
-                    // Generate a random border color for each bar
-                    return randomColor();
-                },
-                borderWidth: 1
-            }]
-        },
+                body: JSON.stringify({
+                    id: reservationId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Redirect to the reservation page
+                    window.location.href = redirectUrl;
+                } else {
+                    // If marking as read fails, still redirect but show an error
+                    console.error('Failed to mark notification as read');
+                    window.location.href = redirectUrl;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Even if there's an error, still redirect
+                window.location.href = redirectUrl;
+            });
+        });
     });
+
+    // Regular notification click handling (for mark as read modal)
+    document.querySelectorAll('.notification-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+            // Check if click was on the View button or its container
+            if (e.target.closest('.btn-view') || e.target.closest('.ms-3')) {
+                return;
+            }
+            
+            e.preventDefault();
+            currentNotificationElement = this;
+            
+            // Update modal with notification details
+            const packageName = this.dataset.package;
+            const date = this.dataset.date;
+            document.getElementById('notificationDetails').textContent = 
+                `Package: ${packageName}\nDate: ${date}`;
+            
+            // Show the modal
+            modal.show();
+        });
+    });
+
+    // Original markAsRead function for modal confirmation
+    document.getElementById('confirmMarkAsRead').addEventListener('click', function() {
+        if (currentNotificationElement) {
+            markAsRead(currentNotificationElement);
+            modal.hide();
+        }
+    });
+
+    function markAsRead(element) {
+        const reservationId = element.getAttribute('data-id');
+        
+        // Show spinner
+        const overlay = element.querySelector('.notification-overlay');
+        overlay.style.display = 'flex';
+        
+        fetch(`/admin/reservations/mark-as-read/${reservationId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            },
+            body: JSON.stringify({
+                id: reservationId
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                // Hide spinner
+                overlay.style.display = 'none';
+                
+                // Add fade-out animation
+                element.style.transition = 'opacity 0.5s';
+                element.style.opacity = '0';
+                
+                // Remove the element after animation
+                setTimeout(() => {
+                    element.remove();
+                    // Check if there are no more notifications
+                    const remainingNotifications = document.querySelectorAll('.notification-item');
+                    if (remainingNotifications.length === 0) {
+                        const noNotificationsMessage = document.createElement('p');
+                        noNotificationsMessage.className = 'text-center text-muted';
+                        noNotificationsMessage.textContent = 'No new notifications.';
+                        element.parentElement.appendChild(noNotificationsMessage);
+                    }
+                }, 500);
+            }
+        })
+        .catch(error => {
+            // Hide spinner on error
+            overlay.style.display = 'none';
+            console.error('Error:', error);
+            alert('Failed to mark notification as read. Please try again.');
+        });
+    }
+});
 </script>
-
-
 
 @endsection

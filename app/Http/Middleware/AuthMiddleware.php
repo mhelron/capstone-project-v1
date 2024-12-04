@@ -21,7 +21,7 @@ class AuthMiddleware
         $this->firebaseAuth = $firebaseAuth;
     }
 
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, ...$roles)
     {
         $idToken = Session::get('firebase_id_token');
         
@@ -29,10 +29,20 @@ class AuthMiddleware
             return $this->clearSessionAndRedirect('Access Denied. Please log in.');
         }
 
+        if (!Session::has('user_role')) {
+            return $this->clearSessionAndRedirect('User role not found. Please log in again.');
+        }
+
+        $userRole = Session::get('user_role');
+
+        // If roles are specified and user's role is not in the allowed roles
+        if (!empty($roles) && !in_array($userRole, $roles)) {
+            return redirect()->route('unauthorized')->with('error', 'You do not have permission to access this page.');
+        }
+
         try {
             $verifiedIdToken = $this->firebaseAuth->verifyIdToken($idToken, self::TOKEN_LEEWAY);
 
-            // Handle expiration time properly
             $expirationTime = $verifiedIdToken->claims()->get('exp');
             if ($expirationTime instanceof DateTimeImmutable) {
                 $expirationTime = $expirationTime->getTimestamp();
@@ -42,9 +52,9 @@ class AuthMiddleware
 
             if ($expiration->subMinutes(5)->isPast()) {
                 $user = Session::get('firebase_user');
-
                 Log::info('Activity Log', [
                     'user' => $user->email,
+                    'role' => $userRole,
                     'action' => 'Session Expired'
                 ]);
                 return $this->clearSessionAndRedirect('Session expired. Please log in again.');

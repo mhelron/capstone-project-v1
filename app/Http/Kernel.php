@@ -29,5 +29,6 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         // other middleware
         'firebase.auth' => \App\Http\Middleware\AuthMiddleware::class,
+        'roles' => \App\Http\Middleware\RoleMiddleware::class,
     ];
 }

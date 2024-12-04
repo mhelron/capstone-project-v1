@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
+@php
+    use Illuminate\Support\Facades\Session;
+@endphp
+
 <head>
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -28,6 +33,23 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
+    <style>
+        #greeting {
+            font-size: 16px;
+        }
+        .user-name {
+            color: black;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        #current-datetime {
+            color: black;
+            font-weight: bold;
+            text-decoration: underline;
+            font-size: 16px;
+        }
+    </style>
+
 
     @vite('resources/css/app.css')
   
@@ -35,78 +57,36 @@
     <body>
 
         <div class="wrapper">
-            <aside class="{{ $isExpanded ? 'expand' : '' }}" id="sidebar">
-                <div class="d-flex">
-                    <button class="toggle-btn" type="button" id="toggleSidebar">
-                        <i class='bx bx-menu'></i>
-                    </button>
-                    <div class="sidebar-logo">
-                        <a href="#">Kyla and Kyle</a>
-                    </div>
-                </div>
-                <ul class="sidebar-nav">
-                    <li class="sidebar-item">
-                        <a href="{{route('admin.dashboard')}}" class="sidebar-link">
-                            <i class='bx bxs-dashboard'></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="{{route('admin.calendar')}}" class="sidebar-link">
-                            <i class='bx bxs-calendar'></i>
-                            <span>Calendar</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="{{ route('admin.reservation', ['tab' => 'penbook']) }}" class="sidebar-link">
-                            <i class='bx bx-edit-alt'></i>
-                            <span>Reservation</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="{{route('admin.packages')}}" class="sidebar-link">
-                            <i class='bx bxs-food-menu'></i>
-                            <span>Packages</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="{{route('admin.users')}}" class="sidebar-link">
-                            <i class='bx bx-user'></i>
-                            <span>User</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
-                            data-bs-target="#auth" aria-expanded="false" aria-controls="auth">
-                            <i class='bx bx-line-chart'></i>
-                            <span>Reports</span>
-                            @if ($isExpanded)
-                                <i class="bx bx-chevron-left custom-chevron ms-auto"></i>
-                            @endif
-                        </a>
-                        <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                            <li class="sidebar-item">
-                                <a href="{{route('admin.reports.reservation')}}" class="sidebar-link">Reservation</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="{{route('admin.reports.sales')}}" class="sidebar-link">Sales</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="{{route('admin.reports.logs')}}" class="sidebar-link">Activity Logs</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+        @php
+            $userRole = session('user_role');
+            $userFirstName = session('fname');
+        @endphp
 
-                <div class="sidebar-footer">
-                    <a href="#" class="sidebar-link" id="logout-link" data-bs-toggle="modal" data-bs-target="#logoutModal">
-                        <i class='bx bx-log-out'></i>
-                        <span>Logout</span>
-                    </a>
-                </div>
-            </aside>
+        @switch($userRole)
+            @case('Super Admin')
+                @include('layouts.inc.superadmin')
+                @break
+            @case('Admin')
+                @include('layouts.inc.admin')
+                @break
+            @case('Manager')
+                @include('layouts.inc.manager')
+                @break
+            @case('Staff')
+                @include('layouts.inc.staff')
+                @break
+            @default
+                @include('layouts.inc.staff')
+        @endswitch
             <div class="main p-3">
             <nav class="navbar navbar-expand px-4 py-3 admin-nav">
+                <div class="d-flex align-items-center">
+                    <span class="fs-5">
+                        <span id="greeting">Good morning</span>,
+                        <span class="user-name">{{ Session::get('firebase_user')->displayName }}</span><span style="font-size: 16px;">! Today is </span>
+                        <span id="current-datetime"></span>
+                    </span>
+                </div>
             </nav>
                 <div>
                     @yield('content')
@@ -172,5 +152,40 @@
                 sidebar.classList.toggle('expand');
             });
         });
+    </script>
+
+    
+    <script>
+        function updateDateTime() {
+            const now = new Date();
+            const hours = now.getHours();
+            const greeting = document.getElementById('greeting');
+            
+            // Update greeting based on time of day
+            if (hours >= 5 && hours < 12) {
+                greeting.textContent = 'Good morning';
+            } else if (hours >= 12 && hours < 18) {
+                greeting.textContent = 'Good afternoon';
+            } else {
+                greeting.textContent = 'Good evening';
+            }
+
+            // Format date and time
+            const options = {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            };
+            const dateTimeString = now.toLocaleDateString('en-US', options);
+            document.getElementById('current-datetime').textContent = dateTimeString;
+        }
+
+        // Update immediately and then every minute
+        updateDateTime();
+        setInterval(updateDateTime, 60000);
     </script>
 </html>
