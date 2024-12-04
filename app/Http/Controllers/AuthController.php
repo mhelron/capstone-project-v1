@@ -67,15 +67,15 @@ class AuthController extends Controller
 
             Log::info('Activity Log', [
                 'user' => $user->email,
-                'action' => 'Successfully logged in'
+                'action' => 'User logged in.'
             ]);
 
 
             return redirect()->route('admin.dashboard')->with('status', 'Logged in successfully!');
         } catch (\Kreait\Firebase\Auth\SignIn\FailedToSignIn $e) {
             Log::info('Activity Log', [
-                'user' => $request->email,
-                'action' => 'Failed login attempt'
+                'user' => strtolower($request->email),
+                'action' => 'User failed login attempt.'
             ]);
             return redirect()->back()->with(['error' => 'Invalid Credentials! Please Check Your Email or Password']);
         } catch (\Exception $e) {
@@ -89,7 +89,7 @@ class AuthController extends Controller
 
         Log::info('Activity Log', [
             'user' => $user->email,
-            'action' => 'SuccessfullyLogged out'
+            'action' => 'User logged out.'
         ]);
 
         Session::flush();
