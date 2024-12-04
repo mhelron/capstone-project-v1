@@ -846,35 +846,56 @@ document.addEventListener('DOMContentLoaded', function () {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Get the tab parameter from URL
     const urlParams = new URLSearchParams(window.location.search);
-    const activeTab = urlParams.get('tab') || 'penbook';
-    const dateFilter = urlParams.get('date') || 'all';
-    const venueFilter = urlParams.get('venue') || 'all';
+    const activeTab = urlParams.get('tab');
 
-    // Set initial filter values
-    document.querySelectorAll('.date-filter').forEach(filter => filter.value = dateFilter);
-    document.querySelectorAll('.venue-filter').forEach(filter => filter.value = venueFilter);
+    if (activeTab) {
+        // Remove active class from all tabs
+        document.querySelectorAll('.nav-link').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        document.querySelectorAll('.tab-pane').forEach(pane => {
+            pane.classList.remove('active', 'show');
+        });
 
-    // Handle tab activation
-    document.querySelectorAll('.nav-link, .tab-pane').forEach(el => {
-        el.classList.remove('active', 'show');
-    });
+        // Activate the correct tab
+        let tabButton;
+        let tabContent;
+        
+        switch(activeTab) {
+            case 'pending':
+                tabButton = document.querySelector('#pending-reservation');
+                tabContent = document.querySelector('#pending');
+                break;
+            case 'confirmed':
+                tabButton = document.querySelector('#confirmed-reservation');
+                tabContent = document.querySelector('#confirmed');
+                break;
+            case 'cancelled':
+                tabButton = document.querySelector('#cancelled-reservation');
+                tabContent = document.querySelector('#cancelled');
+                break;
+            case 'finished':
+                tabButton = document.querySelector('#finished-reservation');
+                tabContent = document.querySelector('#finished');
+                break;
+            case 'penbook':
+                tabButton = document.querySelector('#pen-book');
+                tabContent = document.querySelector('#penbook');
+                break;
+            default:
+                tabButton = document.querySelector('#pen-book');
+                tabContent = document.querySelector('#penbook');
+        }
 
-    // Modified tab selection logic
-    const tabId = activeTab === 'pending' ? 'pending' : 
-                 activeTab === 'confirmed' ? 'confirmed' :
-                 activeTab === 'cancelled' ? 'cancelled' :
-                 activeTab === 'finished' ? 'finished' : 'penbook';
-
-    const tabButton = document.querySelector(`#${tabId}-reservation`);
-    const tabContent = document.querySelector(`#${tabId}`);
-
-    if (tabButton && tabContent) {
-        tabButton.classList.add('active');
-        tabContent.classList.add('active', 'show');
+        if (tabButton && tabContent) {
+            tabButton.classList.add('active');
+            tabContent.classList.add('active', 'show');
+        }
     }
 
-    // Update URL when tabs are clicked
+    // Keep your existing event listeners for tab clicks
     document.querySelectorAll('.nav-link').forEach(tab => {
         tab.addEventListener('click', function(e) {
             const tabId = this.getAttribute('data-bs-target').replace('#', '');
@@ -883,16 +904,7 @@ document.addEventListener('DOMContentLoaded', function() {
             history.pushState(null, '', `?${params.toString()}`);
         });
     });
-
-    // Filter handling remains the same
-    document.querySelectorAll('.date-filter, .venue-filter').forEach(filter => {
-        filter.addEventListener('change', function() {
-            const params = new URLSearchParams(window.location.search);
-            params.set(this.classList.contains('date-filter') ? 'date' : 'venue', this.value);
-            history.pushState(null, '', `?${params.toString()}`);
-        });
-    });
-});
+});yt
 </script>
 
 <style>

@@ -1,114 +1,114 @@
 ::after,
 ::before {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 a {
-    text-decoration: none;
+    text-decoration: none !important;
 }
 
 li {
-    list-style: none;
+    list-style: none !important;
 }
 
 h1 {
-    font-weight: 600;
-    font-size: 1.5rem;
+    font-weight: 600 !important;
+    font-size: 1.5rem !important;
 }
 
 .header {
-    display: flex;
-    align-items: center;
-    padding: 0.5rem;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0.5rem !important;
 }
 
 .toggle-btn {
-    background-color: transparent;
-    cursor: pointer;
-    border: none;
-    padding: 0.5rem 1rem;
-    display: inline-flex;
-    align-items: center;
+    background-color: transparent !important;
+    cursor: pointer !important;
+    border: none !important;
+    padding: 0.5rem 1rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
 }
 
 
 /* Sidebar */
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins', sans-serif !important;
 }
 
 .wrapper {
-    display: flex;
-    min-height: 100vh;
+    display: flex !important;
+    min-height: 100vh !important;
 }
 
 .main {
-    flex-grow: 1;
-    min-height: 100vh;
-    width: 100%;
-    overflow: hidden;
-    transition: all 0.35s ease-in-out;
-    background-color: #fafbfe;
+    flex-grow: 1 !important;
+    min-height: 100vh !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    transition: all 0.35s ease-in-out !important;
+    background-color: #fafbfe !important
 }
 
 #sidebar {
-    width: 70px;
-    min-width: 70px;
-    z-index: 1000;
-    transition: all .25s ease-in-out;
-    background-color: #292b2c;
-    display: flex;
-    flex-direction: column;
+    width: 70px !important;
+    min-width: 70px !important; 
+    z-index: 1000 !important;
+    transition: all .25s ease-in-out !important;
+    background-color: #292b2c !important;;
+    display: flex !important;
+    flex-direction: column !important;
 }
 
 #sidebar.expand {
-    width: 260px;
-    min-width: 260px;
+    width: 260px !important;
+    min-width: 260px !important;
 }
 
 .toggle-btn {
-    background-color: transparent;
-    cursor: pointer;
-    border: 0;
-    padding: 1rem 1.5rem;
+    background-color: transparent !important;
+    cursor: pointer !important;
+    border: 0 !important;
+    padding: 1rem 1.5rem !important;
 }
 
 .toggle-btn i {
-    font-size: 1.5rem;
-    color: #FFF;
+    font-size: 1.5rem !important;
+    color: #FFF !important;;
 }
 
 .sidebar-logo {
-    margin: auto 0;
+    margin: auto 0 !important;
 }
 
 .sidebar-logo a {
-    color: #FFF;
-    font-size: 1.15rem;
-    font-weight: 600;
+    color: #FFF !important;;
+    font-size: 1.15rem !important;
+    font-weight: 600 !important;
 }
 
 #sidebar:not(.expand) .sidebar-logo,
 #sidebar:not(.expand) a.sidebar-link span {
-    display: none;
+    display: none !important; 
 }
 
 .sidebar-nav {
-    padding: 2rem 0;
-    flex: 1 1 auto;
+    padding: 2rem 0 !important;
+    flex: 1 1 auto !important;
 }
 
 a.sidebar-link {
-    padding: .625rem 1.625rem;
-    color: #FFF;
-    display: flex;
-    align-items: center;
-    font-size: 0.9rem;
-    white-space: nowrap;
-    border-left: 3px solid transparent;
-    font-size: 16px;
+    padding: .625rem 1.625rem !important;
+    color: #FFF !important;;
+    display: flex !important;
+    align-items: center !important;
+    font-size: 0.9rem !important;
+    white-space: nowrap !important;
+    border-left: 3px solid transparent !important;
+    font-size: 16px !important;
 }
 
 .sidebar-link::after {
@@ -117,107 +117,107 @@ a.sidebar-link {
 }
 
 .custom-chevron {
-    transition: transform 0.3s ease; 
+    transition: transform 0.3s ease !important; 
 }
 
 .sidebar-link.collapsed .custom-chevron {
-    transform: rotate(0deg); 
+    transform: rotate(0deg) !important; 
 }
 
 .sidebar-link[aria-expanded="true"] .custom-chevron {
-    transform: rotate(-90deg);
+    transform: rotate(-90deg) !important;
 }
 
 .sidebar-link i {
-    font-size: 1.1rem;
-    margin-right: .75rem;
-    display: inline-block;
+    font-size: 1.1rem !important;
+    margin-right: .75rem !important;
+    display: inline-block !important;
 }
 
 .sidebar-link span {
-    display: inline-block;
-    line-height: 1.1rem;
-    font-size: 16px;
+    display: inline-block !important;
+    line-height: 1.1rem !important;
+    font-size: 16px !important;
 }
 
 a.sidebar-link:hover {
-    background-color: rgba(255, 255, 255, .075);
-    border-left: 3px solid #FFF;
+    background-color: rgba(255, 255, 255, .075) !important;
+    border-left: 3px solid #FFF !important;;
 }
 
 .sidebar-item {
-    position: relative;
+    position: relative !important;
 }
 
 #sidebar:not(.expand) .sidebar-item .sidebar-dropdown {
-    position: absolute;
-    top: 0;
-    left: 70px;
-    background-color: #0e2238;
-    padding: 0;
-    min-width: 15rem;
-    display: none;
+    position: absolute !important;
+    top: 0 !important;
+    left: 70px !important;
+    background-color: #0e2238 !important;;
+    padding: 0 !important;
+    min-width: 15rem !important;
+    display: none !important;
 }
 
 #sidebar:not(.expand) .sidebar-item:hover .has-dropdown+.sidebar-dropdown {
-    display: block;
-    max-height: 15em;
-    width: 100%;
-    opacity: 1;
+    display: block !important;
+    max-height: 15em !important;
+    width: 100% !important;
+    opacity: 1 !important;
 }
 
 #sidebar.expand .sidebar-link[data-bs-toggle="collapse"]::after {
-    border: solid;
-    border-width: 0 .075rem .075rem 0;
-    content: "";
-    display: inline-block;
-    padding: 2px;
-    position: absolute;
-    right: 1.5rem;
-    top: 1.4rem;
-    transform: rotate(-135deg);
-    transition: all .2s ease-out;
+    border: solid !important;
+    border-width: 0 .075rem .075rem 0 !important;
+    content: "" !important;
+    display: inline-block !important;
+    padding: 2px !important;
+    position: absolute !important;
+    right: 1.5rem !important;
+    top: 1.4rem !important;
+    transform: rotate(-135deg) !important;
+    transition: all .2s ease-out !important;
 }
 
 #sidebar.expand .sidebar-link[data-bs-toggle="collapse"].collapsed::after {
-    transform: rotate(45deg);
-    transition: all .2s ease-out;
+    transform: rotate(45deg) !important;
+    transition: all .2s ease-out !important;
 }
 
 /* Adjust for mobile view */
 @media (max-width: 768px) {
     #sidebar {
-        width: 0;
-        min-width: 0;   
+        width: 0 !important;
+        min-width: 0 !important   
     }
     #sidebar.expand {
-        width: 260px;
-        min-width: 260px;
+        width: 260px !important;
+        min-width: 260px !important;
     }
 
     #sidebar:not(.expand) .sidebar-link i {
-        display: none; /* Hide icons when collapsed */
+        display: none !important; /* Hide icons when collapsed */
     }
 }
 
 /* Default toggle button style for mobile view */
 @media (max-width: 768px) {
     .toggle-btn {
-        background-color: transparent;
+        background-color: transparent !important;
     }
     .toggle-btn i {
-        color: black; /* Icon color change for expanded state */
+        color: black !important; /* Icon color change for expanded state */
     }
 }
 
 /* Expanded state - change background and icon color */
 @media (max-width: 768px) {
     .toggle-btn.expanded {
-        color: black; /* Change text and icon to white on expansion */
+        color: black !important;; /* Change text and icon to white on expansion */
     }
 
     .toggle-btn.expanded i {
-        color: white; /* Icon color change for expanded state */
+        color: white !important;; /* Icon color change for expanded state */
     }
 
 }

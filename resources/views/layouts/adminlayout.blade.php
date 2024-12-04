@@ -26,8 +26,6 @@
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- AdminLTE v1 JS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
 
@@ -60,7 +58,7 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="{{route('admin.reservation')}}" class="sidebar-link">
+                        <a href="{{ route('admin.reservation', ['tab' => 'penbook']) }}" class="sidebar-link">
                             <i class='bx bx-edit-alt'></i>
                             <span>Reservation</span>
                         </a>
@@ -165,9 +163,6 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- AdminLTE v1 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
