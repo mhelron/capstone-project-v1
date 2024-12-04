@@ -138,7 +138,7 @@
         <!-- First Image -->
         <div class="col-md-4 mb-4">
             <a href="#" class="d-block" data-bs-toggle="modal" data-bs-target="#imageModal" 
-               data-bs-image="{{ asset('images/MyTeam/Team1.png') }}">
+            data-bs-image="{{ asset('images/MyTeam/team1.png') }}">
                 <img src="{{ asset('images/MyTeam/team1.png') }}" class="gallery-image" alt="Team Member 1">
             </a>
         </div>
@@ -146,7 +146,7 @@
         <!-- Second Image -->
         <div class="col-md-4 mb-4">
             <a href="#" class="d-block" data-bs-toggle="modal" data-bs-target="#imageModal" 
-               data-bs-image="{{ asset('images/MyTeam/Team2.png') }}">
+            data-bs-image="{{ asset('images/MyTeam/team2.png') }}">
                 <img src="{{ asset('images/MyTeam/team2.png') }}" class="gallery-image" alt="Team Member 2">
             </a>
         </div>
@@ -154,7 +154,7 @@
         <!-- Third Image -->
         <div class="col-md-4 mb-4">
             <a href="#" class="d-block" data-bs-toggle="modal" data-bs-target="#imageModal" 
-               data-bs-image="{{ asset('images/MyTeam/Team3.png') }}">
+            data-bs-image="{{ asset('images/MyTeam/team3.png') }}">
                 <img src="{{ asset('images/MyTeam/team3.png') }}" class="gallery-image" alt="Team Member 3">
             </a>
         </div>
@@ -645,31 +645,44 @@ p {
 }
             </style>
 
-<!-- JavaScript for Carousel Indicator Activation -->
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
+    // Check if Bootstrap is loaded
+    if (typeof bootstrap === 'undefined') {
+        console.error('Bootstrap is not loaded');
+        return;
+    }
+
     var imageModal = document.getElementById('imageModal');
-    
-    // Disable page scrolling when modal is shown
-    imageModal.addEventListener('show.bs.modal', function () {
-        document.body.style.overflow = 'hidden'; // Disable scrolling
-    });
-    
-    // Enable page scrolling when modal is hidden
-    imageModal.addEventListener('hidden.bs.modal', function () {
-        document.body.style.overflow = ''; // Enable scrolling again
+    if (!imageModal) {
+        console.error('Modal element not found');
+        return;
+    }
+
+    // Create modal instance
+    var modal = new bootstrap.Modal(imageModal);
+
+    // Handle image click
+    document.querySelectorAll('[data-bs-toggle="modal"]').forEach(function(element) {
+        element.addEventListener('click', function(e) {
+            e.preventDefault();
+            var imageSrc = this.getAttribute('data-bs-image');
+            document.getElementById('modalImage').src = imageSrc;
+            modal.show();
+        });
     });
 
-    // Image modal setup (same as before)
-    imageModal.addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget;
-        var imageSrc = button.getAttribute('data-bs-image'); // Get the image source
-        var modalImage = document.getElementById('modalImage');
-        modalImage.src = imageSrc; // Set the image source in the modal
+    // Handle modal show/hide
+    imageModal.addEventListener('show.bs.modal', function () {
+        document.body.style.overflow = 'hidden';
+    });
+
+    imageModal.addEventListener('hidden.bs.modal', function () {
+        document.body.style.overflow = '';
+        // Clear the image source when modal is closed
+        document.getElementById('modalImage').src = '';
     });
 });
-
-
 </script>
 
 

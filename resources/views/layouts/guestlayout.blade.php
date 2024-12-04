@@ -81,7 +81,7 @@
             mainColor: 'darkorange',
             bubbleBackground: 'darkorange',
             placeholderText: 'Type your message here...',
-            bubbleAvatarUrl:'images/bubble.png',
+            bubbleAvatarUrl:'{{ asset("images/bubble.png") }}',
             aboutText: ' ',
             headerTextColor: '#ffffff'
         };

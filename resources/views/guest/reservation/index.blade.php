@@ -195,7 +195,7 @@
                                 <!-- Number of Guests -->
                                 <div class="form-group col-md-6 mb-3">
                                     <label>Number of Guests</label><span class="text-danger"> *</span>
-                                    <input type="number" name="guests_number" value="{{ old('guests_number') }}" class="form-control" id="guests_number" min="1">
+                                    <input type="number" name="guests_number" value="{{ old('guests_number') }}" class="form-control" id="guests_number" min="1" max="500">
                                     @if ($errors->has('guests_number'))
                                         <small class="text-danger">{{ $errors->first('guests_number') }}</small>
                                     @endif
@@ -208,7 +208,9 @@
                                         id="sponsors" 
                                         name="sponsors" 
                                         value="{{ old('sponsors') }}" 
-                                        class="form-control" 
+                                        class="form-control"
+                                        min="1"
+                                        max="500"
                                         @if(old('package_type', $packageType ?? '') !== 'Wedding') disabled @endif>
 
                                     <input type="hidden" id="package_type" name="package_type" value="{{ old('package_type', $packageType ?? '') }}">

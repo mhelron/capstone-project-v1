@@ -65,7 +65,6 @@ class GuestReservationController extends Controller
             'barangay' => 'required',
             'street_houseno' => [
                 'required',
-                'regex:/^\d+\s+[a-zA-Z0-9\s]+$/',
             ],
             'package_name' => 'required',
             'event_title' => 'required',
@@ -92,7 +91,6 @@ class GuestReservationController extends Controller
             'city.required' => 'Please select a city.',
             'barangay.required' => 'Please select a barangay.',
             'street_houseno.required' => 'The House Number, Building, Street is required.',
-            'street_houseno.regex' => 'The input must start with a house number followed by the street name (e.g., "123 Sample Street").',
             'package_name.required' => 'Please select a package.',
             'event_title.required' => 'The event title is required.',
             'menu_name.required' => 'Please select a menu.',

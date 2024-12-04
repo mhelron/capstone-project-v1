@@ -82,7 +82,7 @@
             <nav class="navbar navbar-expand px-4 py-3 admin-nav">
                 <div class="d-flex align-items-center">
                     <span class="fs-5">
-                        <span id="greeting">Good morning</span>,
+                        <span id="greeting"></span>,
                         <span class="user-name">{{ Session::get('firebase_user')->displayName }}</span><span style="font-size: 16px;">! Today is </span>
                         <span id="current-datetime"></span>
                     </span>

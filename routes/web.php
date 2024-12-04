@@ -58,12 +58,6 @@ Route::post('/check-status', [GuestReservationController::class, 'checkStatus'])
 Route::delete('/reservation/{reservation_id}/cancel', [GuestReservationController::class, 'cancelReservation'])->name('reservation.cancel');
 Route::get('/edit-reserve/{reservation_id}', [GuestReservationController::class, 'edit'])->name('guest.reserve.edit');
 
-//Botman Route
-Route::match(['get', 'post'], '/botman', [BotmanController::class, 'handle']);
-Route::get('/botman/widget', function () {
-    return view('botman.botmanwidget');
-}); 
-
 Route::view('/unauthorized', 'unauthorized')->name('unauthorized');
 
 // Admin Route
@@ -148,3 +142,9 @@ Route::middleware([AuthMiddleware::class])->group(function () {
         });
     });
 });
+
+//Botman Route
+Route::match(['get', 'post'], '/botman', [BotmanController::class, 'handle']);
+Route::get('/botman/widget', function () {
+    return view('botman.botmanwidget');
+}); 
