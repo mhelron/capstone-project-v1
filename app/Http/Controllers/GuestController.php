@@ -25,12 +25,24 @@ class GuestController extends Controller
         return view('guest.packages.index');
     }
 
-    public function indexCalendar(){
+    public function indexCalendar()
+    {
+        // Fetch and sanitize reservations
         $reservations = $this->database->getReference($this->reservations)->getValue();
-        $reservations = is_array($reservations) ? $reservations : [];
+        $reservations = is_array($reservations) ? array_filter($reservations, function($reservation) {
+            return is_array($reservation) && 
+                isset($reservation['event_date']) && 
+                isset($reservation['status']);
+        }) : [];
 
+        // Fetch and sanitize packages
         $packages = $this->database->getReference($this->packages)->getValue();
-        $packages = is_array($packages) ? $packages : [];
+        $packages = is_array($packages) ? array_filter($packages, function($package) {
+            return is_array($package) && 
+                isset($package['package_name']) && 
+                isset($package['package_type']) && 
+                isset($package['menus']);
+        }) : [];
 
         return view('guest.calendar.index', compact('reservations', 'packages'));
     }

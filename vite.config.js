@@ -23,7 +23,6 @@ export default defineConfig({
 				'resources/js/filter.js',
 				'resources/js/gallery.js',
 				'resources/js/guestcalendar.js',
-				'resources/js/guestcalendarreservations.js',
 				'resources/js/guestreservation.js',
 				'resources/js/logout.js',
 				'resources/js/modal.js',

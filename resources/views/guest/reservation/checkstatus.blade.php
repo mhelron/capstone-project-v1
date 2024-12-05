@@ -159,14 +159,13 @@
                                 </tr>
                                 
                                 <!-- Additional Requests -->
-                                @if($reservation['other_requests'])
-                                    <tr>
-                                        <th colspan="2" class="table-light">Additional Requests</th>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">{{ $reservation['other_requests'] }}</td>
-                                    </tr>
-                                @endif
+                                <tr>
+                                    <th colspan="2" class="table-light">Additional Requests</th>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">{{ $reservation->other_requests ?? 'No Request' }}</td>
+                                </tr>
+
                                 
                                 <!-- Payment Information -->
                                 <tr>
@@ -198,26 +197,31 @@
 
                     <!-- Action Buttons -->
                     <div class="d-flex gap-2 justify-content-center mt-4">
-                        @if($reservation['payment_status'] !== 'Paid')
-                        <a href="{{ route('guest.payment', ['reservation_id' => $reservation['reservation_id']]) }}" 
-                        class="btn btn-success">
-                            Make Payment
-                        </a>
-                        @endif
+                        @if(!in_array($reservation['status'], ['Cancelled', 'Finished']))
+                            @if($reservation['payment_status'] !== 'Paid')
+                                <a href="{{ route('guest.payment', ['reservation_id' => $reservation['reservation_id']]) }}" 
+                                    class="btn btn-success">
+                                    Make Payment
+                                </a>
+                            @endif
 
-                        @if(in_array($reservation['status'], ['Pencil', 'Pending', 'Confirmed']))
-                        <a href="{{ route('guest.reserve.edit', ['reservation_id' => $reservation['reservation_id']]) }}" class="btn btn-primary">
-                            Edit Details
-                        </a>
+                            @if(in_array($reservation['status'], ['Pencil', 'Pending']))
+                                <a href="{{ route('guest.reserve.edit', ['reservation_id' => $reservation['reservation_id']]) }}" 
+                                    class="btn btn-primary">
+                                    Edit Details
+                                </a>
+                            @endif
 
-                        <form action="{{ route('reservation.cancel', ['reservation_id' => $reservation['reservation_id']]) }}" 
-                            method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal">
-                                Cancel Reservation
-                            </button>
-                        </form>
+                            @if(in_array($reservation['status'], ['Pencil', 'Pending', 'Confirmed']))
+                                <form action="{{ route('reservation.cancel', ['reservation_id' => $reservation['reservation_id']]) }}" 
+                                    method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal">
+                                        Cancel Reservation
+                                    </button>
+                                </form>
+                            @endif
                         @endif
                     </div>
                 </div>

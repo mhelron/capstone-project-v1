@@ -122,70 +122,98 @@ $('#menu_name').change(function () {
     }
 });
 
+let eventDatePicker; // Declare the instance globally
+let eventTimePicker; // Declare time picker globally too
+
 document.addEventListener('DOMContentLoaded', function () {
-    // Function to calculate the minimum date (three days from today)
     function calculateMinDate() {
         const today = new Date();
-        today.setDate(today.getDate() + 3); // Add 3 days to the current date
-        return today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+        today.setDate(today.getDate() + 3);
+        return today.toISOString().split('T')[0];
     }
 
-    // Initialize Flatpickr for the date input
-    const eventDatePicker = flatpickr("#event_date", {
-        dateFormat: "Y-m-d", // Format of the date to send to the server
-        minDate: calculateMinDate(), // Set minDate to three days from today
-        onChange: function (selectedDates) {
+    function getCurrentTime() {
+        const now = new Date();
+        let hours = now.getHours();
+        let minutes = now.getMinutes();
+        hours = (hours < 10 ? '0' : '') + hours;
+        minutes = (minutes < 10 ? '0' : '') + minutes;
+        return hours + ':' + minutes;
+    }
+
+    // Initialize time picker first
+    eventTimePicker = flatpickr("#event_time", {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i",
+        time_24hr: true,
+        minuteIncrement: 30,
+        minTime: "00:00",
+        maxTime: "23:30",
+        defaultHour: 12,
+        defaultMinute: 0,
+        onClose: function(selectedDates, dateStr) {
+            const selectedDate = eventDatePicker?.selectedDates[0];
+            const today = new Date();
+            
+            if (selectedDate && selectedDate.toDateString() === today.toDateString()) {
+                const currentTime = getCurrentTime();
+                const selectedTime = dateStr;
+                
+                if (selectedTime < currentTime) {
+                    this.setDate(currentTime);
+                }
+            }
+        }
+    });
+
+    // Then initialize date picker
+    eventDatePicker = flatpickr("#event_date", {
+        dateFormat: "Y-m-d",
+        minDate: calculateMinDate(),
+        disable: window.events ? events.map(event => event.Date) : [],
+        defaultDate: new URLSearchParams(window.location.search).get('event_date') || null,
+        onReady: function(selectedDates, dateStr, instance) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const selectedDate = urlParams.get('event_date');
+            if (selectedDate) {
+                instance.setDate(selectedDate, true);
+            }
+        },
+        onChange: function(selectedDates) {
             const selectedDate = selectedDates[0];
             const today = new Date();
 
-            // If the selected date is today, update the time picker to not allow past times
-            if (selectedDate.toDateString() === today.toDateString()) {
-                const currentTime = getCurrentTime();
-                // Only update the minTime for the eventTimePicker if it's different from the current value
-                if (eventTimePicker.config.minTime !== currentTime) {
-                    eventTimePicker.set('minTime', currentTime); // Set minTime to current time if today
-                }
-            } else {
-                // Otherwise, allow any time for future dates
-                if (eventTimePicker.config.minTime !== "00:00") {
+            if (selectedDate && eventTimePicker) {
+                if (selectedDate.toDateString() === today.toDateString()) {
+                    eventTimePicker.set('minTime', getCurrentTime());
+                } else {
                     eventTimePicker.set('minTime', "00:00");
                 }
             }
         }
     });
 
-    // Initialize Flatpickr for the time input with AM/PM option
-    const eventTimePicker = flatpickr("#event_time", {
-        enableTime: true,    // Enable time selection
-        noCalendar: true,    // Disable calendar (only time)
-        dateFormat: "h:i K", // Format of the time to send to the server (12-hour format with AM/PM)
-        time_24hr: false,    // Use 12-hour format
-        minTime: getCurrentTime(), // Default minTime is set when the page loads (if today)
-        onOpen: function () {
-            const selectedDate = eventDatePicker.selectedDates[0];
-            const today = new Date();
+    // Handle URL parameters once
+    handleUrlParameters();
+});
 
-            // If the selected date is today, update minTime dynamically based on the current time
-            if (selectedDate && selectedDate.toDateString() === today.toDateString()) {
-                this.set('minTime', getCurrentTime()); // Set minTime to current time
-            } else {
-                this.set('minTime', "00:00"); // Allow any time for future dates
-            }
+// Remove the duplicate date handling from document.ready
+$(document).ready(function() {
+    if (!$('#package_name').val()) {
+        $('.main-form').addClass('col-lg-12').removeClass('col-lg-8');
+    }
+    
+    $('#package_name').on('change', change);
+ 
+    if ($('#package_name').val()) {
+        change();
+        if ($('#guests_number').val() === '') {
+            $('#guests_number').val($('#package_name option:selected').data('persons'));
         }
-    });
-
-    // Function to get the current time in the correct format (24-hour format)
-    function getCurrentTime() {
-        const now = new Date();
-        let hours = now.getHours();
-        let minutes = now.getMinutes();
-
-        // Ensure hours and minutes are two digits
-        hours = (hours < 10 ? '0' : '') + hours; // Two-digit hour
-        minutes = (minutes < 10 ? '0' : '') + minutes; // Two-digit minutes
-
-        // Return the formatted time string (HH:mm)
-        return hours + ':' + minutes;
+        if ($('#guests_number').val()) {
+            $('#guests_number').trigger('input');
+        }
     }
 });
 
@@ -226,6 +254,7 @@ function handleUrlParameters() {
     const urlParams = new URLSearchParams(window.location.search);
     const selectedPackage = urlParams.get('package');
     const selectedMenu = urlParams.get('menu');
+    const selectedDate = urlParams.get('event_date');
     
     if (selectedPackage) {
         // Select the package
@@ -241,7 +270,15 @@ function handleUrlParameters() {
                 const menuSelect = $('#menu_name');
                 menuSelect.val(selectedMenu);
                 menuSelect.trigger('change');
-            }, 500); // Add a small delay to ensure menus are loaded
+            }, 500);
+        }
+    }
+
+    // Handle the date if it's present
+    if (selectedDate) {
+        const eventDateInput = document.getElementById('event_date');
+        if (eventDateInput && eventDateInput._flatpickr) {
+            eventDateInput._flatpickr.setDate(selectedDate);
         }
     }
 }
@@ -266,6 +303,18 @@ $(document).ready(function() {
 
     // Add the URL parameter handling
     handleUrlParameters();
+
+    // Add the date handling from calendar
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedDate = urlParams.get('event_date');
+    
+    if (selectedDate) {
+        // Set the date in the date picker
+        const eventDateInput = document.getElementById('event_date');
+        if (eventDateInput && eventDateInput._flatpickr) {
+            eventDateInput._flatpickr.setDate(selectedDate);
+        }
+    }
 });
 
 document.addEventListener("DOMContentLoaded", function() {

@@ -116,21 +116,7 @@
  .fc .fc-button-group button {
      margin-right: 10px;
  }
- 
- /* Style for past dates */
- .past-date {
-     background-color: #f0f0f0 !important; /* Light grey background */
-     color: #6c757d !important; /* Muted text color */
-     pointer-events: none; /* Make them unclickable */
-     opacity: 0.5; /* Add opacity for visual effect */
-     cursor: not-allowed; /* Change cursor to indicate disabled state */
- }
- 
- /* Optionally, add opacity to past dates */
- .past-date.fc-daygrid-day {
-     opacity: 0.5;
-     cursor: not-allowed; /* Show the disabled cursor */
- }
+
 
  .fc-event-content{
     text-align: center;
@@ -139,3 +125,23 @@
  .fc-daygrid-day{
     height: 150px;
  }
+
+/* Optionally, add opacity to past dates */
+.past-date.fc-daygrid-day {
+    opacity: 0.5;
+}
+
+.past-date {
+    background-color: #f5f5f5 !important;
+    cursor: not-allowed !important;
+}
+
+/* Present date and next 2 days (preparation period) */
+.preparation-period {
+    cursor: not-allowed !important;
+}
+
+/* Future available dates */
+.future-date {
+    background-color: #FFFFFF !important; /* White background */
+}
