@@ -222,7 +222,32 @@ $('#guests_number').on('input', function () {
     isUpdatingGuests = false; // Reset the flag
 });
 
+function handleUrlParameters() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedPackage = urlParams.get('package');
+    const selectedMenu = urlParams.get('menu');
+    
+    if (selectedPackage) {
+        // Select the package
+        const packageSelect = $('#package_name');
+        packageSelect.val(selectedPackage);
+        
+        // Trigger the change event to load package details and menus
+        packageSelect.trigger('change');
+        
+        // Once menus are loaded, select the specific menu
+        if (selectedMenu) {
+            setTimeout(() => {
+                const menuSelect = $('#menu_name');
+                menuSelect.val(selectedMenu);
+                menuSelect.trigger('change');
+            }, 500); // Add a small delay to ensure menus are loaded
+        }
+    }
+}
+
 $(document).ready(function() {
+    // Your existing code
     if (!$('#package_name').val()) {
         $('.main-form').addClass('col-lg-12').removeClass('col-lg-8');
     }
@@ -238,7 +263,10 @@ $(document).ready(function() {
             $('#guests_number').trigger('input');
         }
     }
- });
+
+    // Add the URL parameter handling
+    handleUrlParameters();
+});
 
 document.addEventListener("DOMContentLoaded", function() {
     const packageSelect = document.getElementById('package_name'); // Package select element

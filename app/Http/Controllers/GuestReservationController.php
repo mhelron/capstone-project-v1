@@ -20,15 +20,27 @@ class GuestReservationController extends Controller
         $this->packages = 'packages';
         $this->reservations = 'reservations';
     }
-    public function index(){
+    public function index(Request $request)
+    {
+        // Get the selected package and menu from the URL parameters
+        $selectedPackage = $request->query('package');
+        $selectedMenu = $request->query('menu');
+        
+        // Fetch packages from database
         $packages = $this->database->getReference($this->packages)->getValue();
         $packages = is_array($packages) ? array_map(fn($package) => $package, $packages) : [];
 
+        // Load address data
         $addressData = json_decode(file_get_contents(public_path('address_ph.json')), true);
-
-        return view('guest.reservation.index', compact('packages', 'addressData'));
+        
+        // Pass all data to the view, including the selected package and menu
+        return view('guest.reservation.index', [
+            'packages' => $packages, 
+            'addressData' => $addressData,
+            'selectedPackage' => $selectedPackage,
+            'selectedMenu' => $selectedMenu
+        ]);
     }
-
     private function generateUniqueReferenceNumber()
     {
         do {

@@ -29,19 +29,22 @@
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-4">
                         @foreach($package['menus'] as $menu)
                             <div class="col d-flex">
-                                <div class="card shadow-sm flex-fill" style="border: 2px solid darkorange;">
-                                    <div class="card-body d-flex flex-column">
-                                        <h5 class="card-title text-center text-darkorange">{{ $menu['menu_name'] }}</h5>
-                                        <ul class="list-unstyled flex-grow-1">
-                                            @foreach($menu['foods'] as $food)
-                                                <li>
-                                                    <span style="font-weight: bold;">{{ $food['category'] }}</span> : 
-                                                    {{ $food['food'] }}
-                                                </li>
-                                            @endforeach
-                                        </ul>
+                                <a href="{{ route('guest.reserve', ['package' => $package['package_name'], 'menu' => $menu['menu_name']]) }}" 
+                                class="text-decoration-none w-100">
+                                    <div class="card shadow-sm flex-fill" style="border: 2px solid darkorange; cursor: pointer;">
+                                        <div class="card-body d-flex flex-column">
+                                            <h5 class="card-title text-center text-darkorange">{{ $menu['menu_name'] }}</h5>
+                                            <ul class="list-unstyled flex-grow-1">
+                                                @foreach($menu['foods'] as $food)
+                                                    <li>
+                                                        <span style="font-weight: bold;">{{ $food['category'] }}</span> : 
+                                                        {{ $food['food'] }}
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                         @endforeach
                     </div>
