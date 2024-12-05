@@ -43,12 +43,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
         
+            // Check if selected date is in the past
+            if (selectedDate < today) {
+                alert("Past dates cannot be selected.");
+                return;
+            }
+        
             // Calculate the minimum allowed date (3 days from today)
             const minAllowedDate = new Date(today);
             minAllowedDate.setDate(today.getDate() + 3);
         
-            // Check if selected date is in the past or within the 3-day preparation period
-            if (selectedDate < minAllowedDate) {
+            // Check if selected date is within the 3-day preparation period
+            if (selectedDate >= today && selectedDate < minAllowedDate) {
                 alert("Please select a date at least 3 days from today for preparation time.");
                 return;
             }
