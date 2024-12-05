@@ -51,6 +51,7 @@ return [
 
         'admin' => [
         'transport' => 'smtp',
+        'scheme' => 'smtp', 
         'host' => env('MAIL_HOST', 'smtp.hostinger.com'),
         'port' => env('MAIL_PORT', 465),
         'encryption' => env('MAIL_ENCRYPTION', 'ssl'),
@@ -66,6 +67,7 @@ return [
 
         'clients' => [
             'transport' => 'smtp',
+            'scheme' => 'smtp', 
             'host' => env('MAIL_HOST', 'smtp.hostinger.com'),
             'port' => env('MAIL_PORT', 465),
             'encryption' => env('MAIL_ENCRYPTION', 'ssl'),

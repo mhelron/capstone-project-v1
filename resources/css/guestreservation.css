@@ -81,3 +81,48 @@ input[type="radio"].form-check-input:hover {
 #modalDoneBtn:focus {
     outline: none !important;  /* Ensure no outline */
 }
+
+.main-form {
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+ }
+ 
+ .blank-card {
+    opacity: 0;
+    transform: translateX(-30px);
+    width: 0;
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: #f5f5dc;
+    border: 2px solid darkorange;
+    visibility: hidden;
+    flex: 0;
+ }
+ 
+ .blank-card.visible {
+    opacity: 1;
+    transform: translateX(0);
+    width: 100%;
+    visibility: visible;
+    flex: 1;
+ }
+ 
+ .row {
+    display: flex;
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+ }
+ 
+ /* Bootstrap column overrides */
+ .col-lg-12 {
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+ }
+ 
+ .col-lg-8 {
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 66.66%;
+ }
+ 
+ .col-lg-4 {
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 33.33%;
+ }

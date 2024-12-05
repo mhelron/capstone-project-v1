@@ -151,12 +151,13 @@ class GuestReservationController extends Controller
             'theme' => $validatedData['theme'],
             'other_requests' => $validatedData['other_requests'],
             'total_price' => $validatedData['total_price'] ?? null,
+            'reserve_fee' => '5000',
             'payment_proof' => 'None',
             'payment_status' => 'Not Paid',
-            'payment_submitted_at' => null,
+            'payment_submitted_at' => '',
             'created_at' => Carbon::now()->toDateTimeString(),
-            'cancellation_reason' => null,
-            'cancelled_at' => null,
+            'cancellation_reason' => '',
+            'cancelled_at' => '',
             'read' => false,
         ];
     

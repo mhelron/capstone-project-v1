@@ -38,6 +38,30 @@
                             <span>User</span>
                         </a>
                     </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                            data-bs-target="#auth" aria-expanded="false" aria-controls="auth">
+                            <i class='bx bx-line-chart'></i>
+                            <span>Reports</span>
+                            @if ($isExpanded)
+                                <i class="bx bx-chevron-left custom-chevron ms-auto"></i>
+                            @endif
+                        </a>
+                        <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item">
+                                <a href="{{route('admin.reports.reservation')}}" class="sidebar-link">Reservation</a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="{{route('admin.reports.sales')}}" class="sidebar-link">Sales</a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="{{route('admin.reports.packages')}}" class="sidebar-link">Packages</a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="{{route('admin.reports.locations')}}" class="sidebar-link">Locations</a>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
 
                 <div class="sidebar-footer">

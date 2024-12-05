@@ -279,6 +279,57 @@
     </div>
 
     <div class="row pt-3">
+        <div class="col-lg-4 col-xs-6">
+            <div class="card upcoming-events p-3 box-shadow">
+                <div class="row mb-2">
+                    <div class="col-md-12 d-flex justify-content-md-end">
+                        <i class="bx bx-calendar"></i>
+                    </div>
+                </div>
+                <h1 class="text-start">Upcoming Events</h1>
+
+                <!-- List upcoming confirmed reservations -->
+                <div class="list-group">
+                    @foreach($upcomingReservations as $reservation)
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <div class="d-flex justify-content-between">
+                                <span>{{ $reservation['package_name'] }}</span>
+                                <span class="text-muted">{{ \Carbon\Carbon::parse($reservation['event_date'] . ' ' . $reservation['event_time'])->format('M d, Y - h:i A') }}</span>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+
+                <!-- No events message if no upcoming events -->
+                @if(empty($upcomingReservations))
+                    <p class="text-center text-muted">No upcoming events.</p>
+                @endif
+            </div>
+        </div>
+
+         <!-- Most Picked Package -->
+         <div class="col-lg-4 col-xs-6">
+            <div class="card p-3 box-shadow">
+                <div class="row mb-2">
+                    <div class="col-md-12 d-flex justify-content-md-end">
+                        <i class="bx bx-trophy"></i>
+                    </div>
+                </div>
+                <h1 class="text-start">Top 10 Packages</h1>
+
+                <!-- List of top 5 packages -->
+                <div class="list-group">
+                    @foreach($topPackages as $packageName => $count)
+                        <div class="list-group-item list-group-item-action">
+                            <div class="d-flex justify-content-between">
+                                <span>{{ $packageName }}</span>
+                                <span class="badge bg-primary">{{ $count }} times</span>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
         <!-- Column for Notifications -->
         <div class="col-lg-4 col-xs-6">
             <div class="card notification-card p-3 box-shadow">
@@ -330,58 +381,6 @@
                     </div>
                 </div>
                 @endif
-            </div>
-        </div>
-
-        <div class="col-lg-4 col-xs-6">
-            <div class="card upcoming-events p-3 box-shadow">
-                <div class="row mb-2">
-                    <div class="col-md-12 d-flex justify-content-md-end">
-                        <i class="bx bx-calendar"></i>
-                    </div>
-                </div>
-                <h1 class="text-start">Upcoming Events</h1>
-
-                <!-- List upcoming confirmed reservations -->
-                <div class="list-group">
-                    @foreach($upcomingReservations as $reservation)
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <div class="d-flex justify-content-between">
-                                <span>{{ $reservation['package_name'] }}</span>
-                                <span class="text-muted">{{ \Carbon\Carbon::parse($reservation['event_date'] . ' ' . $reservation['event_time'])->format('M d, Y - h:i A') }}</span>
-                            </div>
-                        </a>
-                    @endforeach
-                </div>
-
-                <!-- No events message if no upcoming events -->
-                @if(empty($upcomingReservations))
-                    <p class="text-center text-muted">No upcoming events.</p>
-                @endif
-            </div>
-        </div>
-
-         <!-- Most Picked Package -->
-         <div class="col-lg-4 col-xs-6">
-            <div class="card p-3 box-shadow">
-                <div class="row mb-2">
-                    <div class="col-md-12 d-flex justify-content-md-end">
-                        <i class="bx bx-trophy"></i>
-                    </div>
-                </div>
-                <h1 class="text-start">Top 10 Packages</h1>
-
-                <!-- List of top 5 packages -->
-                <div class="list-group">
-                    @foreach($topPackages as $packageName => $count)
-                        <div class="list-group-item list-group-item-action">
-                            <div class="d-flex justify-content-between">
-                                <span>{{ $packageName }}</span>
-                                <span class="badge bg-primary">{{ $count }} times</span>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
             </div>
         </div>
     </div>

@@ -155,37 +155,39 @@
     </script>
 
     
-    <script>
-        function updateDateTime() {
-            const now = new Date();
-            const hours = now.getHours();
-            const greeting = document.getElementById('greeting');
-            
-            // Update greeting based on time of day
-            if (hours >= 5 && hours < 12) {
-                greeting.textContent = 'Good morning';
-            } else if (hours >= 12 && hours < 18) {
-                greeting.textContent = 'Good afternoon';
-            } else {
-                greeting.textContent = 'Good evening';
-            }
-
-            // Format date and time
-            const options = {
-                weekday: 'long',
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric',
-                hour: 'numeric',
-                minute: '2-digit',
-                hour12: true
-            };
-            const dateTimeString = now.toLocaleDateString('en-US', options);
-            document.getElementById('current-datetime').textContent = dateTimeString;
+<script>
+    function updateDateTime() {
+        const now = new Date();
+        const hours = now.getHours();
+        console.log("Current hour:", hours);  // Log the current hour to the console
+        const greeting = document.getElementById('greeting');
+        
+        // Update greeting based on time of day
+        if (hours >= 1 && hours < 12) {
+            greeting.textContent = 'Good morning';
+        } else if (hours >= 12 && hours < 18) {
+            greeting.textContent = 'Good afternoon';
+        } else {
+            greeting.textContent = 'Good evening';
         }
 
-        // Update immediately and then every minute
-        updateDateTime();
-        setInterval(updateDateTime, 60000);
-    </script>
+        // Format date and time
+        const options = {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+        };
+        const dateTimeString = now.toLocaleDateString('en-US', options);
+        document.getElementById('current-datetime').textContent = dateTimeString;
+    }
+
+    // Update immediately and then every minute
+    updateDateTime();
+    setInterval(updateDateTime, 60000);
+</script>
+
 </html>

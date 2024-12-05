@@ -16,7 +16,6 @@
             <h3 class="text-left mb-4">Package Details</h3>
                 <div class="card shadow-sm" style="border: 2px solid darkorange;">
                     <div class="card-body">
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore id, fugit laudantium rerum praesentium officiis impedit odit ex maiores minima, dolores deserunt ad sint, excepturi nemo ducimus! Sed, similique illo!</p>
                         <p>The ideal catering package for events with a minimum of <strong>{{ $package['persons'] }}</strong> guests.</p>
                         <p>The packages starts at <strong>{{ number_format($package['price']) }}</strong></p>
                     </div>

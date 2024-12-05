@@ -8,11 +8,13 @@
         "php": "^8.2",
         "botman/botman": "^2.8",
         "botman/driver-web": "^1.5",
+        "guzzlehttp/guzzle": "*",
         "kreait/laravel-firebase": "^5.9",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
         "maatwebsite/excel": "^3.1",
-        "phpmailer/phpmailer": "^6.9"
+        "phpmailer/phpmailer": "^6.9",
+        "psr/http-message": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

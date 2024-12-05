@@ -122,11 +122,19 @@ Route::middleware([AuthMiddleware::class])->group(function () {
     Route::group(['middleware' => RoleMiddleware::class . ':Super Admin'], function () {
         // Reports Route
         Route::prefix('admin/reports')->group(function () {
-            Route::get('/reservation', [ReportsController::class, 'reservation'])->name('admin.reports.reservation');
-            Route::get('/sales', [ReportsController::class, 'sales'])->name('admin.reports.sales');
             Route::get('/logs', [ReportsController::class, 'showLogs'])->name('admin.reports.logs');
             Route::get('/admin/logs/download', [ReportsController::class, 'download'])->name('admin.logs.download');
             Route::post('/logs/remove-all', [ReportsController::class, 'removeAll'])->name('admin.logs.removeAll');
+        });
+    });
+
+    Route::group(['middleware' => RoleMiddleware::class . ':Super Admin,Admin'], function () {
+        // Reports Route
+        Route::prefix('admin/reports')->group(function () {
+            Route::get('/reservation', [ReportsController::class, 'reservation'])->name('admin.reports.reservation');
+            Route::get('/sales', [ReportsController::class, 'sales'])->name('admin.reports.sales');
+            Route::get('/packages', [ReportsController::class, 'packages'])->name('admin.reports.packages');
+            Route::get('/locations', [ReportsController::class, 'locations'])->name('admin.reports.locations');
         });
     });
 

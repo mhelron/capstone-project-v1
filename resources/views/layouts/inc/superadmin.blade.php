@@ -55,6 +55,12 @@
                                 <a href="{{route('admin.reports.sales')}}" class="sidebar-link">Sales</a>
                             </li>
                             <li class="sidebar-item">
+                                <a href="{{route('admin.reports.packages')}}" class="sidebar-link">Packages</a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="{{route('admin.reports.locations')}}" class="sidebar-link">Locations</a>
+                            </li>
+                            <li class="sidebar-item">
                                 <a href="{{route('admin.reports.logs')}}" class="sidebar-link">Activity Logs</a>
                             </li>
                         </ul>

@@ -184,12 +184,10 @@
                                         </span>
                                     </td>
                                 </tr>
-                                @if($reservation['payment_submitted_at'])
                                 <tr>
                                     <th>Payment Date of Reservation Fee</th>
-                                    <td>{{ \Carbon\Carbon::parse($reservation['payment_submitted_at'])->format('M d, Y h:i A') }}</td>
+                                    <td>{{ $reservation['payment_submitted_at'] ? \Carbon\Carbon::parse($reservation['payment_submitted_at'])->format('M d, Y h:i A') : 'None' }}</td>
                                 </tr>
-                                @endif
                                 <tr>
                                     <th>Reservation Price</th>
                                     <td>₱{{ number_format($reservation['total_price'], 2) }}</td>

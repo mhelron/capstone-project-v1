@@ -12,38 +12,42 @@ function change() {
     const totalPriceSpan = $("#total-price");
     const totalPackagePriceSpan = $("#total-package-price");
     const pricePerPackageHeadSpan = $('#price-per-package-head');
-    const sponsorField = $('#sponsors');  // Sponsor field element
-
+    const sponsorField = $('#sponsors');
+    const formColumn = $('.main-form');
+ 
     let packageSelect = document.getElementById('package_name');
     let selectedPackage = packageSelect.options[packageSelect.selectedIndex];
-    let oldMenuValue = menuDropdown.find('option:selected').val(); // Store the old menu value
-
+    let oldMenuValue = menuDropdown.find('option:selected').val();
+ 
     let persons = selectedPackage.getAttribute('data-persons');
-
+ 
     if (selectedPackage.package_type === 'Wedding') {
-        sponsorField.prop('disabled', false);  // Enable sponsor field for wedding packages
+        sponsorField.prop('disabled', false);
     } else {
-        sponsorField.prop('disabled', true);   // Disable sponsor field for other packages
-        sponsorField.val('');  // Optionally clear the value if not enabled
+        sponsorField.prop('disabled', true);
+        sponsorField.val('');
     }
-
+ 
     if (persons) {
-        // Set the value if it's not already populated
         if (!guestsInput.val() || guestsInput.val() < persons) {
-            guestsInput.val(persons); // Set the value to the default persons number
+            guestsInput.val(persons);
         }
     }
-
-    guestsInput.attr('min', persons); // Ensure the minimum value is always the default
-
+ 
+    guestsInput.attr('min', persons);
     menuDropdown.empty().append('<option value="" disabled selected>Select a Menu</option>');
-    previewSection.hide();
     packageServicesList.empty();
-
+ 
     if (selectedPackageName) {
         const selectedPackage = packages.find(pkg => pkg.package_name === selectedPackageName);
-
+ 
         if (selectedPackage) {
+            formColumn.removeClass('col-lg-12').addClass('col-lg-8');
+            setTimeout(() => {
+                previewSection.show();
+                $('.blank-card').addClass('visible');
+            }, 100);
+ 
             menuDropdown.prop('disabled', false);
             selectedPackage.menus.forEach(menu => {
                 const option = new Option(menu.menu_name, menu.menu_name);
@@ -52,58 +56,52 @@ function change() {
                 }
                 menuDropdown.append(option);
             });
-
+ 
             packageNameSpan.text(selectedPackage.package_name);
-            const basePrice = parseInt(selectedPackage.price, 10); // Ensure it's a whole number
+            const basePrice = parseInt(selectedPackage.price, 10);
             packagePriceSpan.text(basePrice);
             packagePaxSpan.text(selectedPackage.persons);
-
+ 
             packageServicesList.empty();
-            if (selectedPackage.services && selectedPackage.services.length > 0) {
+            if (selectedPackage.services?.length > 0) {
                 selectedPackage.services.forEach(service => {
                     packageServicesList.append('<li>' + service.service + '</li>');
                 });
             } else {
                 packageServicesList.append('<li>No services available</li>');
             }
-
+ 
             const baseGuests = selectedPackage.persons;
-            let pricePerAdditionalPerson = 350;
-
-            if (selectedPackage.package_type === 'Wedding') {
-                pricePerAdditionalPerson = 400;
-                sponsorField.prop('disabled', false);  // Enable sponsor field for wedding packages
-            } else {
-                sponsorField.prop('disabled', true);  // Disable sponsor field for other packages
-            }
-
-            pricePerPackageHeadSpan.text(pricePerAdditionalPerson); // Price per head
-
+            let pricePerAdditionalPerson = selectedPackage.package_type === 'Wedding' ? 400 : 350;
+            
+            sponsorField.prop('disabled', selectedPackage.package_type !== 'Wedding');
+ 
+            pricePerPackageHeadSpan.text(pricePerAdditionalPerson);
+ 
             let currentGuests = Math.max(baseGuests, guestsInput.val());
             guestsInput.val(currentGuests);
-
+ 
             const additionalGuests = Math.max(0, currentGuests - baseGuests);
             const additionalPrice = additionalGuests * pricePerAdditionalPerson;
             const totalPrice = basePrice + additionalPrice;
-
+ 
             additionalPersonsSpan.text(additionalGuests);
             totalPriceSpan.text(totalPrice);
             totalPackagePriceSpan.text(basePrice);
             menuItemsList.empty();
-
+ 
             if (oldMenuValue) {
                 $('#menu_name').trigger('change');
             }
-
-            previewSection.show();
-        } else {
-            console.error("Selected package not found or has no menus.");
         }
     } else {
-        menuDropdown.prop('disabled', true);
-        previewSection.hide();
+        $('.blank-card').removeClass('visible');
+        setTimeout(() => {
+            previewSection.hide();
+            formColumn.addClass('col-lg-12').removeClass('col-lg-8');
+        }, 800);
     }
-}
+ }
 
 
 $('#menu_name').change(function () {
@@ -224,23 +222,23 @@ $('#guests_number').on('input', function () {
     isUpdatingGuests = false; // Reset the flag
 });
 
-$(document).ready(function () {
+$(document).ready(function() {
+    if (!$('#package_name').val()) {
+        $('.main-form').addClass('col-lg-12').removeClass('col-lg-8');
+    }
+    
     $('#package_name').on('change', change);
-
-    // Run the change function when the page loads, and set default value for guests
+ 
     if ($('#package_name').val()) {
         change();
-
-        // Set the default guests value if not already set
         if ($('#guests_number').val() === '') {
             $('#guests_number').val($('#package_name option:selected').data('persons'));
         }
-
         if ($('#guests_number').val()) {
             $('#guests_number').trigger('input');
         }
     }
-});
+ });
 
 document.addEventListener("DOMContentLoaded", function() {
     const packageSelect = document.getElementById('package_name'); // Package select element

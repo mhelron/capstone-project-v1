@@ -131,9 +131,9 @@ class ReservationController extends Controller
     $postRef = $this->database->getReference($this->reservations)->push($reserveData);
 
     if ($postRef) {
-        return redirect('admin/reservations')->with('status', 'Reservation Added');
+        return redirect()->route('admin.reservation', ['tab' => 'penbook'])->with('status', 'Reservation Added');
     } else {
-        return redirect('admin/reservations')->with('status', 'Reservation Not Added');
+        return redirect()->route('admin.reservation', ['tab' => 'penbook'])->with('status', 'Reservation not Added');
     }
 }
 
@@ -196,9 +196,9 @@ class ReservationController extends Controller
         $postRef = $this->database->getReference($this->reservations)->push($reserveData);
 
         if ($postRef) {
-            return redirect('admin/reservations')->with('status', 'Reservation Added');
+            return redirect()->route('admin.reservation', ['tab' => 'penbook'])->with('status', 'Reservation Added');
         } else {
-            return redirect('admin/reservations')->with('status', 'Reservation Not Added');
+            return redirect()->route('admin.reservation', ['tab' => 'penbook'])->with('status', 'Reservation Not Added');
         }
     }
 
@@ -213,9 +213,9 @@ class ReservationController extends Controller
         $res_updated = $this->database->getReference($this->reservations. '/'.$key)->update($reserveData);
 
         if ($res_updated) {
-            return redirect('admin/reservations')->with('status', 'Pencil Confirmed');
+            return redirect()->route('admin.reservation', ['tab' => 'penbook'])->with('status', 'Pencil Confirmed');
         } else {
-            return redirect('admin/reservations')->with('status', 'Pencil Not Confirmed');
+            return redirect()->route('admin.reservation', ['tab' => 'penbook'])->with('status', 'Pencil not Confirmed');
         }
     }
 
@@ -230,9 +230,9 @@ class ReservationController extends Controller
         $res_updated = $this->database->getReference($this->reservations. '/'.$key)->update($reserveData);
 
         if ($res_updated) {
-            return redirect('admin/reservations')->with('status', 'Pencil Cancelled');
+            return redirect()->route('admin.reservation', ['tab' => 'penbook'])->with('status', 'Pencil Cancelled');
         } else {
-            return redirect('admin/reservations')->with('status', 'Pencil Not Cancelled');
+            return redirect()->route('admin.reservation', ['tab' => 'penbook'])->with('status', 'Pencil Not Cancelled');
         }
     }
 
@@ -246,9 +246,9 @@ class ReservationController extends Controller
         $res_updated = $this->database->getReference($this->reservations. '/'.$key)->update($reserveData);
 
         if ($res_updated) {
-            return redirect('admin/reservations')->with('status', 'Reservation Confirmed');
+            return redirect()->route('admin.reservation', ['tab' => 'pending'])->with('status', 'Reservation Confirmed');
         } else {
-            return redirect('admin/reservations')->with('status', 'Reservation Not Confirmed');
+            return redirect()->route('admin.reservation', ['tab' => 'pending'])->with('status', 'Reservation Not Confirmed');
         }
     }
 
@@ -262,9 +262,9 @@ class ReservationController extends Controller
         $res_updated = $this->database->getReference($this->reservations. '/'.$key)->update($reserveData);
 
         if ($res_updated) {
-            return redirect('admin/reservations')->with('status', 'Reservation Finished');
+            return redirect()->route('admin.reservation', ['tab' => 'confirmed'])->with('status', 'Reservation Finished');
         } else {
-            return redirect('admin/reservations')->with('status', 'Reservation Not Finished');
+            return redirect()->route('admin.reservation', ['tab' => 'confirmed'])->with('status', 'Reservation Not Finished');
         }
     }
 
@@ -278,9 +278,9 @@ class ReservationController extends Controller
         $res_updated = $this->database->getReference($this->reservations. '/'.$key)->update($reserveData);
 
         if ($res_updated) {
-            return redirect('admin/reservations')->with('status', 'Reservation Cancelled');
+            return redirect()->route('admin.reservation', ['tab' => 'pending'])->with('status', 'Reservation Cancelled');
         } else {
-            return redirect('admin/reservations')->with('status', 'Reservation Not Cancelled');
+            return redirect()->route('admin.reservation', ['tab' => 'pending'])->with('status', 'Reservation not Cancelled');
         }
     }
 
@@ -295,9 +295,9 @@ class ReservationController extends Controller
         $del_data = $this->database->getReference($this->reservations.'/'.$key)->remove();
 
         if ($del_data && $archive_data) {
-            return redirect('admin/reservations')->with('status', 'Reservation Archived Successfully');
+            return redirect()->route('admin.reservation', ['tab' => 'finished'])->with('status', 'Reservation Archived');
         } else {
-            return redirect('admin/reservations')->with('status', 'Reservation Not Archived');
+            return redirect()->route('admin.reservation', ['tab' => 'finished'])->with('status', 'Reservation Not Archived');
         }
     }
 }

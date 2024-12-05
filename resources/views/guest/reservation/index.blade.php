@@ -22,7 +22,7 @@
 <div class="content pt-2">
     <div class="container">
         <div class="row d-flex justify-content-center">
-            <div class="col-lg-8 mb-4">
+            <div class="col-lg-8 mb-4 main-form">
 
                 @if (session('status'))
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
