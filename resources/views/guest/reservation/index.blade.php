@@ -377,6 +377,118 @@
                 </div>
             </div>
         </div>
+
+        <!-- Summary Modal -->
+        <div class="modal fade" id="summaryModal" tabindex="-1" aria-labelledby="summaryModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="summaryModalLabel"><strong>Reservation Summary</strong></h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Personal Information Table -->
+                        <h5>Personal Information</h5>
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <th style="width: 30%">Name</th>
+                                    <td><span id="summary-name"></span></td>
+                                </tr>
+                                <tr>
+                                    <th>Phone</th>
+                                    <td><span id="summary-phone"></span></td>
+                                </tr>
+                                <tr>
+                                    <th>Email</th>
+                                    <td><span id="summary-email"></span></td>
+                                </tr>
+                                <tr>
+                                    <th>Address</th>
+                                    <td><span id="summary-address"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Event Details Table -->
+                        <h5 class="mt-4">Event Details</h5>
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <th style="width: 30%">Event Title</th>
+                                    <td><span id="summary-event-title"></span></td>
+                                </tr>
+                                <tr>
+                                    <th>Package</th>
+                                    <td><span id="summary-package"></span></td>
+                                </tr>
+                                <tr>
+                                    <th>Menu</th>
+                                    <td><span id="summary-menu"></span></td>
+                                </tr>
+                                <tr>
+                                    <th>Number of Guests</th>
+                                    <td><span id="summary-guests"></span></td>
+                                </tr>
+                                <tr id="summary-sponsors-container" style="display: none;">
+                                    <th>Number of Sponsors</th>
+                                    <td><span id="summary-sponsors"></span></td>
+                                </tr>
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <td><span id="summary-datetime"></span></td>
+                                </tr>
+                                <tr>
+                                    <th>Venue</th>
+                                    <td><span id="summary-venue"></span></td>
+                                </tr>
+                                <tr>
+                                    <th>Theme</th>
+                                    <td><span id="summary-theme"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Special Requests Table -->
+                        <h5 class="mt-4">Special Requests</h5>
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <td><span id="summary-requests"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Price Breakdown Table -->
+                        <h5 class="mt-4">Price Breakdown</h5>
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <th style="width: 30%">Package Price</th>
+                                    <td>₱<span id="summary-package-price"></span></td>
+                                </tr>
+                                <tr>
+                                    <th>Additional Persons Cost</th>
+                                    <td>₱<span id="summary-additional-cost"></span></td>
+                                </tr>
+                                <tr class="table-active">
+                                    <th>Total Price</th>
+                                    <td><strong>₱<span id="summary-total-price"></span></strong></td>
+                                </tr>
+                                <tr class="table-active">
+                                    <th>Reservation Fee</th>
+                                    <td><strong>₱<span>5,000.00</span></strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Edit</button>
+                        <button type="button" class="btn btn-darkorange" id="confirmSubmit">Confirm Reservation</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <!-- /.content -->
@@ -391,6 +503,20 @@
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+    document.getElementById('guests_number').addEventListener('input', function() {
+        // Get the current value
+        let value = parseInt(this.value);
+        
+        // Check if the value exceeds the max value
+        if (value > 500) {
+            this.value = 500;
+        } else if (value < 1) {
+            this.value = 1;
+        }
+    });
+</script>
 
 
 <script>
@@ -439,6 +565,205 @@
 ?>
 
 const addressData = <?php echo json_encode($addressData); ?>;
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('myForm');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const summaryModal = new bootstrap.Modal(document.getElementById('summaryModal'));
+
+    // Create error message elements for all fields
+    function createErrorElements() {
+        const fields = form.querySelectorAll('input, select, textarea');
+        fields.forEach(field => {
+            const parent = field.parentElement;
+            const existingError = parent.querySelector('.error-message');
+            if (!existingError) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message text-danger small mt-1';
+                errorDiv.style.display = 'none';
+                parent.appendChild(errorDiv);
+            }
+        });
+    }
+
+    // Initialize error elements
+    createErrorElements();
+
+    // Clear all error messages
+    function clearErrors() {
+        form.querySelectorAll('.error-message').forEach(errorDiv => {
+            errorDiv.style.display = 'none';
+            errorDiv.textContent = '';
+        });
+    }
+
+    // Show error message for a specific field
+    function showError(field, message) {
+        const parent = field.parentElement;
+        const errorDiv = parent.querySelector('.error-message');
+        if (errorDiv) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+    }
+
+    submitBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        clearErrors();
+        
+        if (!validateForm()) {
+            return;
+        }
+
+        updateSummaryModal();
+        summaryModal.show();
+    });
+
+    document.getElementById('confirmSubmit').addEventListener('click', function() {
+        form.submit();
+    });
+
+    function validateForm() {
+        let isValid = true;
+
+        // Validate required fields
+        const requiredFields = {
+            'first_name': 'First Name',
+            'last_name': 'Last Name',
+            'phone': 'Phone',
+            'email': 'Email',
+            'street_houseno': 'House Number, Building, Street',
+            'event_title': 'Event Title',
+            'guests_number': 'Number of Guests',
+            'event_date': 'Date of Event',
+            'event_time': 'Time of Event',
+            'venue': 'Venue',
+            'theme': 'Theme'
+        };
+
+        // Check each required field
+        for (const [fieldName, label] of Object.entries(requiredFields)) {
+            const field = document.getElementsByName(fieldName)[0];
+            if (!field.value.trim()) {
+                showError(field, `${label} is required`);
+                isValid = false;
+            }
+        }
+
+        // Validate dropdowns
+        const requiredDropdowns = {
+            'region': 'Region',
+            'province': 'Province',
+            'city': 'City',
+            'barangay': 'Barangay',
+            'package_name': 'Package',
+            'menu_name': 'Menu'
+        };
+
+        for (const [dropdownId, label] of Object.entries(requiredDropdowns)) {
+            const dropdown = document.getElementById(dropdownId);
+            if (!dropdown.value || dropdown.value === '' || dropdown.value === 'Select a ' + label) {
+                showError(dropdown, `Please select a ${label}`);
+                isValid = false;
+            }
+        }
+
+        // Special validation for wedding package sponsors
+        const packageType = document.getElementById('package_type').value;
+        const sponsorsInput = document.getElementById('sponsors');
+        if (packageType === 'Wedding' && (!sponsorsInput.value || sponsorsInput.value <= 0)) {
+            showError(sponsorsInput, 'Please enter the number of sponsors');
+            isValid = false;
+        }
+
+        // Phone number format validation
+        const phoneInput = document.getElementsByName('phone')[0];
+        const phonePattern = /^(09|\+639)\d{9}$/;
+        if (phoneInput.value && !phonePattern.test(phoneInput.value)) {
+            showError(phoneInput, 'Please enter a valid Philippine mobile number');
+            isValid = false;
+        }
+
+        // Email format validation
+        const emailInput = document.getElementsByName('email')[0];
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (emailInput.value && !emailPattern.test(emailInput.value)) {
+            showError(emailInput, 'Please enter a valid email address');
+            isValid = false;
+        }
+
+        // Number of guests validation
+        const guestsInput = document.getElementById('guests_number');
+        if (guestsInput.value && (guestsInput.value < 1 || guestsInput.value > 500)) {
+            showError(guestsInput, 'Number of guests must be between 1 and 500');
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    function updateSummaryModal() {
+    // Personal Information
+    document.getElementById('summary-name').textContent = 
+        `${document.getElementsByName('first_name')[0].value} ${document.getElementsByName('last_name')[0].value}`;
+    document.getElementById('summary-phone').textContent = document.getElementsByName('phone')[0].value;
+    document.getElementById('summary-email').textContent = document.getElementsByName('email')[0].value;
+    
+    // Address
+    const address = [
+        document.getElementsByName('street_houseno')[0].value = document.getElementsByName('street_houseno')[0].value.toUpperCase(),
+        document.getElementById('barangay').options[document.getElementById('barangay').selectedIndex]?.text,
+        document.getElementById('city').options[document.getElementById('city').selectedIndex]?.text,
+        document.getElementById('province').options[document.getElementById('province').selectedIndex]?.text,
+        document.getElementById('region').options[document.getElementById('region').selectedIndex]?.text
+    ].filter(Boolean).join(', ');
+    document.getElementById('summary-address').textContent = address;
+    
+    // Event Details
+    document.getElementById('summary-event-title').textContent = document.getElementsByName('event_title')[0].value;
+    document.getElementById('summary-package').textContent = document.getElementById('package_name').value;
+    document.getElementById('summary-menu').textContent = document.getElementById('menu_name').value;
+    document.getElementById('summary-guests').textContent = document.getElementById('guests_number').value;
+    document.getElementById('summary-datetime').textContent = 
+        `${document.getElementById('event_date').value} ${document.getElementById('event_time').value}`;
+    document.getElementById('summary-venue').textContent = document.getElementsByName('venue')[0].value;
+    document.getElementById('summary-theme').textContent = document.getElementsByName('theme')[0].value;
+    
+    // Sponsors (only for wedding packages)
+    const sponsorsContainer = document.getElementById('summary-sponsors-container');
+    if (document.getElementById('package_type').value === 'Wedding') {
+        sponsorsContainer.style.display = 'table-row';
+        document.getElementById('summary-sponsors').textContent = document.getElementById('sponsors').value;
+    } else {
+        sponsorsContainer.style.display = 'none';
+    }
+    
+    // Special Requests
+    document.getElementById('summary-requests').textContent = 
+        document.getElementsByName('other_requests')[0].value || 'None';
+    
+    // Price Breakdown
+    document.getElementById('summary-package-price').textContent = 
+        document.getElementById('total-package-price').textContent;
+    document.getElementById('summary-additional-cost').textContent = 
+        document.getElementById('total-additional-person-price').textContent;
+    document.getElementById('summary-total-price').textContent = 
+        document.getElementById('total-price').textContent;
+}
+
+    // Add input event listeners to clear errors when user starts typing
+    form.querySelectorAll('input, select, textarea').forEach(field => {
+        field.addEventListener('input', function() {
+            const errorDiv = this.parentElement.querySelector('.error-message');
+            if (errorDiv) {
+                errorDiv.style.display = 'none';
+                errorDiv.textContent = '';
+            }
+        });
+    });
+});
 </script>
 
 @vite('resources/js/address.js')

@@ -147,9 +147,6 @@ document.addEventListener('DOMContentLoaded', function () {
         noCalendar: true,
         dateFormat: "h:i K", // h:i K for 12-hour format with AM/PM
         time_24hr: false, // Disable 24-hour format
-        minuteIncrement: 30,
-        minTime: "12:00 AM", // Update to 12-hour format
-        maxTime: "11:30 PM", // Update to 12-hour format
         defaultHour: 12,
         defaultMinute: 0,
         onClose: function(selectedDates, dateStr) {
