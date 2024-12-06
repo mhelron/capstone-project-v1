@@ -83,7 +83,8 @@
             placeholderText: 'Type your message here...',
             bubbleAvatarUrl:'{{ asset("images/bubble.png") }}',
             aboutText: ' ',
-            headerTextColor: '#ffffff'
+            headerTextColor: '#ffffff',
+            desktopHeight: 700
         };
     </script>
 

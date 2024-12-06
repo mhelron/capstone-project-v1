@@ -217,7 +217,7 @@ public function run()
         
         Log::info("Seeding process started");
         
-        $totalReservations = 10;
+        $totalReservations = 5000;
         Log::info("Attempting to create {$totalReservations} reservations");
         
         // Current date for reference
