@@ -133,7 +133,9 @@ Route::middleware([AuthMiddleware::class])->group(function () {
         // Reports Route
         Route::prefix('admin/reports')->group(function () {
             Route::get('/reservation', [ReportsController::class, 'reservation'])->name('admin.reports.reservation');
+            Route::get('/reservation/print', [ReportsController::class, 'printReservation'])->name('reservation.print');
             Route::get('/sales', [ReportsController::class, 'sales'])->name('admin.reports.sales');
+            Route::get('/sales/print', [ReportsController::class, 'printSales'])->name('admin.reports.sales.print');
             Route::get('/packages', [ReportsController::class, 'packages'])->name('admin.reports.packages');
             Route::get('/locations', [ReportsController::class, 'locations'])->name('admin.reports.locations');
         });

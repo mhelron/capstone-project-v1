@@ -2,8 +2,9 @@
 
 @section('content')
 
-<div>
-    <h1 style="padding-top: 35px;">Reservation Report</h1>
+<div class="d-flex justify-content-between align-items-center" style="padding-top: 35px;">
+    <h1>Reservations Report Page</h1>
+    <a href="{{ route('reservation.print') }}" class="btn btn-primary" target="_blank">Print Report</a>
 </div>
 
 <div class="row pt-3">

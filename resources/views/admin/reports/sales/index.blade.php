@@ -2,8 +2,9 @@
 
 @section('content')
 
-<div>
-    <h1 style="padding-top: 35px;">Sales Page</h1>
+<div class="d-flex justify-content-between align-items-center" style="padding-top: 35px;">
+    <h1>Sales Page</h1>
+    <a href="{{ route('admin.reports.sales.print') }}" class="btn btn-primary" target="_blank">Print Report</a>
 </div>
 
 <div>
@@ -51,8 +52,9 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const months = @json($months);
-    const reservationFeesYearly = @json([$yearlyFees]); // Pass yearly data
-    const totalPricesYearly = @json([$yearlyPrices]); // Pass yearly total price data
+    const years = @json($years); // Pass years array
+    const yearlyFeesData = @json(array_values($yearlyFees)); // Extract values for fees
+    const yearlyPricesData = @json(array_values($yearlyPrices)); // Extract values for total prices
     const reservationFeesMonthly = @json($reservationFees);
     const totalPricesMonthly = @json($totalPrices); // Monthly total price data
     const reservationFeesWeekly = @json($weeklyFees); // Weekly data
@@ -63,21 +65,23 @@
     new Chart(ctx1, {
         type: 'bar',
         data: {
-            labels: ['2024'], // Only one label for yearly sales
-            datasets: [{
-                label: 'Reservation Fees',
-                data: reservationFeesYearly,
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            },
-            {
-                label: 'Packages Total',
-                data: totalPricesYearly,
-                backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            }]
+            labels: years, // Use dynamic years
+            datasets: [
+                {
+                    label: 'Reservation Fees',
+                    data: yearlyFeesData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Packages Total',
+                    data: yearlyPricesData,
+                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }
+            ]
         },
         options: {
             responsive: true,
