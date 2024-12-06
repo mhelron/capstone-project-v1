@@ -4,15 +4,6 @@
 
 <div class="container">
 <div class="row mt-4">
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
     <!-- Left Column: Contact Us title and description -->
     <div class="col-md-6">
     <div style="display: flex; flex-direction: column; text-align: left; padding-top: 100px;">
@@ -42,18 +33,30 @@
                 <div class="mb-3">
                     <label for="name" style="color: solid black; font-family: 'Arial'; font-weight: bolder;" class="form-label">Name</label>  
                     <input type="text" class="form-control" style="border: 3px solid darkorange;" id="name" name="name" placeholder="Enter your Full Name">
+                    @if ($errors->has('name'))
+                        <small class="text-danger">{{ $errors->first('name') }}</small>
+                    @endif
                 </div>
                 <div class="mb-3">
                     <label for="phone" style="color: solid black; font-family: 'Arial'; font-weight: bolder;" class="form-label">Phone Number</label>
                     <input type="phone" class="form-control"  style="border: 3px solid darkorange;" id="phone" name="phone" placeholder="Enter your Contact Number">
+                    @if ($errors->has('phone'))
+                        <small class="text-danger">{{ $errors->first('phone') }}</small>
+                    @endif
                 </div>
                 <div class="mb-3">
                     <label for="email" style="color: solid black; font-family: 'Arial'; font-weight: bolder;" class="form-label">Email</label>
                     <input type="email" class="form-control"  style="border: 3px solid darkorange;" id="email" name="email" placeholder="Enter your Email">
+                    @if ($errors->has('email'))
+                        <small class="text-danger">{{ $errors->first('email') }}</small>
+                    @endif
                 </div>
                 <div class="mb-3">
                     <label for="message" style="color: solid black; font-family: 'Arial'; font-weight: bolder;" class="form-label" >Message</label>
                     <textarea class="form-control"  style="border: 3px solid darkorange;" id="message" name="message" rows="4" placeholder="Enter your Message"></textarea>
+                    @if ($errors->has('message'))
+                        <small class="text-danger">{{ $errors->first('message') }}</small>
+                    @endif
                 </div>
                 <button type="submit" class="btn btn-darkorange">Send Message</button>
             </form>

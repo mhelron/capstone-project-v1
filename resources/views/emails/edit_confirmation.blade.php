@@ -76,11 +76,11 @@
     </style>
 </head>
 <body>
-    <h1>Pending Reservation</h1>
+    <h1>Edit Reservation</h1>
 
     <p>Dear {{ $first_name }} {{ $last_name }},</p>
-    <p>We have received your payment for your reservation. Our team will verify your payment shortly.</p>
-    <p>Thank you for reserving with Kyla and Kyle Catering Services! Here are your reservation details:</p>
+    <p>Thank you for updating your reservation with Kyla and Kyle Catering Services. Your updated reservation details have been successfully received. Our team will review the changes and verify the payment, if applicable, shortly.</p>
+    <p>Here are your updated reservation details:</p>
 
     <table>
         <tr>
@@ -178,7 +178,9 @@
         </tr>
     </table>
 
-    <p>We look forward to making your event memorable. Thank you for choosing Kyla and Kyle Catering Services!</p>
+    <p>If you have any further changes or questions, please don't hesitate to contact us. You can reach us at <a href="mailto:support@kylaandkylecatering.com">support@kylaandkylecatering.com</a> or call us at <strong> 0917-82-1971 and 0945-413-0258</strong>.</p>
+
+    <p>Thank you for choosing Kyla and Kyle Catering Services. We look forward to making your event special!</p>
 
     <div class="footer">
         <p>&copy; 2024 Kyla and Kyle Catering Services</p>

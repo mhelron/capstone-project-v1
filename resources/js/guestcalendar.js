@@ -73,10 +73,16 @@ document.addEventListener('DOMContentLoaded', function() {
             // Use absolute URL to ensure proper redirection
             const baseUrl = window.location.origin;
             window.location.href = `${baseUrl}/reserve?event_date=${info.dateStr}`;
+        },
+        datesSet: function() {
+            highlightPastDates();
+            updateDateCellsWithCount();
         }
     });
     
     calendar.render();
+    highlightPastDates();
+    updateDateCellsWithCount();
    
     function highlightPastDates() {
         var today = new Date();

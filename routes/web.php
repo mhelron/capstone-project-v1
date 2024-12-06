@@ -57,6 +57,7 @@ Route::get('/check-status', [GuestReservationController::class, 'showCheckStatus
 Route::post('/check-status', [GuestReservationController::class, 'checkStatus'])->name('guest.check.submit');
 Route::delete('/reservation/{reservation_id}/cancel', [GuestReservationController::class, 'cancelReservation'])->name('reservation.cancel');
 Route::get('/edit-reserve/{reservation_id}', [GuestReservationController::class, 'edit'])->name('guest.reserve.edit');
+Route::put('/edit-reserve/{reservation_id}', [GuestReservationController::class, 'update'])->name('guest.reservation.update');
 
 Route::view('/unauthorized', 'unauthorized')->name('unauthorized');
 

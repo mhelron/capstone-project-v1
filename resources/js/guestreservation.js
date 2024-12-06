@@ -145,21 +145,21 @@ document.addEventListener('DOMContentLoaded', function () {
     eventTimePicker = flatpickr("#event_time", {
         enableTime: true,
         noCalendar: true,
-        dateFormat: "H:i",
-        time_24hr: true,
+        dateFormat: "h:i K", // h:i K for 12-hour format with AM/PM
+        time_24hr: false, // Disable 24-hour format
         minuteIncrement: 30,
-        minTime: "00:00",
-        maxTime: "23:30",
+        minTime: "12:00 AM", // Update to 12-hour format
+        maxTime: "11:30 PM", // Update to 12-hour format
         defaultHour: 12,
         defaultMinute: 0,
         onClose: function(selectedDates, dateStr) {
             const selectedDate = eventDatePicker?.selectedDates[0];
             const today = new Date();
-            
+    
             if (selectedDate && selectedDate.toDateString() === today.toDateString()) {
                 const currentTime = getCurrentTime();
                 const selectedTime = dateStr;
-                
+    
                 if (selectedTime < currentTime) {
                     this.setDate(currentTime);
                 }

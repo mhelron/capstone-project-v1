@@ -153,10 +153,10 @@
                                     <label for="package_name">Package</label>
                                     <select name="package_name" id="package_name" class="form-control">
                                         <option value="" disabled {{ old('package_name') ? '' : 'selected' }}>Select a Package</option>
-                                        @foreach ($packages as $package)
-                                            <option value="{{ $package['package_name'] }}" data-persons="{{ $package['persons'] }}"
-                                                    {{ old('package_name') == $package['package_name'] ? 'selected' : '' }}>
-                                                {{ $package['package_name'] }}
+                                        @foreach ($packages ?? [] as $package)
+                                            <option value="{{ $package['package_name'] ?? '' }}" data-persons="{{ $package['persons'] ?? '' }}"
+                                                    {{ old('package_name') == ($package['package_name'] ?? '') ? 'selected' : '' }}>
+                                                {{ $package['package_name'] ?? 'Unknown Package' }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -410,11 +410,13 @@
                     "menu_name": "'. addslashes($menu['menu_name']) .'", 
                     "foods": [';
 
-            foreach($menu['foods'] as $food) {
-                echo '{
-                    "category": "'. addslashes($food['category']) .'", 
-                    "food": "'. addslashes($food['food']) .'"
-                },';
+            foreach($menu['foods'] ?? [] as $food) {
+                if (is_array($food)) {
+                    echo '{
+                        "category": "'. addslashes($food['category'] ?? '') .'", 
+                        "food": "'. addslashes($food['food'] ?? '') .'"
+                    },';
+                }
             }
             // Remove trailing comma and close the foods array
             echo ']},';

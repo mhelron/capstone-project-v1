@@ -243,12 +243,14 @@
                 echo '{
                     "menu_name": "'. addslashes($menu['menu_name']) .'",
                     "foods": [';                
-                foreach($menu['foods'] as $food) {
-                    echo '{
-                        "category": "'. addslashes($food['category']) .'",
-                        "food": "'. addslashes($food['food']) .'"
-                    },';
-                }                
+                foreach($menu['foods'] ?? [] as $food) {
+                    if (is_array($food)) {
+                        echo '{
+                            "category": "'. addslashes($food['category'] ?? '') .'", 
+                             "food": "'. addslashes($food['food'] ?? '') .'"
+                        },';
+                    }
+                }            
                 echo ']
                 },';
             }

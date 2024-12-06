@@ -32,9 +32,11 @@
                                         class="form-control" 
                                         id="reference_number" 
                                         name="reference_number" 
-                                        value="{{ old('reference_number', request('reference_number')) }}"
-                                        required 
+                                        value="{{ old('reference_number', request('reference_number')) }}" 
                                         placeholder="Enter your 12-digit reference number">
+                                    @if ($errors->has('reference_number'))
+                                        <small class="text-danger">{{ $errors->first('reference_number') }}</small>
+                                    @endif
                                 </div>
 
                                 <button type="submit" class="btn btn-darkorange w-100">

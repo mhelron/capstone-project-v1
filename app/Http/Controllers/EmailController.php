@@ -24,9 +24,16 @@ class EmailController extends Controller
         // Validate the contact form data
         $validatedData = $request->validate([
             'name' => 'required|string',
-            'phone' => 'required|string',
+            'phone' => 'required|string|regex:/^09\d{9}$/',
             'email' => 'required|email',
             'message' => 'required|string',
+        ], [
+            'name.required' => 'Your name is required.',
+            'phone.required' => 'Please provide your phone number.',
+            'phone.regex' => 'The phone number must start with "09" and contain exactly 11 digits.',
+            'email.required' => 'An email address is required.',
+            'email.email' => 'Please provide a valid email address.',
+            'message.required' => 'You must enter a message.',
         ]);
 
         // Send the contact email using the 'admin' mailer

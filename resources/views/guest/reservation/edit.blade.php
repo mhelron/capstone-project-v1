@@ -33,8 +33,9 @@
 
                 <div class="card">
                     <div class="card-body form-container">
-                        <form id="myForm" action="{{ route('guest.reserve.add') }}" method="POST">
+                        <form id="myForm" action="{{ url('edit-reserve/'. $key) }}" method="POST">
                             @csrf
+                            @method('PUT')
 
                             <div class="row">
                                 <!-- First Name -->
@@ -298,7 +299,7 @@
                             <input type="hidden" id="total_price" name="total_price" value="{{ old('total_price', $editdata['total_price']) }}">
 
                             <div class="form-group">
-                                <button type="submit" class="btn btn-darkorange float-end">Submit</button>
+                                <button type="submit" class="btn btn-darkorange float-end">Edit</button>
                             </div>
                         </form>
                     </div>
@@ -353,11 +354,13 @@
                     "menu_name": "'. addslashes($menu['menu_name']) .'", 
                     "foods": [';
 
-            foreach($menu['foods'] as $food) {
-                echo '{
-                    "category": "'. addslashes($food['category']) .'", 
-                    "food": "'. addslashes($food['food']) .'"
-                },';
+            foreach($menu['foods'] ?? [] as $food) {
+                if (is_array($food)) {
+                    echo '{
+                        "category": "'. addslashes($food['category'] ?? '') .'", 
+                        "food": "'. addslashes($food['food'] ?? '') .'"
+                    },';
+                }
             }
             // Remove trailing comma and close the foods array
             echo ']},';

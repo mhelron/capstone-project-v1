@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Mail\PencilConfirmationMail;
 use App\Mail\PendingConfirmationMail;
+use App\Mail\EditConfirmationEmail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -22,24 +23,16 @@ class GuestReservationController extends Controller
     }
     public function index(Request $request)
     {
-        // Get the selected package and menu from the URL parameters
         $selectedPackage = $request->query('package');
         $selectedMenu = $request->query('menu');
         
-        // Fetch packages from database
-        $packages = $this->database->getReference($this->packages)->getValue();
-        $packages = is_array($packages) ? array_map(fn($package) => $package, $packages) : [];
+        // Add null coalescing to handle null response
+        $packagesData = $this->database->getReference($this->packages)->getValue() ?? [];
+        $packages = is_array($packagesData) ? array_values($packagesData) : [];
 
-        // Load address data
         $addressData = json_decode(file_get_contents(public_path('address_ph.json')), true);
         
-        // Pass all data to the view, including the selected package and menu
-        return view('guest.reservation.index', [
-            'packages' => $packages, 
-            'addressData' => $addressData,
-            'selectedPackage' => $selectedPackage,
-            'selectedMenu' => $selectedMenu
-        ]);
+        return view('guest.reservation.index', compact('packages', 'addressData', 'selectedPackage', 'selectedMenu'));
     }
     private function generateUniqueReferenceNumber()
     {
@@ -302,25 +295,31 @@ class GuestReservationController extends Controller
     {
         $request->validate([
             'reference_number' => 'required|string|size:12'
+        ], [
+            'reference_number.required' => 'The reference number is required.',
+            'reference_number.size' => 'The reference number must be exactly 12 characters.',
         ]);
-    
+
         $reservation = $this->database->getReference($this->reservations)
             ->orderByChild('reference_number')
             ->equalTo($request->reference_number)
             ->getValue();
-    
+
         if (empty($reservation)) {
-            return back()->withInput()->with('error', 'No reservation found with this reference number.');
+            return back()->withInput()->with('error', 'No reservation found.');
         }
 
-        // Get the first reservation and its key
         $reservationKey = array_key_first($reservation);
-        $reservationData = array_values($reservation)[0];
-        
-        // Add the Firebase key to the reservation data
+        $reservationData = $reservation[$reservationKey];
         $reservationData['reservation_id'] = $reservationKey;
-        
-        return view('guest.reservation.checkstatus', ['reservation' => $reservationData]);
+
+        // Store reference number in session
+        session(['last_reference_number' => $request->reference_number]);
+
+        return view('guest.reservation.checkstatus', [
+            'reservation' => $reservationData,
+            'reference_number' => $request->reference_number
+        ]);
     }
     public function cancelReservation($reservation_id, Request $request)
     {
@@ -345,20 +344,143 @@ class GuestReservationController extends Controller
         }
     }
 
-    public function edit($reservation_id){
+    public function edit($id){
+        $key = $id;
 
         $packages = $this->database->getReference($this->packages)->getValue();
         $packages = is_array($packages) ? array_map(fn($package) => $package, $packages) : [];
 
         $addressData = json_decode(file_get_contents(public_path('address_ph.json')), true);
         
-        $editdata = $this->database->getReference($this->reservations)->getChild($reservation_id)->getValue();
+        $editdata = $this->database->getReference($this->reservations)->getChild($key)->getValue();
 
         $isExpanded = session()->get('sidebar_is_expanded', true);
         if($editdata){
-            return view('guest.reservation.edit', compact('editdata', 'isExpanded', 'packages', 'addressData'));
+            return view('guest.reservation.edit', compact('editdata', 'isExpanded', 'packages', 'addressData', 'key'));
         } else {
             return redirect('/check-status')->with('status', 'User ID Not Found');
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        Log::info('Update method called', ['id' => $id, 'data' => $request->all()]);
+
+        $key = $id;
+
+        $validatedData = $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'phone' => [
+                'required',
+                'regex:/^09\d{9}$/',
+            ],
+            'email' => 'required',
+            'region' => 'required',
+            'province' => 'required',
+            'city' => 'required',
+            'barangay' => 'required',
+            'street_houseno' => [
+                'required',
+            ],
+            'package_name' => 'required',
+            'event_title' => 'required',
+            'menu_name' => 'required',
+            'event_date' => 'required',
+            'guests_number' => 'required',
+            'sponsors' => 'nullable',
+            'venue' => 'required',
+            'event_time' => 'required',
+            'theme' => 'required',
+            'other_requests' => 'nullable',
+        ], [
+            'first_name.required' => 'The first name is required.',
+            'first_name.regex' => 'The first name must only contain letters, spaces, or hyphens.',
+            'last_name.required' => 'The last name is required.',
+            'last_name.regex' => 'The last name must only contain letters and spaces.',
+            'phone.required' => 'The phone is required.',
+            'phone.regex' => 'The phone number must start with "09" and contain exactly 11 digits.',
+            'email.required' => 'The email is required.',
+            'email.email' => 'The email must be a valid email address.',
+            'region.required' => 'Please select a region.',
+            'province.required' => 'Please select a province.',
+            'city.required' => 'Please select a city.',
+            'barangay.required' => 'Please select a barangay.',
+            'street_houseno.required' => 'The House Number, Building, Street is required.',
+            'package_name.required' => 'Please select a package.',
+            'event_title.required' => 'The event title is required.',
+            'menu_name.required' => 'Please select a menu.',
+            'guests_number.required' => 'The number of guest is required.',
+            'venue.required' => 'The location or venue is required',
+            'event_date.required' => 'Please select a date.',
+            'event_time.required' => 'Please select a time.',
+            'theme.required' => 'The color motif or/and theme is required.',
+        ]);
+
+        try {
+            $menuContent = [];
+            $packages = $this->database->getReference($this->packages)->getValue() ?? [];
+            
+            // Get menu content
+            foreach ($packages as $package) {
+                if ($package['package_name'] === $validatedData['package_name']) {
+                    foreach ($package['menus'] as $menu) {
+                        if ($menu['menu_name'] === $validatedData['menu_name']) {
+                            $menuContent = $menu['foods'];
+                            break 2;
+                        }
+                    }
+                }
+            }
+        
+            $updateData = [
+                'first_name' => $validatedData['first_name'],
+                'last_name' => $validatedData['last_name'],
+                'phone' => $validatedData['phone'],
+                'email' => $validatedData['email'],
+                'region' => $validatedData['region'],
+                'province' => $validatedData['province'],
+                'city' => $validatedData['city'],
+                'barangay' => $validatedData['barangay'],
+                'street_houseno' => strtoupper($validatedData['street_houseno']),
+                'package_name' => $validatedData['package_name'],
+                'event_title' => $validatedData['event_title'],
+                'menu_name' => $validatedData['menu_name'],
+                'menu_content' => $menuContent,
+                'guests_number' => $validatedData['guests_number'],
+                'sponsors' => $validatedData['sponsors'] ?? null,
+                'venue' => $validatedData['venue'],
+                'event_date' => $validatedData['event_date'],
+                'event_time' => $validatedData['event_time'],
+                'theme' => $validatedData['theme'],
+                'other_requests' => $validatedData['other_requests'],
+                'total_price' => $request->total_price,
+            ];
+
+            $updateData = [...$validatedData, 'menu_content' => $menuContent];
+
+            $reservationRef = $this->database->getReference($this->reservations)->getChild($key)->update($updateData);
+            $reservation = $reservationRef->getValue();
+            $reservation = array_merge($reservation, $updateData);
+
+            Log::info('Update successful');
+
+            try {
+                Mail::mailer('clients')
+                    ->to($validatedData['email'])
+                    ->send(new EditConfirmationEmail($reservation));
+                Log::info('Edit confirmation email sent successfully');
+            } catch (\Exception $mailError) {
+                Log::error('Failed to send edit confirmation email:', ['error' => $mailError->getMessage()]);
+            }
+
+            $referenceNumber = $reservation['reference_number'];
+            
+            return redirect()->route('guest.check')
+            ->with('status', 'Reservation Updated Successfully')
+            ->with('reference_number', $referenceNumber);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to update reservation: ' . $e->getMessage());
         }
     }
 }

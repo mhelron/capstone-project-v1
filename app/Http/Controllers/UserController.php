@@ -39,7 +39,7 @@ class UserController extends Controller
             'user_role' => 'required',
             'first_name' => 'required|regex:/^[a-zA-Z\s\-]+$/',
             'last_name' => 'required|regex:/^[a-zA-Z\s]+$/',
-            'email' => 'required|email',
+            'email' => 'required|email:rfc,dns',
             'password' => [
                 'required',
                 'min:8',

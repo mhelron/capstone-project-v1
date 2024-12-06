@@ -10,8 +10,7 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-
-class PendingConfirmationMail extends Mailable
+class EditConfirmationEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -42,7 +41,7 @@ class PendingConfirmationMail extends Mailable
         Log::info('Reservation data for email:', $this->reservation);
 
         return $this->mailer('clients')  // Specify the 'clients' mailer here
-                ->view('emails.Pending_confirmation')
+                ->view('emails.edit_confirmation')
                 ->with([
                     'first_name' => $this->reservation['first_name'],
                     'last_name' => $this->reservation['last_name'],
@@ -70,6 +69,6 @@ class PendingConfirmationMail extends Mailable
                     'created_at' => $this->reservation['created_at'],
                     'reference_number' => $this->reservation['reference_number'],
                 ])
-                ->subject('Pending Reservation Confirmation');
+                ->subject('Edit Reservation Confirmation');
     }
 }
