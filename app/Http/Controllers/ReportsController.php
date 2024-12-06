@@ -9,6 +9,7 @@ use App\Exports\LogsExport;
 use Kreait\Firebase\Contract\Database;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class ReportsController extends Controller
 {
@@ -295,6 +296,7 @@ class ReportsController extends Controller
     
         return view('admin.reports.packages.index', compact('packageCounts', 'isExpanded'));
     }
+    
 
     public function locations() {
         // Get data from Firebase or another source
@@ -386,47 +388,55 @@ class ReportsController extends Controller
             'July', 'August', 'September', 'October', 'November', 'December'
         ];
 
-        // Initialize data arrays
-        $reservationFees = array_fill(0, 12, 0);
-        $totalPrices = array_fill(0, 12, 0);
-        $weeklyFees = array_fill(0, 4, 0);
-        $weeklyPrices = array_fill(0, 4, 0);
-        $yearlyFees = 0;
-        $yearlyPrices = 0;
+        // Initialize yearly data structure
+        $yearlyData = [];
 
         // Process reservations
         foreach ($finishedReservations as $reservation) {
             if (!empty($reservation['event_date'])) {
                 $eventDate = strtotime($reservation['event_date']);
+                $eventYear = date('Y', $eventDate);
                 $eventMonth = date('n', $eventDate) - 1;
-                $eventWeek = (int)(date('W', $eventDate) - 1) % 4;
 
+                // Correct week calculation
+                $firstDayOfYear = strtotime("first day of January $eventYear");
+                $weekDifference = (int)((date('W', $eventDate) - date('W', $firstDayOfYear)));
+                $eventWeek = max(0, $weekDifference);
+
+                // Initialize data structure for the year if not already set
+                if (!isset($yearlyData[$eventYear])) {
+                    $yearlyData[$eventYear] = [
+                        'reservationFees' => array_fill(0, 12, 0),
+                        'totalPrices' => array_fill(0, 12, 0),
+                        'weeklyFees' => array_fill(0, 4, 0),
+                        'weeklyPrices' => array_fill(0, 4, 0),
+                        'yearlyFees' => 0,
+                        'yearlyPrices' => 0,
+                    ];
+                }
+
+                // Add data to the appropriate year
                 if (isset($reservation['reserve_fee'])) {
-                    $reservationFees[$eventMonth] += floatval($reservation['reserve_fee']);
-                    $yearlyFees += floatval($reservation['reserve_fee']);
-                    $weeklyFees[$eventWeek] += floatval($reservation['reserve_fee']);
+                    $yearlyData[$eventYear]['reservationFees'][$eventMonth] += floatval($reservation['reserve_fee']);
+                    $yearlyData[$eventYear]['yearlyFees'] += floatval($reservation['reserve_fee']);
+                    $yearlyData[$eventYear]['weeklyFees'][$eventWeek % 4] += floatval($reservation['reserve_fee']);
                 }
 
                 if (isset($reservation['total_price'])) {
-                    $totalPrices[$eventMonth] += floatval($reservation['total_price']);
-                    $yearlyPrices += floatval($reservation['total_price']);
-                    $weeklyPrices[$eventWeek] += floatval($reservation['total_price']);
+                    $yearlyData[$eventYear]['totalPrices'][$eventMonth] += floatval($reservation['total_price']);
+                    $yearlyData[$eventYear]['yearlyPrices'] += floatval($reservation['total_price']);
+                    $yearlyData[$eventYear]['weeklyPrices'][$eventWeek % 4] += floatval($reservation['total_price']);
                 }
             }
         }
 
         return view('admin.reports.sales.print', compact(
             'months',
-            'reservationFees',
-            'totalPrices',
-            'weeklyFees',
-            'weeklyPrices',
-            'yearlyFees',
-            'yearlyPrices'
+            'yearlyData'
         ));
     }
 
-    public function printReservation()
+    public function printReservations()
     {
         // Get data from Firebase or another source
         $reservations = $this->database->getReference($this->reservations)->getValue();
@@ -475,4 +485,5 @@ class ReportsController extends Controller
         // Pass the data to the printable view
         return view('admin.reports.reservation.print', compact('yearlyReservations', 'monthlyReservations', 'weeklyReservations', 'months'));
     }
+
 }
