@@ -35,12 +35,16 @@
                                         <div class="card-body d-flex flex-column">
                                             <h5 class="card-title text-center text-darkorange">{{ $menu['menu_name'] }}</h5>
                                             <ul class="list-unstyled flex-grow-1">
-                                                @foreach($menu['foods'] as $food)
-                                                    <li>
-                                                        <span style="font-weight: bold;">{{ $food['category'] }}</span> : 
-                                                        {{ $food['food'] }}
-                                                    </li>
-                                                @endforeach
+                                                @if(isset($menu['foods']) && is_array($menu['foods']))
+                                                    @foreach($menu['foods'] as $food)
+                                                        <li>
+                                                            <span style="font-weight: bold;">{{ $food['category'] ?? 'No Category' }}</span> : 
+                                                            {{ $food['food'] ?? 'No Food' }}
+                                                        </li>
+                                                    @endforeach
+                                                @else
+                                                    <li>No Foods Available</li>
+                                                @endif
                                             </ul>
                                         </div>
                                     </div>

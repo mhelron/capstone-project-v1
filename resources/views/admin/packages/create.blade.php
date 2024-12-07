@@ -76,7 +76,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label for="foods" class="form-label">Foods & Categories <span class="text-danger">*</span></label>
-                                            <div id="food-list-{{ $index }}" class="food-list" data-index="{{ $loop->index }}">
+                                            <div id="food-list-{{ $index }}" class="food-list" data-index="{{ $index }}">
                                                  @foreach($menu['foods'] as $foodIndex => $food)
                                                     <div class="row mb-2">
                                                         @if ($foodIndex === 0)
@@ -226,168 +226,187 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        updateAllCategoryOptions();
-    });
+document.addEventListener('DOMContentLoaded', function () {
+    updateAllCategoryOptions();
+});
 
-    // Add menu button
-    document.getElementById('add-menu').addEventListener('click', function() {
-        var menuSection = document.getElementById('menu-section');
-        var index = menuSection.querySelectorAll('.menu-group').length;
+// Add menu button
+document.getElementById('add-menu').addEventListener('click', function() {
+    var menuSection = document.getElementById('menu-section');
+    var index = menuSection.querySelectorAll('.menu-group').length;
 
-        var menuGroup = `
-        <div class="row mt-3 menu-group">
-            <div class="col-md-6">
-                <label for="menu_name" class="form-label">Menu Name <span class="text-danger">*</span></label>
-                <input type="text" name="menus[${index}][menu_name]" class="form-control" placeholder="Enter menu name">
-            </div>
-            <div class="col-md-6">
-                <label for="foods" class="form-label">Foods & Categories <span class="text-danger">*</span></label>
-                <div id="food-list-${index}" class="food-list">
-                    <div class="row mb-2">
-                        <div class="col-md-5">
-                            <select name="menus[${index}][foods][0][category]" class="form-control category-select" onchange="updateCategoryOptions(${index})">
-                                <option value="" disabled selected>Select a category</option>
-                                ${generateCategoryOptions()}
-                            </select>
-                        </div>
-                        <div class="col-md-5">
-                            <input type="text" name="menus[${index}][foods][0][food]" class="form-control" placeholder="Enter food">
-                        </div>
+    var menuGroup = `
+    <div class="row mt-3 menu-group">
+        <div class="col-md-6">
+            <label for="menu_name" class="form-label">Menu Name <span class="text-danger">*</span></label>
+            <input type="text" name="menus[${index}][menu_name]" class="form-control" placeholder="Enter menu name">
+        </div>
+        <div class="col-md-6">
+            <label for="foods" class="form-label">Foods & Categories <span class="text-danger">*</span></label>
+            <div id="food-list-${index}" class="food-list" data-index="${index}">
+                <div class="row mb-2">
+                    <div class="col-md-5">
+                        <select name="menus[${index}][foods][0][category]" class="form-control category-select" onchange="updateCategoryOptions(${index})">
+                            <option value="" disabled selected>Select a category</option>
+                            ${generateCategoryOptions()}
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <input type="text" name="menus[${index}][foods][0][food]" class="form-control" placeholder="Enter food">
                     </div>
                 </div>
-                <button id="food-${index}" class="btn btn-sm btn-success mt-2 float-start" type="button" onclick="addMoreFoods(${index})">Add More Foods</button>
             </div>
-            <div class="col-md-12 mt-2">
-                <button class="btn btn-danger btn-sm remove-menu" type="button">Remove Menu</button>
-            </div>
+            <button id="food-${index}" class="btn btn-sm btn-success mt-2 float-start" type="button" onclick="addMoreFoods(${index})">Add More Foods</button>
         </div>
-        `;
+        <div class="col-md-12 mt-2">
+            <button class="btn btn-danger btn-sm remove-menu" type="button">Remove Menu</button>
+        </div>
+    </div>
+    `;
 
-        menuSection.insertAdjacentHTML('beforeend', menuGroup);
+    menuSection.insertAdjacentHTML('beforeend', menuGroup);
+    updateAllCategoryOptions();
+});
+
+// Remove food or services
+document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('remove-menu')) {
+        event.target.closest('.menu-group').remove();
         updateAllCategoryOptions();
-    });
-
-    // Remove food or services
-    document.addEventListener('click', function(event) {
-        if (event.target.classList.contains('remove-menu')) {
-            event.target.closest('.menu-group').remove();
-            updateAllCategoryOptions();
-        } 
-        else if (event.target.classList.contains('remove-item')) {
-            event.target.closest('.row').remove();
-            updateAllCategoryOptions();
-        }
-    });
-
-    function addMoreFoods(menuIndex) {
-        var foodList = document.getElementById('food-list-' + menuIndex);
-        var foodCount = foodList.querySelectorAll('.row').length;
-        var addButton = document.getElementById('food-' + menuIndex);
-
-        if (foodCount < 9) { // Maximum of 8 foods
-            var foodIndex = foodCount; // Set the next index for the new food
-
-            var foodGroup = `
-            <div class="row mb-2">
-                <div class="col-md-5">
-                    <select name="menus[${menuIndex}][foods][${foodIndex}][category]" class="form-control category-select" onchange="updateCategoryOptions(${menuIndex})">
-                        <option value="">Select a category</option>
-                        ${generateCategoryOptions(getSelectedCategories(menuIndex))}
-                    </select>
-                </div>
-                <div class="col-md-5">
-                    <input type="text" name="menus[${menuIndex}][foods][${foodIndex}][food]" class="form-control" placeholder="Enter food">
-                </div>
-                <div class="col-md-2">
-                    <button class="btn btn-danger remove-item" type="button" onclick="removeFood(this, ${menuIndex})">Remove</button>
-                </div>
-            </div>
-            `;
-
-            foodList.insertAdjacentHTML('beforeend', foodGroup);
-
-            // Disable the add button if 9 items are reached
-            if (foodCount + 1 >= 9) {
-                addButton.disabled = true;
-            }
-
-            updateCategoryOptions(menuIndex); // Ensure options are updated for new field
-        }
+    } 
+    else if (event.target.classList.contains('remove-item')) {
+        event.target.closest('.row').remove();
+        updateAllCategoryOptions();
     }
+});
 
-    function removeFood(button, menuIndex) {
-        // Remove the food item from the DOM
-        var foodRow = button.closest('.row');
-        foodRow.remove();
+function addMoreFoods(menuIndex) {
+    var foodList = document.getElementById('food-list-' + menuIndex);
+    var foodRows = foodList.querySelectorAll('.row');
+    var newIndex = foodRows.length;
+    var addButton = document.getElementById('food-' + menuIndex);
 
-        // Re-count food items
-        var foodList = document.getElementById('food-list-' + menuIndex);
-        var foodCount = foodList.querySelectorAll('.row').length;
-        var addButton = document.getElementById('food-' + menuIndex);
-
-        // Enable the add button if foodCount is less than 9
-        if (foodCount < 9) {
-            addButton.disabled = false;
-        }
-
-        updateCategoryOptions(menuIndex); // Update options after removal
-    }
-
-    function getSelectedCategories(menuIndex) {
-        var foodList = document.getElementById('food-list-' + menuIndex);
-        var selects = foodList.querySelectorAll('.category-select');
-        return Array.from(selects).map(select => select.value).filter(value => value !== '');
-    }
-
-    function updateCategoryOptions(menuIndex) {
-        var selectedValues = getSelectedCategories(menuIndex);
-        var foodList = document.getElementById('food-list-' + menuIndex);
-        var selects = foodList.querySelectorAll('.category-select');
-
-        selects.forEach(select => {
-            var currentValue = select.value;
-            var newOptions = `
-                <option value="" disabled selected>Select category</option>
-                ${generateCategoryOptions(selectedValues, currentValue)}
-            `;
-            select.innerHTML = newOptions;
-            select.value = currentValue; // Preserve the selected value
-        });
-    }
-
-    function generateCategoryOptions(selectedValues = [], currentValue = "") {
-        const categories = [
-            "Main Course (Beef)", "Main Course (Chicken)", "Main Course (Pork)",  "Main Course (Fish)", "Side Dish",
-            "Pasta", "Rice", "Dessert", "Drinks"
-        ];
-
-        return categories
-            .filter(category => !selectedValues.includes(category) || category === currentValue)
-            .map(category => `<option value="${category}">${category}</option>`)
-            .join('');
-    }
-
-    // Add service button
-    document.getElementById('add-service').addEventListener('click', function() {
-        var servicesList = document.getElementById('services-list');
-        var serviceIndex = servicesList.querySelectorAll('input').length;
-
-        var serviceGroup = `
+    if (foodRows.length < 9) {
+        var foodGroup = `
         <div class="row mb-2">
-            <div class="col-md-10">
-                <div class="input-group">
-                    <input type="text" name="services[]" class="form-control" placeholder="Enter service">
-                </div>
+            <div class="col-md-5">
+                <select name="menus[${menuIndex}][foods][${newIndex}][category]" class="form-control category-select" onchange="updateCategoryOptions(${menuIndex})">
+                    <option value="" disabled selected>Select a category</option>
+                    ${generateCategoryOptions(getSelectedCategories(menuIndex))}
+                </select>
+            </div>
+            <div class="col-md-5">
+                <input type="text" name="menus[${menuIndex}][foods][${newIndex}][food]" class="form-control" placeholder="Enter food">
             </div>
             <div class="col-md-2">
-                <button class="btn btn-danger remove-item" type="button">Remove</button>
+                <button class="btn btn-danger remove-item" type="button" onclick="removeFood(this, ${menuIndex})">Remove</button>
             </div>
         </div>
         `;
 
-        servicesList.insertAdjacentHTML('beforeend', serviceGroup);
+        foodList.insertAdjacentHTML('beforeend', foodGroup);
+
+        if (foodRows.length + 1 >= 9) {
+            addButton.disabled = true;
+        }
+
+        updateCategoryOptions(menuIndex);
+    }
+}
+
+function removeFood(button, menuIndex) {
+    var foodList = document.getElementById('food-list-' + menuIndex);
+    var foodRow = button.closest('.row');
+    foodRow.remove();
+
+    // Get all remaining food rows and reindex them
+    var remainingFoodRows = foodList.querySelectorAll('.row');
+    
+    // Reindex the remaining food items
+    remainingFoodRows.forEach((row, newIndex) => {
+        // Update category select name
+        var categorySelect = row.querySelector('select');
+        if (categorySelect) {
+            categorySelect.name = `menus[${menuIndex}][foods][${newIndex}][category]`;
+        }
+
+        // Update food input name
+        var foodInput = row.querySelector('input[type="text"]');
+        if (foodInput) {
+            foodInput.name = `menus[${menuIndex}][foods][${newIndex}][food]`;
+        }
+
+        // Update remove button onclick
+        var removeButton = row.querySelector('.remove-item');
+        if (removeButton) {
+            removeButton.setAttribute('onclick', `removeFood(this, ${menuIndex})`);
+        }
     });
+
+    // Enable the "Add More Foods" button if there are fewer than 9 items
+    var addButton = document.getElementById('food-' + menuIndex);
+    if (remainingFoodRows.length < 9) {
+        addButton.disabled = false;
+    }
+
+    // Update category options
+    updateCategoryOptions(menuIndex);
+}
+
+function getSelectedCategories(menuIndex) {
+    var foodList = document.getElementById('food-list-' + menuIndex);
+    var selects = foodList.querySelectorAll('.category-select');
+    return Array.from(selects).map(select => select.value).filter(value => value !== '');
+}
+
+function updateCategoryOptions(menuIndex) {
+    var selectedValues = getSelectedCategories(menuIndex);
+    var foodList = document.getElementById('food-list-' + menuIndex);
+    var selects = foodList.querySelectorAll('.category-select');
+
+    selects.forEach(select => {
+        var currentValue = select.value;
+        var newOptions = `
+            <option value="" disabled selected>Select category</option>
+            ${generateCategoryOptions(selectedValues, currentValue)}
+        `;
+        select.innerHTML = newOptions;
+        select.value = currentValue;
+    });
+}
+
+function generateCategoryOptions(selectedValues = [], currentValue = "") {
+    const categories = [
+        "Main Course (Beef)", "Main Course (Chicken)", "Main Course (Pork)", "Main Course (Fish)", "Side Dish",
+        "Pasta", "Rice", "Dessert", "Drinks"
+    ];
+
+    return categories
+        .filter(category => !selectedValues.includes(category) || category === currentValue)
+        .map(category => `<option value="${category}">${category}</option>`)
+        .join('');
+}
+
+// Add service button
+document.getElementById('add-service').addEventListener('click', function() {
+    var servicesList = document.getElementById('services-list');
+    var serviceIndex = servicesList.querySelectorAll('input').length;
+
+    var serviceGroup = `
+    <div class="row mb-2">
+        <div class="col-md-10">
+            <div class="input-group">
+                <input type="text" name="services[]" class="form-control" placeholder="Enter service">
+            </div>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-danger remove-item" type="button">Remove</button>
+        </div>
+    </div>
+    `;
+
+    servicesList.insertAdjacentHTML('beforeend', serviceGroup);
+});
 </script>
 
 @endsection
