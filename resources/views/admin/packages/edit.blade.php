@@ -400,6 +400,12 @@ document.addEventListener('click', function(event) {
     if (event.target.classList.contains('remove-menu')) {
         event.target.closest('.menu-group').remove();
         updateAllCategoryOptions();
+    } else if (event.target.classList.contains('remove-item')) {
+        // This will handle removing both food items and services
+        const row = event.target.closest('.row');
+        if (row) {
+            row.remove();
+        }
     }
 });
 

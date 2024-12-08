@@ -1,12 +1,9 @@
 @extends('layouts.guestlayout')
 
 @section('content')
-<div class="content-header" style="padding-top: 100px;">
+<div class="content-header" style="padding-top: 50px;">
     <div class="container">
         <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0">Payment</h1>
-            </div>
         </div>
     </div>
 </div>
@@ -30,17 +27,46 @@
                         </div>
                     @endif
 
-                    <p class="text-center mb-4">To pay, scan the QR code below.</p>
+                    <div class="text-center mb-4">
+                        <h2 class="fw-bold" style="color: darkorange;">Payment</h2>
+                    </div>
+                    <p class="text-center mb-2 fw-bold">To pay, scan the QR code below.</p>
+                    <p class="text-center mb-4">Or if you're just want to pencil book, just click the 'Proceed to Pencil Reservation'</p>
 
-                    <!-- QR Codes Side by Side -->
-                    <div class="d-flex justify-content-center align-items-center gap-4 mb-4">
-                        <div class="text-center">
-                            <h5 class="mb-3">GCash</h5>
-                            <img src="{{ asset('images/gcash.png') }}" alt="GCash QR Code" class="img-fluid" style="max-width: 300px;">
-                        </div>
-                        <div class="text-center">
-                            <h5 class="mb-3">UnionBank</h5>
-                            <img src="{{ asset('images/unionbank.png') }}" alt="UnionBank QR Code" class="img-fluid" style="max-width: 300px;">
+                    <!-- QR Codes Section -->
+                    <div class="container">
+                        <div class="row justify-content-center align-items-center g-4">
+                            <!-- GCash QR -->
+                            <div class="col-12 col-md-4 text-center">
+                                <h5 class="mb-3" style="color: #087cf4;">
+                                    <img src="{{ asset('/images/icons/gcash_icon.png') }}" alt="GCash Icon" 
+                                        class="img-fluid" style="max-width: 50px; border-radius: 10px;">
+                                    GCash
+                                </h5>
+                                <div class="qr-container">
+                                    <img src="{{ asset('images/gcash.png') }}" alt="GCash QR Code" 
+                                        class="qr-image">
+                                </div>
+                            </div>
+
+                            <!-- OR Divider -->
+                            <div class="col-12 col-md-2 text-center">
+                                <h5 class="mb-3 fw-bold d-none d-md-block">or</h5>
+                                <h5 class="my-2 fw-bold d-block d-md-none">or</h5>
+                            </div>
+
+                            <!-- UnionBank QR -->
+                            <div class="col-12 col-md-4 text-center">
+                                <h5 class="mb-3" style="color: darkorange;">
+                                    <img src="{{ asset('/images/icons/unionbank_icon.png') }}" alt="Unionbank Icon" 
+                                        class="img-fluid" style="max-width: 50px; border-radius: 10px;"> 
+                                    UnionBank
+                                </h5>
+                                <div class="qr-container">
+                                    <img src="{{ asset('images/unionbank.png') }}" alt="UnionBank QR Code" 
+                                        class="qr-image">
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -79,23 +105,63 @@
 
                     <!-- Receipt Upload Section -->
                     <div class="text-center">
-                        <p>Attach the receipt here. Make sure the reference number is visible.</p>
-                        <form action="{{ route('guest.payment.proof', ['reservation_id' => $reservation_id]) }}"
-                                method="POST" 
-                                enctype="multipart/form-data">
-                            @csrf
-                            <div class="form-group">
+                        <p class="fw-bold">Attach the receipt here. Make sure the reference number is visible.</p>
+                        <div class="row justify-content-center">
+                            <div class="col-12">
                                 <input type="file" name="payment_proof" class="form-control mb-3" required>
                                 @error('payment_proof')
                                     <div class="text-danger mb-3">{{ $message }}</div>
                                 @enderror
-                                <button type="submit" class="btn btn-success">Submit Payment Proof</button>
                             </div>
-                        </form>
+                            <div class="col-12 d-flex justify-content-center gap-2">
+                                <form action="{{ route('guest.payment.proof', ['reservation_id' => $reservation_id]) }}"
+                                        method="POST" 
+                                        enctype="multipart/form-data"
+                                        class="w-50">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success w-100">Submit Payment</button>
+                                </form>
+                                @if(isset($reservation) && $reservation['status'] === 'New')
+                                    <form action="{{ route('guest.pencil.booking', ['reservation_id' => $reservation_id]) }}" 
+                                        method="POST"
+                                        class="w-50">
+                                        @csrf
+                                        <button type="submit" class="btn btn-secondary w-100">Proceed to Pencil Booking</button>
+                                    </form>
+                                @endif
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .qr-container {
+        max-width: 300px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .qr-image {
+        width: 260px;
+        height: 260px;
+        object-fit: contain;
+    }
+
+    @media (max-width: 768px) {
+        .qr-container {
+            margin: 0 auto 20px;
+        }
+        
+        .qr-image {
+            width: 200px;
+            height: 200px;
+        }
+    }
+</style>
 @endsection

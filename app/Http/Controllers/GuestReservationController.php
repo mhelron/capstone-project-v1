@@ -133,8 +133,8 @@ class GuestReservationController extends Controller
         // Prepare reservation data
         $reserveData = [
             'reference_number' => $reference_number,
-            'status' => 'Pencil',
-            'reserve_type' => 'Pencil',
+            'status' => 'New',
+            'reserve_type' => 'New',
             'first_name' => $validatedData['first_name'],
             'last_name' => $validatedData['last_name'],
             'phone' => $validatedData['phone'],
@@ -166,29 +166,14 @@ class GuestReservationController extends Controller
             'read' => false,
         ];
     
-        try {
-            Log::info('Saving reservation to Firebase...', ['reservation_data' => $reserveData]);
-        
+        try {      
             $postRef = $this->database->getReference($this->reservations)->push($reserveData);
         
             if ($postRef->getKey()) {
-                Log::info('Reservation saved to Firebase', ['reservation_id' => $postRef->getKey()]);
-        
-                // Queue confirmation email
-                try {
-                    Mail::mailer('clients')  // Specify 'admin' mailer here
-                        ->to($validatedData['email'])
-                        ->send(new PencilConfirmationMail($reserveData));
-                    Log::info('Confirmation email queued for user', ['email' => $validatedData['email']]);
-                } catch (\Exception $mailException) {
-                    Log::error('Error queuing confirmation email', ['error' => $mailException->getMessage()]);
-                    // Optionally, you can redirect with an error if email queuing fails
-                    return redirect()->route('guest.payment', ['reservation_id' => $postRef->getKey()])
-                                     ->with('status', 'Reservation Added, but email failed to send');
-                }
         
                 return redirect()->route('guest.payment', ['reservation_id' => $postRef->getKey()])
-                                 ->with('status', 'Reservation Added');
+                                 ->with('status', 'Reservation Form Submitted');
+
             } else {
                 Log::warning('Reservation not added to Firebase - postRef has no key');
                 return redirect('/reserve')->with('status', 'Reservation Not Added');
@@ -241,7 +226,7 @@ class GuestReservationController extends Controller
                     'reserve_type' => 'Reserve',
                     'status' => 'Pending',
                     'payment_proof' => $paymentProofUrl,
-                    'payment_status' => 'Paid',
+                    'payment_status' => 'Pending',
                     'payment_submitted_at' => now()->toDateTimeString(),
                 ];
 
@@ -283,6 +268,59 @@ class GuestReservationController extends Controller
             ]);
 
             return redirect()->back()->with('error', 'There was an error uploading your payment proof. Please try again.');
+        }
+    }
+
+    public function processPencilBooking($reservation_id)
+    {
+        try {
+            $reservationRef = $this->database->getReference($this->reservations)->getChild($reservation_id);
+            $reservation = $reservationRef->getValue();
+
+            if (!$reservation) {
+                return redirect()->back()->with('error', 'Reservation not found.');
+            }
+
+            // Update the reservation status
+            $updates = [
+                'status' => 'Pencil',
+                'reserve_type' => 'Pencil',
+            ];
+
+            $reservationRef->update($updates);
+
+            // Merge updates for the email
+            $reservation = array_merge($reservation, $updates);
+
+            // Send the pencil confirmation email
+            try {
+                Mail::mailer('clients')
+                    ->to($reservation['email'])
+                    ->send(new PencilConfirmationMail($reservation));
+                
+                Log::info('Pencil confirmation email sent successfully', [
+                    'reservation_id' => $reservation_id,
+                    'email' => $reservation['email']
+                ]);
+            } catch (\Exception $mailException) {
+                Log::error('Error sending pencil confirmation email', [
+                    'error' => $mailException->getMessage(),
+                    'reservation_id' => $reservation_id
+                ]);
+                return redirect()->route('guest.home')
+                    ->with('warning', 'Pencil booking processed but email notification failed.');
+            }
+
+            return redirect()->route('guest.home')
+                ->with('status', 'Your pencil booking has been processed successfully.');
+                
+        } catch (\Exception $e) {
+            Log::error('Error processing pencil booking', [
+                'error' => $e->getMessage(),
+                'reservation_id' => $reservation_id
+            ]);
+            return redirect()->back()
+                ->with('error', 'There was an error processing your pencil booking. Please try again.');
         }
     }
 
