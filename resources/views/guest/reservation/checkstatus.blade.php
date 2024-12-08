@@ -180,9 +180,13 @@
                                 <tr>
                                     <th>Payment Status of Reservation Fee</th>
                                     <td>
-                                        <span class="badge {{ $reservation['payment_status'] === 'Paid' ? 'bg-success' : 'bg-danger' }}">
-                                            {{ $reservation['payment_status'] }}
-                                        </span>
+                                    <span class="badge 
+                                        {{ 
+                                            $reservation['payment_status'] === 'Paid' ? 'bg-success' : 
+                                            ($reservation['payment_status'] === 'Pending' ? 'bg-warning' : 'bg-danger') 
+                                        }}">
+                                        {{ $reservation['payment_status'] }}
+                                    </span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -200,7 +204,7 @@
                     <!-- Action Buttons -->
                     <div class="d-flex gap-2 justify-content-center mt-4">
                         @if(!in_array($reservation['status'], ['Cancelled', 'Finished']))
-                            @if($reservation['payment_status'] !== 'Paid')
+                            @if($reservation['payment_status'] !== 'Paid' && $reservation['payment_status'] !== 'Pending')
                                 <a href="{{ route('guest.payment', ['reservation_id' => $reservation['reservation_id']]) }}" 
                                     class="btn btn-success">
                                     Make Payment

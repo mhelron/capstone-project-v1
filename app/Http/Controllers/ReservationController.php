@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Kreait\Firebase\Contract\Database;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class ReservationController extends Controller
 {
@@ -236,19 +238,45 @@ class ReservationController extends Controller
         }
     }
 
-    public function confirmReservation($id){
+    public function confirmReservation($id) {
         $key = $id;
-
+        
+        // Get reservation details before updating
+        $reservation = $this->database->getReference($this->reservations . '/' . $key)->getValue();
+        
         $reserveData = [
             'status' => 'Confirmed'
         ];
-
-        $res_updated = $this->database->getReference($this->reservations. '/'.$key)->update($reserveData);
-
+    
+        $res_updated = $this->database->getReference($this->reservations . '/' . $key)->update($reserveData);
+    
         if ($res_updated) {
-            return redirect()->route('admin.reservation', ['tab' => 'pending'])->with('status', 'Reservation Confirmed');
+            // Send confirmation email
+            try {
+                Mail::send('emails.reservation-confirmed', [
+                    'name' => $reservation['name'],
+                    'reservation_details' => $reservation,
+                    // Add any other reservation details you want to include in the email
+                ], function($message) use ($reservation) {
+                    $message->to($reservation['email'])
+                            ->subject('Your Reservation Has Been Confirmed');
+                });
+    
+                return redirect()
+                    ->route('admin.reservation', ['tab' => 'pending'])
+                    ->with('status', 'Reservation Confirmed and Email Sent');
+            } catch (\Exception $e) {
+                // Log the error but still confirm the reservation
+                Log::error('Failed to send confirmation email: ' . $e->getMessage());
+                
+                return redirect()
+                    ->route('admin.reservation', ['tab' => 'pending'])
+                    ->with('status', 'Reservation Confirmed but Failed to Send Email');
+            }
         } else {
-            return redirect()->route('admin.reservation', ['tab' => 'pending'])->with('status', 'Reservation Not Confirmed');
+            return redirect()
+                ->route('admin.reservation', ['tab' => 'pending'])
+                ->with('status', 'Reservation Not Confirmed');
         }
     }
 
