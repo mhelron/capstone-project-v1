@@ -108,27 +108,59 @@
                         <p class="fw-bold">Attach the receipt here. Make sure the reference number is visible.</p>
                         <div class="row justify-content-center">
                             <div class="col-12">
-                                <input type="file" name="payment_proof" class="form-control mb-3" required>
-                                @error('payment_proof')
-                                    <div class="text-danger mb-3">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-12 d-flex justify-content-center gap-2">
-                                <form action="{{ route('guest.payment.proof', ['reservation_id' => $reservation_id]) }}"
-                                        method="POST" 
-                                        enctype="multipart/form-data"
-                                        class="w-50">
-                                    @csrf
-                                    <button type="submit" class="btn btn-success w-100">Submit Payment</button>
-                                </form>
-                                @if(isset($reservation) && $reservation['status'] === 'New')
-                                    <form action="{{ route('guest.pencil.booking', ['reservation_id' => $reservation_id]) }}" 
-                                        method="POST"
-                                        class="w-50">
+                                <!-- File input section -->
+                                <div class="mb-4">
+                                    <input type="file" name="payment_proof" id="payment_proof" class="form-control">
+                                    <div class="invalid-feedback">Please provide a receipt image.</div>
+                                    @error('payment_proof')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <!-- Buttons section -->
+                                <div class="d-flex justify-content-center gap-2">
+                                    <!-- Payment Submit Button -->
+                                    <form id="paymentForm" action="{{ route('guest.payment.proof', ['reservation_id' => $reservation_id]) }}"
+                                            method="POST" 
+                                            enctype="multipart/form-data"
+                                            class="w-50">
                                         @csrf
-                                        <button type="submit" class="btn btn-secondary w-100">Proceed to Pencil Booking</button>
+                                        <input type="hidden" name="payment_proof" id="payment_proof_hidden">
+                                        <button type="submit" class="btn btn-success w-100" id="submitBtn">
+                                            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true" id="submitSpinner"></span>
+                                            <span id="submitText">Submit Payment</span>
+                                        </button>
                                     </form>
-                                @endif
+                                    
+                                    <!-- Pencil Booking Button -->
+                                    @if(isset($reservation) && $reservation['status'] === 'New')
+                                        <form id="pencilForm" action="{{ route('guest.pencil.booking', ['reservation_id' => $reservation_id]) }}" 
+                                            method="POST"
+                                            class="w-50">
+                                            @csrf
+                                            <button type="submit" class="btn btn-secondary w-100">Proceed to Pencil Booking</button>
+                                        </form>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Success Modal -->
+                    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="successModalLabel">Payment Submitted</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <i class="fas fa-check-circle text-success" style="font-size: 48px;"></i>
+                                    <p class="mt-3">Your payment has been submitted successfully. We will verify it shortly.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" id="modalOkButton">Okay</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -164,4 +196,77 @@
         }
     }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const paymentForm = document.getElementById('paymentForm');
+    const fileInput = document.getElementById('payment_proof');
+    const hiddenInput = document.getElementById('payment_proof_hidden');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitSpinner = document.getElementById('submitSpinner');
+    const submitText = document.getElementById('submitText');
+    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+    
+    // Handle modal okay button
+    document.getElementById('modalOkButton').addEventListener('click', function() {
+        successModal.hide();
+        window.location.href = '{{ route('guest.home') }}';
+    });
+
+    // Handle payment form submission
+    paymentForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Reset previous validation states
+        fileInput.classList.remove('is-invalid');
+        
+        // Check if file is selected for payment submission
+        if (!fileInput.files || !fileInput.files[0]) {
+            fileInput.classList.add('is-invalid');
+            return false;
+        }
+
+        // Show loading state
+        submitSpinner.classList.remove('d-none');
+        submitText.textContent = 'Processing...';
+        submitBtn.disabled = true;
+
+        // If validation passes, copy the file to the hidden input and submit
+        const formData = new FormData();
+        formData.append('payment_proof', fileInput.files[0]);
+        formData.append('_token', document.querySelector('input[name="_token"]').value);
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            // Hide loading state
+            submitSpinner.classList.add('d-none');
+            submitText.textContent = 'Submit Payment';
+            submitBtn.disabled = false;
+            
+            // Show success modal
+            successModal.show();
+        })
+        .catch(error => {
+            // Hide loading state
+            submitSpinner.classList.add('d-none');
+            submitText.textContent = 'Submit Payment';
+            submitBtn.disabled = false;
+            
+            console.error('Error:', error);
+            alert('An error occurred while uploading the payment proof. Please try again.');
+        });
+    });
+
+    // Add change event listener to show validation in real-time
+    fileInput.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            this.classList.remove('is-invalid');
+        }
+    });
+});
+</script>
 @endsection

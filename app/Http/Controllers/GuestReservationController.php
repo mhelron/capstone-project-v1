@@ -204,6 +204,8 @@ class GuestReservationController extends Controller
         // Validate the request
         $request->validate([
             'payment_proof' => 'required|image|mimes:jpeg,png,jpg|max:30720',
+        ],[
+            'payment_proof' => 'Please input a image of your receipt.'
         ]);
 
         try {
