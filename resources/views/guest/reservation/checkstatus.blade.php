@@ -211,7 +211,7 @@
                                 </a>
                             @endif
 
-                            @if(in_array($reservation['status'], ['Pencil', 'Pending']))
+                            @if(in_array($reservation['status'], ['Pencil', 'Pending', 'Confirmed']))
                                 <a href="{{ route('guest.reserve.edit', ['reservation_id' => $reservation['reservation_id']]) }}" 
                                     class="btn btn-primary">
                                     Edit Details

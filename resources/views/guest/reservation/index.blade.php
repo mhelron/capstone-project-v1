@@ -154,10 +154,13 @@
                                     <select name="package_name" id="package_name" class="form-control">
                                         <option value="" disabled {{ old('package_name') ? '' : 'selected' }}>Select a Package</option>
                                         @foreach ($packages ?? [] as $package)
-                                            <option value="{{ $package['package_name'] ?? '' }}" data-persons="{{ $package['persons'] ?? '' }}"
-                                                    {{ old('package_name') == ($package['package_name'] ?? '') ? 'selected' : '' }}>
-                                                {{ $package['package_name'] ?? 'Unknown Package' }}
-                                            </option>
+                                            @if(isset($package['is_displayed']) && $package['is_displayed'] === true)
+                                                <option value="{{ $package['package_name'] ?? '' }}" 
+                                                        data-persons="{{ $package['persons'] ?? '' }}"
+                                                        {{ old('package_name') == ($package['package_name'] ?? '') ? 'selected' : '' }}>
+                                                    {{ $package['package_name'] ?? 'Unknown Package' }}
+                                                </option>
+                                            @endif
                                         @endforeach
                                     </select>
                                     @if ($errors->has('package_name'))
@@ -524,45 +527,56 @@
 
     <?php 
     foreach($packages as $package) {
-        echo 'packages.push({
-            "package_name": "'. addslashes($package['package_name']) .'", 
-            "package_type": "'. addslashes($package['package_type']) .'", 
-            "persons": "'. addslashes($package['persons']) .'", 
-            "price": "'. addslashes($package['price']) .'", 
-            "menus": [';
+        if (isset($package['is_displayed']) && $package['is_displayed'] === true) {
+            echo 'packages.push({
+                "package_name": "'. addslashes($package['package_name']) .'", 
+                "package_type": "'. addslashes($package['package_type']) .'", 
+                "persons": "'. addslashes($package['persons']) .'", 
+                "price": "'. addslashes($package['price']) .'", 
+                "menus": [';
 
-        foreach($package['menus'] as $menu) {
-            echo '{
-                    "menu_name": "'. addslashes($menu['menu_name']) .'", 
-                    "foods": [';
+            foreach($package['menus'] as $menu) {
+                echo '{
+                        "menu_name": "'. addslashes($menu['menu_name']) .'", 
+                        "foods": [';
 
-            foreach($menu['foods'] ?? [] as $food) {
-                if (is_array($food)) {
-                    echo '{
-                        "category": "'. addslashes($food['category'] ?? '') .'", 
-                        "food": "'. addslashes($food['food'] ?? '') .'"
-                    },';
+                foreach($menu['foods'] ?? [] as $food) {
+                    if (is_array($food)) {
+                        echo '{
+                            "category": "'. addslashes($food['category'] ?? '') .'", 
+                            "food": "'. addslashes($food['food'] ?? '') .'"
+                        },';
+                    }
                 }
+                echo ']},';
             }
-            // Remove trailing comma and close the foods array
-            echo ']},';
-        }
-        // Remove trailing comma and close the menus array
-        echo '], 
-        "services": [';
+            echo '], 
+            "services": [';
 
-        // Add services to the package
-        foreach($package['services'] as $service) {
-            echo '{
-                "service": "'. addslashes($service['service']) .'"
-            },';
-        }
+            foreach($package['services'] as $service) {
+                echo '{
+                    "service": "'. addslashes($service['service']) .'"
+                },';
+            }
 
-        // Remove trailing comma and close the services array
-        echo ']
-        });';
+            echo ']
+            });';
+        }
     }
-?>
+    ?>
+
+    var events = [];
+    <?php 
+        foreach($reservations as $reservation) {
+            // Ensure consistent date format
+            $formattedDate = date('Y-m-d', strtotime($reservation['event_date']));
+            echo 'events.push({
+                "Event": "Reserved", 
+                "Date": "'. addslashes($formattedDate) .'",
+                "Status": "'. addslashes($reservation['status']) .'"
+            });';
+        }
+    ?>
 
 const addressData = <?php echo json_encode($addressData); ?>;
 </script>

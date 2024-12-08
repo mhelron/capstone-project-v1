@@ -38,7 +38,7 @@ class EmailController extends Controller
 
         // Send the contact email using the 'admin' mailer
         Mail::mailer('admin')  // Specify 'admin' mailer here
-            ->to('contactus@kylaandkylecatering.com')  // The recipient email
+            ->to('kylaandkylecs@gmail.com')  // The recipient email
             ->send(new ContactUsMail($validatedData));
 
         return back()->with('success', 'Your message has been sent!');

@@ -128,7 +128,7 @@ let eventTimePicker; // Declare time picker globally too
 document.addEventListener('DOMContentLoaded', function () {
     function calculateMinDate() {
         const today = new Date();
-        today.setDate(today.getDate() + 3);
+        today.setDate(today.getDate() + 4);
         return today.toISOString().split('T')[0];
     }
 
@@ -141,12 +141,60 @@ document.addEventListener('DOMContentLoaded', function () {
         return hours + ':' + minutes;
     }
 
-    // Initialize time picker first
+    function formatDate(date) {
+        return date.toISOString().split('T')[0];
+    }
+
+    function countReservationsOnDate(date) {
+        if (!window.events) return 0;
+        
+        // Format the check date consistently
+        const checkDate = new Date(date);
+        checkDate.setHours(0, 0, 0, 0);
+        const dateStr = formatDate(checkDate);
+        
+        // Filter events to count only confirmed reservations
+        const confirmedReservations = events.filter(event => {
+            // Normalize event date
+            const eventDate = new Date(event.Date);
+            eventDate.setHours(0, 0, 0, 0);
+            const eventDateStr = formatDate(eventDate);
+            const isConfirmed = event.Status.toLowerCase() === 'confirmed';
+            
+            // Debug logging
+            console.log('Comparing dates:', {
+                checkingDate: dateStr,
+                eventDate: eventDateStr,
+                status: event.Status,
+                isConfirmed: isConfirmed,
+                isMatch: eventDateStr === dateStr && isConfirmed
+            });
+            
+            return eventDateStr === dateStr && isConfirmed;
+        });
+
+        console.log(`Date ${dateStr} has ${confirmedReservations.length} confirmed reservations:`, confirmedReservations);
+        return confirmedReservations.length;
+    }
+
+    function isDateFullyBooked(date) {
+        const MAX_RESERVATIONS = 5;
+        const count = countReservationsOnDate(date);
+        const isBooked = count >= MAX_RESERVATIONS;
+        
+        if (isBooked) {
+            console.log(`Date ${formatDate(date)} is BLOCKED with ${count} reservations`);
+        }
+        
+        return isBooked;
+    }
+
+    // Initialize time picker
     eventTimePicker = flatpickr("#event_time", {
         enableTime: true,
         noCalendar: true,
-        dateFormat: "h:i K", // h:i K for 12-hour format with AM/PM
-        time_24hr: false, // Disable 24-hour format
+        dateFormat: "h:i K",
+        time_24hr: false,
         defaultHour: 12,
         defaultMinute: 0,
         onClose: function(selectedDates, dateStr) {
@@ -164,19 +212,16 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Then initialize date picker
+    // Initialize date picker
     eventDatePicker = flatpickr("#event_date", {
         dateFormat: "Y-m-d",
         minDate: calculateMinDate(),
-        disable: window.events ? events.map(event => event.Date) : [],
-        defaultDate: new URLSearchParams(window.location.search).get('event_date') || null,
-        onReady: function(selectedDates, dateStr, instance) {
-            const urlParams = new URLSearchParams(window.location.search);
-            const selectedDate = urlParams.get('event_date');
-            if (selectedDate) {
-                instance.setDate(selectedDate, true);
+        disable: [
+            function(date) {
+                return isDateFullyBooked(date);
             }
-        },
+        ],
+        defaultDate: new URLSearchParams(window.location.search).get('event_date') || null,
         onChange: function(selectedDates) {
             const selectedDate = selectedDates[0];
             const today = new Date();
@@ -187,11 +232,27 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     eventTimePicker.set('minTime', "00:00");
                 }
+
+                // Debug log for selected date
+                console.log('Selected date:', {
+                    date: formatDate(selectedDate),
+                    reservations: countReservationsOnDate(selectedDate)
+                });
+            }
+        },
+        onReady: function(selectedDates, dateStr, instance) {
+            // Log all events on initialization
+            console.log('Available events:', events);
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const selectedDate = urlParams.get('event_date');
+            if (selectedDate) {
+                instance.setDate(selectedDate, true);
             }
         }
     });
 
-    // Handle URL parameters once
+    // Handle URL parameters
     handleUrlParameters();
 });
 

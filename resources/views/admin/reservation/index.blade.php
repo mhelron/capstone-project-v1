@@ -760,6 +760,60 @@
     </div>
 </div>
 
+<!-- Confirm Reservation Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Confirm Reservation</h5>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to confirm the reservation for <strong id="confirmUserName"></strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" id="confirmReservationButton">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cancel Reservation Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelModalLabel">Cancel Reservation</h5>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to cancel the reservation for <strong id="cancelUserName"></strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-danger" id="confirmCancelButton">Yes, Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Finish Reservation Modal -->
+<div class="modal fade" id="finishModal" tabindex="-1" aria-labelledby="finishModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="finishModalLabel">Finish Reservation</h5>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to mark the reservation for <strong id="finishUserName"></strong> as finished?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-success" id="confirmFinishButton">Yes, Finish</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
     .tooltip-text[data-bs-toggle="tooltip"] {
         white-space: nowrap; /* Prevents text from wrapping */

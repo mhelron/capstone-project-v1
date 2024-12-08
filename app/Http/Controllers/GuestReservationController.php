@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use App\Mail\PencilConfirmationMail;
 use App\Mail\PendingConfirmationMail;
 use App\Mail\EditConfirmationEmail;
+use App\Mail\CancelByUser;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -26,13 +27,39 @@ class GuestReservationController extends Controller
         $selectedPackage = $request->query('package');
         $selectedMenu = $request->query('menu');
         
-        // Add null coalescing to handle null response
+        // Get and sanitize reservations data
+        $reservationsData = $this->database->getReference($this->reservations)->getValue() ?? [];
+        $reservations = is_array($reservationsData) ? array_filter($reservationsData, function($reservation) {
+            return is_array($reservation) && 
+                isset($reservation['event_date']) && 
+                isset($reservation['status']);
+        }) : [];
+        
+        // Get and filter packages data
         $packagesData = $this->database->getReference($this->packages)->getValue() ?? [];
-        $packages = is_array($packagesData) ? array_values($packagesData) : [];
+        
+        // Filter packages to only include those with is_displayed set to true
+        $displayedPackages = [];
+        if (is_array($packagesData)) {
+            foreach ($packagesData as $key => $package) {
+                if (isset($package['is_displayed']) && $package['is_displayed'] === true) {
+                    $displayedPackages[$key] = $package;
+                }
+            }
+        }
+        
+        // Convert to array values to maintain consistent indexing
+        $packages = array_values($displayedPackages);
 
         $addressData = json_decode(file_get_contents(public_path('address_ph.json')), true);
         
-        return view('guest.reservation.index', compact('packages', 'addressData', 'selectedPackage', 'selectedMenu'));
+        return view('guest.reservation.index', compact(
+            'packages', 
+            'addressData', 
+            'selectedPackage', 
+            'selectedMenu',
+            'reservations' // Add reservations to the view
+        ));
     }
     private function generateUniqueReferenceNumber()
     {
@@ -364,25 +391,66 @@ class GuestReservationController extends Controller
     public function cancelReservation($reservation_id, Request $request)
     {
         try {
+            // Retrieve the reservation
+            $reservationRef = $this->database->getReference($this->reservations)->getChild($reservation_id);
+            $reservation = $reservationRef->getValue();
+
+            if (!$reservation) {
+                return redirect()->back()->with('error', 'Reservation not found.');
+            }
+
+            // Determine the cancellation reason
             $cancellationReason = $request->cancellation_reason;
             if ($cancellationReason === 'other') {
                 $cancellationReason = $request->other_reason;
             }
 
-            $this->database->getReference($this->reservations . '/' . $reservation_id)
-                ->update([
-                    'status' => 'Cancelled',
-                    'cancellation_reason' => $cancellationReason,
-                    'cancelled_at' => Carbon::now()->toDateTimeString()
+            // Update the reservation status
+            $updates = [
+                'status' => 'Cancelled',
+                'cancellation_reason' => $cancellationReason,
+                'cancelled_at' => Carbon::now()->toDateTimeString(),
+            ];
+
+            $reservationRef->update($updates);
+
+            // Merge updates with reservation data for email
+            $reservation = array_merge($reservation, $updates);
+
+            // Send the cancellation email
+            try {
+                Mail::mailer('clients')
+                    ->to($reservation['email'])
+                    ->send(new CancelByUser($reservation));
+
+                Log::info('Cancellation email sent successfully', [
+                    'reservation_id' => $reservation_id,
+                    'email' => $reservation['email']
                 ]);
-                    
+            } catch (\Exception $mailException) {
+                Log::error('Error sending cancellation email', [
+                    'error' => $mailException->getMessage(),
+                    'reservation_id' => $reservation_id
+                ]);
+
+                return redirect()->route('guest.check')
+                    ->with('warning', 'Reservation cancelled but email notification failed.');
+            }
+
             return redirect()->route('guest.check')
                 ->with('success', 'Reservation has been cancelled successfully.');
+
         } catch (\Exception $e) {
-            return redirect()->route('guest.check')
-                ->with('error', 'Failed to cancel reservation. Please try again.');
+            Log::error('Error cancelling reservation', [
+                'error' => $e->getMessage(),
+                'reservation_id' => $reservation_id
+            ]);
+
+            return redirect()->back()
+                ->with('error', 'There was an error cancelling your reservation. Please try again.');
         }
     }
+
 
     public function edit($id){
         $key = $id;

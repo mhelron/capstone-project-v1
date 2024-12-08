@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use Kreait\Firebase\Contract\Database;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Log  ;
+use Illuminate\Support\Facades\Log;
+use App\Mail\PaymentConfirmationMail;
 
 class ReservationController extends Controller
 {
@@ -245,28 +246,26 @@ class ReservationController extends Controller
         $reservation = $this->database->getReference($this->reservations . '/' . $key)->getValue();
         
         $reserveData = [
-            'status' => 'Confirmed'
+            'status' => 'Confirmed',
+            'payment_status' => 'Paid'
         ];
     
         $res_updated = $this->database->getReference($this->reservations . '/' . $key)->update($reserveData);
     
+        // Update the status in the reservation array instead of trying to merge
         if ($res_updated) {
-            // Send confirmation email
+            $reservation['status'] = 'Confirmed';
+            $reservation['payment_status'] = 'Paid';
+            
             try {
-                Mail::send('emails.reservation-confirmed', [
-                    'name' => $reservation['name'],
-                    'reservation_details' => $reservation,
-                    // Add any other reservation details you want to include in the email
-                ], function($message) use ($reservation) {
-                    $message->to($reservation['email'])
-                            ->subject('Your Reservation Has Been Confirmed');
-                });
+                Mail::mailer('clients')
+                            ->to($reservation['email'])
+                            ->send(new PaymentConfirmationMail($reservation));
     
                 return redirect()
                     ->route('admin.reservation', ['tab' => 'pending'])
                     ->with('status', 'Reservation Confirmed and Email Sent');
             } catch (\Exception $e) {
-                // Log the error but still confirm the reservation
                 Log::error('Failed to send confirmation email: ' . $e->getMessage());
                 
                 return redirect()
