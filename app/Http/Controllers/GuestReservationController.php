@@ -203,7 +203,7 @@ class GuestReservationController extends Controller
 
         // Validate the request
         $request->validate([
-            'payment_proof' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'payment_proof' => 'required|image|mimes:jpeg,png,jpg|max:30720',
         ]);
 
         try {
