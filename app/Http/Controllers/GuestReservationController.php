@@ -310,10 +310,15 @@ class GuestReservationController extends Controller
                 return redirect()->back()->with('error', 'Reservation not found.');
             }
 
+            // Calculate expiration date (1 week from now)
+            $expirationDate = Carbon::now()->addWeek()->toDateTimeString();
+
             // Update the reservation status
             $updates = [
                 'status' => 'Pencil',
                 'reserve_type' => 'Pencil',
+                'pencil_created_at' => Carbon::now()->toDateTimeString(),
+                'pencil_expires_at' => $expirationDate
             ];
 
             $reservationRef->update($updates);
@@ -321,7 +326,7 @@ class GuestReservationController extends Controller
             // Merge updates for the email
             $reservation = array_merge($reservation, $updates);
 
-            // Send the pencil confirmation email
+            // Send the pencil confirmation email with expiration date
             try {
                 Mail::mailer('clients')
                     ->to($reservation['email'])
@@ -329,7 +334,8 @@ class GuestReservationController extends Controller
                 
                 Log::info('Pencil confirmation email sent successfully', [
                     'reservation_id' => $reservation_id,
-                    'email' => $reservation['email']
+                    'email' => $reservation['email'],
+                    'expires_at' => $expirationDate
                 ]);
             } catch (\Exception $mailException) {
                 Log::error('Error sending pencil confirmation email', [
@@ -341,7 +347,7 @@ class GuestReservationController extends Controller
             }
 
             return redirect()->route('guest.home')
-                ->with('status', 'Your pencil booking has been processed successfully.');
+                ->with('status', 'Your pencil booking has been processed successfully. Please note that it will expire in 1 week.');
                 
         } catch (\Exception $e) {
             Log::error('Error processing pencil booking', [
@@ -350,6 +356,47 @@ class GuestReservationController extends Controller
             ]);
             return redirect()->back()
                 ->with('error', 'There was an error processing your pencil booking. Please try again.');
+        }
+    }
+
+    public function checkExpiredPencilBookings()
+    {
+        try {
+            $now = Carbon::now()->toDateTimeString();
+            
+            // Get all pencil bookings
+            $pencilBookings = $this->database->getReference($this->reservations)
+                ->orderByChild('status')
+                ->equalTo('Pencil')
+                ->getValue();
+
+            if (!$pencilBookings) {
+                return;
+            }
+
+            foreach ($pencilBookings as $key => $booking) {
+                if (isset($booking['pencil_expires_at'])) {
+                    $expirationDate = Carbon::parse($booking['pencil_expires_at']);
+                    
+                    if ($expirationDate->isPast()) {
+                        // Update expired booking status
+                        $this->database->getReference($this->reservations)->getChild($key)->update([
+                            'status' => 'Expired',
+                            'expired_at' => $now
+                        ]);
+
+                        // Log the expiration
+                        Log::info('Pencil booking expired', [
+                            'reservation_id' => $key,
+                            'expired_at' => $now
+                        ]);
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            Log::error('Error checking expired pencil bookings', [
+                'error' => $e->getMessage()
+            ]);
         }
     }
 
@@ -591,4 +638,6 @@ class GuestReservationController extends Controller
             return redirect()->back()->with('error', 'Failed to update reservation: ' . $e->getMessage());
         }
     }
+
+    
 }

@@ -11,6 +11,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         AutoFinishReservation::class,
         Commands\SendReservationReminders::class,
+        Commands\CheckPencilBookingExpiration::class,
     ];
 
     protected function schedule(Schedule $schedule)
