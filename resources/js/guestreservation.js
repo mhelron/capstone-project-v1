@@ -312,12 +312,24 @@ function handleUrlParameters() {
     const urlParams = new URLSearchParams(window.location.search);
     const selectedPackage = urlParams.get('package');
     const selectedMenu = urlParams.get('menu');
+    const selectedPrice = urlParams.get('price');
     const selectedDate = urlParams.get('event_date');
     
     if (selectedPackage) {
         // Select the package
         const packageSelect = $('#package_name');
         packageSelect.val(selectedPackage);
+        
+        // Set the package price if it exists in URL
+        if (selectedPrice) {
+            const totalPackagePriceSpan = document.getElementById("total-package-price");
+            const totalPriceSpan = document.getElementById("total-price");
+            const totalPriceInput = document.getElementById("total_price");
+            
+            if (totalPackagePriceSpan) totalPackagePriceSpan.innerText = selectedPrice;
+            if (totalPriceSpan) totalPriceSpan.innerText = selectedPrice;
+            if (totalPriceInput) totalPriceInput.value = selectedPrice;
+        }
         
         // Trigger the change event to load package details and menus
         packageSelect.trigger('change');
