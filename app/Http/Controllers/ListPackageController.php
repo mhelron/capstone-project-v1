@@ -14,8 +14,8 @@ class ListPackageController extends Controller
                              ->orderByChild('area_name')
                              ->equalTo('Marikina')
                              ->getValue();
-        
-        return view('guest.packages.marikina', compact('packages'));
+        $content = $database->getReference('contents')->getValue();
+        return view('guest.packages.marikina', compact('packages', 'content'));
     }
 
     public function sanmateo(Database $database)
@@ -25,8 +25,8 @@ class ListPackageController extends Controller
                              ->orderByChild('area_name')
                              ->equalTo('San Mateo')
                              ->getValue();
-        
-        return view('guest.packages.sanmateo', compact('packages'));
+        $content = $database->getReference('contents')->getValue();
+        return view('guest.packages.sanmateo', compact('packages', 'content'));
     }
 
     public function montalban(Database $database)
@@ -36,8 +36,8 @@ class ListPackageController extends Controller
                              ->orderByChild('area_name')
                              ->equalTo('Montalban')
                              ->getValue();
-        
-        return view('guest.packages.montalban', compact('packages'));
+        $content = $database->getReference('contents')->getValue();
+        return view('guest.packages.montalban', compact('packages', 'content'));
     }
 
     public function show($id)

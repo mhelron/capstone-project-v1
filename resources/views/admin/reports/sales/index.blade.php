@@ -73,6 +73,32 @@
             </div>
         </div>
     </div>
+    <div class="row pt-3">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>Daily Sales</span>
+                        <div class="d-flex gap-2">
+                            <select id="dailyYearSelector" class="form-select form-select-sm custom-select-height" style="width: auto;">
+                                @foreach($years as $year)
+                                    <option value="{{ $year }}" {{ $year == date('Y') ? 'selected' : '' }}>{{ $year }}</option>
+                                @endforeach
+                            </select>
+                            <select id="dailyMonthSelector" class="form-select form-select-sm custom-select-height" style="width: auto;">
+                                @foreach($months as $index => $month)
+                                    <option value="{{ $index + 1 }}" {{ ($index + 1) == date('n') ? 'selected' : '' }}>{{ $month }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="dailySalesChart" style="height: 300px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -83,9 +109,11 @@ const yearlyFeesData = @json(array_values($yearlyFees));
 const yearlyPricesData = @json(array_values($yearlyPrices));
 const weeklyData = @json($weeklyData);
 const monthlyData = @json($monthlyData);
+const dailyData = @json($dailyData);
 
 let monthlySalesChart;
 let weeklySalesChart;
+let dailySalesChart;
 
 // Function to update monthly chart
 function updateMonthlyChart(selectedYear) {
@@ -169,6 +197,48 @@ function updateWeeklyChart(selectedYear, selectedMonth) {
     });
 }
 
+function updateDailyChart(selectedYear, selectedMonth) {
+    const yearMonthData = dailyData[selectedYear][selectedMonth];
+    const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+    const labels = Array.from({length: daysInMonth}, (_, i) => i + 1);
+    
+    if (dailySalesChart) {
+        dailySalesChart.destroy();
+    }
+
+    const ctx4 = document.getElementById('dailySalesChart').getContext('2d');
+    dailySalesChart = new Chart(ctx4, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Reservation Fees',
+                data: yearMonthData.reservationFees.slice(1),
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            },
+            {
+                label: 'Packages Total',
+                data: yearMonthData.totalPrices.slice(1),
+                backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                },
+            },
+        },
+    });
+}
+
 // Event listeners for chart selectors
 document.getElementById('yearSelector').addEventListener('change', function(e) {
     updateMonthlyChart(e.target.value);
@@ -181,6 +251,19 @@ document.getElementById('weeklyYearSelector').addEventListener('change', functio
 document.getElementById('weeklyMonthSelector').addEventListener('change', function(e) {
     updateWeeklyChart(document.getElementById('weeklyYearSelector').value, e.target.value);
 });
+
+document.getElementById('dailyYearSelector').addEventListener('change', function(e) {
+    updateDailyChart(e.target.value, document.getElementById('dailyMonthSelector').value);
+});
+
+document.getElementById('dailyMonthSelector').addEventListener('change', function(e) {
+    updateDailyChart(document.getElementById('dailyYearSelector').value, e.target.value);
+});
+
+// Initialize charts with default values
+const currentYear = new Date().getFullYear().toString();
+const currentMonth = (new Date().getMonth() + 1).toString();
+const defaultYear = years.includes(currentYear) ? currentYear : years[0];
 
 // Yearly Sales Chart
 const ctx1 = document.getElementById('yearlySalesChart').getContext('2d');
@@ -217,16 +300,9 @@ new Chart(ctx1, {
     },
 });
 
-// Initialize charts with default values
-const currentYear = new Date().getFullYear().toString();
-const currentMonth = (new Date().getMonth() + 1).toString();
-const defaultYear = years.includes(currentYear) ? currentYear : years[0];
-
-// Initialize monthly chart
 updateMonthlyChart(defaultYear);
-
-// Initialize weekly chart
 updateWeeklyChart(defaultYear, currentMonth);
+updateDailyChart(defaultYear, currentMonth);
 </script>
 
 @endsection

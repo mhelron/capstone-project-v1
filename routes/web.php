@@ -14,6 +14,7 @@ use App\Http\Controllers\ListPackageController;
 use App\Http\Controllers\GuestReservationController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\CMSController;
 
 use App\Http\Controllers\BotmanController;
 
@@ -99,6 +100,13 @@ Route::middleware([AuthMiddleware::class])->group(function () {
             Route::put('/update-package/{id}', [PackageController::class, 'update'])->name('admin.packages.update');
             Route::get('/archive-package/{id}', [PackageController::class, 'destroy'])->name('admin.packages.delete');
             Route::post('admin/packages/toggle-display/{packageId}', [PackageController::class, 'toggleDisplay'])->name('admin.packages.toggleDisplay');
+        });
+
+        Route::prefix('/admin/content')->group(function () {
+            Route::get('/home', [CMSController::class, 'editHome'])->name('admin.home.edit');
+            Route::post('/edit-home', [CMSController::class, 'updateHome'])->name('admin.home.update');
+            Route::get('/carousel', [CMSController::class, 'editCarousel'])->name('admin.carousel.edit');
+            Route::post('/edit-carousel', [CMSController::class, 'updateCarousel'])->name('admin.carousel.update');
         });
     });
 

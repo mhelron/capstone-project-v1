@@ -98,20 +98,23 @@ class ReportsController extends Controller
             return isset($reservation['status']) && $reservation['status'] === 'Finished';
         });
 
-        // Initialize data arrays
+        // Initialize all data arrays
         $years = [];
         $yearlyFees = [];
         $yearlyPrices = [];
         $monthlyData = [];
-        $weeklyData = []; // New array to store weekly data by year and month
+        $weeklyData = [];
+        $dailyData = []; // New array for daily data
+        $currentWeekData = []; // New array for current week
 
         foreach ($finishedReservations as $reservation) {
             if (!empty($reservation['event_date'])) {
                 $eventDate = strtotime($reservation['event_date']);
                 $eventYear = date('Y', $eventDate);
                 $eventMonth = date('n', $eventDate);
+                $eventDay = date('j', $eventDate);
                 
-                // Track unique years
+                // Initialize year if not exists
                 if (!in_array($eventYear, $years)) {
                     $years[] = $eventYear;
                     $yearlyFees[$eventYear] = 0;
@@ -120,27 +123,38 @@ class ReportsController extends Controller
                         'reservationFees' => array_fill(0, 12, 0),
                         'totalPrices' => array_fill(0, 12, 0)
                     ];
-                    // Initialize weekly data structure for this year
                     $weeklyData[$eventYear] = [];
+                    $dailyData[$eventYear] = []; // Initialize daily data structure
+                    
                     for ($month = 1; $month <= 12; $month++) {
                         $weeklyData[$eventYear][$month] = [
                             'reservationFees' => array_fill(0, 4, 0),
                             'totalPrices' => array_fill(0, 4, 0)
                         ];
+                        
+                        // Initialize daily data for each month
+                        $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $eventYear);
+                        $dailyData[$eventYear][$month] = [
+                            'reservationFees' => array_fill(1, $daysInMonth, 0),
+                            'totalPrices' => array_fill(1, $daysInMonth, 0)
+                        ];
                     }
                 }
 
-                // Aggregate yearly and monthly data (existing code)
+                // Existing yearly and monthly aggregation
                 if (isset($reservation['reserve_fee'])) {
                     $yearlyFees[$eventYear] += floatval($reservation['reserve_fee']);
                     $monthlyData[$eventYear]['reservationFees'][$eventMonth - 1] += floatval($reservation['reserve_fee']);
+                    $dailyData[$eventYear][$eventMonth]['reservationFees'][$eventDay] += floatval($reservation['reserve_fee']);
                 }
+                
                 if (isset($reservation['total_price'])) {
                     $yearlyPrices[$eventYear] += floatval($reservation['total_price']);
                     $monthlyData[$eventYear]['totalPrices'][$eventMonth - 1] += floatval($reservation['total_price']);
+                    $dailyData[$eventYear][$eventMonth]['totalPrices'][$eventDay] += floatval($reservation['total_price']);
                 }
 
-                // Aggregate weekly data by year and month
+                // Weekly data aggregation
                 $eventWeek = (int)(date('W', $eventDate) - 1) % 4;
                 if (isset($reservation['reserve_fee'])) {
                     $weeklyData[$eventYear][$eventMonth]['reservationFees'][$eventWeek] += floatval($reservation['reserve_fee']);
@@ -148,12 +162,33 @@ class ReportsController extends Controller
                 if (isset($reservation['total_price'])) {
                     $weeklyData[$eventYear][$eventMonth]['totalPrices'][$eventWeek] += floatval($reservation['total_price']);
                 }
+
+                // Current week data
+                $currentWeekStart = strtotime('monday this week');
+                $currentWeekEnd = strtotime('sunday this week');
+                
+                if ($eventDate >= $currentWeekStart && $eventDate <= $currentWeekEnd) {
+                    $weekDay = date('w', $eventDate); // 0 (Sunday) to 6 (Saturday)
+                    if (!isset($currentWeekData[$weekDay])) {
+                        $currentWeekData[$weekDay] = [
+                            'date' => date('Y-m-d', $eventDate),
+                            'reservationFees' => 0,
+                            'totalPrices' => 0
+                        ];
+                    }
+                    if (isset($reservation['reserve_fee'])) {
+                        $currentWeekData[$weekDay]['reservationFees'] += floatval($reservation['reserve_fee']);
+                    }
+                    if (isset($reservation['total_price'])) {
+                        $currentWeekData[$weekDay]['totalPrices'] += floatval($reservation['total_price']);
+                    }
+                }
             }
         }
 
         // Sort years in descending order
         rsort($years);
-
+        
         $months = [
             'January', 'February', 'March', 'April', 'May', 'June',
             'July', 'August', 'September', 'October', 'November', 'December'
@@ -168,6 +203,8 @@ class ReportsController extends Controller
             'months' => $months,
             'monthlyData' => $monthlyData,
             'weeklyData' => $weeklyData,
+            'dailyData' => $dailyData,
+            'currentWeekData' => $currentWeekData,
             'isExpanded' => $isExpanded,
         ]);
     }

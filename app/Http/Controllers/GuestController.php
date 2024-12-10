@@ -18,11 +18,13 @@ class GuestController extends Controller
     }
 
     public function indexHome(){
-        return view('guest.home.index');
+        $content = $this->database->getReference('contents')->getValue();
+        return view('guest.home.index', compact('content'));
     }
 
     public function indexPackages(){
-        return view('guest.packages.index');
+        $content = $this->database->getReference('contents')->getValue();
+        return view('guest.packages.index', compact('content'));
     }
 
     public function indexCalendar()
@@ -44,18 +46,23 @@ class GuestController extends Controller
                 isset($package['menus']);
         }) : [];
 
-        return view('guest.calendar.index', compact('reservations', 'packages'));
+        $content = $this->database->getReference('contents')->getValue();
+
+        return view('guest.calendar.index', compact('reservations', 'packages', 'content'));
     }
 
     public function indexContact(){
-        return view('guest.contact.index');
+        $content = $this->database->getReference('contents')->getValue();
+        return view('guest.contact.index', compact('content'));
     }
 
     public function indexAbout(){
-        return view('guest.about.index');
+        $content = $this->database->getReference('contents')->getValue();
+        return view('guest.about.index', compact('content'));
     }
 
     public function indexGallery(){
-        return view('guest.gallery.index');
+        $content = $this->database->getReference('contents')->getValue();
+        return view('guest.gallery.index', compact('content'));
     }
 }

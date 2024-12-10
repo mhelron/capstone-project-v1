@@ -1,22 +1,28 @@
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
+
 <footer style="background-color: #000; padding: 7px;">
     <div class="container">
         <div class="row align-items-center">
             <!-- Logo and Title Section -->
             <div class="col-md-4 text-center text-md-start d-flex flex-column align-items-center">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo" style="width: 100px; height: auto; margin-bottom: 10px;">
+                @if (!empty($content['logo_path']))
+                    <img src="{{ Storage::url($content['logo_footer_path']) }}" alt="Logo" class="me-2" style="height: 70px; width: auto;">
+                @endif
                 <h5 style="margin: 0; font-weight: bold; color: white; text-align: center;">
-                    <span style="color: darkorange;">Kyla</span> and <span style="color: red;">Kyle</span>
+                {!! $content['title_footer'] !!}
                 </h5>
             </div>
 
             <!-- Contact Information Section -->
             <div class="col-md-4 text-center mt-3">
-                <p style="margin: 0; font-weight: bold; color: white;">
-                    <i class="bi bi-geo-alt-fill" style="color: darkorange;"></i> 428 Cacho St. Brgy Balite Rodriguez Rizal
+            <p style="margin: 0; font-weight: bold; color: white;">
+                    <i class="bi bi-geo-alt-fill" style="color: darkorange;"></i> {{$content['address']}}
                 </p>
                 <p style="margin: 5px 0; font-weight: bold; color: white;">
-                    <i class="bi bi-telephone-fill" style="color: darkorange;"></i> 0917-82-1971 &nbsp;&nbsp;
-                    <i class="bi bi-telephone-fill" style="color: darkorange;"></i> 0945-413-0258
+                    <i class="bi bi-telephone-fill" style="color: darkorange;"></i> {{$content['number1']}} &nbsp;&nbsp;
+                    <i class="bi bi-telephone-fill" style="color: darkorange;"></i> {{$content['number2']}}
                 </p>
                 <p style="margin: 5px 0; font-weight: bold; color: white;">
                     <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal" style="color: white; text-decoration: underline;">Terms & Conditions</a>

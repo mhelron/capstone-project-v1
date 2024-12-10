@@ -2,6 +2,10 @@
 
 @section('content')
 
+@php
+use Illuminate\Support\Facades\Storage;
+@endphp
+
 <div class="container">
 
 <div class="container" style="padding-top: 50px;">
@@ -24,19 +28,10 @@
         <div class="col-md-6">
        
         <h3 style="color: solid black; font-family: 'Monaco'; border-bottom: 4px solid darkorange; padding-bottom:
-        3px;">Kyla and Kyle Catering Services</h3>
+        3px;">{!! $content['title_home'] !!}</h3>
 
-            <h1 style="font-weight: 900; font-family: 'Georgia', sans-serif; font-size: 48px; padding-top: 5px;">One of 
-            the most known Catering Services in Montalban</h1>
-            <p>At Kyla and Kyle Catering Services, we bring people together through great food and
-            exceptional service. Based in Rodriguez, Rizal, we specialize in creating unforgettable
-            experiences for every occasion, from weddings and corporate events to family
-            celebrations. 
-            </p>
-
-            <p>With our skilled team and attention to detail, we handle everything from
-            venue setup to delicious, carefully prepared meals. Let us bring your vision to life and
-            make your next event truly special.</p>
+            <h1 style="font-weight: 900; font-family: 'Georgia', sans-serif; font-size: 48px; padding-top: 5px;">{!! $content['headline'] !!}</h1>
+            <p>{!! $content['subtext'] !!}</p>
             
             <div class="d-flex mt-4 mb-4">
                 <a href="{{route('guest.reserve')}}" class="btn btn-darkorange me-3">Reserve</a>
@@ -45,45 +40,44 @@
         </div>
 
         <!-- Image Carousel with Fade Effect -->
-        <div class="col-md-6 mt-4 mb-5">
+        <div class="col-md-6 mt-5 mb-4">
             <div id="imageCarousel" class="carousel slide carousel-fade overflow-hidden" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="{{ asset('images/Home/image1.png') }}" class="d-block w-100 carousel-image" alt="Wedding Image">
+                @if(isset($content['carousel_images']) && count($content['carousel_images']) > 0)
+                    <div class="carousel-inner">
+                        @foreach($content['carousel_images'] as $index => $image)
+                            <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                <img src="{{ Storage::url($image) }}" class="d-block w-100 carousel-image" alt="Carousel Image {{ $index + 1 }}">
+                            </div>
+                        @endforeach
                     </div>
-                    <div class="carousel-item">
-                        <img src="{{ asset('images/Home/image2.png') }}" class="d-block w-100 carousel-image" alt="Debut Image">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="{{ asset('images/Home/image3.png') }}" class="d-block w-100 carousel-image" alt="Baptismal Image">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="{{ asset('images/Home/image4.png') }}" class="d-block w-100 carousel-image" alt="Corporate Event Image">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="{{ asset('images/Home/image5.png') }}" class="d-block w-100 carousel-image" alt="Birthday Image">
-                    </div>
-                </div>
 
-                <!-- Carousel Arrows -->
-                <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev" aria-label="Previous Slide">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next" aria-label="Next Slide">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
+                    <!-- Carousel Arrows -->
+                    <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev" aria-label="Previous Slide">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next" aria-label="Next Slide">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
 
-
-                <!-- Circle Index Indicators -->
-                <div class="carousel-indicators-container">
-                    <div class="carousel-indicator" data-bs-target="#imageCarousel" data-bs-slide-to="0"></div>
-                    <div class="carousel-indicator" data-bs-target="#imageCarousel" data-bs-slide-to="1"></div>
-                    <div class="carousel-indicator" data-bs-target="#imageCarousel" data-bs-slide-to="2"></div>
-                    <div class="carousel-indicator" data-bs-target="#imageCarousel" data-bs-slide-to="3"></div>
-                    <div class="carousel-indicator" data-bs-target="#imageCarousel" data-bs-slide-to="4"></div>
-                </div>
+                    <!-- Circle Index Indicators -->
+                    <div class="carousel-indicators-container">
+                        @foreach($content['carousel_images'] as $index => $image)
+                            <div class="carousel-indicator {{ $index === 0 ? 'active' : '' }}" 
+                                 data-bs-target="#imageCarousel" 
+                                 data-bs-slide-to="{{ $index }}">
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="empty-carousel">
+                        <div class="empty-message">
+                            <i class="bi bi-image"></i>
+                            <p>No images to display</p>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -190,32 +184,65 @@
             }
         }
 
+        .empty-carousel {
+    height: 600px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    border: 2px solid darkorange;
+    border-top-right-radius: 100px;
+    border-bottom-left-radius: 100px;
+    box-shadow: 0px 0px 10px 5px rgba(255, 87, 34, 0.7);
+    }
+
+    .empty-message {
+        text-align: center;
+        color: #6c757d;
+    }
+
+    .empty-message i {
+        font-size: 48px;
+        margin-bottom: 10px;
+    }
+
+    .empty-message p {
+        font-size: 18px;
+        margin: 0;
+    }
 </style>
 
-<script>
-// JavaScript to update active class on carousel item change
-const carousel = document.querySelector('#imageCarousel');
-const indicators = document.querySelectorAll('.carousel-indicator');
+@if(isset($content['carousel_images']) && count($content['carousel_images']) > 0)
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const carousel = document.querySelector('#imageCarousel');
+            const indicators = document.querySelectorAll('.carousel-indicator');
 
-carousel.addEventListener('slide.bs.carousel', (event) => {
-    const activeIndex = event.to;
-    indicators.forEach((indicator, index) => {
-        if (index === activeIndex) {
-            indicator.classList.add('active');
-        } else {
-            indicator.classList.remove('active');
-        }
-    });
-});
+            if (carousel && indicators.length > 0) {
+                // Update active class on carousel item change
+                carousel.addEventListener('slide.bs.carousel', (event) => {
+                    const activeIndex = event.to;
+                    indicators.forEach((indicator, index) => {
+                        if (index === activeIndex) {
+                            indicator.classList.add('active');
+                        } else {
+                            indicator.classList.remove('active');
+                        }
+                    });
+                });
 
-// Optionally, handle clicking the circle to change the slide
-indicators.forEach((indicator) => {
-    indicator.addEventListener('click', (e) => {
-        const slideToIndex = e.target.getAttribute('data-bs-slide-to');
-        const carouselInstance = new bootstrap.Carousel(carousel);
-        carouselInstance.to(parseInt(slideToIndex));
-    });
-});
-</script>
+                // Handle clicking the indicator to change the slide
+                indicators.forEach((indicator) => {
+                    indicator.addEventListener('click', (e) => {
+                        const slideToIndex = e.target.getAttribute('data-bs-slide-to');
+                        const carouselInstance = bootstrap.Carousel.getOrCreateInstance(carousel);
+                        carouselInstance.to(parseInt(slideToIndex));
+                    });
+                });
+            }
+        });
+    </script>
+@endif
 
 @endsection

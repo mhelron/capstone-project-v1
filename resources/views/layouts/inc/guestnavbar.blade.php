@@ -1,10 +1,48 @@
 @vite('resources/css/guest.css')
 
+<style>
+    .navbar-brand {
+        display: flex;
+        align-items: center;
+    }
+
+    .navbar-brand p {
+        margin: 0;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .navbar-brand img {
+            height: 30px; /* Slightly smaller on mobile */
+        }
+    }
+
+    .logo-header {
+        height: 50px; /* Default size */
+        width: auto;
+    }
+
+    @media (max-width: 768px) {
+        .logo-header {
+            height: 30px; /* Smaller size for mobile devices */
+        }
+    }
+</style>
+
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
+
 <nav class="navbar navbar-expand-lg navbar-light custom-navbar" id="navbar">
     <div class="container">
         <!-- Navbar Brand (Kyla and Kyle) -->
         <a class="navbar-brand" href="{{ route('guest.home') }}">
-            <span style="color: darkorange;">Kyla</span> and <span style="color: red;">Kyle</span>
+            <div class="d-flex align-items-center">
+                @if (!empty($content['logo_path']))
+                    <img src="{{ Storage::url($content['logo_path']) }}" alt="Logo" class="me-2" style="height: 40px; width: auto;">
+                @endif
+                <p class="mb-0">{!! $content['title_nav'] !!}</p>
+            </div>
         </a>
 
         <!-- Navbar Toggler (Hamburger Icon) -->
