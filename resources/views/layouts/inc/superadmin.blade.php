@@ -54,6 +54,9 @@
                 <li class="sidebar-item">
                     <a href="{{route('admin.carousel.edit')}}" class="sidebar-link">Carousel Home</a>
                 </li>
+                <li class="sidebar-item">
+                    <a href="{{route('admin.terms.edit')}}" class="sidebar-link">Terms & Conditions</a>
+                </li>
             </ul>
         </li>
         <li class="sidebar-item">

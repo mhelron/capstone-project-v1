@@ -54,43 +54,12 @@
                 <h4 class="modal-title" id="termsModalLabel"><strong>Terms and Conditions Policy</strong></h4>
             </div>
             <div class="modal-body" id="termsModalBody" style="max-height: 750px; overflow-y: auto;">
-                <h5>PLEASE READ THE FOLLOWING:</h5>
-                <h6><strong>1. Services Provided:</strong></h6>
-                <p>The caterer agrees to provide catering services for the event specified in the contract. Services include menu planning, food preparation, setup, service during the event, and cleanup.</p>
                 
-                <h6><strong>2. Duration of Services:</strong></h6>
-                <p>The standard duration of catering services provided by the Caterer is up to 5 hours from the scheduled start time of the event. If the Client wishes to extend the duration, an additional service charge will apply.</p>
-                
-                <h6><strong>3. Payment and Cancellation:</strong></h6>
-                <p>3.1 The Client agrees to pay the agreed-upon total amount as outlined in the catering contract. This amount includes the base catering package and any additional services requested by the Client.</p>
-                <p>3.2 A non-refundable deposit of ₱5,000.00 of the total contract amount is due upon confirming this agreement, to be paid within 3 days before the event. The remaining balance must be paid according to the following schedule:</p>
-                <ul>
-                    <li>₱5,000.00 Reservation</li>
-                    <li>50% Down Payment (1 week prior to the event)</li>
-                    <li>Remaining balance (The day of the event)</li>
-                </ul>
-
-                <h6><strong>4. Pencil Booking Policy:</strong></h6>
-                <p>Pencil bookings are held for a maximum duration of 1 week. Clients who provide proof of payment will be prioritized over pencil bookings. If another client secures the date with payment, the pencil booking may be released.</p>
-                
-                <h6><strong>5. Rescheduling and Cancellation:</strong></h6>
-                <p>5.1 Rescheduling: If the event is rescheduled 3 days or fewer prior to the event date, the reservation fee of ₱5,000.00 will be non-refundable for events with fewer than 500 attendees. For events with 500 or more attendees, 5% of the total package amount will be deducted from the deposit as a rescheduling fee.</p>
-                <p>5.2 Cancellation: If cancellation occurs 3 days or fewer before the event, the Client agrees to pay 10% of the total contract amount to cover preparations made by the Caterer.</p>
-                <p>5.3 Exemptions: The above rescheduling and cancellation fees will be waived in cases of severe weather conditions (e.g., typhoon), death, or other extraordinary circumstances.</p>
-                
-                <h6><strong>6. Liability:</strong></h6>
-                <p>The Caterer shall not be held liable for any damages or injuries to persons or property that may occur during the event, except in cases of gross negligence or intentional misconduct.</p>
-                
-                <h6><strong>7. Privacy Policy:</strong></h6>
-                <p>Kyla and Kyle Catering Services value your privacy. All personal information collected is used solely for business purposes, including event planning, communication, and service improvements. We ensure that your information is kept confidential and secure, and it will not be shared with third parties except as required by law or with your permission. By providing your information, you consent to its use for these purposes. If you have any questions or wish to update or remove your information, please contact us directly.</p>
-                
-                <h6><strong>8. Governing Law:</strong></h6>
-                <p>This Agreement shall be governed by and construed in accordance with the laws of the Republic of the Philippines.</p>
-
+            {!! $content['terms'] !!}
                 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modalDoneBtn" disabled>Done</button>
+                <button type="button" class="btn btn-darkorange" data-bs-dismiss="modal" id="modalDoneBtn" disabled>Done</button>
             </div>
         </div>
     </div>

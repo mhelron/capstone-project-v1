@@ -107,6 +107,8 @@ Route::middleware([AuthMiddleware::class])->group(function () {
             Route::post('/edit-home', [CMSController::class, 'updateHome'])->name('admin.home.update');
             Route::get('/carousel', [CMSController::class, 'editCarousel'])->name('admin.carousel.edit');
             Route::post('/edit-carousel', [CMSController::class, 'updateCarousel'])->name('admin.carousel.update');
+            Route::get('/terms', [CMSController::class, 'editTerms'])->name('admin.terms.edit');
+            Route::post('/edit-terms', [CMSController::class, 'updateTerms'])->name('admin.terms.update');
         });
     });
 

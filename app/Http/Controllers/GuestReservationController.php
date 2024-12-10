@@ -26,6 +26,8 @@ class GuestReservationController extends Controller
     {
         $selectedPackage = $request->query('package');
         $selectedMenu = $request->query('menu');
+
+        $content = $this->database->getReference('contents')->getValue();
         
         // Get and sanitize reservations data
         $reservationsData = $this->database->getReference($this->reservations)->getValue() ?? [];
@@ -58,7 +60,8 @@ class GuestReservationController extends Controller
             'addressData', 
             'selectedPackage', 
             'selectedMenu',
-            'reservations' // Add reservations to the view
+            'reservations',
+            'content'
         ));
     }
     private function generateUniqueReferenceNumber()

@@ -149,4 +149,29 @@ class CMSController extends Controller
         return redirect()->route('admin.carousel.edit')
             ->with('status', 'Content updated successfully!');
     }
+
+    public function editTerms()
+    {
+        $content = $this->database->getReference('contents')->getValue();
+
+        $isExpanded = session()->get('sidebar_is_expanded', true);
+        return view('admin.content.terms.index', compact('content', 'isExpanded'));
+    }
+
+    public function updateTerms(Request $request)
+    {
+        $request->validate([
+            'terms' => 'nullable|string',
+        ]);
+
+        // Strip tags but allow specific HTML elements
+        $updates = [
+            'terms' => strip_tags($request->input('terms', ''),
+                '<p><br><strong><em><ul><ol><li><i><span><div><h1><h2><h3><h4><h5><h6>'),
+        ];
+
+        $this->database->getReference('contents')->update($updates);
+
+        return redirect()->route('admin.terms.edit')->with('status', 'Content updated successfully!');
+    }
 }
