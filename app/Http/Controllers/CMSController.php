@@ -174,4 +174,73 @@ class CMSController extends Controller
 
         return redirect()->route('admin.terms.edit')->with('status', 'Content updated successfully!');
     }
+
+    public function editGallery()
+    {
+        $content = $this->database->getReference('contents')->getValue();
+
+        $isExpanded = session()->get('sidebar_is_expanded', true);
+        return view('admin.content.gallery.index', compact('content', 'isExpanded'));
+    }
+
+    public function updateGallery(Request $request)
+{
+    $request->validate([
+        'wedding_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:30720',
+        'debut_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:30720',
+        'kiddie_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:30720',
+        'adult_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:30720',
+        'corporate_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:30720'
+    ]);
+
+    $categories = ['wedding', 'debut', 'kiddie', 'adult', 'corporate'];
+    $updates = [];
+    $currentContent = $this->database->getReference('contents')->getValue();
+
+    foreach ($categories as $category) {
+        $categoryImages = [];
+        $existingImages = isset($currentContent[$category . '_gallery']) 
+            ? $currentContent[$category . '_gallery'] 
+            : [];
+
+        // Handle existing images
+        if ($request->has('existing_' . $category . '_images')) {
+            $categoryImages = $request->input('existing_' . $category . '_images');
+            
+            // Delete removed images
+            foreach ($existingImages as $oldImage) {
+                if (!in_array($oldImage, $categoryImages)) {
+                    Storage::disk('public')->delete($oldImage);
+                }
+            }
+        }
+
+        // Handle new image uploads
+        if ($request->hasFile($category . '_images')) {
+            foreach ($request->file($category . '_images') as $index => $image) {
+                if ($image) {
+                    // Delete existing image at this index if it exists
+                    if (isset($categoryImages[$index]) && Storage::disk('public')->exists($categoryImages[$index])) {
+                        Storage::disk('public')->delete($categoryImages[$index]);
+                    }
+
+                    // Store new image
+                    $filename = time() . '_' . $image->getClientOriginalName();
+                    $imagePath = $image->storeAs('gallery/' . $category, $filename, 'public');
+                    $categoryImages[$index] = $imagePath;
+                }
+            }
+        }
+
+        // Remove null values and reindex array
+        $categoryImages = array_values(array_filter($categoryImages));
+        $updates[$category . '_gallery'] = $categoryImages;
+    }
+
+    // Update Firebase
+    $this->database->getReference('contents')->update($updates);
+
+    return redirect()->route('admin.gallery.edit')
+        ->with('status', 'Gallery updated successfully!');
+}
 }

@@ -57,6 +57,9 @@
                 <li class="sidebar-item">
                     <a href="{{route('admin.terms.edit')}}" class="sidebar-link">Terms & Conditions</a>
                 </li>
+                <li class="sidebar-item">
+                    <a href="{{route('admin.gallery.edit')}}" class="sidebar-link">Gallery</a>
+                </li>
             </ul>
         </li>
         <li class="sidebar-item">

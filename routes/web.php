@@ -102,6 +102,7 @@ Route::middleware([AuthMiddleware::class])->group(function () {
             Route::post('admin/packages/toggle-display/{packageId}', [PackageController::class, 'toggleDisplay'])->name('admin.packages.toggleDisplay');
         });
 
+        // Content Route
         Route::prefix('/admin/content')->group(function () {
             Route::get('/home', [CMSController::class, 'editHome'])->name('admin.home.edit');
             Route::post('/edit-home', [CMSController::class, 'updateHome'])->name('admin.home.update');
@@ -109,6 +110,8 @@ Route::middleware([AuthMiddleware::class])->group(function () {
             Route::post('/edit-carousel', [CMSController::class, 'updateCarousel'])->name('admin.carousel.update');
             Route::get('/terms', [CMSController::class, 'editTerms'])->name('admin.terms.edit');
             Route::post('/edit-terms', [CMSController::class, 'updateTerms'])->name('admin.terms.update');
+            Route::get('/gallery', [CMSController::class, 'editGallery'])->name('admin.gallery.edit');
+            Route::post('/edit-gallery', [CMSController::class, 'updateGallery'])->name('admin.gallery.update');
         });
     });
 
