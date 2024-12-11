@@ -78,14 +78,16 @@ document.addEventListener('DOMContentLoaded', function() {
         },
 
         dateClick: function(info) {
-            const selectedDate = new Date(info.dateStr);
+            // Store selected date in localStorage
+            localStorage.setItem('selectedDate', info.dateStr);
 
-            if (selectedDate >= today) {
-                $('#eventModal').modal('show');
-                $('#event_date').val(info.dateStr); 
-                $('#eventTitle, #eventDescription, #eventTime').val('');
+            // Show the reserve type modal
+            var modalElement = document.getElementById('reserveTypeModal');
+            if (modalElement) {
+                var modal = new bootstrap.Modal(modalElement);
+                modal.show();
             } else {
-                alert("Cannot select past dates.");
+                console.error('Modal element not found.');
             }
         },
 

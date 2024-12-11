@@ -302,6 +302,9 @@
                                 </div>
                             </div>
 
+                            <!-- Add hidden input for selected_date -->
+                            <input type="hidden" name="selected_date" value="{{ request()->query('selected_date') }}">
+
                             <input type="hidden" id="total_price" name="total_price" value="{{ old('total_price') }}">
 
                             <div class="form-group">

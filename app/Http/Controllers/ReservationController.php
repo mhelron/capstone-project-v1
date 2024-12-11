@@ -56,10 +56,14 @@ class ReservationController extends Controller
         ]);
     }
 
-    public function createReservation(){
+    public function createReservation()
+    {
+        // Fetching packages data from Firebase
         $packages = $this->database->getReference($this->packages)->getValue();
-        $packages = is_array($packages) ? array_map(fn($package) => $package, $packages) : [];
+        // Ensure packages are an array, fallback to an empty array if not
+        $packages = is_array($packages) ? $packages : [];
 
+        // Fetching reservations data from Firebase and filtering for valid entries
         $reservationsData = $this->database->getReference($this->reservations)->getValue() ?? [];
         $reservations = is_array($reservationsData) ? array_filter($reservationsData, function($reservation) {
             return is_array($reservation) && 
@@ -67,9 +71,19 @@ class ReservationController extends Controller
                 isset($reservation['status']);
         }) : [];
 
+        // Get the sidebar state from the session, defaulting to true if not set
         $isExpanded = session()->get('sidebar_is_expanded', true);
-        $addressData = json_decode(file_get_contents(public_path('address_ph.json')), true);    
-        return view('admin.reservation.createreservation', compact('packages', 'isExpanded', 'addressData', 'reservations'));
+
+        // Fetch address data from local JSON file
+        $addressData = json_decode(file_get_contents(public_path('address_ph.json')), true);
+
+        // Return the view with necessary data
+        return view('admin.reservation.createreservation', compact(
+            'packages', 
+            'isExpanded', 
+            'addressData', 
+            'reservations'
+        ));
     }
 
     public function createPencil(){   
