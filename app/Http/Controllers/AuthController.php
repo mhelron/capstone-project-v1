@@ -56,6 +56,12 @@ class AuthController extends Controller
             $uid = $verifiedIdToken->claims()->get('sub');
             $user = $this->auth->getUser($uid);
 
+            // Check if email is verified
+            if (!$user->emailVerified) {
+                Session::put('firebase_user', $user); // Store user temporarily for verification
+                return redirect()->route('verification.notice');
+            }
+
             // Fetch user role from Realtime Database
             $userRecord = $this->database->getReference('users')
                 ->orderByChild('email')
@@ -100,6 +106,21 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             Log::error('Login error: ' . $e->getMessage());
             return redirect()->back()->with(['error' => 'Authentication failed. Please try again.']);
+        }
+    }
+
+    public function resendVerificationEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+
+        try {
+            $this->auth->sendEmailVerificationLink($request->email);
+            return redirect()->back()->with('status', 'Verification email has been resent.');
+        } catch (\Exception $e) {
+            Log::error('Email verification error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to send verification email. Please try again.');
         }
     }
 

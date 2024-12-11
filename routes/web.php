@@ -15,6 +15,7 @@ use App\Http\Controllers\GuestReservationController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\CMSController;
+use App\Http\Controllers\EmailVerificationController;
 
 use App\Http\Controllers\BotmanController;
 
@@ -75,6 +76,14 @@ Route::get('/password/reset', [PasswordResetController::class, 'showResetForm'])
 
 // Send reset password link
 Route::post('/password/reset', [PasswordResetController::class, 'sendResetLink'])->name('password.reset.send');
+
+// Email Verification Routes
+Route::get('/email/verify', [EmailVerificationController::class, 'notice'])
+    ->name('verification.notice');
+Route::post('/email/verification-notification', [EmailVerificationController::class, 'send'])
+    ->name('verification.send');
+Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+    ->name('verification.verify');
 
 // Auth Middleware
 Route::middleware([AuthMiddleware::class])->group(function () {
