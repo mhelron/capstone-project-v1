@@ -7,6 +7,7 @@ use Kreait\Firebase\Contract\Database;
 use Faker\Factory as Faker;
 use Illuminate\Support\Facades\Log;
 use DateTime;
+use Carbon\Carbon;
 
 class FirebaseReservationSeeder extends Seeder
 {
@@ -217,7 +218,7 @@ public function run()
         
         Log::info("Seeding process started");
         
-        $totalReservations = 5000;
+        $totalReservations = 1000;
         Log::info("Attempting to create {$totalReservations} reservations");
         
         // Current date for reference
@@ -337,9 +338,17 @@ public function run()
                     'payment_submitted_at' => $payment_submitted_at,
                     'created_at' => $createdAt->format('Y-m-d H:i:s'),
                     'cancellation_reason' => '',  // Default empty string
-                    'cancelled_at' => '',         // Default empty string
+                    'cancelled_at' => '',   
+                    'pencil_created_at' => '',
+                    'pencil_expires_at' => '',      // Default empty string
                     'read' => true
                 ];
+
+                if ($status === 'Pencil') {
+                    $pencilCreatedAt = Carbon::parse($createdAt);
+                    $reservation['pencil_created_at'] = $pencilCreatedAt->toDateTimeString();
+                    $reservation['pencil_expires_at'] = $pencilCreatedAt->copy()->addWeek()->toDateTimeString();
+                }
 
                 if ($status === 'Cancelled') {
                     $reservation['cancellation_reason'] = $this->faker->sentence;
