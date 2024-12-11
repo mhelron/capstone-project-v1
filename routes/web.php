@@ -112,6 +112,8 @@ Route::middleware([AuthMiddleware::class])->group(function () {
             Route::post('/edit-terms', [CMSController::class, 'updateTerms'])->name('admin.terms.update');
             Route::get('/gallery', [CMSController::class, 'editGallery'])->name('admin.gallery.edit');
             Route::post('/edit-gallery', [CMSController::class, 'updateGallery'])->name('admin.gallery.update');
+            Route::get('/about', [CMSController::class, 'editAbout'])->name('admin.about.edit');
+            Route::post('/edit-about', [CMSController::class, 'updateAbout'])->name('admin.about.update');
         });
     });
 

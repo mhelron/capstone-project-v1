@@ -7,7 +7,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0" style="padding-top: 35px;">Add Pencil Reservation</h1>
+                <h1 class="m-0 pt-4">Add Pencil Reservation</h1>
             </div>
         </div>
     </div>
@@ -28,8 +28,8 @@
                 @endif
 
                 <div class="d-flex justify-content-end mb-2">
-                    <a href="{{ route('admin.reservation') }}" class="btn btn-danger">Back</a>
-                </div>                  
+                    <a href="{{ route('admin.reservation', ['tab' => 'pencil']) }}" class="btn btn-danger">Back</a>
+                </div>
 
                 <div class="card">
                     <div class="card-body form-container">
@@ -37,6 +37,8 @@
                             @csrf
 
                             <div class="row">
+                                <!-- First Name -->
+                                <div class="row">
                                 <!-- First Name -->
                                 <div class="form-group col-md-6 mb-3">
                                     <label>First Name</label><span class="text-danger"> *</span>
@@ -77,39 +79,120 @@
                             </div>
 
                             <div class="row">
-                                <!-- Address -->
-                                <div class="form-group col-md-12 mb-3">
-                                    <label>Address</label><span class="text-danger"> *</span>
-                                    <input type="text" name="address" value="{{ old('address') }}" class="form-control">
-                                    @if ($errors->has('address'))
-                                        <small class="text-danger">{{ $errors->first('address') }}</small>
+                                <!-- Region Dropdown -->
+                                <div class="form-group col-md-6 mb-3">
+                                    <label for="region">Region</label>
+                                    <select name="region" id="region" class="form-control">
+                                        <option value="" disabled selected>Select a Region</option>
+                                            @foreach ($addressData as $region)
+                                                <option value="{{ $region['id'] }}" {{ old('region') == $region['id'] ? 'selected' : '' }}>
+                                                    {{ $region['name'] }}
+                                                </option>
+                                            @endforeach
+                                    </select>
+                                    @if ($errors->has('region'))
+                                        <small class="text-danger">{{ $errors->first('region') }}</small>
+                                    @endif
+                                </div>
+
+                                <!-- Province Dropdown -->
+                                <div class="form-group col-md-6 mb-3">
+                                    <label for="province">Province</label>
+                                    <select name="province" id="province" class="form-control" disabled>
+                                    <option value="">Select a Province</option>
+                                        @if(old('province'))
+                                            <option value="{{ old('province') }}" selected>{{ old('province') }}</option>
+                                        @endif
+                                    </select>
+                                    @if ($errors->has('province') && !is_null(old('region')))
+                                        <small class="text-danger">{{ $errors->first('province') }}</small>
                                     @endif
                                 </div>
                             </div>
 
                             <div class="row">
-                                <!-- Package -->
+                                <!-- City Dropdown -->
+                                <div class="form-group col-md-6 mb-3">
+                                    <label for="city">City</label>
+                                    <select name="city" id="city" class="form-control" disabled>
+                                    <option value="">Select a City</option>
+                                        @if(old('city'))
+                                            <option value="{{ old('city') }}" selected>{{ old('city') }}</option>
+                                        @endif
+                                    </select>
+                                    @if ($errors->has('city') && !is_null(old('province')))
+                                        <small class="text-danger">{{ $errors->first('city') }}</small>
+                                    @endif
+                                </div>
+
+                                <!-- Barangay Dropdown -->
+                                <div class="form-group col-md-6 mb-3">
+                                    <label for="barangay">Barangay</label>
+                                    <select name="barangay" id="barangay" class="form-control" disabled>
+                                        <option value="">Select a Barangay</option>
+                                        @if(old('barangay'))
+                                            <option value="{{ old('barangay') }}" selected>{{ old('barangay') }}</option>
+                                        @endif
+                                    </select>
+                                    @if ($errors->has('barangay') && !is_null(old('city')))
+                                        <small class="text-danger">{{ $errors->first('barangay') }}</small>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Street, Building, House Number -->
+                                <div class="form-group col-md-6 mb-3">
+                                    <label>House Number, Building, Street</label><span class="text-danger"> *</span>
+                                    <input type="text" name="street_houseno" value="{{ old('street_houseno') }}" class="form-control" style="text-transform: uppercase;">
+                                    @if ($errors->has('street_houseno'))
+                                        <small class="text-danger">{{ $errors->first('street_houseno') }}</small>
+                                    @endif
+                                </div>
+
+                                <!-- Package Selection -->
                                 <div class="form-group col-md-6 mb-3">
                                     <label for="package_name">Package</label>
-                                    <select onchange="packageChange()" name="package_name" id="package_name" class="form-control">
+                                    <select name="package_name" id="package_name" class="form-control">
                                         <option value="" disabled {{ old('package_name') ? '' : 'selected' }}>Select a Package</option>
-                                        @foreach ($packages as $package)
-                                            <option value="{{ $package['package_name'] }}" {{ old('package_name') == $package['package_name'] ? 'selected' : '' }}>
-                                                {{ $package['package_name'] }}
-                                            </option>
+                                        @foreach ($packages ?? [] as $package)
+                                            @if(isset($package['is_displayed']) && $package['is_displayed'] === true)
+                                                <option value="{{ $package['package_name'] ?? '' }}" 
+                                                        data-persons="{{ $package['persons'] ?? '' }}"
+                                                        {{ old('package_name') == ($package['package_name'] ?? '') ? 'selected' : '' }}>
+                                                    {{ $package['package_name'] ?? 'Unknown Package' }}
+                                                </option>
+                                            @endif
                                         @endforeach
                                     </select>
-
                                     @if ($errors->has('package_name'))
                                         <small class="text-danger">{{ $errors->first('package_name') }}</small>
                                     @endif
                                 </div>
+                            </div>
 
+                            <div class="row">
+                                <!-- Title of the Event -->
+                                <div class="form-group col-md-6 mb-3">
+                                    <label>Title of the Event</label><span class="text-danger"> *</span>
+                                    <input type="text" name="event_title" value="{{ old('event_title') }}" class="form-control">
+                                    @if ($errors->has('event_title'))
+                                        <small class="text-danger">{{ $errors->first('event_title') }}</small>
+                                    @endif
+                                </div>
+                                
+                                 <!-- Menu Selection -->
                                 <div class="form-group col-md-6 mb-3">
                                     <label>Menu</label>
-                                    <select name="menu_name" class="form-select" disabled>
-                                        <option value=""></option>
+                                    <select name="menu_name" class="form-select" id="menu_name" {{ old('package_name') ? '' : 'disabled' }}>
+                                        <option value="">Select a Menu</option>
+                                        @if(old('menu_name'))
+                                            <option value="{{ old('menu_name') }}" selected>{{ old('menu_name') }}</option>
+                                        @endif
                                     </select>
+                                    @if ($errors->has('menu_name') && !is_null(old('package_name')))
+                                        <small class="text-danger">{{ $errors->first('menu_name') }}</small>
+                                    @endif
                                 </div>
                             </div>
 
@@ -117,17 +200,27 @@
                                 <!-- Number of Guests -->
                                 <div class="form-group col-md-6 mb-3">
                                     <label>Number of Guests</label><span class="text-danger"> *</span>
-                                    <input type="number" name="guests_number" value="{{ old('guests_number') }}" class="form-control">
+                                    <input type="number" name="guests_number" value="{{ old('guests_number') }}" class="form-control" id="guests_number" min="1" max="500">
                                     @if ($errors->has('guests_number'))
                                         <small class="text-danger">{{ $errors->first('guests_number') }}</small>
                                     @endif
                                 </div>
 
-                                <!-- Number of Sponsors -->
                                 <div class="form-group col-md-6 mb-3">
                                     <label>Number of Principal Sponsors (Ninong, Ninang & Parents)</label>
-                                    <input type="number" id="sponsors" name="sponsors" value="{{ old('sponsors') }}" class="form-control" disabled>
-                                    @if ($errors->has('sponsors'))
+                                    <input 
+                                        type="number" 
+                                        id="sponsors" 
+                                        name="sponsors" 
+                                        value="{{ old('sponsors') }}" 
+                                        class="form-control"
+                                        min="1"
+                                        max="500"
+                                        @if(old('package_type', $packageType ?? '') !== 'Wedding') disabled @endif>
+
+                                    <input type="hidden" id="package_type" name="package_type" value="{{ old('package_type', $packageType ?? '') }}">
+                                    
+                                    @if ($errors->has('sponsors') && old('package_name', $packageType ?? '') === 'Wedding')
                                         <small class="text-danger">{{ $errors->first('sponsors') }}</small>
                                     @endif
                                 </div>
@@ -165,7 +258,7 @@
 
                                 <!-- Color Motif or Theme -->
                                 <div class="form-group col-md-6 mb-3">
-                                    <label>Color Motif or Theme</label><span class="text-danger"> *</span>
+                                    <label>Color Motif or/and Theme</label><span class="text-danger"> *</span>
                                     <input type="text" name="theme" value="{{ old('theme') }}" class="form-control">
                                     @if ($errors->has('theme'))
                                         <small class="text-danger">{{ $errors->first('theme') }}</small>
@@ -180,114 +273,117 @@
                                 </div>
                             </div>
 
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-3">
+
+                                </div>
+
+                                <!-- Color Motif or Theme -->
+                             <div class="form-group col-md-6">
+                                    <h4>Total Breakdown</h4>
+                                    <p class="d-flex justify-content-between">
+                                        <strong>Additional Persons: </strong>
+                                        <span id="total-additional-persons">0</span> 
+                                        <span>x</span> 
+                                        <span id="price-per-package-head">0.00</span>
+                                    </p>
+                                    <p class="d-flex justify-content-between">
+                                        <strong>Total Additional Person Price: </strong>
+                                        <span id="total-additional-person-price">0.00</span>
+                                    </p>
+                                    <p class="d-flex justify-content-between">
+                                        <strong>Package Price: </strong>
+                                        <span id="total-package-price">0.00</span>
+                                    </p>
+                                    <p class="d-flex justify-content-between">
+                                        <strong>Total:</strong>
+                                        <span id="total-price">0.00</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <input type="hidden" id="total_price" name="total_price" value="{{ old('total_price') }}">
+
                             <div class="form-group">
                                 <button type="submit" class="btn btn-primary float-end">Add Pencil Reservation</button>
                             </div>
                         </form>
                     </div>
                 </div>
-
+                <div class="col-lg-4 mb-4">
+                <div class="card blank-card">
+                    <div class="card-body">
+                        <div style="display:none;">
+                            <h4>Package Preview</h4>
+                            <p><strong>Package Name: </strong><span id="preview-package-name"></span></p>
+                            <p><strong>Package Price: </strong><span id="preview-package-price"></span></p>
+                            <p><strong>Package Pax: </strong><span id="preview-package-pax"></span></p>
+                            <p><h4>Menu</h4></p>
+                            <p><span id="preview-menu-items"></span></p>
+                            <p><h4>Services</h4><span id="preview-package-services"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
             </div>
         </div>
     </div>
 </div>
 <!-- /.content -->
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
-    var packages = [];
+ var packages = [];
 
-    <?php 
-        foreach($packages as $package) {
-            echo 'packages.push({
-                "package_name": "'. addslashes($package['package_name']) .'",
-                "package_type": "'. addslashes($package['package_type']) .'",
-                "menus": [';        
-            foreach($package['menus'] as $menu) {
+<?php 
+    foreach($packages as $package) {
+        echo 'packages.push({
+            "package_name": "'. addslashes($package['package_name']) .'",
+            "package_type": "'. addslashes($package['package_type']) .'",
+            "persons": "'. addslashes($package['persons']) .'", 
+            "price": "'. addslashes($package['price']) .'",
+            "menus": [';        
+        foreach($package['menus'] as $menu) {
+            echo '{
+                "menu_name": "'. addslashes($menu['menu_name']) .'",
+                "foods": [';                
+            foreach($menu['foods'] as $food) {
                 echo '{
-                    "menu_name": "'. addslashes($menu['menu_name']) .'",
-                    "foods": [';                
-                foreach($menu['foods'] as $food) {
-                    echo '{
-                        "category": "'. addslashes($food['category']) .'",
-                        "food": "'. addslashes($food['food']) .'"
-                    },';
-                }                
-                echo ']
+                    "category": "'. addslashes($food['category']) .'",
+                    "food": "'. addslashes($food['food']) .'"
                 },';
-            }
-            echo ']});';
+            }                
+            echo ']
+            },';
+        }
+        echo ']});';
+    }
+?>
+
+var events = [];
+    <?php 
+        foreach($reservations as $reservation) {
+            // Ensure consistent date format
+            $formattedDate = date('Y-m-d', strtotime($reservation['event_date']));
+            echo 'events.push({
+                "Event": "Reserved", 
+                "Date": "'. addslashes($formattedDate) .'",
+                "Status": "'. addslashes($reservation['status']) .'"
+            });';
         }
     ?>
 
-    function packageChange() {
-        const selectedPackageName = $('#package_name').val();
-        const menuDropdown = document.querySelector('select[name="menu_name"]');
-
-        if (selectedPackageName) {
-            const selectedPackage = packages.find(pkg => pkg.package_name === selectedPackageName);
-
-            if (selectedPackage) {
-                menuDropdown.disabled = false;
-                document.getElementById('sponsors').disabled = (selectedPackage.package_type !== 'Wedding');
-
-                // Clear existing options and add options for the selected package's menus
-                menuDropdown.innerHTML = '<option value="">Select a Menu</option>';
-                selectedPackage.menus.forEach(menu => {
-                    const option = document.createElement('option');
-                    option.value = menu.menu_name;
-                    option.textContent = menu.menu_name;
-
-                    // Get only the food names for the tooltip
-                    const foodsList = menu.foods.map(food => food.food).join('\n');
-                    option.title = foodsList || "No foods available";
-
-                    menuDropdown.appendChild(option);
-                });
-            } else {
-                console.error("Selected package not found.");
-            }
-        } else {
-            menuDropdown.disabled = true;
-        }
-    }
-
-    $(document).ready(function() {
-        packageChange();
-        $('#package_name').on('change', packageChange);
-
-        // Initialize tooltips for the menu dropdown
-        $('select[name="menu_name"]').tooltip({
-            content: function() {
-                return $(this).find('option:selected').attr('title');
-            },
-            items: "> option",
-            track: true,
-            tooltipClass: "custom-tooltip"
-        });
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize Flatpickr for the date input
-        flatpickr("#event_date", {
-            dateFormat: "Y-m-d", // Format of the date to send to the server
-            minDate: "today",    // Prevent past dates
-        });
-
-        // Initialize Flatpickr for the time input with AM/PM option
-        flatpickr("#event_time", {
-            enableTime: true,    // Enable time selection
-            noCalendar: true,     // Disable calendar (only time)
-            dateFormat: "h:i K",  // Format of the time to send to the server (12-hour format with AM/PM)
-            time_24hr: false,     // Use 12-hour format
-        });
-    });
+const addressData = <?php echo json_encode($addressData); ?>;
+console.log(packages)
 </script>
+
+@vite('resources/js/address.js')
+@vite('resources/js/adminreservation.js')
 
 @endsection

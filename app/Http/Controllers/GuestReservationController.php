@@ -93,7 +93,10 @@ class GuestReservationController extends Controller
                 'required',
                 'regex:/^09\d{9}$/',
             ],
-            'email' => 'required',
+            'email' => [
+                'required',
+                'regex:/^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|outlook\.com|hotmail\.com|icloud\.com|aol\.com|proton\.me|protonmail\.com|yahoo\.co\.uk|msn\.com)$/i'
+            ],
             'region' => 'required',
             'province' => 'required',
             'city' => 'required',

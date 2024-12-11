@@ -670,12 +670,34 @@ document.addEventListener('DOMContentLoaded', function() {
             isValid = false;
         }
 
-        // Email format validation
         const emailInput = document.getElementsByName('email')[0];
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (emailInput.value && !emailPattern.test(emailInput.value)) {
-            showError(emailInput, 'Please enter a valid email address');
-            isValid = false;
+        if (emailInput.value) {
+            // First check basic email format
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(emailInput.value)) {
+                showError(emailInput, 'Please enter a valid email address');
+                isValid = false;
+            } else {
+                // Then check allowed domains
+                const allowedDomains = [
+                    'gmail.com',
+                    'yahoo.com',
+                    'outlook.com',
+                    'hotmail.com',
+                    'icloud.com',
+                    'aol.com',
+                    'proton.me',
+                    'protonmail.com',
+                    'yahoo.co.uk',
+                    'msn.com'
+                ];
+                
+                const domain = emailInput.value.split('@')[1].toLowerCase();
+                if (!allowedDomains.includes(domain)) {
+                    showError(emailInput, 'Please use a common email provider (Gmail, Yahoo, Outlook, etc.)');
+                    isValid = false;
+                }
+            }
         }
 
         // Number of guests validation

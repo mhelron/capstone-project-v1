@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use App\Mail\PaymentConfirmationMail;
+use App\Mail\ConfirmedByAdmin;
+use App\Mail\PencilConfirmationMail;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class ReservationController extends Controller
 {
@@ -56,16 +60,50 @@ class ReservationController extends Controller
         $packages = $this->database->getReference($this->packages)->getValue();
         $packages = is_array($packages) ? array_map(fn($package) => $package, $packages) : [];
 
-        $isExpanded = session()->get('sidebar_is_expanded', true);    
-        return view('admin.reservation.createreservation', compact('packages', 'isExpanded'));
+        $reservationsData = $this->database->getReference($this->reservations)->getValue() ?? [];
+        $reservations = is_array($reservationsData) ? array_filter($reservationsData, function($reservation) {
+            return is_array($reservation) && 
+                isset($reservation['event_date']) && 
+                isset($reservation['status']);
+        }) : [];
+
+        $isExpanded = session()->get('sidebar_is_expanded', true);
+        $addressData = json_decode(file_get_contents(public_path('address_ph.json')), true);    
+        return view('admin.reservation.createreservation', compact('packages', 'isExpanded', 'addressData', 'reservations'));
     }
 
     public function createPencil(){   
         $packages = $this->database->getReference($this->packages)->getValue();
         $packages = is_array($packages) ? array_map(fn($package) => $package, $packages) : [];
 
+        $reservationsData = $this->database->getReference($this->reservations)->getValue() ?? [];
+        $reservations = is_array($reservationsData) ? array_filter($reservationsData, function($reservation) {
+            return is_array($reservation) && 
+                isset($reservation['event_date']) && 
+                isset($reservation['status']);
+        }) : [];
+
+        $addressData = json_decode(file_get_contents(public_path('address_ph.json')), true);   
+
         $isExpanded = session()->get('sidebar_is_expanded', true);    
-        return view('admin.reservation.createpencilreservation', compact('packages', 'isExpanded'));
+        return view('admin.reservation.createpencilreservation', compact('packages', 'isExpanded', 'addressData', 'reservations'));
+    }
+
+    private function generateUniqueReferenceNumber()
+    {
+        do {
+            // Generate a random 12-character string with numbers and uppercase letters
+            $reference = strtoupper(Str::random(6)) . rand(100000, 999999);
+            
+            // Check if this reference number already exists in Firebase
+            $existingReservation = $this->database->getReference($this->reservations)
+                ->orderByChild('reference_number')
+                ->equalTo($reference)
+                ->getValue();
+                
+        } while (!empty($existingReservation));
+        
+        return $reference;
     }
 
     public function reservation(Request $request)
@@ -74,95 +112,67 @@ class ReservationController extends Controller
     $validatedData = $request->validate([
         'first_name' => 'required',
         'last_name' => 'required',
-        'address' => 'required',
-        'phone' => 'required',
-        'email' => 'required',
-        'package_name' => 'required', // Ensure package is selected
+        'phone' => [
+            'required',
+            'regex:/^09\d{9}$/',
+        ],
+        'email' => [
+                'required',
+                'regex:/^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|outlook\.com|hotmail\.com|icloud\.com|aol\.com|proton\.me|protonmail\.com|yahoo\.co\.uk|msn\.com)$/i'
+            ],
+        'region' => 'required',
+        'province' => 'required',
+        'city' => 'required',
+        'barangay' => 'required',
+        'street_houseno' => [
+            'required',
+        ],
+        'package_name' => 'required',
+        'event_title' => 'required',
         'menu_name' => 'required',
         'event_date' => 'required',
         'guests_number' => 'required',
-        'sponsors' => 'nullable|integer',
+        'sponsors' => 'nullable',
         'venue' => 'required',
         'event_time' => 'required',
         'theme' => 'required',
         'other_requests' => 'nullable',
-    ],[
-        'menu_name.required_if' => 'You must select a menu when a package is selected.',
+        'total_price' => 'required|numeric'
+    ], [
+        'first_name.required' => 'The first name is required.',
+        'first_name.regex' => 'The first name must only contain letters, spaces, or hyphens.',
+        'last_name.required' => 'The last name is required.',
+        'last_name.regex' => 'The last name must only contain letters and spaces.',
+        'phone.required' => 'The phone is required.',
+        'phone.regex' => 'The phone number must start with "09" and contain exactly 11 digits.',
+        'email.required' => 'The email is required.',
+        'email.email' => 'The email must be a valid email address.',
+        'email.regex' => 'Please use a common email provider (Gmail, Yahoo, Outlook, etc.)',
+        'region.required' => 'Please select a region.',
+        'province.required' => 'Please select a province.',
+        'city.required' => 'Please select a city.',
+        'barangay.required' => 'Please select a barangay.',
+        'street_houseno.required' => 'The House Number, Building, Street is required.',
+        'package_name.required' => 'Please select a package.',
+        'event_title.required' => 'The event title is required.',
+        'menu_name.required' => 'Please select a menu.',
+        'guests_number.required' => 'The number of guest is required.',
+        'venue.required' => 'The location or venue is required',
+        'event_date.required' => 'Please select a date.',
+        'event_time.required' => 'Please select a time.',
+        'theme.required' => 'The color motif or/and theme is required.',
     ]);
 
-    // Fetch packages from Firebase
-    $packages = $this->database->getReference($this->packages)->getValue();
-    $packages = is_array($packages) ? $packages : [];
-
-    $menuContent = [];
-    // Only process menu if both package_name and menu_name are provided
-    if (!empty($validatedData['package_name']) && !empty($validatedData['menu_name'])) {
-        foreach ($packages as $package) {
-            if ($package['package_name'] === $validatedData['package_name']) {
-                foreach ($package['menus'] as $menu) {
-                    if ($menu['menu_name'] === $validatedData['menu_name']) {
-                        $menuContent = $menu['foods']; // Get the foods from the selected menu
-                        break 2; // Exit both loops once found
-                    }
-                }
-            }
-        }
-    }
-
-    // Prepare reservation data
-    $reserveData = [
-        'status' => 'Pending',
-        'reserve_type' => 'Reserve',
-        'first_name' => $validatedData['first_name'],
-        'last_name' => $validatedData['last_name'],
-        'address' => $validatedData['address'],
-        'phone' => $validatedData['phone'],
-        'email' => $validatedData['email'],
-        'package_name' => $validatedData['package_name'] ?? null,
-        'menu_name' => $validatedData['menu_name'] ?? null,
-        'menu_content' => $menuContent,
-        'event_date' => $validatedData['event_date'],
-        'guests_number' => $validatedData['guests_number'],
-        'sponsors' => $validatedData['sponsors'] ?? null,
-        'venue' => $validatedData['venue'],
-        'event_time' => $validatedData['event_time'],
-        'theme' => $validatedData['theme'],
-        'other_requests' => $validatedData['other_requests'],
-    ];
-
-    // Push reservation data to Firebase
-    $postRef = $this->database->getReference($this->reservations)->push($reserveData);
-
-    if ($postRef) {
-        return redirect()->route('admin.reservation', ['tab' => 'penbook'])->with('status', 'Reservation Added');
-    } else {
-        return redirect()->route('admin.reservation', ['tab' => 'penbook'])->with('status', 'Reservation not Added');
-    }
-}
-
-    public function pencilReservation(Request $request){
-
-        $validatedData = $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'address' => 'required',
-            'phone' => 'required',
-            'email' => 'required',
-            'package_name' => 'required',
-            'menu_name' => 'required',
-            'event_date' => 'required',
-            'guests_number' => 'required',
-            'sponsors' => 'nullable|integer',
-            'venue' => 'required',
-            'event_time' => 'required',
-            'theme' => 'required',
-            'other_requests' => 'nullable',
-        ]);
-
+        $reference_number = $this->generateUniqueReferenceNumber();
+    
+        // Fetch packages from Firebase
         $packages = $this->database->getReference($this->packages)->getValue();
         $packages = is_array($packages) ? $packages : [];
 
+        $totalPrice = floatval($validatedData['total_price']);
+    
         $menuContent = [];
+        // Only process menu if both package_name and menu_name are provided
         if (!empty($validatedData['package_name']) && !empty($validatedData['menu_name'])) {
             foreach ($packages as $package) {
                 if ($package['package_name'] === $validatedData['package_name']) {
@@ -177,32 +187,198 @@ class ReservationController extends Controller
         }
 
         $reserveData = [
-            'status' => 'Pencil',
-            'reserve_type' => 'Pencil',
+            'reference_number' => $reference_number,
+            'status' => 'Confirmed',
+            'reserve_type' => 'Reserve',
             'first_name' => $validatedData['first_name'],
             'last_name' => $validatedData['last_name'],
-            'address' => $validatedData['address'],
             'phone' => $validatedData['phone'],
             'email' => $validatedData['email'],
+            'region' => $validatedData['region'],
+            'province' => $validatedData['province'],
+            'city' => $validatedData['city'],
+            'barangay' => $validatedData['barangay'],
+            'street_houseno' => strtoupper($validatedData['street_houseno']),
             'package_name' => $validatedData['package_name'] ?? null,
+            'event_title' => $validatedData['event_title'],
             'menu_name' => $validatedData['menu_name'] ?? null,
             'menu_content' => $menuContent,
-            'event_date' => $validatedData['event_date'],
             'guests_number' => $validatedData['guests_number'],
             'sponsors' => $validatedData['sponsors'] ?? null,
-            'venue' => $validatedData['venue'],
+            'event_date' => $validatedData['event_date'],
             'event_time' => $validatedData['event_time'],
+            'venue' => $validatedData['venue'],
             'theme' => $validatedData['theme'],
             'other_requests' => $validatedData['other_requests'],
+            'total_price' => $totalPrice,
+            'reserve_fee' => '5000',
+            'payment_proof' => 'Walk in',
+            'payment_status' => 'Paid',
+            'payment_submitted_at' => Carbon::now()->toDateTimeString(),
+            'created_at' => Carbon::now()->toDateTimeString(),
+            'cancellation_reason' => '',
+            'cancelled_at' => '',
+            'read' => false,
         ];
-
-        $postRef = $this->database->getReference($this->reservations)->push($reserveData);
-
-        if ($postRef) {
-            return redirect()->route('admin.reservation', ['tab' => 'penbook'])->with('status', 'Reservation Added');
-        } else {
-            return redirect()->route('admin.reservation', ['tab' => 'penbook'])->with('status', 'Reservation Not Added');
+    
+        try {      
+            $postRef = $this->database->getReference($this->reservations)->push($reserveData);
+            
+            if ($postRef->getKey()) {
+                // Send confirmation email
+                try {
+                    Mail::mailer('clients')
+                            ->to($reserveData['email'])
+                            ->send(new ConfirmedByAdmin($reserveData));
+                    
+                            return redirect()->route('admin.reservation', ['tab' => 'pencil'])->with('status', 'Reservation confirmed! A confirmation email has been sent to your email address.');
+                } catch (\Exception $e) {
+                    Log::error('Error sending confirmation email', ['error' => $e->getMessage()]);
+                    return redirect()->route('admin.reservation', ['tab' => 'pencil'])->with('status', 'Reservation confirmed! However, there was an error sending the confirmation email.');
+                }
+            } else {
+                Log::warning('Reservation not added to Firebase - postRef has no key');
+                return redirect()->route('admin.reservation', ['tab' => 'pencil'])->with('status', 'Reservation Not Added');
+            }
+        } catch (\Exception $e) {
+            Log::error('Error saving reservation to Firebase', ['error' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'There was an error saving the reservation: ' . $e->getMessage());
         }
+    }
+
+    public function pencilReservation(Request $request){
+
+        $validatedData = $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'phone' => [
+                'required',
+                'regex:/^09\d{9}$/',
+            ],
+            'email' => 'required',
+            'region' => 'required',
+            'province' => 'required',
+            'city' => 'required',
+            'barangay' => 'required',
+            'street_houseno' => [
+                'required',
+            ],
+            'package_name' => 'required',
+            'event_title' => 'required',
+            'menu_name' => 'required',
+            'event_date' => 'required',
+            'guests_number' => 'required',
+            'sponsors' => 'nullable',
+            'venue' => 'required',
+            'event_time' => 'required',
+            'theme' => 'required',
+            'other_requests' => 'nullable',
+            'total_price' => 'required|numeric'
+        ], [
+            'first_name.required' => 'The first name is required.',
+            'first_name.regex' => 'The first name must only contain letters, spaces, or hyphens.',
+            'last_name.required' => 'The last name is required.',
+            'last_name.regex' => 'The last name must only contain letters and spaces.',
+            'phone.required' => 'The phone is required.',
+            'phone.regex' => 'The phone number must start with "09" and contain exactly 11 digits.',
+            'email.required' => 'The email is required.',
+            'email.email' => 'The email must be a valid email address.',
+            'region.required' => 'Please select a region.',
+            'province.required' => 'Please select a province.',
+            'city.required' => 'Please select a city.',
+            'barangay.required' => 'Please select a barangay.',
+            'street_houseno.required' => 'The House Number, Building, Street is required.',
+            'package_name.required' => 'Please select a package.',
+            'event_title.required' => 'The event title is required.',
+            'menu_name.required' => 'Please select a menu.',
+            'guests_number.required' => 'The number of guest is required.',
+            'venue.required' => 'The location or venue is required',
+            'event_date.required' => 'Please select a date.',
+            'event_time.required' => 'Please select a time.',
+            'theme.required' => 'The color motif or/and theme is required.',
+        ]);
+    
+            $reference_number = $this->generateUniqueReferenceNumber();
+        
+            // Fetch packages from Firebase
+            $packages = $this->database->getReference($this->packages)->getValue();
+            $packages = is_array($packages) ? $packages : [];
+    
+            $totalPrice = floatval($validatedData['total_price']);
+        
+            $menuContent = [];
+            // Only process menu if both package_name and menu_name are provided
+            if (!empty($validatedData['package_name']) && !empty($validatedData['menu_name'])) {
+                foreach ($packages as $package) {
+                    if ($package['package_name'] === $validatedData['package_name']) {
+                        foreach ($package['menus'] as $menu) {
+                            if ($menu['menu_name'] === $validatedData['menu_name']) {
+                                $menuContent = $menu['foods']; // Get the foods from the selected menu
+                                break 2; // Exit both loops once found
+                            }
+                        }
+                    }
+                }
+            }
+    
+            $reserveData = [
+                'reference_number' => $reference_number,
+                'status' => 'Pencil',
+                'reserve_type' => 'Pencil',
+                'first_name' => $validatedData['first_name'],
+                'last_name' => $validatedData['last_name'],
+                'phone' => $validatedData['phone'],
+                'email' => $validatedData['email'],
+                'region' => $validatedData['region'],
+                'province' => $validatedData['province'],
+                'city' => $validatedData['city'],
+                'barangay' => $validatedData['barangay'],
+                'street_houseno' => strtoupper($validatedData['street_houseno']),
+                'package_name' => $validatedData['package_name'] ?? null,
+                'event_title' => $validatedData['event_title'],
+                'menu_name' => $validatedData['menu_name'] ?? null,
+                'menu_content' => $menuContent,
+                'guests_number' => $validatedData['guests_number'],
+                'sponsors' => $validatedData['sponsors'] ?? null,
+                'event_date' => $validatedData['event_date'],
+                'event_time' => $validatedData['event_time'],
+                'venue' => $validatedData['venue'],
+                'theme' => $validatedData['theme'],
+                'other_requests' => $validatedData['other_requests'],
+                'total_price' => $totalPrice,
+                'reserve_fee' => '5000',
+                'payment_proof' => 'None',
+                'payment_status' => 'Not Paid',
+                'payment_submitted_at' => '',
+                'created_at' => Carbon::now()->toDateTimeString(),
+                'cancellation_reason' => '',
+                'cancelled_at' => '',
+                'read' => false,
+            ];
+        
+            try {      
+                $postRef = $this->database->getReference($this->reservations)->push($reserveData);
+                
+                if ($postRef->getKey()) {
+                    // Send confirmation email
+                    try {
+                        Mail::mailer('clients')
+                                ->to($reserveData['email'])
+                                ->send(new PencilConfirmationMail($reserveData));
+                        
+                                return redirect()->route('admin.reservation', ['tab' => 'pending'])->with('status', 'Pencil Added! A confirmation email has been sent to your email address.');
+                    } catch (\Exception $e) {
+                        Log::error('Error sending confirmation email', ['error' => $e->getMessage()]);
+                        return redirect()->route('admin.reservation', ['tab' => 'pencil'])->with('status', 'Pencil confirmed! However, there was an error sending the confirmation email.');
+                    }
+                } else {
+                    Log::warning('Pencilnot added to Firebase - postRef has no key');
+                    return redirect()->route('admin.reservation', ['tab' => 'pencil'])->with('status', 'Pencil Not Added');
+                }
+            } catch (\Exception $e) {
+                Log::error('Error saving reservation to Firebase', ['error' => $e->getMessage()]);
+                return redirect()->back()->with('error', 'There was an error saving the reservation: ' . $e->getMessage());
+            }
     }
 
     public function confirmPencil($id){

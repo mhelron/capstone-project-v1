@@ -60,6 +60,9 @@
                 <li class="sidebar-item">
                     <a href="{{route('admin.gallery.edit')}}" class="sidebar-link">Gallery</a>
                 </li>
+                <li class="sidebar-item">
+                    <a href="{{route('admin.about.edit')}}" class="sidebar-link">About</a>
+                </li>
             </ul>
         </li>
         <li class="sidebar-item">

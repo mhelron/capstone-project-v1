@@ -117,21 +117,19 @@ function addImage(category) {
     
     const imageGroup = `
         <div class="row mb-3">
-            <div class="col-md-6">
+            <div class="col-12">
                 <div class="preview-container mt-2 mb-2">
                     <!-- Preview will be inserted here -->
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="d-flex flex-column">
-                    <div class="input-group mb-2">
+                <div class="d-flex mt-2">
+                    <div class="input-group flex-grow-1">
                         <input type="file" name="${category}_images[${newIndex}]" class="form-control" onchange="previewImage(this)">
-                        <div class="input-group-text bg-light">
+                        <div class="form-control bg-light">
                             No file chosen
                         </div>
                     </div>
-                    <button class="btn btn-danger remove-image" type="button" onclick="removeImage(this)">
-                        <i class="fas fa-trash"></i> Remove
+                    <button class="btn btn-danger remove-image ms-2" type="button" onclick="removeImage(this)">
+                        <i class="fas fa-trash"></i>
                     </button>
                 </div>
             </div>

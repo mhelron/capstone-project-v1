@@ -184,63 +184,148 @@ class CMSController extends Controller
     }
 
     public function updateGallery(Request $request)
-{
-    $request->validate([
-        'wedding_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:30720',
-        'debut_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:30720',
-        'kiddie_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:30720',
-        'adult_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:30720',
-        'corporate_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:30720'
-    ]);
+    {
+        $request->validate([
+            'wedding_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:30720',
+            'debut_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:30720',
+            'kiddie_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:30720',
+            'adult_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:30720',
+            'corporate_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:30720'
+        ]);
 
-    $categories = ['wedding', 'debut', 'kiddie', 'adult', 'corporate'];
-    $updates = [];
-    $currentContent = $this->database->getReference('contents')->getValue();
+        $categories = ['wedding', 'debut', 'kiddie', 'adult', 'corporate'];
+        $updates = [];
+        $currentContent = $this->database->getReference('contents')->getValue();
 
-    foreach ($categories as $category) {
-        $categoryImages = [];
-        $existingImages = isset($currentContent[$category . '_gallery']) 
-            ? $currentContent[$category . '_gallery'] 
-            : [];
+        foreach ($categories as $category) {
+            $categoryImages = [];
+            $existingImages = isset($currentContent[$category . '_gallery']) 
+                ? $currentContent[$category . '_gallery'] 
+                : [];
 
-        // Handle existing images
-        if ($request->has('existing_' . $category . '_images')) {
-            $categoryImages = $request->input('existing_' . $category . '_images');
-            
-            // Delete removed images
-            foreach ($existingImages as $oldImage) {
-                if (!in_array($oldImage, $categoryImages)) {
-                    Storage::disk('public')->delete($oldImage);
-                }
-            }
-        }
-
-        // Handle new image uploads
-        if ($request->hasFile($category . '_images')) {
-            foreach ($request->file($category . '_images') as $index => $image) {
-                if ($image) {
-                    // Delete existing image at this index if it exists
-                    if (isset($categoryImages[$index]) && Storage::disk('public')->exists($categoryImages[$index])) {
-                        Storage::disk('public')->delete($categoryImages[$index]);
+            // Handle existing images
+            if ($request->has('existing_' . $category . '_images')) {
+                $categoryImages = $request->input('existing_' . $category . '_images');
+                
+                // Delete removed images
+                foreach ($existingImages as $oldImage) {
+                    if (!in_array($oldImage, $categoryImages)) {
+                        Storage::disk('public')->delete($oldImage);
                     }
-
-                    // Store new image
-                    $filename = time() . '_' . $image->getClientOriginalName();
-                    $imagePath = $image->storeAs('gallery/' . $category, $filename, 'public');
-                    $categoryImages[$index] = $imagePath;
                 }
             }
+
+            // Handle new image uploads
+            if ($request->hasFile($category . '_images')) {
+                foreach ($request->file($category . '_images') as $index => $image) {
+                    if ($image) {
+                        // Delete existing image at this index if it exists
+                        if (isset($categoryImages[$index]) && Storage::disk('public')->exists($categoryImages[$index])) {
+                            Storage::disk('public')->delete($categoryImages[$index]);
+                        }
+
+                        // Store new image
+                        $filename = time() . '_' . $image->getClientOriginalName();
+                        $imagePath = $image->storeAs('gallery/' . $category, $filename, 'public');
+                        $categoryImages[$index] = $imagePath;
+                    }
+                }
+            }
+
+            // Remove null values and reindex array
+            $categoryImages = array_values(array_filter($categoryImages));
+            $updates[$category . '_gallery'] = $categoryImages;
         }
 
-        // Remove null values and reindex array
-        $categoryImages = array_values(array_filter($categoryImages));
-        $updates[$category . '_gallery'] = $categoryImages;
+        // Update Firebase
+        $this->database->getReference('contents')->update($updates);
+
+        return redirect()->route('admin.gallery.edit')
+            ->with('status', 'Gallery updated successfully!');
     }
 
-    // Update Firebase
-    $this->database->getReference('contents')->update($updates);
+    public function editabout()
+    {
+        $content = $this->database->getReference('contents')->getValue();
 
-    return redirect()->route('admin.gallery.edit')
-        ->with('status', 'Gallery updated successfully!');
-}
+        $isExpanded = session()->get('sidebar_is_expanded', true);
+        return view('admin.content.about.index', compact('content', 'isExpanded'));
+    }
+
+    public function updateAbout(Request $request)
+    {
+        $request->validate([
+            'mission' => 'nullable|string',
+            'vision' => 'nullable|string',
+            'about' => 'nullable|string',
+            'history' => 'nullable|string',
+            'values_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:30720',
+            'values_titles.*' => 'required|string',  // Add this validation
+            'team_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:30720'
+        ]);
+    
+        // Get current content to check existing images
+        $currentContent = $this->database->getReference('contents')->getValue();
+    
+        $updates = [
+            'mission' => strip_tags($request->input('mission', ''), 
+                '<p><br><strong><em><ul><ol><li><i><span><div><h1><h2><h3><h4><h5><h6>'),
+            'vision' => strip_tags($request->input('vision', ''), 
+                '<p><br><strong><em><ul><ol><li><i><span><div><h1><h2><h3><h4><h5><h6>'),
+            'about' => strip_tags($request->input('about    ', ''), 
+                '<p><br><strong><em><ul><ol><li><i><span><div><h1><h2><h3><h4><h5><h6>'),
+            'history' => strip_tags($request->input('history', ''), 
+                '<p><br><strong><em><ul><ol><li><i><span><div><h1><h2><h3><h4><h5><h6>')
+        ];
+    
+        // Handle Our Values section
+        $values = [];
+        if ($request->has('values_titles')) {
+            foreach ($request->values_titles as $index => $title) {
+                $valueData = ['title' => $title];
+                
+                // Handle new image upload
+                if ($request->hasFile("values_images.$index")) {
+                    // Delete old image if exists
+                    if (isset($currentContent['values'][$index]['image_path'])) {
+                        Storage::disk('public')->delete($currentContent['values'][$index]['image_path']);
+                    }
+    
+                    $image = $request->file("values_images.$index");
+                    $filename = time() . '_value_' . $index . '_' . $image->getClientOriginalName();
+                    $imagePath = $image->storeAs('values', $filename, 'public');
+                    $valueData['image_path'] = $imagePath;
+                }
+                // Keep existing image if no new upload
+                elseif (isset($currentContent['values'][$index]['image_path'])) {
+                    $valueData['image_path'] = $currentContent['values'][$index]['image_path'];
+                }
+    
+                $values[] = $valueData;
+            }
+        }
+        $updates['values'] = $values;
+
+        // Handle Team Members section
+        $teamImages = [];
+        if ($request->hasFile('team_images')) {
+            foreach ($request->file('team_images') as $index => $image) {
+                // Delete old image if exists
+                if (isset($currentContent['team_images'][$index])) {
+                    Storage::disk('public')->delete($currentContent['team_images'][$index]);
+                }
+
+                $filename = time() . '_team_' . $index . '_' . $image->getClientOriginalName();
+                $imagePath = $image->storeAs('team', $filename, 'public');
+                $teamImages[] = $imagePath;
+            }
+            $updates['team_images'] = $teamImages;
+        }
+
+        // Update Firebase
+        $this->database->getReference('contents')->update($updates);
+
+        return redirect()->route('admin.about.edit')
+            ->with('status', 'About page content updated successfully!');
+    }
 }
