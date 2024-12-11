@@ -982,12 +982,6 @@ document.addEventListener('DOMContentLoaded', function() {
     text-overflow: ellipsis;
     max-width: 200px;
 }
-
-.status-badge {
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-size: 0.875rem;
-}
 </style>
 
 @vite('resources/js/filter.js')

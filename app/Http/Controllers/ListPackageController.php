@@ -46,6 +46,7 @@ class ListPackageController extends Controller
         $packageRef = $database->getReference('packages/' . $id);
         $package = $packageRef->getValue();
 
-        return view('guest.packages.show', compact('package'));
+        $content = $database->getReference('contents')->getValue();
+        return view('guest.packages.show', compact('package', 'content'));
     }
 }

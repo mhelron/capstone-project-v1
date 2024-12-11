@@ -224,7 +224,8 @@ class GuestReservationController extends Controller
             return redirect()->route('guest.reserve')->with('error', 'Reservation not found.');
         }
 
-        return view('guest.reservation.payment', compact('reservation', 'reservation_id'));
+        $content = $this->database->getReference('contents')->getValue();
+        return view('guest.reservation.payment', compact('reservation', 'reservation_id', 'content'));
     }
 
     public function storePaymentProof(Request $request, $reservation_id)
@@ -405,7 +406,8 @@ class GuestReservationController extends Controller
 
     public function showCheckStatus()
     {
-        return view('guest.reservation.checkstatus');  // This just shows the form
+        $content = $this->database->getReference('contents')->getValue();
+        return view('guest.reservation.checkstatus', compact('content'));  // This just shows the form
     }
 
     public function checkStatus(Request $request)
@@ -511,10 +513,11 @@ class GuestReservationController extends Controller
         $addressData = json_decode(file_get_contents(public_path('address_ph.json')), true);
         
         $editdata = $this->database->getReference($this->reservations)->getChild($key)->getValue();
+        $content = $this->database->getReference('contents')->getValue();
 
         $isExpanded = session()->get('sidebar_is_expanded', true);
         if($editdata){
-            return view('guest.reservation.edit', compact('editdata', 'isExpanded', 'packages', 'addressData', 'key'));
+            return view('guest.reservation.edit', compact('editdata', 'isExpanded', 'packages', 'addressData', 'key', 'content'));
         } else {
             return redirect('/check-status')->with('status', 'User ID Not Found');
         }
