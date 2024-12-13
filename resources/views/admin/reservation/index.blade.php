@@ -87,6 +87,17 @@
                                                 <option value="montalban">Montalban</option>
                                             </select>
                                         </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Filter by Event</label>
+                                            <select class="form-select event-filter">
+                                                <option value="all">All Events</option>
+                                                <option value="Adult Birthday">Adult Birthday</option>
+                                                <option value="Kiddie Birthday">Kiddie Birthday</option>
+                                                <option value="Debut">Debut</option>
+                                                <option value="Wedding">Wedding</option>
+                                                <option value="Corporate">Corporate</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                                     <table class="table table-hover">
@@ -247,6 +258,17 @@
                                                 <option value="montalban">Montalban</option>
                                             </select>
                                         </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Filter by Event</label>
+                                            <select class="form-select event-filter">
+                                                <option value="all">All Events</option>
+                                                <option value="Adult Birthday">Adult Birthday</option>
+                                                <option value="Kiddie Birthday">Kiddie Birthday</option>
+                                                <option value="Debut">Debut</option>
+                                                <option value="Wedding">Wedding</option>
+                                                <option value="Corporate">Corporate</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             <table class="table table-hover">
@@ -368,6 +390,17 @@
                                                 <option value="marikina">Marikina</option>
                                                 <option value="san mateo">San Mateo</option>
                                                 <option value="montalban">Montalban</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Filter by Event</label>
+                                            <select class="form-select event-filter">
+                                                <option value="all">All Events</option>
+                                                <option value="Adult Birthday">Adult Birthday</option>
+                                                <option value="Kiddie Birthday">Kiddie Birthday</option>
+                                                <option value="Debut">Debut</option>
+                                                <option value="Wedding">Wedding</option>
+                                                <option value="Corporate">Corporate</option>
                                             </select>
                                         </div>
                                     </div>
@@ -515,6 +548,17 @@
                                                 <option value="montalban">Montalban</option>
                                             </select>
                                         </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Filter by Event</label>
+                                            <select class="form-select event-filter">
+                                                <option value="all">All Events</option>
+                                                <option value="Adult Birthday">Adult Birthday</option>
+                                                <option value="Kiddie Birthday">Kiddie Birthday</option>
+                                                <option value="Debut">Debut</option>
+                                                <option value="Wedding">Wedding</option>
+                                                <option value="Corporate">Corporate</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             <table class="table table-hover">
@@ -659,6 +703,17 @@
                                                 <option value="marikina">Marikina</option>
                                                 <option value="san mateo">San Mateo</option>
                                                 <option value="montalban">Montalban</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Filter by Event</label>
+                                            <select class="form-select event-filter">
+                                                <option value="all">All Events</option>
+                                                <option value="Adult Birthday">Adult Birthday</option>
+                                                <option value="Kiddie Birthday">Kiddie Birthday</option>
+                                                <option value="Debut">Debut</option>
+                                                <option value="Wedding">Wedding</option>
+                                                <option value="Corporate">Corporate</option>
                                             </select>
                                         </div>
                                     </div>

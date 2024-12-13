@@ -166,10 +166,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const dateFilter = document.querySelector(`#${tableId} .date-filter`);
         const venueFilter = document.querySelector(`#${tableId} .venue-filter`);
+        const eventFilter = document.querySelector(`#${tableId} .event-filter`);
         const entriesSelect = document.querySelector(`#${tableId} .entries-select`);
         const itemsPerPage = parseInt(entriesSelect?.value || defaultItemsPerPage);
 
-        if (!dateFilter || !venueFilter) {
+        if (!dateFilter || !venueFilter || !eventFilter) {
             console.error('Filters not found for table:', tableId);
             return;
         }
@@ -181,6 +182,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const dateValue = dateFilter.value;
         const locationValue = venueFilter.value;
+        const eventValue = eventFilter.value;
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
@@ -191,11 +193,24 @@ document.addEventListener('DOMContentLoaded', function () {
             const location = row.getAttribute('data-location');
             const eventDate = row.getAttribute('data-event-date');
             const createdDate = row.getAttribute('data-created');
+            
+            // Get package name from the 5th column (index 4)
+            const packageCell = row.querySelector('td:nth-child(5)');
+            const packageName = packageCell ? packageCell.textContent.trim() : '';
 
+            // Apply location filter
             if (locationValue !== 'all' && (!location || location.toLowerCase() !== locationValue.toLowerCase())) {
                 return false;
             }
 
+            // Apply event filter
+            if (eventValue !== 'all') {
+                if (!packageName.includes(eventValue)) {
+                    return false;
+                }
+            }
+
+            // Apply date filter
             if (dateValue === 'upcoming') {
                 if (!eventDate) return false;
                 const eventDateTime = new Date(eventDate);
@@ -236,7 +251,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const colspan = table.querySelector('thead tr').children.length;
             tbody.innerHTML = `<tr><td colspan="${colspan}" class="text-center">No reservations found matching the selected filters</td></tr>`;
         } else {
-            // Clone and reappend rows in sorted order
             paginatedRows.forEach((row, index) => {
                 const clonedRow = row.cloneNode(true);
                 const firstCell = clonedRow.querySelector('td:first-child');
@@ -261,6 +275,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Add event listeners to filter controls
         const dateFilter = document.querySelector(`#${paneId} .date-filter`);
         const venueFilter = document.querySelector(`#${paneId} .venue-filter`);
+        const eventFilter = document.querySelector(`#${paneId} .event-filter`);
 
         if (dateFilter) {
             dateFilter.addEventListener('change', () => {
@@ -271,6 +286,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (venueFilter) {
             venueFilter.addEventListener('change', () => {
+                currentPage = 1;
+                filterTable(paneId);
+            });
+        }
+
+        if (eventFilter) {
+            eventFilter.addEventListener('change', () => {
                 currentPage = 1;
                 filterTable(paneId);
             });
