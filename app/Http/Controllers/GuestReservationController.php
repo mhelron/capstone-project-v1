@@ -435,12 +435,15 @@ class GuestReservationController extends Controller
         $reservationData = $reservation[$reservationKey];
         $reservationData['reservation_id'] = $reservationKey;
 
+        $content = $this->database->getReference('contents')->getValue();
+
         // Store reference number in session
         session(['last_reference_number' => $request->reference_number]);
 
         return view('guest.reservation.checkstatus', [
             'reservation' => $reservationData,
-            'reference_number' => $request->reference_number
+            'reference_number' => $request->reference_number,
+            'content' => $content
         ]);
     }
     public function cancelReservation($reservation_id, Request $request)

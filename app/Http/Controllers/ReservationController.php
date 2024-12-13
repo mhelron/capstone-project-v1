@@ -400,7 +400,10 @@ class ReservationController extends Controller
 
         $reserveData = [
             'status' => 'Pending',
-            'reserve_type' => 'Reserve'
+            'reserve_type' => 'Reserve',
+            'pencil_created_at' => '',
+            'pencil_expires_at' => ''
+
         ];
 
         $res_updated = $this->database->getReference($this->reservations. '/'.$key)->update($reserveData);

@@ -16,11 +16,14 @@ use App\Http\Controllers\EmailController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\CMSController;
 use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\FirebaseController;
 
 use App\Http\Controllers\BotmanController;
 
 use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\RoleMiddleware;
+
+Route::get('/delete-reservations', [FirebaseController::class, 'deleteReservations']);
 
 // Sample
 Route::get('/send-email', [EmailController::class, 'sendEmail']);

@@ -203,6 +203,14 @@
 
                     <!-- Action Buttons -->
                     <div class="d-flex gap-2 justify-content-center mt-4">
+                        @php
+                            $pencilExpiresAt = new DateTime($reservation['pencil_expires_at']);
+                            $now = new DateTime();
+                            $interval = $now->diff($pencilExpiresAt);
+                            $daysUntilExpiration = $interval->days + ($interval->h / 24) + ($interval->i / 1440);
+                            $isWithinThreeDays = $daysUntilExpiration <= 3;
+                        @endphp
+
                         @if(!in_array($reservation['status'], ['Cancelled', 'Finished']))
                             @if($reservation['payment_status'] !== 'Paid' && $reservation['payment_status'] !== 'Pending')
                                 <a href="{{ route('guest.payment', ['reservation_id' => $reservation['reservation_id']]) }}" 
@@ -213,7 +221,11 @@
 
                             @if(in_array($reservation['status'], ['Pencil', 'Pending', 'Confirmed']))
                                 <a href="{{ route('guest.reserve.edit', ['reservation_id' => $reservation['reservation_id']]) }}" 
-                                    class="btn btn-primary">
+                                    class="btn btn-primary {{ $isWithinThreeDays ? 'disabled' : '' }}"
+                                    @if($isWithinThreeDays) 
+                                        title="Editing is disabled within 3 days of pencil booking expiration"
+                                        onclick="return false;"
+                                    @endif>
                                     Edit Details
                                 </a>
                             @endif
@@ -223,7 +235,14 @@
                                     method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal">
+                                    <button type="button" 
+                                        class="btn btn-danger {{ $isWithinThreeDays ? 'disabled' : '' }}"
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#cancelModal"
+                                        @if($isWithinThreeDays) 
+                                            title="Cancellation is disabled within 3 days of pencil booking expiration"
+                                            onclick="return false;"
+                                        @endif>
                                         Cancel Reservation
                                     </button>
                                 </form>
