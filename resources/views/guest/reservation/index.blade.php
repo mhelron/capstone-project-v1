@@ -24,13 +24,6 @@
         <div class="row d-flex justify-content-center">
             <div class="col-lg-8 mb-4 main-form">
 
-                @if (session('status'))
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        {{ session('status') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-
                 <div class="card">
                     <div class="card-body form-container">
                         <form id="myForm" action="{{ route('guest.reserve.add') }}" method="POST">

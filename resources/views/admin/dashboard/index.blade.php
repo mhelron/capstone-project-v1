@@ -430,25 +430,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                },
-                body: JSON.stringify({
-                    id: reservationId
-                })
+                    'Accept': 'application/json'
+                }
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Redirect to the reservation page
                     window.location.href = redirectUrl;
                 } else {
-                    // If marking as read fails, still redirect but show an error
-                    console.error('Failed to mark notification as read');
+                    console.error('Failed to mark notification as read:', data.message);
                     window.location.href = redirectUrl;
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                // Even if there's an error, still redirect
                 window.location.href = redirectUrl;
             });
         });
@@ -496,17 +491,10 @@ document.addEventListener('DOMContentLoaded', function() {
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            },
-            body: JSON.stringify({
-                id: reservationId
-            })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+                'Accept': 'application/json'
             }
-            return response.json();
         })
+        .then(response => response.json())
         .then(data => {
             if (data.success) {
                 // Hide spinner
@@ -519,22 +507,35 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Remove the element after animation
                 setTimeout(() => {
                     element.remove();
-                    // Check if there are no more notifications
                     const remainingNotifications = document.querySelectorAll('.notification-item');
-                    if (remainingNotifications.length === 0) {
-                        const noNotificationsMessage = document.createElement('p');
-                        noNotificationsMessage.className = 'text-center text-muted';
-                        noNotificationsMessage.textContent = 'No new notifications.';
-                        element.parentElement.appendChild(noNotificationsMessage);
+                    const listGroup = document.querySelector('.list-group');
+                    if (remainingNotifications.length === 0 && listGroup) {
+                        const noNotificationsMessage = document.createElement('div');
+                        noNotificationsMessage.className = 'notification-content';
+                        noNotificationsMessage.innerHTML = `
+                            <div class="notification-info">
+                                <small class="text-center text-muted">No new notifications.</small>
+                            </div>
+                        `;
+                        listGroup.appendChild(noNotificationsMessage);
                     }
                 }, 500);
+            } else {
+                // Hide spinner and show error
+                overlay.style.display = 'none';
+                if (data.message === 'Please login again to continue.') {
+                    alert('Your session has expired. Please login again.');
+                    window.location.href = '{{ route("login") }}';
+                } else {
+                    alert(data.message || 'Unable to mark notification as read.');
+                }
             }
         })
         .catch(error => {
-            // Hide spinner on error
+            // Hide spinner and show error
             overlay.style.display = 'none';
             console.error('Error:', error);
-            alert('Failed to mark notification as read. Please try again.');
+            alert('Network error. Please try again.');
         });
     }
 });

@@ -45,21 +45,32 @@
                                             <li>No Foods Available</li>
                                         @endif
                                     </ul>
-                                    <div class="d-flex flex-column gap-2">
+                                    <div class="d-flex gap-2 mt-3 justify-content-center w-100">
                                         <a href="{{ route('guest.reserve', [
                                             'package' => $package['package_name'], 
                                             'menu' => $menu['menu_name'],
                                             'price' => $package['price']
                                         ]) }}" 
-                                        class="btn btn-darkorange w-100">
-                                            Select Menu
+                                        class="btn btn-darkorange flex-grow-1 menu-btn"
+                                        data-href="{{ route('guest.reserve', [
+                                            'package' => $package['package_name'], 
+                                            'menu' => $menu['menu_name'],
+                                            'price' => $package['price']
+                                        ]) }}">
+                                            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                            <span class="btn-text">Select Menu</span>
                                         </a>
                                         <a href="{{ route('menu.customize', [
                                             'packageId' => $package['id'] ?? array_key_first($packages),
                                             'menuName' => $menu['menu_name']
                                         ]) }}" 
-                                        class="btn btn-secondary w-100">
-                                            Customize This Menu
+                                        class="btn btn-secondary flex-grow-1 menu-btn"
+                                        data-href="{{ route('menu.customize', [
+                                            'packageId' => $package['id'] ?? array_key_first($packages),
+                                            'menuName' => $menu['menu_name']
+                                        ]) }}">
+                                            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                            <span class="btn-text">Customize Menu</span>
                                         </a>
                                     </div>
                                 </div>
@@ -184,4 +195,147 @@
     p{
         font-size: 16px;
     }
+
+    .card {
+        border-radius: 10px;
+        font-size: 16px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Rest of your existing card styles... */
+
+    /* Add these new button styles */
+    .btn {
+        padding: 8px 16px;
+        transition: all 0.3s ease;
+        border-radius: 5px;
+        font-weight: bold;
+        text-align: center;
+        white-space: nowrap;
+        min-width: 120px; /* Ensure minimum width for buttons */
+    }
+
+    .btn-darkorange:hover {
+        background-color: #FF8C00;
+        transform: translateY(-2px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .btn {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            min-width: auto; /* Remove minimum width on mobile */
+        }
+
+        .d-flex.gap-2 {
+            flex-direction: column; /* Stack buttons on mobile */
+            gap: 0.5rem !important;
+        }
+
+        .btn {
+            width: 100%; /* Full width buttons on mobile */
+        }
+    }
+
+    .btn.loading {
+        position: relative;
+        cursor: not-allowed;
+        opacity: 0.8;
+    }
+
+    .spinner-border-sm {
+        width: 1rem;
+        height: 1rem;
+        margin-right: 0.5rem;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .spinner-border {
+        animation: spin 0.8s linear infinite;
+    }
+
+    /* Add hover effects */
+    .btn-darkorange:not(.loading):hover,
+    .btn-secondary:not(.loading):hover {
+        transform: translateY(-2px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Transition for hover effects */
+    .btn {
+        transition: all 0.3s ease;
+    }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle all menu buttons
+    document.querySelectorAll('.menu-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent immediate navigation
+            
+            const button = this;
+            const loadingText = button.classList.contains('btn-darkorange') ? 'Selecting...' : 'Customizing...';
+            const href = button.getAttribute('data-href');
+            
+            // Prevent multiple clicks
+            if (button.classList.contains('loading')) {
+                return;
+            }
+
+            // Add loading state
+            button.classList.add('loading');
+            button.querySelector('.spinner-border').classList.remove('d-none');
+            button.querySelector('.btn-text').textContent = loadingText;
+
+            // Disable all menu buttons in the same container
+            const buttonContainer = button.closest('.d-flex');
+            buttonContainer.querySelectorAll('.menu-btn').forEach(btn => {
+                btn.style.pointerEvents = 'none';
+                if (btn !== button) {
+                    btn.style.opacity = '0.5';
+                }
+            });
+
+            // Navigate after a short delay to show loading state
+            setTimeout(() => {
+                window.location.href = href;
+            }, 500); // 500ms delay to show loading state
+        });
+    });
+});
+
+// Reset buttons if user navigates back
+window.addEventListener('pageshow', function(event) {
+    if (event.persisted) {
+        document.querySelectorAll('.menu-btn').forEach(button => {
+            button.classList.remove('loading');
+            button.querySelector('.spinner-border').classList.add('d-none');
+            button.querySelector('.btn-text').textContent = 
+                button.classList.contains('btn-darkorange') ? 'Select Menu' : 'Customize Menu';
+            button.style.pointerEvents = 'auto';
+            button.style.opacity = '1';
+        });
+    }
+});
+</script>

@@ -95,6 +95,7 @@ Route::middleware([AuthMiddleware::class])->group(function () {
     // Dashboard Route
     Route::group(['middleware' => RoleMiddleware::class . ':Super Admin,Admin,Manager,Staff'], function () {
         Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+        Route::patch('/admin/reservations/mark-as-read/{reservationId}', [DashboardController::class, 'markAsRead'])->name('admin.notification.markAsRead');
     });
 
     Route::group(['middleware' => RoleMiddleware::class . ':Super Admin,Admin,Manager,Staff'], function () {
