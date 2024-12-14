@@ -55,13 +55,19 @@ class GuestReservationController extends Controller
 
         $addressData = json_decode(file_get_contents(public_path('address_ph.json')), true);
         
+        // Get customized menu from session if it exists
+        $customizedMenu = session('customized_menu');
+        $selectedPackageFromSession = session('selected_package');
+        
         return view('guest.reservation.index', compact(
             'packages', 
             'addressData', 
             'selectedPackage', 
             'selectedMenu',
             'reservations',
-            'content'
+            'content',
+            'customizedMenu',
+            'selectedPackageFromSession'
         ));
     }
     private function generateUniqueReferenceNumber()
@@ -149,14 +155,19 @@ class GuestReservationController extends Controller
         $packages = is_array($packages) ? $packages : [];
     
         $menuContent = [];
-        // Only process menu if both package_name and menu_name are provided
-        if (!empty($validatedData['package_name']) && !empty($validatedData['menu_name'])) {
-            foreach ($packages as $package) {
-                if ($package['package_name'] === $validatedData['package_name']) {
-                    foreach ($package['menus'] as $menu) {
-                        if ($menu['menu_name'] === $validatedData['menu_name']) {
-                            $menuContent = $menu['foods']; // Get the foods from the selected menu
-                            break 2; // Exit both loops once found
+        // Check for customized menu in session first
+        if (session()->has('customized_menu') && $validatedData['menu_name'] === session('customized_menu')['menu_name']) {
+            $menuContent = session('customized_menu')['foods'];
+        } else {
+            // Your existing menu content retrieval code
+            if (!empty($validatedData['package_name']) && !empty($validatedData['menu_name'])) {
+                foreach ($packages as $package) {
+                    if ($package['package_name'] === $validatedData['package_name']) {
+                        foreach ($package['menus'] as $menu) {
+                            if ($menu['menu_name'] === $validatedData['menu_name']) {
+                                $menuContent = $menu['foods'];
+                                break 2;
+                            }
                         }
                     }
                 }

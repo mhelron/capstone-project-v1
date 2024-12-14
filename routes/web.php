@@ -16,14 +16,13 @@ use App\Http\Controllers\EmailController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\CMSController;
 use App\Http\Controllers\EmailVerificationController;
-use App\Http\Controllers\FirebaseController;
+use App\Http\Controllers\CustomMenuController;
 
 use App\Http\Controllers\BotmanController;
 
 use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\RoleMiddleware;
 
-Route::get('/delete-reservations', [FirebaseController::class, 'deleteReservations']);
 
 // Sample
 Route::get('/send-email', [EmailController::class, 'sendEmail']);
@@ -39,6 +38,8 @@ Route::get('/package/{id}', [ListPackageController::class, 'show'])->name('packa
 Route::get('/packages/markina', [ListPackageController::class, 'marikina'])->name('guest.packages.marikina');
 Route::get('/packages/san-mateo', [ListPackageController::class, 'sanmateo'])->name('guest.packages.sanmateo');
 Route::get('/packages/motalban', [ListPackageController::class, 'montalban'])->name('guest.packages.montalban');
+Route::get('/menu/customize/{packageId}/{menuName}', [CustomMenuController::class, 'edit'])->name('menu.customize');
+Route::post('/menu/update/{packageId}', [CustomMenuController::class, 'update'])->name('menu.update');
 
 //Gallery
 Route::get('/gallery', [GuestController::class, 'indexGallery'])->name('guest.gallery');

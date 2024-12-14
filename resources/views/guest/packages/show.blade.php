@@ -25,38 +25,49 @@
 
         <div class="row mb-4">
             <div class="col-lg-12 mb-4">
-                <h3 class="text-left mb-4">Menus</h3><p style="font-style: italic; color: red;">Please select a menu to proceed in the reservation form *</p>
-                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-4">
-                        @foreach($package['menus'] as $menu)
-                            <div class="col d-flex">
-                            <a href="{{ route('guest.reserve', [
-                                'package' => $package['package_name'], 
-                                'menu' => $menu['menu_name'],
-                                'price' => $package['price']
-                            ]) }}" 
-                            class="text-decoration-none w-100">
-                                    <div class="card shadow-sm flex-fill" style="border: 2px solid darkorange; cursor: pointer;">
-                                        <div class="card-body d-flex flex-column">
-                                            <h5 class="card-title text-center text-darkorange">{{ $menu['menu_name'] }}</h5>
-                                            <ul class="list-unstyled flex-grow-1">
-                                                @if(isset($menu['foods']) && is_array($menu['foods']))
-                                                    @foreach($menu['foods'] as $food)
-                                                        <li>
-                                                            <span style="font-weight: bold;">{{ $food['category'] ?? 'No Category' }}</span> : 
-                                                            {{ $food['food'] ?? 'No Food' }}
-                                                        </li>
-                                                    @endforeach
-                                                @else
-                                                    <li>No Foods Available</li>
-                                                @endif
-                                            </ul>
-                                        </div>
+                <h3 class="text-left mb-4">Menus</h3>
+                <p style="font-style: italic; color: red;">Please select a menu to proceed in the reservation form *</p>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-4">
+                    @foreach($package['menus'] as $menu)
+                        <div class="col d-flex">
+                            <div class="card shadow-sm flex-fill" style="border: 2px solid darkorange;">
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title text-center text-darkorange">{{ $menu['menu_name'] }}</h5>
+                                    <ul class="list-unstyled flex-grow-1">
+                                        @if(isset($menu['foods']) && is_array($menu['foods']))
+                                            @foreach($menu['foods'] as $food)
+                                                <li>
+                                                    <span style="font-weight: bold;">{{ $food['category'] ?? 'No Category' }}</span> : 
+                                                    {{ $food['food'] ?? 'No Food' }}
+                                                </li>
+                                            @endforeach
+                                        @else
+                                            <li>No Foods Available</li>
+                                        @endif
+                                    </ul>
+                                    <div class="d-flex flex-column gap-2">
+                                        <a href="{{ route('guest.reserve', [
+                                            'package' => $package['package_name'], 
+                                            'menu' => $menu['menu_name'],
+                                            'price' => $package['price']
+                                        ]) }}" 
+                                        class="btn btn-darkorange w-100">
+                                            Select Menu
+                                        </a>
+                                        <a href="{{ route('menu.customize', [
+                                            'packageId' => $package['id'] ?? array_key_first($packages),
+                                            'menuName' => $menu['menu_name']
+                                        ]) }}" 
+                                        class="btn btn-secondary w-100">
+                                            Customize This Menu
+                                        </a>
                                     </div>
-                                </a>
+                                </div>
                             </div>
-                        @endforeach
-                    </div>
+                        </div>
+                    @endforeach
                 </div>
+            </div>
             <!-- Column 2: Package Details and Services (Right Side) -->
             <div class="col-lg-12 mx-auto mb-4"> <!-- Add mx-auto to center the column -->
                 <h3 class="text-left mb-4">Services</h3>

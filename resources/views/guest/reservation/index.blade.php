@@ -2,6 +2,11 @@
 
 @section('content')
 
+@php
+    $customizedMenu = session('customized_menu');
+    $selectedPackageFromSession = session('selected_package');
+@endphp
+
 @vite('resources/css/guestreservation.css')
 
 <meta charset="UTF-8">
@@ -549,6 +554,9 @@
     ?>
 
 const addressData = <?php echo json_encode($addressData); ?>;
+
+window.customizedMenu = @json($customizedMenu ?? null);
+window.selectedPackageFromSession = @json($selectedPackageFromSession ?? null);
 </script>
 
 <script>

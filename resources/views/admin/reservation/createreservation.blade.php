@@ -313,9 +313,9 @@
                         </form>
                     </div>
                 </div>
-                <div class="col-lg-4 mb-4">
-                <div class="card blank-card">
-                    <div class="card-body">
+                <div class="col-lg-4 mb-4" style="display:none;">
+                <div class="card blank-card" style="display:none;">
+                    <div class="card-body" style="display:none;">
                         <div style="display:none;">
                             <h4>Package Preview</h4>
                             <p><strong>Package Name: </strong><span id="preview-package-name"></span></p>

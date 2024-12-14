@@ -45,7 +45,9 @@ class ListPackageController extends Controller
         $database = app('firebase.database');
         $packageRef = $database->getReference('packages/' . $id);
         $package = $packageRef->getValue();
-
+        if ($package) {
+            $package['id'] = $id;
+        }
         $content = $database->getReference('contents')->getValue();
         return view('guest.packages.show', compact('package', 'content'));
     }
