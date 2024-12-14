@@ -2,11 +2,6 @@
 
 @section('content')
 
-@php
-    $customizedMenu = session('customized_menu');
-    $selectedPackageFromSession = session('selected_package');
-@endphp
-
 @vite('resources/css/guestreservation.css')
 
 <meta charset="UTF-8">
@@ -185,10 +180,17 @@
                                 </div>
                                 
                                  <!-- Menu Selection -->
-                                <div class="form-group col-md-6 mb-3">
-                                    <label>Menu</label>
+                                 <div class="form-group col-md-6 mb-3">
+                                    <label for="menu_name">Menu</label>
                                     <select name="menu_name" class="form-select" id="menu_name" {{ old('package_name') ? '' : 'disabled' }}>
                                         <option value="">Select a Menu</option>
+                                        @if(isset($menuId) && session()->has('customized_menu_' . $menuId))
+                                            @php $customMenu = session('customized_menu_' . $menuId); @endphp
+                                            <option value="{{ $customMenu['menu_name'] }}" 
+                                                    {{ old('menu_name') == $customMenu['menu_name'] ? 'selected' : '' }}>
+                                                {{ $customMenu['menu_name'] }}
+                                            </option>
+                                        @endif
                                         @if(old('menu_name'))
                                             <option value="{{ old('menu_name') }}" selected>{{ old('menu_name') }}</option>
                                         @endif
@@ -198,6 +200,11 @@
                                     @endif
                                 </div>
                             </div>
+
+                            <!-- Add a hidden input for menu_id if it exists -->
+                            @if(isset($menuId))
+                                <input type="hidden" name="menu_id" value="{{ $menuId }}">
+                            @endif
 
                             <div class="row">
                                 <!-- Number of Guests -->
@@ -554,9 +561,6 @@
     ?>
 
 const addressData = <?php echo json_encode($addressData); ?>;
-
-window.customizedMenu = @json($customizedMenu ?? null);
-window.selectedPackageFromSession = @json($selectedPackageFromSession ?? null);
 </script>
 
 <script>

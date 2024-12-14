@@ -1,9 +1,9 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Kreait\Firebase\Contract\Database;
+use Illuminate\Support\Str;
 
 class CustomMenuController extends Controller
 {
@@ -28,27 +28,35 @@ class CustomMenuController extends Controller
             }
         }
 
-        // Get all available foods from all menus for substitution
+        // Get all available foods from all packages for substitution
         $availableFoods = [];
-        foreach ($package['menus'] as $menu) {
-            foreach ($menu['foods'] as $food) {
-                if (!isset($availableFoods[$food['category']])) {
-                    $availableFoods[$food['category']] = [];
-                }
-                if (!in_array($food['food'], $availableFoods[$food['category']])) {
-                    $availableFoods[$food['category']][] = $food['food'];
+        $allPackages = $this->database->getReference('packages')->getValue();
+        
+        foreach ($allPackages as $pkg) {
+            foreach ($pkg['menus'] as $menu) {
+                foreach ($menu['foods'] as $food) {
+                    if (!isset($availableFoods[$food['category']])) {
+                        $availableFoods[$food['category']] = [];
+                    }
+                    if (!in_array($food['food'], $availableFoods[$food['category']])) {
+                        $availableFoods[$food['category']][] = $food['food'];
+                    }
                 }
             }
         }
 
         $content = $database->getReference('contents')->getValue();
-        return view('guest.reservation.customize', compact('content','selectedMenu', 'availableFoods', 'package', 'packageId',));
+        return view('guest.reservation.customize', compact('content', 'selectedMenu', 'availableFoods', 'package', 'packageId'));
     }
 
     public function update(Request $request, $packageId)
     {
+        // Generate a unique identifier for this customized menu
+        $menuId = Str::random(10);
+        
         $customizedMenu = [
             'menu_name' => $request->menu_name . ' (Customized)',
+            'menu_id' => $menuId,
             'foods' => []
         ];
 
@@ -59,16 +67,17 @@ class CustomMenuController extends Controller
             ];
         }
 
-        // Store in session
+        // Store the customized menu in session with the unique ID
         session([
-            'customized_menu' => $customizedMenu,
+            'customized_menu_' . $menuId => $customizedMenu,
             'selected_package' => $request->package_name
         ]);
 
-        // Redirect with both package and menu parameters
+        // Redirect with package, menu, and menu ID parameters
         return redirect()->route('guest.reserve', [
             'package' => $request->package_name,
-            'menu' => $customizedMenu['menu_name']
+            'menu' => $customizedMenu['menu_name'],
+            'menu_id' => $menuId
         ])->with('status', 'Menu customized successfully');
     }
 }

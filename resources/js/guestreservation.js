@@ -49,6 +49,8 @@ function change() {
             }, 100);
  
             menuDropdown.prop('disabled', false);
+            
+            // Add regular menus
             selectedPackage.menus.forEach(menu => {
                 const option = new Option(menu.menu_name, menu.menu_name);
                 if (menu.menu_name === oldMenuValue) {
@@ -56,6 +58,19 @@ function change() {
                 }
                 menuDropdown.append(option);
             });
+
+            // Check for customized menu in URL and session
+            const urlParams = new URLSearchParams(window.location.search);
+            const menuId = urlParams.get('menu_id');
+            
+            // If there's a customized menu in the session, add it to the dropdown
+            if (menuId && window.customizedMenu) {
+                const option = new Option(window.customizedMenu.menu_name, window.customizedMenu.menu_name);
+                if (window.customizedMenu.menu_name === oldMenuValue) {
+                    option.selected = true;
+                }
+                menuDropdown.append(option);
+            }
  
             packageNameSpan.text(selectedPackage.package_name);
             const basePrice = parseInt(selectedPackage.price, 10);
@@ -101,23 +116,34 @@ function change() {
             formColumn.addClass('col-lg-12').removeClass('col-lg-8');
         }, 800);
     }
- }
-
+}
 
 $('#menu_name').change(function () {
     const selectedMenuName = $(this).val();
     const selectedPackageName = $('#package_name').val();
-    const selectedPackage = packages.find(pkg => pkg.package_name === selectedPackageName);
     const menuItemsList = $('#preview-menu-items');
 
-    if (selectedPackage && selectedMenuName) {
-        const selectedMenu = selectedPackage.menus.find(menu => menu.menu_name === selectedMenuName);
+    // Check if this is a customized menu
+    const urlParams = new URLSearchParams(window.location.search);
+    const menuId = urlParams.get('menu_id');
 
-        if (selectedMenu) {
-            menuItemsList.empty();
-            selectedMenu.foods.forEach(food => {
-                menuItemsList.append(`<li><span style="font-weight: bold;">${food.category}</span>: ${food.food}</li>`);
-            });
+    if (window.customizedMenu && selectedMenuName === window.customizedMenu.menu_name) {
+        // Display customized menu items
+        menuItemsList.empty();
+        window.customizedMenu.foods.forEach(food => {
+            menuItemsList.append(`<li><span style="font-weight: bold;">${food.category}</span>: ${food.food}</li>`);
+        });
+    } else {
+        // Handle regular menu display
+        const selectedPackage = packages.find(pkg => pkg.package_name === selectedPackageName);
+        if (selectedPackage && selectedMenuName) {
+            const selectedMenu = selectedPackage.menus.find(menu => menu.menu_name === selectedMenuName);
+            if (selectedMenu) {
+                menuItemsList.empty();
+                selectedMenu.foods.forEach(food => {
+                    menuItemsList.append(`<li><span style="font-weight: bold;">${food.category}</span>: ${food.food}</li>`);
+                });
+            }
         }
     }
 });
@@ -314,13 +340,20 @@ function handleUrlParameters() {
     const selectedMenu = urlParams.get('menu');
     const selectedPrice = urlParams.get('price');
     const selectedDate = urlParams.get('event_date');
+    const menuId = urlParams.get('menu_id');
     
+    // If there's a menu_id, try to get the customized menu from session
+    if (menuId && typeof sessionStorage !== 'undefined') {
+        const customizedMenu = sessionStorage.getItem('customized_menu_' + menuId);
+        if (customizedMenu) {
+            window.customizedMenu = JSON.parse(customizedMenu);
+        }
+    }
+
     if (selectedPackage) {
-        // Select the package
         const packageSelect = $('#package_name');
         packageSelect.val(selectedPackage);
         
-        // Set the package price if it exists in URL
         if (selectedPrice) {
             const totalPackagePriceSpan = document.getElementById("total-package-price");
             const totalPriceSpan = document.getElementById("total-price");
@@ -331,10 +364,8 @@ function handleUrlParameters() {
             if (totalPriceInput) totalPriceInput.value = selectedPrice;
         }
         
-        // Trigger the change event to load package details and menus
         packageSelect.trigger('change');
         
-        // Once menus are loaded, select the specific menu
         if (selectedMenu) {
             setTimeout(() => {
                 const menuSelect = $('#menu_name');
@@ -344,7 +375,6 @@ function handleUrlParameters() {
         }
     }
 
-    // Handle the date if it's present
     if (selectedDate) {
         const eventDateInput = document.getElementById('event_date');
         if (eventDateInput && eventDateInput._flatpickr) {
@@ -388,46 +418,54 @@ $(document).ready(function() {
 });
 
 document.addEventListener("DOMContentLoaded", function() {
-    const packageSelect = document.getElementById('package_name'); // Package select element
-    const guestsNumberInput = document.getElementById('guests_number'); // Guests input element
-    const totalPackagePriceSpan = document.getElementById("preview-package-price"); // Package price span
-    const additionalPersonsSpan = document.getElementById("total-additional-persons"); // Additional persons span
-    const totalPriceSpan = document.getElementById("total-price"); // Total price span
-    const totalPriceInput = document.getElementById("total_price"); // Hidden input for total price
-    const pricePerPackageHeadSpan = document.getElementById('price-per-package-head'); // Define pricePerPackageHeadSpan
+    const packageSelect = document.getElementById('package_name');
+    const guestsNumberInput = document.getElementById('guests_number');
+    const totalPackagePriceSpan = document.getElementById("preview-package-price");
+    const additionalPersonsSpan = document.getElementById("total-additional-persons");
+    const totalPriceSpan = document.getElementById("total-price");
+    const totalPriceInput = document.getElementById("total_price");
+    const pricePerPackageHeadSpan = document.getElementById('price-per-package-head');
 
     let packagePrice = 0;
     let packagePersons = 0;
-    let selectedPackage = null; // Add selectedPackage as a global variable
+    let selectedPackage = null;
+    let totalPrice = 0;
 
-    // Function to update the total breakdown
-    let totalPrice = 0; // Store the total price in a variable
+    // Add custom menu initialization
+    const urlParams = new URLSearchParams(window.location.search);
+    const menuId = urlParams.get('menu_id');
+    
+    // Initialize customized menu if it exists in session
+    if (menuId) {
+        try {
+            const customizedMenuData = sessionStorage.getItem('customized_menu_' + menuId);
+            if (customizedMenuData) {
+                window.customizedMenu = JSON.parse(customizedMenuData);
+            }
+        } catch (error) {
+            console.error('Error loading customized menu:', error);
+        }
+    }
 
-    // Function to update the total breakdown
     function updateTotal(selectedPackage) {
         console.log("Updating total...");
         
-        // Log the selected package and the current input values
         console.log("Selected Package:", selectedPackage);
         const pricePerAdditionalPerson = (selectedPackage.package_type === 'Wedding') ? 400 : 350;
         console.log("Price per Additional Person:", pricePerAdditionalPerson);
 
-        // Ensure the guests number input is never empty
-        const guestsInputValue = guestsNumberInput.value.trim() || packagePersons; // Default to packagePersons if empty
+        const guestsInputValue = guestsNumberInput.value.trim() || packagePersons;
         console.log("Guests Input Value:", guestsInputValue);
 
-        // Parse the value and handle cases for invalid or empty inputs
         const currentGuests = parseInt(guestsInputValue, 10);
         console.log("Parsed Guests Number:", currentGuests);
 
-        // Check for invalid input
         if (isNaN(currentGuests) || currentGuests <= 0) {
             console.error("Invalid guests number input:", guestsInputValue);
-            guestsNumberInput.value = packagePersons; // Reset to base number if invalid
+            guestsNumberInput.value = packagePersons;
             return;
         }
 
-        // The rest of your logic for calculating prices remains the same
         const additionalGuests = Math.max(0, currentGuests - packagePersons);
         const additionalPrice = additionalGuests * pricePerAdditionalPerson;
         totalPrice = (parseInt(packagePrice, 10) || 0) + additionalPrice;
@@ -443,9 +481,18 @@ document.addEventListener("DOMContentLoaded", function() {
         totalPriceInput.value = totalPrice;
 
         document.getElementById('total-additional-person-price').innerText = additionalPrice.toFixed(2);
+        
+        // If there's a customized menu, update its price in session
+        if (window.customizedMenu) {
+            try {
+                const updatedMenu = { ...window.customizedMenu, totalPrice: totalPrice };
+                sessionStorage.setItem('customized_menu_' + menuId, JSON.stringify(updatedMenu));
+            } catch (error) {
+                console.error('Error updating customized menu price:', error);
+            }
+        }
     }
 
-    // When the package is selected
     packageSelect.addEventListener("change", function() {
         const selectedPackageName = packageSelect.value;
         selectedPackage = packages.find(pkg => pkg.package_name === selectedPackageName);
@@ -453,19 +500,49 @@ document.addEventListener("DOMContentLoaded", function() {
         if (selectedPackage) {
             packagePrice = selectedPackage.price;
             packagePersons = selectedPackage.persons;
-            updateTotal(selectedPackage); // Update breakdown and hidden input
+            
+            // Check if we have a customized menu selected
+            const menuDropdown = document.getElementById('menu_name');
+            const selectedMenuName = menuDropdown.value;
+            
+            if (window.customizedMenu && selectedMenuName === window.customizedMenu.menu_name) {
+                // If using customized menu, ensure any special pricing is handled
+                console.log("Using customized menu:", window.customizedMenu.menu_name);
+            }
+            
+            updateTotal(selectedPackage);
         }
     });
 
-    // When the number of guests changes
     guestsNumberInput.addEventListener("input", function() {
         if (selectedPackage) {
-            updateTotal(selectedPackage); // Update breakdown and hidden input
+            updateTotal(selectedPackage);
         }
     });
 
-    packageForm.addEventListener('submit', function () {
-        // Ensure commas are removed from the hidden input field before submission
-        totalPriceInput.value = totalPrice; // Use the stored totalPrice
-    });
+    // Modified form submission handler
+    const packageForm = document.querySelector('form');
+    if (packageForm) {
+        packageForm.addEventListener('submit', function(event) {
+            // Include custom menu data in form submission if it exists
+            if (window.customizedMenu && menuId) {
+                const menuInput = document.createElement('input');
+                menuInput.type = 'hidden';
+                menuInput.name = 'customized_menu_data';
+                menuInput.value = JSON.stringify(window.customizedMenu);
+                this.appendChild(menuInput);
+            }
+            
+            totalPriceInput.value = totalPrice;
+        });
+    }
+
+    // Initialize form with URL parameters if they exist
+    if (urlParams.get('package')) {
+        const packageName = urlParams.get('package');
+        if (packageSelect) {
+            packageSelect.value = packageName;
+            packageSelect.dispatchEvent(new Event('change'));
+        }
+    }
 });

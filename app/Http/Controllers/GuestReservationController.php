@@ -26,6 +26,7 @@ class GuestReservationController extends Controller
     {
         $selectedPackage = $request->query('package');
         $selectedMenu = $request->query('menu');
+        $menuId = $request->query('menu_id');
 
         $content = $this->database->getReference('contents')->getValue();
         
@@ -45,6 +46,11 @@ class GuestReservationController extends Controller
         if (is_array($packagesData)) {
             foreach ($packagesData as $key => $package) {
                 if (isset($package['is_displayed']) && $package['is_displayed'] === true) {
+                    // If there's a custom menu, add it to the package's menus
+                    if ($menuId && session()->has('customized_menu_' . $menuId)) {
+                        $customMenu = session('customized_menu_' . $menuId);
+                        $package['menus'][] = $customMenu;
+                    }
                     $displayedPackages[$key] = $package;
                 }
             }
@@ -55,10 +61,6 @@ class GuestReservationController extends Controller
 
         $addressData = json_decode(file_get_contents(public_path('address_ph.json')), true);
         
-        // Get customized menu from session if it exists
-        $customizedMenu = session('customized_menu');
-        $selectedPackageFromSession = session('selected_package');
-        
         return view('guest.reservation.index', compact(
             'packages', 
             'addressData', 
@@ -66,8 +68,7 @@ class GuestReservationController extends Controller
             'selectedMenu',
             'reservations',
             'content',
-            'customizedMenu',
-            'selectedPackageFromSession'
+            'menuId'
         ));
     }
     private function generateUniqueReferenceNumber()
@@ -155,11 +156,13 @@ class GuestReservationController extends Controller
         $packages = is_array($packages) ? $packages : [];
     
         $menuContent = [];
-        // Check for customized menu in session first
-        if (session()->has('customized_menu') && $validatedData['menu_name'] === session('customized_menu')['menu_name']) {
-            $menuContent = session('customized_menu')['foods'];
+        if ($request->menu_id && session()->has('customized_menu_' . $request->menu_id)) {
+            // Use the customized menu from session
+            $customMenu = session('customized_menu_' . $request->menu_id);
+            $menuContent = $customMenu['foods'];
         } else {
-            // Your existing menu content retrieval code
+            // Use standard menu from package
+            $packages = $this->database->getReference($this->packages)->getValue();
             if (!empty($validatedData['package_name']) && !empty($validatedData['menu_name'])) {
                 foreach ($packages as $package) {
                     if ($package['package_name'] === $validatedData['package_name']) {
