@@ -17,9 +17,9 @@ class PasswordResetController extends Controller
     }
 
     // Show the password reset form (already in place for email)
-    public function showResetForm()
+    public function showResetForm(Request $request)
     {
-        return view('admin.auth.passwords.reset'); // Existing reset email view
+        return view('admin.auth.passwords.new', ['oobCode' => $request->get('oobCode')]);
     }
 
     // Handle sending the reset link

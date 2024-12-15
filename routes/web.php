@@ -90,7 +90,7 @@ Route::post('/reset/password', [PasswordResetController::class, 'sendResetLink']
 // Show the new password form (after clicking the link)
 Route::get('/reset-password/{oobCode}', [PasswordResetController::class, 'showNewPasswordForm'])->name('password.new');
 // Confirm the password reset and update the password in Firebase
-Route::post('/reset-password/{oobCode}', [PasswordResetController::class, 'confirmReset'])->name('password.reset.confirm');
+    Route::post('/reset-password/{oobCode}', [PasswordResetController::class, 'confirmReset'])->name('password.reset.confirm');
 
 // Email Verification Routes
 Route::get('/email/verify', [EmailVerificationController::class, 'notice'])

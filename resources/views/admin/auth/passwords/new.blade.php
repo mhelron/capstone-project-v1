@@ -20,7 +20,7 @@
                     Reset Password
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('password.reset.confirm') }}" method="POST">
+                    <form action="{{ route('password.reset.confirm', ['oobCode' => $oobCode]) }}" method="POST">
                         @csrf
                         <input type="hidden" name="oobCode" value="{{ request()->get('oobCode') }}">
                         <div class="mb-3">
