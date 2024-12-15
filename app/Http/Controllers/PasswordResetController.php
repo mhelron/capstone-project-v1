@@ -37,10 +37,9 @@ class PasswordResetController extends Controller
         }
     }
 
-    // Show the new password form (after clicking the link)
     public function showNewPasswordForm()
     {
-        return view('admin.auth.passwords.new-password'); // This is the new password blade view
+        return view('admin.auth.passwords.new');
     }
 
     // Handle the password reset confirmation
