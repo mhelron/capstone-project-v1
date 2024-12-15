@@ -51,6 +51,31 @@
     </div>
 </div>
 
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Confirm Your Selection</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6 class=" mb-3">Selected Items:</h6>
+                <div id="selectedItemsList" class="mb-3">
+                    <!-- Selected items will be populated here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Edit Selection</button>
+                <button type="button" class="btn btn-darkorange" id="confirmBtn">
+                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                    <span class="btn-text">Confirm and Proceed</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
 /* Card Styles */
 .custom-card {
@@ -124,29 +149,89 @@
 .spinner-border {
     animation: spin 1s linear infinite;
 }
+
+/* Modal Styles */
+#selectedItemsList .selected-item {
+    padding: 10px;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+}
+
+#selectedItemsList .selected-item:last-child {
+    border-bottom: none;
+}
+
+.selected-item-category {
+    font-weight: bold;
+}
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('customizeForm');
     const saveBtn = document.getElementById('saveBtn');
     const cancelBtn = document.getElementById('cancelBtn');
+    const selectedItemsList = document.getElementById('selectedItemsList');
     let isSubmitting = false;
 
-    // Handle form submission
+    // Initialize Bootstrap modal
+    const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+
+    // Handle form submission to show modal
     form.addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent form from submitting immediately
+        
         if (isSubmitting) {
-            e.preventDefault();
             return;
         }
 
+        // Clear and populate the selected items list
+        selectedItemsList.innerHTML = '';
+        document.querySelectorAll('.custom-select').forEach(select => {
+            const category = select.name.match(/\[(.*?)\]/)[1];
+            const item = document.createElement('div');
+            item.className = 'selected-item';
+            item.innerHTML = `
+                <span class="selected-item-category">${category}:</span>
+                <span>${select.value}</span>
+            `;
+            selectedItemsList.appendChild(item);
+        });
+
+        // Show the modal
+        modal.show();
+    });
+
+    // Handle modal close - reset form state
+    document.getElementById('confirmationModal').addEventListener('hidden.bs.modal', function () {
+        isSubmitting = false;
+        saveBtn.disabled = false;
+        cancelBtn.disabled = false;
+        
+        // Reset button states
+        const confirmBtn = document.getElementById('confirmBtn');
+        confirmBtn.disabled = false;
+        confirmBtn.querySelector('.spinner-border').classList.add('d-none');
+        confirmBtn.querySelector('.btn-text').textContent = 'Confirm and Proceed';
+        
+        saveBtn.querySelector('.spinner-border').classList.add('d-none');
+        saveBtn.querySelector('.btn-text').textContent = 'Save and Select Menu';
+    });
+
+    // Handle confirm button click
+    document.getElementById('confirmBtn').addEventListener('click', function() {
+        if (isSubmitting) return;
+
         isSubmitting = true;
-        saveBtn.disabled = true;
-        cancelBtn.disabled = true;
+        this.disabled = true;
         
         // Show spinner, hide text
-        saveBtn.querySelector('.spinner-border').classList.remove('d-none');
-        saveBtn.querySelector('.btn-text').textContent = 'Saving...';
+        this.querySelector('.spinner-border').classList.remove('d-none');
+        this.querySelector('.btn-text').textContent = 'Processing...';
+        
+        // Submit the form
+        form.submit();
     });
 
     // Handle cancel button
@@ -157,7 +242,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         cancelBtn.disabled = true;
-        saveBtn.disabled = true;
         
         // Show spinner, hide text
         cancelBtn.querySelector('.spinner-border').classList.remove('d-none');

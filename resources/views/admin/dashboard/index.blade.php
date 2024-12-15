@@ -107,6 +107,43 @@
         min-width: 120px;
         margin-left: 10px;
     }
+
+    .fixed-height-card {
+        height: 400px;
+        overflow-y: auto;
+    }
+
+    .fixed-height-card .list-group {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    /* Custom scrollbar for better appearance */
+    .fixed-height-card .list-group::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .fixed-height-card .list-group::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+
+    .fixed-height-card .list-group::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+    }
+
+    .fixed-height-card .list-group::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    /* Center content vertically when empty */
+    .empty-card-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 300px;
+    }
 </style>
 
 <div class="pt-4">
@@ -280,7 +317,7 @@
 
     <div class="row pt-3">
         <div class="col-lg-4 col-xs-6">
-            <div class="card upcoming-events p-3 box-shadow">
+            <div class="card upcoming-events p-3 box-shadow fixed-height-card">
                 <div class="row mb-2">
                     <div class="col-md-12 d-flex justify-content-md-end">
                         <i class="bx bx-calendar"></i>
@@ -288,28 +325,28 @@
                 </div>
                 <h1 class="text-start">Upcoming Events</h1>
 
-                <!-- List upcoming confirmed reservations -->
-                <div class="list-group">
-                    @foreach($upcomingReservations as $reservation)
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <div class="d-flex justify-content-between">
-                                <span>{{ $reservation['package_name'] }}</span>
-                                <span class="text-muted">{{ \Carbon\Carbon::parse($reservation['event_date'] . ' ' . $reservation['event_time'])->format('M d, Y - h:i A') }}</span>
-                            </div>
-                        </a>
-                    @endforeach
-                </div>
-
-                <!-- No events message if no upcoming events -->
-                @if(empty($upcomingReservations))
-                    <p class="text-center text-muted">No upcoming events.</p>
+                @if(!empty($upcomingReservations))
+                    <div class="list-group">
+                        @foreach($upcomingReservations as $reservation)
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex justify-content-between">
+                                    <span>{{ $reservation['package_name'] }}</span>
+                                    <span class="text-muted">{{ \Carbon\Carbon::parse($reservation['event_date'] . ' ' . $reservation['event_time'])->format('M d, Y - h:i A') }}</span>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="empty-card-content">
+                        <p class="text-center text-muted">No upcoming events.</p>
+                    </div>
                 @endif
             </div>
         </div>
 
-         <!-- Most Picked Package -->
-         <div class="col-lg-4 col-xs-6">
-            <div class="card p-3 box-shadow">
+         <!-- Top 10 Packages Card -->
+        <div class="col-lg-4 col-xs-6">
+            <div class="card p-3 box-shadow fixed-height-card">
                 <div class="row mb-2">
                     <div class="col-md-12 d-flex justify-content-md-end">
                         <i class="bx bx-trophy"></i>
@@ -317,22 +354,28 @@
                 </div>
                 <h1 class="text-start">Top 10 Packages</h1>
 
-                <!-- List of top 5 packages -->
-                <div class="list-group">
-                    @foreach($topPackages as $packageName => $count)
-                        <div class="list-group-item list-group-item-action">
-                            <div class="d-flex justify-content-between">
-                                <span>{{ $packageName }}</span>
-                                <span class="badge bg-primary">{{ $count }} times</span>
+                @if(!empty($topPackages))
+                    <div class="list-group">
+                        @foreach($topPackages as $packageName => $count)
+                            <div class="list-group-item list-group-item-action">
+                                <div class="d-flex justify-content-between">
+                                    <span>{{ $packageName }}</span>
+                                    <span class="badge bg-primary">{{ $count }} times</span>
+                                </div>
                             </div>
-                        </div>
-                    @endforeach
-                </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="empty-card-content">
+                        <p class="text-center text-muted">No package data available.</p>
+                    </div>
+                @endif
             </div>
         </div>
-        <!-- Column for Notifications -->
+
+        <!-- Notifications Card -->
         <div class="col-lg-4 col-xs-6">
-            <div class="card notification-card p-3 box-shadow">
+            <div class="card notification-card p-3 box-shadow fixed-height-card">
                 <div class="row mb-2">
                     <div class="col-md-12 d-flex justify-content-md-end">
                         <i class="bx bx-bell"></i>
@@ -340,46 +383,43 @@
                 </div>
                 <h1 class="text-start">New Notifications</h1>
 
-                <div class="list-group">
-                    @foreach($newNotifications as $notification)
-                        <div class="list-group-item notification-item" data-id="{{ $notification['key'] }}"
-                            data-package="{{ $notification['data']['package_name'] }}"
-                            data-date="{{ \Carbon\Carbon::parse($notification['data']['event_date'] . ' ' . $notification['data']['event_time'])->format('M d, Y - h:i A') }}">
-                            <!-- Add spinner overlay -->
-                            <div class="notification-overlay">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                            </div>
-                            <div class="notification-content">
-                                <div class="notification-info">
-                                    <div class="d-flex justify-content-between">
-                                        <span>{{ $notification['data']['package_name'] }}</span>
-                                        <span class="badge bg-danger">New</span>
+                @if(!empty($newNotifications))
+                    <div class="list-group">
+                        @foreach($newNotifications as $notification)
+                            <div class="list-group-item notification-item" data-id="{{ $notification['key'] }}"
+                                data-package="{{ $notification['data']['package_name'] }}"
+                                data-date="{{ \Carbon\Carbon::parse($notification['data']['event_date'] . ' ' . $notification['data']['event_time'])->format('M d, Y - h:i A') }}">
+                                <!-- Add spinner overlay -->
+                                <div class="notification-overlay">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
                                     </div>
-                                    <small class="text-muted d-block">
-                                        {{ \Carbon\Carbon::parse($notification['data']['event_date'] . ' ' . $notification['data']['event_time'])->format('M d, Y - h:i A') }}
-                                    </small>
                                 </div>
-                                <div class="ms-3">
-                                    <button class="btn btn-primary btn-sm btn-view" 
-                                            data-id="{{ $notification['key'] }}"
-                                            data-redirect="{{ route('admin.reservation', ['tab' => 'penbook']) }}">
-                                        View
-                                    </button>
+                                <div class="notification-content">
+                                    <div class="notification-info">
+                                        <div class="d-flex justify-content-between">
+                                            <span>{{ $notification['data']['package_name'] }}</span>
+                                            <span class="badge bg-danger">New</span>
+                                        </div>
+                                        <small class="text-muted d-block">
+                                            {{ \Carbon\Carbon::parse($notification['data']['event_date'] . ' ' . $notification['data']['event_time'])->format('M d, Y - h:i A') }}
+                                        </small>
+                                    </div>
+                                    <div class="ms-3">
+                                        <button class="btn btn-primary btn-sm btn-view" 
+                                                data-id="{{ $notification['key'] }}"
+                                                data-redirect="{{ route('admin.reservation', ['tab' => 'penbook']) }}">
+                                            View
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
-                </div>
-
-                <!-- No new notifications message -->
-                @if(empty($newNotifications))
-                <div class="notification-content">
-                    <div class="notification-info">
-                        <small class="text-center text-muted">No new notifications.</small>
+                        @endforeach
                     </div>
-                </div>
+                @else
+                    <div class="empty-card-content">
+                        <p class="text-center text-muted">No new notifications.</p>
+                    </div>
                 @endif
             </div>
         </div>

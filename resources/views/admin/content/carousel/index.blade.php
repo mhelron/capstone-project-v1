@@ -5,127 +5,115 @@ use Illuminate\Support\Facades\Storage;
 @endphp
 
 @section('content')
+<!-- Content Header (Page header) -->
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0" style="padding-top: 30px;">Gallery Management</h1>
+                <h1 class="m-0" style="padding-top: 30px;">Carousel Image Home</h1>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Main content -->
 <div class="content">
     <div class="container-fluid">
-        <form action="{{ route('admin.gallery.update') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            
-            @php
-                $categories = [
-                    'wedding' => 'Wedding Gallery',
-                    'debut' => 'Debut Gallery',
-                    'kiddie' => 'Kiddie Gallery',
-                    'adult' => 'Adult Gallery',
-                    'corporate' => 'Corporate Gallery'
-                ];
-                $categoriesChunked = array_chunk($categories, 2, true);
-            @endphp
-
-            @foreach ($categoriesChunked as $categoryRow)
-                <div class="row">
-                    @foreach ($categoryRow as $category => $title)
-                        <div class="col-md-6">
-                            <div class="card mb-4">
-                                <div class="card-header bg-light">
-                                    <h2 class="card-title mb-0">{{ $title }}</h2>
-                                </div>
-                                <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr class="bg-light">
-                                                <th style="width: 60px;">#</th>
-                                                <th>Image</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="{{ $category }}-images-list">
-                                            @if (!empty($content[$category . '_gallery']))
-                                                @foreach ($content[$category . '_gallery'] as $index => $image)
-                                                    <tr class="image-row">
-                                                        <td class="text-center align-middle number-cell">
-                                                            {{$index + 1}}
-                                                        </td>
-                                                        <td>
-                                                            <div class="preview-container mt-2 mb-2 text-center">
-                                                                <img src="{{ Storage::url($image) }}" alt="{{ $title }} Image" style="max-height: 200px; max-width: 100%;">
+        <div class="row d-flex justify-content-center">
+            <div class="col-lg-12">
+                <!-- Edit Content Form -->
+                <div class="card">
+                    <div class="card-body form-container">
+                        <form action="{{ route('admin.carousel.update') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div>
+                                <!-- Carousel Images -->
+                                <div class="col-md-12">
+                                    <div class="form-group mb-3">
+                                        <h1><label for="carousel_images">Add/Edit</label></h1>
+                                        <div id="carousel-images-list">
+                                            @if (old('carousel_images'))
+                                                @foreach (old('carousel_images') as $index => $image)
+                                                    <div class="row mb-2">
+                                                        <div class="col-md-12">
+                                                            <div class="preview-container mt-2 mb-2">
+                                                                <p>No preview available</p>
                                                             </div>
-                                                            <div class="d-flex mt-2">
+                                                            <div class="d-flex">
                                                                 <div class="input-group flex-grow-1">
-                                                                    <input type="file" name="{{ $category }}_images[{{$index}}]" class="form-control" onchange="previewImage(this)">
-                                                                    <div class="form-control bg-light">
+                                                                    <input type="file" name="carousel_images[{{$index}}]" class="form-control mb-2" onchange="previewImage(this)">
+                                                                    <div class="form-control mb-2" style="background-color: #e9ecef;">
+                                                                        No file chosen
+                                                                    </div>
+                                                                </div>
+                                                                <button class="btn btn-danger remove-image ms-2 mb-2" type="button" onclick="removeImage(this)">Remove</button>
+                                                            </div>
+                                                            @error("carousel_images.$index")
+                                                                <small class="text-danger" style="margin-top: 2px; margin-bottom: 1px; display: block;">{{ $message }}</small>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @elseif (!empty($content['carousel_images']))
+                                                @foreach ($content['carousel_images'] as $index => $image)
+                                                    <div class="row mb-2">
+                                                        <div class="col-md-12">
+                                                            <div class="preview-container mt-2 mb-2">
+                                                                <img src="{{ Storage::url($image) }}" alt="Carousel Image" style="max-height: 200px; max-width: 100%;">
+                                                            </div>
+                                                            <div class="d-flex">
+                                                                <div class="input-group flex-grow-1">
+                                                                    <input type="file" name="carousel_images[{{$index}}]" class="form-control mb-2" onchange="previewImage(this)">
+                                                                    <div class="form-control mb-2" style="background-color: #e9ecef;">
                                                                         Current: {{ basename($image) }}
                                                                     </div>
                                                                 </div>
-                                                                <button class="btn btn-danger remove-image ms-2" type="button" onclick="removeImage(this)">
-                                                                    <i class="fas fa-trash"></i>
-                                                                </button>
+                                                                @if ($index > 0)
+                                                                    <button class="btn btn-danger remove-image ms-2 mb-2" type="button" onclick="removeImage(this)">Remove</button>
+                                                                @endif
                                                             </div>
-                                                            @error("${category}_images.$index")
-                                                                <small class="text-danger">{{ $message }}</small>
+                                                            @error("carousel_images.$index")
+                                                                <small class="text-danger" style="margin-top: 2px; margin-bottom: 1px; display: block;">{{ $message }}</small>
                                                             @enderror
-                                                            <input type="hidden" name="existing_{{ $category }}_images[{{$index}}]" value="{{ $image }}">
-                                                        </td>
-                                                    </tr>
+                                                            <input type="hidden" name="existing_images[{{$index}}]" value="{{ $image }}">
+                                                        </div>
+                                                    </div>
                                                 @endforeach
                                             @else
-                                                <!-- Add initial empty row when no images exist -->
-                                                <tr class="image-row">
-                                                    <td class="text-center align-middle number-cell">1</td>
-                                                    <td>
-                                                        <div class="preview-container mt-2 mb-2 text-center">
+                                                <div class="row mb-2">
+                                                    <div class="col-md-12">
+                                                        <div class="preview-container mt-2 mb-2">
                                                             <!-- Preview will be inserted here -->
                                                         </div>
-                                                        <div class="d-flex mt-2">
+                                                        <div class="d-flex">
                                                             <div class="input-group flex-grow-1">
-                                                                <input type="file" name="{{ $category }}_images[0]" class="form-control" onchange="previewImage(this)">
-                                                                <div class="form-control bg-light">
+                                                                <input type="file" name="carousel_images[0]" class="form-control mb-2" onchange="previewImage(this)">
+                                                                <div class="form-control mb-2" style="background-color: #e9ecef;">
                                                                     No file chosen
                                                                 </div>
                                                             </div>
-                                                            <button class="btn btn-danger remove-image ms-2" type="button" onclick="removeImage(this)">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
                                                         </div>
-                                                    </td>
-                                                </tr>
+                                                        @error('carousel_images.0')
+                                                            <small class="text-danger" style="margin-top: 2px; margin-bottom: 1px; display: block;">{{ $message }}</small>
+                                                        @enderror
+                                                    </div>
+                                                </div>
                                             @endif
-                                        </tbody>
-                                    </table>
-                                </div>
-                                    <div class="text-center mt-3">
-                                        <button type="button" class="btn btn-success" onclick="addImage('{{ $category }}')">
-                                            <i class="fas fa-plus"></i> Add New Image
-                                        </button>
+                                        </div>
+                                        <button id="add-image" class="btn btn-sm btn-success mt-2" type="button">Add More Images</button>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
-                </div>
-            @endforeach
 
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body text-end">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="fas fa-save"></i> Save All Changes
-                            </button>
-                        </div>
+                            <!-- Submit button -->
+                            <div class="form-group mb-3">
+                                <button type="submit" class="btn btn-primary float-end">Save Changes</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 
@@ -134,7 +122,7 @@ function previewImage(input) {
     const file = input.files[0];
     if (file) {
         const reader = new FileReader();
-        const previewDiv = input.closest('td').querySelector('.preview-container');
+        const previewDiv = input.closest('.col-md-12').querySelector('.preview-container');
         const filenameDiv = input.nextElementSibling;
         
         if (filenameDiv) {
@@ -149,60 +137,45 @@ function previewImage(input) {
     }
 }
 
-function updateRowNumbers(category) {
-    const tbody = document.getElementById(`${category}-images-list`);
-    const rows = tbody.querySelectorAll('tr');
-    rows.forEach((row, index) => {
-        const numberCell = row.querySelector('.number-cell');
-        if (numberCell) {
-            numberCell.textContent = index + 1;
-        }
-    });
-}
-
-function addImage(category) {
-    const tbody = document.getElementById(`${category}-images-list`);
-    const newIndex = tbody.querySelectorAll('tr').length;
+// Add more images button handler
+document.getElementById('add-image').addEventListener('click', function() {
+    const imagesList = document.getElementById('carousel-images-list');
+    const newIndex = imagesList.querySelectorAll('.row').length;
     
-    const newRow = `
-        <tr class="image-row">
-            <td class="text-center align-middle number-cell">
-                ${newIndex + 1}
-            </td>
-            <td>
-                <div class="preview-container mt-2 mb-2 text-center">
+    const imageGroup = `
+        <div class="row mb-2">
+            <div class="col-md-12">
+                <div class="preview-container mt-2 mb-2">
                     <!-- Preview will be inserted here -->
                 </div>
-                <div class="d-flex mt-2">
+                <div class="d-flex">
                     <div class="input-group flex-grow-1">
-                        <input type="file" name="${category}_images[${newIndex}]" class="form-control" onchange="previewImage(this)">
-                        <div class="form-control bg-light">
+                        <input type="file" name="carousel_images[${newIndex}]" class="form-control mb-2" onchange="previewImage(this)">
+                        <div class="form-control mb-2" style="background-color: #e9ecef;">
                             No file chosen
                         </div>
                     </div>
-                    <button class="btn btn-danger remove-image ms-2" type="button" onclick="removeImage(this)">
-                        <i class="fas fa-trash"></i>
-                    </button>
+                    <button class="btn btn-danger remove-image ms-2 mb-2" type="button" onclick="removeImage(this)">Remove</button>
                 </div>
-            </td>
-        </tr>
+                <small class="text-danger" style="margin-top: 2px; margin-bottom: 1px; display: block;"></small>
+            </div>
+        </div>
     `;
 
-    tbody.insertAdjacentHTML('beforeend', newRow);
-}
+    imagesList.insertAdjacentHTML('beforeend', imageGroup);
+});
 
+// Remove image handler
 function removeImage(button) {
-    const row = button.closest('tr');
-    const tbody = row.parentElement;
-    const category = tbody.id.replace('-images-list', '');
-    const hiddenInput = row.querySelector('input[type="hidden"]');
+    const row = button.closest('.row');
+    const hiddenInput = row.querySelector('input[name^="existing_images"]');
     
+    // If there's a hidden input with an existing image path, remove it
     if (hiddenInput) {
         hiddenInput.remove();
     }
     
     row.remove();
-    updateRowNumbers(category);
 }
 
 document.addEventListener('DOMContentLoaded', function() {

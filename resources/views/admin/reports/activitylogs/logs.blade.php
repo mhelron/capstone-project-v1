@@ -135,22 +135,57 @@
 
     <style>
         .table td {
-            vertical-align: middle;
-        }
+        vertical-align: middle;
+    }
 
-        .badge {
-            font-size: 0.875em;
-            padding: 0.5em 0.75em;
-        }
+    .badge {
+        font-size: 0.875em;
+        padding: 0.5em 0.75em;
+    }
 
-        th.activity-column, td.activity-column {
-            width: 900px; /* Set a fixed width for the Activity column */
-            word-wrap: break-word; /* Wrap text if it overflows */
-        }
+    .activity-column {
+        width: 900px;
+        word-wrap: break-word;
+    }
 
-        .sort-icon {
-            margin-left: 5px;
+    /* New pagination styles */
+    .pagination {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        justify-content: center;
+    }
+
+    .pagination .page-item {
+        margin: 2px;
+    }
+
+    .pagination .page-link {
+        padding: 6px 12px;
+        min-width: 38px;
+        text-align: center;
+    }
+
+    .pagination-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .pagination-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    @media (max-width: 768px) {
+        .pagination-info {
+            flex-direction: column;
+            align-items: center;
         }
+    }
     </style>
 
     @endsection
@@ -231,29 +266,72 @@ document.addEventListener('DOMContentLoaded', function () {
     const updatePagination = (filteredLogs) => {
         const itemsPerPage = parseInt(itemsPerPageSelect.value);
         const totalPages = Math.ceil(filteredLogs.length / itemsPerPage);
-
+        
         // Clear existing page numbers
         paginationList.innerHTML = '';
 
         // Previous Button
-        paginationList.innerHTML += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-                                        <button class="page-link prev-page" aria-label="Previous">Previous</button>
-                                     </li>`;
+        paginationList.innerHTML += `
+            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                <button class="page-link prev-page" aria-label="Previous">&laquo;</button>
+            </li>`;
+
+        // Calculate visible page range
+        let startPage = Math.max(1, currentPage - 2);
+        let endPage = Math.min(totalPages, startPage + 4);
+        
+        // Adjust start if we're near the end
+        if (endPage - startPage < 4) {
+            startPage = Math.max(1, endPage - 4);
+        }
+
+        // First page and ellipsis
+        if (startPage > 1) {
+            paginationList.innerHTML += `
+                <li class="page-item">
+                    <button class="page-link page-number" data-page="1">1</button>
+                </li>`;
+            if (startPage > 2) {
+                paginationList.innerHTML += `
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>`;
+            }
+        }
 
         // Page Numbers
-        for (let i = 1; i <= totalPages; i++) {
-            paginationList.innerHTML += `<li class="page-item ${currentPage === i ? 'active' : ''}">
-                                            <button class="page-link page-number" data-page="${i}">${i}</button>
-                                          </li>`;
+        for (let i = startPage; i <= endPage; i++) {
+            paginationList.innerHTML += `
+                <li class="page-item ${currentPage === i ? 'active' : ''}">
+                    <button class="page-link page-number" data-page="${i}">${i}</button>
+                </li>`;
+        }
+
+        // Last page and ellipsis
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                paginationList.innerHTML += `
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>`;
+            }
+            paginationList.innerHTML += `
+                <li class="page-item">
+                    <button class="page-link page-number" data-page="${totalPages}">${totalPages}</button>
+                </li>`;
         }
 
         // Next Button
-        paginationList.innerHTML += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
-                                        <button class="page-link next-page" aria-label="Next">Next</button>
-                                     </li>`;
+        paginationList.innerHTML += `
+            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                <button class="page-link next-page" aria-label="Next">&raquo;</button>
+            </li>`;
 
-        document.querySelector('.showing-start').textContent = (currentPage - 1) * itemsPerPage + 1;
-        document.querySelector('.showing-end').textContent = Math.min(currentPage * itemsPerPage, filteredLogs.length);
+        // Update showing entries text
+        const start = filteredLogs.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
+        const end = Math.min(currentPage * itemsPerPage, filteredLogs.length);
+        document.querySelector('.showing-start').textContent = start;
+        document.querySelector('.showing-end').textContent = end;
         document.querySelector('.total-entries').textContent = filteredLogs.length;
     };
 
