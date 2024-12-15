@@ -44,6 +44,7 @@
 
                     <form action="{{ route('password.reset.send') }}" method="POST">
                         @csrf
+                        <input type="hidden" name="oobCode" value="{{ request()->get('oobCode') }}">
                         <div class="mb-3">
                             <label for="email" class="form-label">Email Address</label>
                             <input type="email" name="email" id="email" class="form-control" required>

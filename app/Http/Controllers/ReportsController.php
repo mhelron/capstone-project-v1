@@ -23,70 +23,98 @@ class ReportsController extends Controller
 
     public function reservation()
     {
-        $reservations = $this->database->getReference($this->reservations)->getValue();
-        $reservations = is_array($reservations) ? $reservations : [];
+        $reservations = $this->getFinishedReservations();
+        
+        // Get all the report data
+        $reportData = $this->generateReportData($reservations);
+        
+        $isExpanded = session()->get('sidebar_is_expanded', true);
+        
+        return view('admin.reports.reservation.index', array_merge(
+            ['isExpanded' => $isExpanded],
+            $reportData
+        ));
+    }
 
-        $finishedReservations = array_filter($reservations, function ($reservation) {
+    private function getFinishedReservations()
+    {
+        $reservations = $this->database->getReference($this->reservations)->getValue() ?: [];
+        
+        return array_filter($reservations, function ($reservation) {
             return isset($reservation['status']) && $reservation['status'] === 'Finished';
         });
+    }
 
-        // Initialize data arrays
-        $years = [];
-        $yearlyReservations = [];
-        $monthlyData = [];
-        $weeklyData = [];
-
-        $months = [
-            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-            'Jul', 'Aug', 'Sep', 'Octr', 'Nov', 'Dec'
+    private function generateReportData($reservations)
+    {
+        $data = [
+            'years' => [],
+            'months' => [
+                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+            ],
+            'yearlyData' => [],      // Yearly total counts
+            'monthlyTrends' => [],    // Monthly trends for each year
+            'monthlyData' => [],      // Monthly breakdown for selected year
+            'weeklyData' => [],       // Weekly breakdown for selected month
+            'dailyData' => []         // Daily breakdown for selected week
         ];
 
-        foreach ($finishedReservations as $reservation) {
-            if (isset($reservation['event_date'])) {
-                $eventDate = strtotime($reservation['event_date']);
-                $year = date('Y', $eventDate);
-                $month = date('n', $eventDate);
-                $week = ceil(date('j', $eventDate) / 7);
+        foreach ($reservations as $reservation) {
+            if (!isset($reservation['event_date'])) continue;
 
-                // Track unique years
-                if (!in_array($year, $years)) {
-                    $years[] = $year;
-                    $monthlyData[$year] = array_fill(0, 12, 0);
-                    $weeklyData[$year] = [];
-                    for ($m = 1; $m <= 12; $m++) {
-                        $weeklyData[$year][$m] = array_fill(0, 4, 0);
-                    }
-                }
+            $date = new \DateTime($reservation['event_date']);
+            $year = $date->format('Y');
+            $month = $date->format('n') - 1; // 0-11
+            $week = ceil($date->format('j') / 7);
+            $day = $date->format('j');
 
-                // Yearly data
-                if (!isset($yearlyReservations[$year])) {
-                    $yearlyReservations[$year] = 0;
-                }
-                $yearlyReservations[$year]++;
-
-                // Monthly data by year
-                $monthlyData[$year][date('n', $eventDate) - 1]++;
-
-                // Weekly data by year and month
-                if ($week >= 1 && $week <= 4) {
-                    $weeklyData[$year][$month][$week - 1]++;
+            // Track years
+            if (!in_array($year, $data['years'])) {
+                $data['years'][] = $year;
+                $data['yearlyData'][$year] = 0;
+                $data['monthlyTrends'][$year] = array_fill(0, 12, 0);
+                $data['monthlyData'][$year] = array_fill(0, 12, 0);
+                $data['weeklyData'][$year] = [];
+                $data['dailyData'][$year] = [];
+                
+                // Initialize weekly and daily data structures
+                for ($m = 0; $m < 12; $m++) {
+                    $data['weeklyData'][$year][$m] = array_fill(0, 6, 0); // Up to 6 weeks
+                    $data['dailyData'][$year][$m] = array_fill(1, 31, 0); // Days 1-31
                 }
             }
+
+            // Update counts
+            $data['yearlyData'][$year]++;
+            $data['monthlyTrends'][$year][$month]++;
+            $data['monthlyData'][$year][$month]++;
+            
+            if ($week >= 1 && $week <= 6) {
+                $data['weeklyData'][$year][$month][$week - 1]++;
+            }
+            
+            $data['dailyData'][$year][$month][$day]++;
         }
 
         // Sort years in descending order
-        rsort($years);
+        rsort($data['years']);
 
-        $isExpanded = session()->get('sidebar_is_expanded', true);
+        return $data;
+    }
 
-        return view('admin.reports.reservation.index', compact(
-            'isExpanded',
-            'years',
-            'yearlyReservations',
-            'monthlyData',
-            'weeklyData',
-            'months'
-        ));
+    public function printReservations()
+    {
+        $reservations = $this->getFinishedReservations();
+        $reportData = $this->generateReportData($reservations);
+
+        // Convert month abbreviations to full names for print view
+        $reportData['months'] = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+
+        return view('admin.reports.reservation.print', $reportData);
     }
 
     public function sales()
@@ -493,67 +521,4 @@ class ReportsController extends Controller
 
         return view('admin.reports.sales.print', compact('months', 'yearlyData'));
     }
-
-    public function printReservations()
-    {
-        // Get data from Firebase or another source
-        $reservations = $this->database->getReference($this->reservations)->getValue();
-        $reservations = is_array($reservations) ? $reservations : [];
-
-        // Filter only finished reservations
-        $finishedReservations = array_filter($reservations, function ($reservation) {
-            return isset($reservation['status']) && $reservation['status'] === 'Finished';
-        });
-
-        // Initialize data arrays
-        $yearlyReservations = [];
-        $monthlyReservations = array_fill(0, 12, 0);
-        $weeklyReservationsByMonth = []; // New structure for weekly data by month
-
-        // Initialize weekly data structure for all months
-        for ($month = 1; $month <= 12; $month++) {
-            $weeklyReservationsByMonth[$month] = array_fill(0, 4, 0);
-        }
-
-        // Initialize months array
-        $months = [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
-        ];
-
-        // Loop through the finished reservations
-        foreach ($finishedReservations as $reservation) {
-            if (isset($reservation['event_date'])) {
-                $eventDate = strtotime($reservation['event_date']);
-                $year = date('Y', $eventDate);
-                $month = date('n', $eventDate); // 1-12 format
-                $week = ceil(date('j', $eventDate) / 7);
-
-                // Yearly data
-                if (!isset($yearlyReservations[$year])) {
-                    $yearlyReservations[$year] = 0;
-                }
-                $yearlyReservations[$year]++;
-
-                // Monthly data
-                $monthlyReservations[$month - 1]++; // Convert to 0-11 for array index
-
-                // Weekly data organized by month
-                if ($week >= 1 && $week <= 4) {
-                    $weeklyReservationsByMonth[$month][$week - 1]++;
-                }
-            }
-        }
-
-        // Sort years in descending order
-        krsort($yearlyReservations);
-
-        return view('admin.reports.reservation.print', [
-            'yearlyReservations' => $yearlyReservations,
-            'monthlyReservations' => $monthlyReservations,
-            'weeklyReservationsByMonth' => $weeklyReservationsByMonth,
-            'months' => $months
-        ]);
-    }
-
 }

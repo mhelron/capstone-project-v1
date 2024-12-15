@@ -210,6 +210,8 @@ class GuestReservationController extends Controller
             'created_at' => Carbon::now()->toDateTimeString(),
             'cancellation_reason' => '',
             'cancelled_at' => '',
+            'pencil_created_at',
+            'pencil_expires_at',
             'readBy' => [],  // Initialize empty readBy object
         ];
     

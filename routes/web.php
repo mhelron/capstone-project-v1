@@ -17,6 +17,8 @@ use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\CMSController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\CustomMenuController;
+use App\Http\Controllers\QuotationController;
+use App\Http\Controllers\FoodTasteController;
 
 use App\Http\Controllers\BotmanController;
 
@@ -66,6 +68,12 @@ Route::delete('/reservation/{reservation_id}/cancel', [GuestReservationControlle
 Route::get('/edit-reserve/{reservation_id}', [GuestReservationController::class, 'edit'])->name('guest.reserve.edit');
 Route::put('/edit-reserve/{reservation_id}', [GuestReservationController::class, 'update'])->name('guest.reservation.update');
 
+//Quotation
+Route::get('/quotation', [QuotationController::class, 'index'])->name('guest.quote');
+
+//Food Taste
+Route::get('/food-taste', [FoodTasteController::class, 'index'])->name('guest.foodtaste');
+
 Route::view('/unauthorized', 'unauthorized')->name('unauthorized');
 
 // Admin Route
@@ -76,10 +84,13 @@ Route::post('login', [AuthController::class, 'login'])->name('firebase.login');
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
 // Password reset form
-Route::get('/password/reset', [PasswordResetController::class, 'showResetForm'])->name('password.reset.form');
-
+Route::get('/reset/password', [PasswordResetController::class, 'showResetForm'])->name('password.reset.form');
 // Send reset password link
-Route::post('/password/reset', [PasswordResetController::class, 'sendResetLink'])->name('password.reset.send');
+Route::post('/reset/password', [PasswordResetController::class, 'sendResetLink'])->name('password.reset.send');
+// Show the new password form (after clicking the link)
+Route::get('/reset-password', [PasswordResetController::class, 'showNewPasswordForm'])->name('password.new');
+// Confirm the password reset and update the password in Firebase
+Route::post('/reset-password', [PasswordResetController::class, 'confirmReset'])->name('password.reset.confirm');
 
 // Email Verification Routes
 Route::get('/email/verify', [EmailVerificationController::class, 'notice'])

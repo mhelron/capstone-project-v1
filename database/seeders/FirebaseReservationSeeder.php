@@ -7,6 +7,7 @@ use Kreait\Firebase\Contract\Database;
 use Faker\Factory as Faker;
 use Illuminate\Support\Facades\Log;
 use DateTime;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class FirebaseReservationSeeder extends Seeder
@@ -107,40 +108,112 @@ class FirebaseReservationSeeder extends Seeder
             [
                 'menu_name' => 'Menu A',
                 'foods' => [
-                    'Beef with Creamy Mushroom Sauce',
-                    'Chicken Cordon Bleu',
-                    'Golden Pork Hamonado',
-                    'Buttered Mixed Vegetables with Quail Eggs',
-                    'Creamy Carbonara',
-                    'Pandan Rice',
-                    'Fruit Salad',
-                    'Pine-Orange Juice'
+                    [
+                        'category' => 'Main Course (Beef)',
+                        'food' => 'Beef with Creamy Mushroom Sauce'
+                    ],
+                    [
+                        'category' => 'Main Course (Chicken)',
+                        'food' => 'Chicken Cordon Bleu'
+                    ],
+                    [
+                        'category' => 'Main Course (Pork)',
+                        'food' => 'Golden Pork Hamonado'
+                    ],
+                    [
+                        'category' => 'Side Dish',
+                        'food' => 'Buttered Mixed Vegetables with Quail Eggs'
+                    ],
+                    [
+                        'category' => 'Pasta',
+                        'food' => 'Creamy Carbonara'
+                    ],
+                    [
+                        'category' => 'Rice',
+                        'food' => 'Pandan Rice'
+                    ],
+                    [
+                        'category' => 'Dessert',
+                        'food' => 'Fruit Salad'
+                    ],
+                    [
+                        'category' => 'Drinks',
+                        'food' => 'Pine-Orange Juice'
+                    ]
                 ]
             ],
             [
                 'menu_name' => 'Menu B',
                 'foods' => [
-                    'Beef Caldereta',
-                    'Honey Glazed Chicken',
-                    'Pork Black Hawaiian',
-                    'Creamy Green Peas with Quail Eggs',
-                    'Aglio Olio Pasta',
-                    'Pandan Rice',
-                    'Buko Pandan',
-                    'Four Seasons'
+                    [
+                        'category' => 'Main Course (Beef)',
+                        'food' => 'Beef Caldereta'
+                    ],
+                    [
+                        'category' => 'Main Course (Chicken)',
+                        'food' => 'Honey Glazed Chicken'
+                    ],
+                    [
+                        'category' => 'Main Course (Pork)',
+                        'food' => 'Pork Black Hawaiian'
+                    ],
+                    [
+                        'category' => 'Vegetables',
+                        'food' => 'Creamy Green Peas with Quail Eggs'
+                    ],
+                    [
+                        'category' => 'Pasta',
+                        'food' => 'Aglio Olio Pasta'
+                    ],
+                    [
+                        'category' => 'Rice',
+                        'food' => 'Pandan Rice'
+                    ],
+                    [
+                        'category' => 'Dessert',
+                        'food' => 'Buko Pandan'
+                    ],
+                    [
+                        'category' => 'Drinks',
+                        'food' => 'Four Seasons'
+                    ]
                 ]
             ],
             [
                 'menu_name' => 'Menu C',
                 'foods' => [
-                    'Beef with Brocolli',
-                    'Creamy Chicken Pastel',
-                    'Roasted Pork Coated with Gravy Sauce',
-                    'Kare-Kare with Beef Tripe',
-                    'Cheesy Baked Macaroni',
-                    'Pandan Rice',
-                    'Leche Flan',
-                    'Red Tea Juice'
+                    [
+                        'category' => 'Main Course (Beef)',
+                        'food' => 'Beef with Brocolli'
+                    ],
+                    [
+                        'category' => 'Main Course (Chicken)',
+                        'food' => 'Creamy Chicken Pastel'
+                    ],
+                    [
+                        'category' => 'Main Course (Pork)',
+                        'food' => 'Roasted Pork Coated with Gravy Sauce'
+                    ],
+                    [
+                        'category' => 'Main Dish',
+                        'food' => 'Kare-Kare with Beef Tripe'
+                    ],
+                    [
+                        'category' => 'Pasta',
+                        'food' => 'Cheesy Baked Macaroni'
+                    ],
+                    [
+                        'category' => 'Rice',
+                        'food' => 'Pandan Rice'
+                    ],
+                    [
+                        'category' => 'Dessert',
+                        'food' => 'Leche Flan'
+                    ],
+                    [
+                        'category' => 'Drinks',
+                        'food' => 'Red Tea Juice'
+                    ]
                 ]
             ]
         ];
@@ -150,13 +223,22 @@ class FirebaseReservationSeeder extends Seeder
     {
         Log::info("Starting reference number generation");
         
-        // Generate a reference number using timestamp and random string
-        $timestamp = date('YmdHis');
-        $random = strtoupper(substr(md5(uniqid(rand(), true)), 0, 4));
-        $referenceNumber = "REF{$timestamp}{$random}";
+        do {
+            // Generate a random 12-character string with numbers and uppercase letters
+            $reference = strtoupper(Str::random(6)) . rand(100000, 999999);
+            
+            // Check if this reference number already exists in reservations
+            $existingReservation = $this->database->getReference('reservations')
+                ->orderByChild('reference_number')
+                ->equalTo($reference)
+                ->getValue();
+                
+            Log::info("Checking reference number: " . $reference);
+            
+        } while (!empty($existingReservation));
         
-        Log::info("Generated reference number: " . $referenceNumber);
-        return $referenceNumber;
+        Log::info("Generated unique reference number: " . $reference);
+        return $reference;
     }
 
     private function getRandomAddress()
@@ -218,7 +300,7 @@ public function run()
         
         Log::info("Seeding process started");
         
-        $totalReservations = 1000;
+        $totalReservations = 20;
         Log::info("Attempting to create {$totalReservations} reservations");
         
         // Current date for reference
@@ -269,6 +351,18 @@ public function run()
                 
                 $selectedMenu = $this->faker->randomElement($selectedPackage['menus']);
                 Log::info("Selected menu: " . $selectedMenu['menu_name']);
+
+                $menuContent = [];
+                foreach ($packages as $package) {
+                    if ($package['package_name'] === $selectedPackage['package_name']) {
+                        foreach ($package['menus'] as $menu) {
+                            if ($menu['menu_name'] === $selectedMenu['menu_name']) {
+                                $menuContent = $menu['foods'];
+                                break 2;
+                            }
+                        }
+                    }
+                }
                 
                 // Set status based on event date
                 if ($eventDate < $currentDate) {
@@ -281,10 +375,7 @@ public function run()
                 Log::info("Selected status: " . $status);
                 
                 // Generate reference number
-                $timestamp = date('YmdHis');
-                $random = strtoupper(substr(md5(uniqid(rand(), true)), 0, 4));
-                $reference_number = "REF{$timestamp}{$random}";
-                Log::info("Generated reference number: " . $reference_number);
+                $reference_number = $this->generateUniqueReferenceNumber();
                 
                 $address = $this->getRandomAddress();
                 Log::info("Got address for: " . $address['city']);
@@ -323,7 +414,7 @@ public function run()
                     'package_name' => $selectedPackage['package_name'],
                     'event_title' => $this->faker->randomElement(['Birthday', 'Wedding', 'Debut', 'Corporate Event']),
                     'menu_name' => $selectedMenu['menu_name'],
-                    'menu_content' => $selectedMenu['foods'],
+                    'menu_content' => $menuContent,
                     'guests_number' => $guestsNumber,
                     'sponsors' => $sponsors,
                     'event_date' => $eventDate->format('Y-m-d'),

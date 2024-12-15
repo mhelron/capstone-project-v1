@@ -34,8 +34,10 @@ use Illuminate\Support\Facades\Storage;
             <p>{!! $content['subtext'] !!}</p>
             
             <div class="d-flex mt-4 mb-4">
-                <a href="{{route('guest.reserve')}}" class="btn btn-darkorange me-3">Reserve</a>
-                <a href="{{route('guest.check')}}" class="btn btn-darkorange">View Status</a>
+                <a href="{{route('guest.reserve')}}" class="btn btn-darkorange me-2">Reserve</a>
+                <a href="{{route('guest.check')}}" class="btn btn-darkorange me-2">View Status</a>
+                <a href="{{route('guest.quote')}}" class="btn btn-darkorange me-2">Quote</a>
+                <a href="{{route('guest.foodtaste')}}" class="btn btn-darkorange">Food Taste</a>
             </div>
         </div>
 
