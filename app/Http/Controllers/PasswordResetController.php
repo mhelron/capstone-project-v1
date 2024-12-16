@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Kreait\Firebase\Contract\Auth as FirebaseAuth;
+use Kreait\Firebase\Contract\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
@@ -11,7 +11,7 @@ class PasswordResetController extends Controller
 {
     protected $auth;
 
-    public function __construct(FirebaseAuth $auth)
+    public function __construct(Auth $auth)
     {
         $this->auth = $auth;
     }
@@ -28,18 +28,33 @@ class PasswordResetController extends Controller
         $request->validate(['email' => 'required|email']);
 
         try {
+            // First check if user exists
+            try {
+                $user = $this->auth->getUserByEmail($request->email);
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'No account found with this email address.');
+            }
+
             $actionCodeSettings = [
-                'url' => route('password.new'), // The URL to redirect to after clicking the link
+                'continueUrl' => route('password.new'),
                 'handleCodeInApp' => true
             ];
-
-            $this->auth->sendPasswordResetLink($request->email, $actionCodeSettings);
             
-            Log::info('Activity Log', ['user' => $request->email, 'action' => 'Requested a password reset.']);
+            // Get the password reset link
+            $link = $this->auth->getPasswordResetLink($request->email, $actionCodeSettings);
+            
+            // Log the success
+            Log::info('Activity Log', [
+                'user' => $request->email, 
+                'action' => 'Password reset link generated.',
+                'link' => $link
+            ]);
+
+            // Firebase will automatically send the email with the link
             return redirect()->back()->with('status', 'Password reset email sent! Check your inbox.');
         } catch (\Exception $e) {
-            Log::error('Error sending password reset email: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed to send password reset email.');
+            Log::error('Firebase Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to send password reset email: ' . $e->getMessage());
         }
     }
 
