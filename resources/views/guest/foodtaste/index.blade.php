@@ -26,7 +26,7 @@
                         <p class="text-muted small">Enter your reference number to view your food tasting details</p>
                     </div>
 
-                    <form method="POST" action="/check-status">
+                    <form method="POST" action="{{ route('guest.check.submit') }}">
                         @csrf
                         <div class="row justify-content-center">
                             <div class="col-md-6">
@@ -58,248 +58,88 @@
                 </div>
             </div>
 
-            <!-- Reservation Details -->
+            <!-- Food Tasting Details -->
             @if(isset($foodtaste))
-            <div class="card shadow-sm">
-                <div class="card-body p-4">
-                    <h3 class="fw-bold mb-4">Reservation Details</h3>
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <h3 class="fw-bold mb-4">Food Tasting Details</h3>
 
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <tbody>
-                                <!-- Basic Info -->
-                                <tr>
-                                    <th colspan="2" class="table-light">Personal Information</th>
-                                </tr>
-                                <tr>
-                                    <th width="30%">Reference Number</th>
-                                    <td>{{ $reservation['reference_number'] }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Status</th>
-                                    <td><span class="badge status-badge {{ strtolower($reservation['status']) }}">{{ $reservation['status'] }}</span></td>
-                                </tr>
-                                <tr>
-                                    <th>Created At</th>
-                                    <td>{{ \Carbon\Carbon::parse($reservation['created_at'])->format('M d, Y h:i A') }}</td>
-                                </tr>
-                                
-                                <!-- Personal Information -->
-                                <tr>
-                                    <th colspan="2" class="table-light">Personal Information</th>
-                                </tr>
-                                <tr>
-                                    <th>Name</th>
-                                    <td>{{ $reservation['first_name'] }} {{ $reservation['last_name'] }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Email</th>
-                                    <td>{{ $reservation['email'] }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Phone</th>
-                                    <td>{{ $reservation['phone'] }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Address</th>
-                                    <td>{{ $reservation['street_houseno'] }}, {{ $reservation['barangay'] }}, {{ $reservation['city'] }}, {{ $reservation['province'] }}, {{ $reservation['region'] }}</td>
-                                </tr>
-                                
-                                <!-- Event Details -->
-                                <tr>
-                                    <th colspan="2" class="table-light">Event Details</th>
-                                </tr>
-                                <tr>
-                                    <th>Event Title</th>
-                                    <td>{{ $reservation['event_title'] }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Date</th>
-                                    <td>{{ $reservation['event_date'] }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Time</th>
-                                    <td>{{ $reservation['event_time'] }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Venue</th>
-                                    <td>{{ $reservation['venue'] }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Theme</th>
-                                    <td>{{ $reservation['theme'] }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Number of Guests</th>
-                                    <td>{{ $reservation['guests_number'] }}</td>
-                                </tr>
-                                
-                                <!-- Package and Menu Details -->
-                                <tr>
-                                    <th colspan="2" class="table-light">Package and Menu Details</th>
-                                </tr>
-                                <tr>
-                                    <th>Package</th>
-                                    <td>{{ $reservation['package_name'] }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Menu</th>
-                                    <td>{{ $reservation['menu_name'] }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Menu Content:</th>
-                                    <td>
-                                        @if(isset($reservation['menu_content']) && count($reservation['menu_content']) > 0)
-                                            <table class="table table-sm table-borderless mb-0">
-                                                @foreach ($reservation['menu_content'] as $item)
-                                                    <tr>
-                                                        <td><strong>{{ $item['category'] }}:</strong></td>
-                                                        <td>{{ $item['food'] }}</td>
-                                                    </tr>
-                                                @endforeach
-                                            </table>
-                                        @else
-                                            <p>No menu content available.</p>
-                                        @endif
-                                    </td>
-                                </tr>
-                                
-                                <!-- Additional Requests -->
-                                <tr>
-                                    <th colspan="2" class="table-light">Additional Requests</th>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">{{ $reservation->other_requests ?? 'No Request' }}</td>
-                                </tr>
-
-                                
-                                <!-- Payment Information -->
-                                <tr>
-                                    <th colspan="2" class="table-light">Payment Information</th>
-                                </tr>
-                                <tr>
-                                    <th>Reservation Fee</th>
-                                    <td>₱5,000.00</td>
-                                </tr>
-                                <tr>
-                                    <th>Payment Status of Reservation Fee</th>
-                                    <td>
-                                    <span class="badge 
-                                        {{ 
-                                            $reservation['payment_status'] === 'Paid' ? 'bg-success' : 
-                                            ($reservation['payment_status'] === 'Pending' ? 'bg-warning' : 'bg-danger') 
-                                        }}">
-                                        {{ $reservation['payment_status'] }}
-                                    </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Payment Date of Reservation Fee</th>
-                                    <td>{{ $reservation['payment_submitted_at'] ? \Carbon\Carbon::parse($reservation['payment_submitted_at'])->format('M d, Y h:i A') : 'None' }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Reservation Price</th>
-                                    <td>₱{{ number_format($reservation['total_price'], 2) }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="d-flex gap-2 justify-content-center mt-4">
-                        @php
-                            $pencilExpiresAt = new DateTime($reservation['pencil_expires_at']);
-                            $now = new DateTime();
-                            $interval = $now->diff($pencilExpiresAt);
-                            $daysUntilExpiration = $interval->days + ($interval->h / 24) + ($interval->i / 1440);
-                            $isWithinThreeDays = $daysUntilExpiration <= 3;
-                        @endphp
-
-                        @if(!in_array($reservation['status'], ['Cancelled', 'Finished']))
-                            @if($reservation['payment_status'] !== 'Paid' && $reservation['payment_status'] !== 'Pending')
-                                <a href="{{ route('guest.payment', ['reservation_id' => $reservation['reservation_id']]) }}" 
-                                    class="btn btn-success">
-                                    Make Payment
-                                </a>
-                            @endif
-
-                            @if(in_array($reservation['status'], ['Pencil', 'Pending', 'Confirmed']))
-                                <a href="{{ route('guest.reserve.edit', ['reservation_id' => $reservation['reservation_id']]) }}" 
-                                    class="btn btn-primary {{ $isWithinThreeDays ? 'disabled' : '' }}"
-                                    @if($isWithinThreeDays) 
-                                        title="Editing is disabled within 3 days of pencil booking expiration"
-                                        onclick="return false;"
-                                    @endif>
-                                    Edit Details
-                                </a>
-                            @endif
-
-                            @if(in_array($reservation['status'], ['Pencil', 'Pending', 'Confirmed']))
-                                <form action="{{ route('reservation.cancel', ['reservation_id' => $reservation['reservation_id']]) }}" 
-                                    method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" 
-                                        class="btn btn-danger {{ $isWithinThreeDays ? 'disabled' : '' }}"
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#cancelModal"
-                                        @if($isWithinThreeDays) 
-                                            title="Cancellation is disabled within 3 days of pencil booking expiration"
-                                            onclick="return false;"
-                                        @endif>
-                                        Cancel Reservation
-                                    </button>
-                                </form>
-                            @endif
-                        @endif
-                    </div>
-                </div>
-            </div>
-
-            <!-- Cancel Confirmation Modal -->
-            <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="cancelModalLabel">Confirm Cancellation</h5>
-                        </div>
-                        <form action="{{ route('reservation.cancel', ['reservation_id' => $reservation['reservation_id']]) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <div class="modal-body">
-                                <p>Are you sure you want to cancel this reservation? This action cannot be undone.</p>
-                                
-                                <div class="mb-3">
-                                    <label for="cancellation_reason" class="form-label">Reason for Cancellation</label>
-                                    <select class="form-select mb-3" id="cancellation_reason" name="cancellation_reason" required>
-                                        <option value="" disabled selected>Select a reason...</option>
-                                        <option value="Change in Event Plans">Change in Event Plans</option>
-                                        <option value="Budget Issues">Budget Issues</option>
-                                        <option value="Found Another Caterer">Found Another Caterer</option>
-                                        <option value="Event Postponed">Event Postponed</option>
-                                        <option value="other">Other (Please specify)</option>
-                                    </select>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <!-- Basic Info -->
+                                    <tr>
+                                        <th colspan="2" class="table-light">Reference Information</th>
+                                    </tr>
+                                    <tr>
+                                        <th width="30%">Reference Number</th>
+                                        <td>{{ $foodtaste['reference_number'] }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Status</th>
+                                        <td><span class="badge status-badge {{ strtolower($foodtaste['status']) }}">{{ $foodtaste['status'] }}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Created At</th>
+                                        <td>{{ \Carbon\Carbon::parse($foodtaste['created_at'])->format('M d, Y h:i A') }}</td>
+                                    </tr>
                                     
-                                    <!-- Other reason textarea - hidden by default -->
-                                    <div id="otherReasonDiv" style="display: none;">
-                                        <textarea 
-                                            class="form-control" 
-                                            id="other_reason" 
-                                            name="other_reason" 
-                                            rows="3" 
-                                            placeholder="Please specify your reason..."></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-danger">Confirm Cancellation</button>
-                            </div>
-                        </form>
+                                    <!-- Personal Information -->
+                                    <tr>
+                                        <th colspan="2" class="table-light">Personal Information</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Name</th>
+                                        <td>{{ $foodtaste['firstname'] }} {{ $foodtaste['lastname'] }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Email</th>
+                                        <td>{{ $foodtaste['email'] }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Phone</th>
+                                        <td>{{ $foodtaste['phone'] }}</td>
+                                    </tr>
+
+                                    <!-- Delivery Information -->
+                                    <tr>
+                                        <th colspan="2" class="table-light">Delivery Information</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Delivery Option</th>
+                                        <td>{{ ucfirst($foodtaste['delivery_option']) }}</td>
+                                    </tr>
+                                    @if($foodtaste['delivery_option'] === 'delivery')
+                                    <tr>
+                                        <th>Delivery Address</th>
+                                        <td>
+                                            {{ $foodtaste['street_houseno'] }}, 
+                                            {{ $foodtaste['barangay'] }}, 
+                                            {{ $foodtaste['city'] }}, 
+                                            {{ $foodtaste['province'] }}, 
+                                            {{ $foodtaste['region'] }}
+                                        </td>
+                                    </tr>
+                                    @endif
+
+                                    <!-- Schedule Information -->
+                                    <tr>
+                                        <th colspan="2" class="table-light">Schedule Information</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Preferred Date</th>
+                                        <td>{{ \Carbon\Carbon::parse($foodtaste['preferred_date'])->format('M d, Y') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Preferred Time</th>
+                                        <td>{{ $foodtaste['preferred_time'] }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
-            @endif
+                @endif
         </div>
     </div>
 </div>

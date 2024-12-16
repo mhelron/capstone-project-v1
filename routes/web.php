@@ -72,8 +72,10 @@ Route::put('/edit-reserve/{reservation_id}', [GuestReservationController::class,
 Route::get('/quotation', [QuotationController::class, 'index'])->name('guest.quote');
 
 //Food Taste
-Route::get('/food-taste', [FoodTasteController::class, 'index'])->name('guest.foodtaste');
+Route::get('/food-taste', [FoodTasteController::class, 'index'])->name('guest.foodtaste.index');
 Route::get('/food-taste/create', [FoodTasteController::class, 'create'])->name('guest.foodtaste.create');
+Route::post('/food-taste', [FoodTasteController::class, 'store'])->name('guest.foodtaste.store');
+Route::post('/food-taste/view', [FoodTasteController::class, 'checkStatus'])->name('guest.check.submit');
 
 Route::view('/unauthorized', 'unauthorized')->name('unauthorized');
 

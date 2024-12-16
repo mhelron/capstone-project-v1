@@ -5,225 +5,259 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 <div class="container mt-5" style="padding-top: 50px;">
-    <div class="card custom-card">
-        <div class="card-body">
-            <h2 class="mb-4 fw-bold">Food Tasting Form</h2>
-            
-            <div class="mb-4">
-                <p>Experience the quality and taste of our dishes before booking your event. Our Food Tasting
-                service allows you to sample a selection of menu items prepared for the day. Please note
-                that personalized requests for specific dishes are not available, as the tasting menu is
-                based on the items scheduled for that day.</p>
+    <div class="row">
+        <div class="col-lg-8 ">
+            <div class="card custom-card">
+                <div class="card-body">
+                    <h2 class="mb-4 fw-bold">Food Tasting Form</h2>
+                    
+                    <div class="mb-4">
+                        <p>Experience the quality and taste of our dishes before booking your event. Our Food Tasting
+                        service allows you to sample a selection of menu items prepared for the day. Please note
+                        that personalized requests for specific dishes are not available, as the tasting menu is
+                        based on the items scheduled for that day.</p>
 
-                <h5 class="text-darkorange mt-4 mb-3 fw-bold">How It Works:</h5>
-                <ol class="mb-4">
-                    <li>Request a Tasting – Schedule a tasting appointment by filling out this form or contacting us directly.</li>
-                    <li>Choose Your Option – Select between pick-up or delivery via Lalamove.</li>
-                    <li>Taste the Experience – Receive a curated selection of menu items available on the chosen date.</li>
-                </ol>
+                        <h5 class="text-darkorange mt-4 mb-3 fw-bold">How It Works:</h5>
+                        <ol class="mb-4">
+                            <li>Request a Tasting – Schedule a tasting appointment by filling out this form or contacting us directly.</li>
+                            <li>Choose Your Option – Select between pick-up or delivery via Lalamove.</li>
+                            <li>Taste the Experience – Receive a curated selection of menu items available on the chosen date.</li>
+                        </ol>
+                    </div>
+
+                    @if(session('success'))
+                        <div class="alert alert-success alert-dismissible fade show">
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+
+                    @if(session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            {{ session('error') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+
+                    <form action="{{route('guest.foodtaste.store')}}" method="POST" id="tastingForm">
+                        @csrf
+                        
+                        <div class="row">
+                            <div class="form-group col-md-6 mb-3">
+                                <label class="form-label">Firstname: <span class="text-danger">*</span></label>
+                                <input type="text" name="firstname" class="form-control custom-select @error('firstname') is-invalid @enderror" 
+                                    value="{{ old('firstname') }}" required>
+                                @error('firstname')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-6 mb-3">
+                                <label class="form-label">Lastname: <span class="text-danger">*</span></label>
+                                <input type="text" name="lastname" class="form-control custom-select @error('lastname') is-invalid @enderror" 
+                                    value="{{ old('client_name') }}" required>
+                                @error('lastname')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-md-6 mb-3">
+                                <label class="form-label">Email Address <span class="text-danger">*</span></label>
+                                <input type="email" name="email" class="form-control custom-select @error('email') is-invalid @enderror" 
+                                    value="{{ old('email') }}" required>
+                                @error('email')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="form-group col-md-6 mb-3">
+                                <label class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                <input type="tel" name="phone" class="form-control custom-select @error('phone') is-invalid @enderror" 
+                                    value="{{ old('phone') }}" required>
+                                @error('phone')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Pickup or Delivery? <span class="text-danger">*</span></label>
+                            <div class="d-flex gap-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="delivery_option" id="pickup" value="pickup" 
+                                        {{ old('delivery_option') == 'pickup' ? 'checked' : '' }} required>
+                                    <label for="pickup">Pickup</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="delivery_option" id="delivery" value="delivery" 
+                                        {{ old('delivery_option') == 'delivery' ? 'checked' : '' }}>
+                                    <label for="delivery">Delivery</label>
+                                </div>
+                            </div>
+                            @error('delivery_option')
+                                <div class="text-danger small">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="row">
+                            <!-- Region Dropdown -->
+                            <div class="form-group col-md-4 mb-3">
+                                <label for="region" class="form-label">Region</label>
+                                <select name="region" id="region" class="form-control custom-select">
+                                    <option value="" disabled selected>Select a Region</option>
+                                    @foreach ($addressData as $region)
+                                        <option value="{{ $region['id'] }}" {{ old('region') == $region['id'] ? 'selected' : '' }}>
+                                            {{ $region['name'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('region'))
+                                    <small class="text-danger">{{ $errors->first('region') }}</small>
+                                @endif
+                            </div>
+
+                            <!-- Province Dropdown -->
+                            <div class="form-group col-md-4 mb-3">
+                                <label for="province" class="form-label">Province</label>
+                                <select name="province" id="province" class="form-control custom-select" disabled>
+                                    <option value="">Select a Province</option>
+                                    @if(old('province'))
+                                        <option value="{{ old('province') }}" selected>{{ old('province') }}</option>
+                                    @endif
+                                </select>
+                                @if ($errors->has('province') && !is_null(old('region')))
+                                    <small class="text-danger">{{ $errors->first('province') }}</small>
+                                @endif
+                            </div>
+
+                            <!-- City Dropdown -->
+                            <div class="form-group col-md-4 mb-3">
+                                <label for="city" class="form-label">City</label>
+                                <select name="city" id="city" class="form-control custom-select" disabled>
+                                    <option value="">Select a City</option>
+                                    @if(old('city'))
+                                        <option value="{{ old('city') }}" selected>{{ old('city') }}</option>
+                                    @endif
+                                </select>
+                                @if ($errors->has('city') && !is_null(old('province')))
+                                    <small class="text-danger">{{ $errors->first('city') }}</small>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Barangay Dropdown -->
+                            <div class="form-group col-md-4 mb-3">
+                                <label for="barangay" class="form-label">Barangay</label>
+                                <select name="barangay" id="barangay" class="form-control custom-select" disabled>
+                                    <option value="">Select a Barangay</option>
+                                    @if(old('barangay'))
+                                        <option value="{{ old('barangay') }}" selected>{{ old('barangay') }}</option>
+                                    @endif
+                                </select>
+                                @if ($errors->has('barangay') && !is_null(old('city')))
+                                    <small class="text-danger">{{ $errors->first('barangay') }}</small>
+                                @endif
+                            </div>
+
+                            <!-- Street, Building, House Number -->
+                            <div class="form-group col-md-8 mb-3">
+                                <label class="form-label text-center">House Number, Building, Street<span class="text-danger"> *</span></label>
+                                <input type="text" name="street_houseno" value="{{ old('street_houseno') }}" class="form-control custom-select" style="text-transform: uppercase;">
+                                @if ($errors->has('street_houseno'))
+                                    <small class="text-danger">{{ $errors->first('street_houseno') }}</small>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-md-6 mb-3">
+                                <label class="form-label">Preferred Time for Pick-Up/Delivery <span class="text-danger">*</span></label>
+                                <input type="text" name="preferred_time" id="timePicker" class="form-control custom-select @error('preferred_time') is-invalid @enderror" 
+                                    value="{{ old('preferred_time') }}" required placeholder="Select time">
+                                @error('preferred_time')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="form-group col-md-6 mb-3">
+                                <label class="form-label">Preferred Date for Food Tasting <span class="text-danger">*</span></label>
+                                <input type="text" name="preferred_date" id="datePicker" class="form-control custom-select @error('preferred_date') is-invalid @enderror" 
+                                    value="{{ old('preferred_date') }}" required placeholder="Select date">
+                                @error('preferred_date')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" name="understanding" id="understanding" required 
+                                    {{ old('understanding') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="understanding">
+                                    I understand that food tasting is subject to menu availability and specific dish requests are not allowed.
+                                </label>
+                                @error('understanding')
+                                    <div class="text-danger small">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="agreement" id="agreement" required 
+                                    {{ old('agreement') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="agreement">
+                                    I agree to the terms and conditions of the Food Tasting service.
+                                </label>
+                                @error('agreement')
+                                    <div class="text-danger small">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="mt-4 d-flex justify-content-end gap-2">
+                            <a href="{{ route('guest.home')}}" class="btn btn-secondary" id="cancelBtn">
+                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                <span class="btn-text">Cancel</span>
+                            </a>
+                            <button type="submit" class="btn btn-darkorange" id="submitBtn">
+                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                <span class="btn-text">Submit</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card custom-card">
+                <div class="card-body">
+                    <h3 class="text-darkorange mb-3">Availabe Food for Tasting</h3>
 
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <!-- Loop through the formatted reservations grouped by event date -->
+                    @if($formattedReservations)
+                        @foreach($formattedReservations as $eventDate => $reservations)
+                            <h5><strong>{{ $eventDate }}</strong></h5>
+                            
+                            <!-- Loop through the reservations for the same event date -->
+                            <ul>
+                                @foreach($reservations as $reservation)
+                                    <li>
+                                        <strong>Menu:</strong> {{ $reservation['menu_name'] }}
+                                        <ul>
+                                            @foreach($reservation['foods'] as $food)
+                                                <li><strong>{{ $food['category'] }}:</strong> {{ $food['food'] }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endforeach
+                    @else
+                        <p>No confirmed reservations found.</p>
+                    @endif
                 </div>
-            @endif
-
-            @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show">
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            <form action="#" method="POST" id="tastingForm">
-                @csrf
-                
-                <div class="row">
-                    <div class="form-group col-md-6 mb-3">
-                        <label class="form-label">Firstname: <span class="text-danger">*</span></label>
-                        <input type="text" name="firstname" class="form-control custom-select @error('firstname') is-invalid @enderror" 
-                            value="{{ old('firstname') }}" required>
-                        @error('firstname')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="form-group col-md-6 mb-3">
-                        <label class="form-label">Lastname: <span class="text-danger">*</span></label>
-                        <input type="text" name="lastname" class="form-control custom-select @error('lastname') is-invalid @enderror" 
-                            value="{{ old('client_name') }}" required>
-                        @error('lastname')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group col-md-6 mb-3">
-                        <label class="form-label">Email Address <span class="text-danger">*</span></label>
-                        <input type="email" name="email" class="form-control custom-select @error('email') is-invalid @enderror" 
-                            value="{{ old('email') }}" required>
-                        @error('email')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group col-md-6 mb-3">
-                        <label class="form-label">Phone Number <span class="text-danger">*</span></label>
-                        <input type="tel" name="phone" class="form-control custom-select @error('phone') is-invalid @enderror" 
-                            value="{{ old('phone') }}" required>
-                        @error('phone')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label">Pickup or Delivery? <span class="text-danger">*</span></label>
-                    <div class="d-flex gap-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="delivery_option" id="pickup" value="pickup" 
-                                {{ old('delivery_option') == 'pickup' ? 'checked' : '' }} required>
-                            <label for="pickup">Pickup</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="delivery_option" id="delivery" value="delivery" 
-                                {{ old('delivery_option') == 'delivery' ? 'checked' : '' }}>
-                            <label for="delivery">Delivery</label>
-                        </div>
-                    </div>
-                    @error('delivery_option')
-                        <div class="text-danger small">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="row">
-                    <!-- Region Dropdown -->
-                    <div class="form-group col-md-4 mb-3">
-                        <label for="region" class="form-label">Region</label>
-                        <select name="region" id="region" class="form-control custom-select">
-                            <option value="" disabled selected>Select a Region</option>
-                            @foreach ($addressData as $region)
-                                <option value="{{ $region['id'] }}" {{ old('region') == $region['id'] ? 'selected' : '' }}>
-                                    {{ $region['name'] }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @if ($errors->has('region'))
-                            <small class="text-danger">{{ $errors->first('region') }}</small>
-                        @endif
-                    </div>
-
-                    <!-- Province Dropdown -->
-                    <div class="form-group col-md-4 mb-3">
-                        <label for="province" class="form-label">Province</label>
-                        <select name="province" id="province" class="form-control custom-select" disabled>
-                            <option value="">Select a Province</option>
-                            @if(old('province'))
-                                <option value="{{ old('province') }}" selected>{{ old('province') }}</option>
-                            @endif
-                        </select>
-                        @if ($errors->has('province') && !is_null(old('region')))
-                            <small class="text-danger">{{ $errors->first('province') }}</small>
-                        @endif
-                    </div>
-
-                    <!-- City Dropdown -->
-                    <div class="form-group col-md-4 mb-3">
-                        <label for="city" class="form-label">City</label>
-                        <select name="city" id="city" class="form-control custom-select" disabled>
-                            <option value="">Select a City</option>
-                            @if(old('city'))
-                                <option value="{{ old('city') }}" selected>{{ old('city') }}</option>
-                            @endif
-                        </select>
-                        @if ($errors->has('city') && !is_null(old('province')))
-                            <small class="text-danger">{{ $errors->first('city') }}</small>
-                        @endif
-                    </div>
-                </div>
-
-                <div class="row">
-                    <!-- Barangay Dropdown -->
-                    <div class="form-group col-md-4 mb-3">
-                        <label for="barangay" class="form-label">Barangay</label>
-                        <select name="barangay" id="barangay" class="form-control custom-select" disabled>
-                            <option value="">Select a Barangay</option>
-                            @if(old('barangay'))
-                                <option value="{{ old('barangay') }}" selected>{{ old('barangay') }}</option>
-                            @endif
-                        </select>
-                        @if ($errors->has('barangay') && !is_null(old('city')))
-                            <small class="text-danger">{{ $errors->first('barangay') }}</small>
-                        @endif
-                    </div>
-
-                    <!-- Street, Building, House Number -->
-                    <div class="form-group col-md-8 mb-3">
-                        <label class="form-label text-center">House Number, Building, Street<span class="text-danger"> *</span></label>
-                        <input type="text" name="street_houseno" value="{{ old('street_houseno') }}" class="form-control custom-select" style="text-transform: uppercase;">
-                        @if ($errors->has('street_houseno'))
-                            <small class="text-danger">{{ $errors->first('street_houseno') }}</small>
-                        @endif
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group col-md-6 mb-3">
-                        <label class="form-label">Preferred Time for Pick-Up/Delivery <span class="text-danger">*</span></label>
-                        <input type="text" name="preferred_time" id="timePicker" class="form-control custom-select @error('preferred_time') is-invalid @enderror" 
-                            value="{{ old('preferred_time') }}" required placeholder="Select time">
-                        @error('preferred_time')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group col-md-6 mb-3">
-                        <label class="form-label">Preferred Date for Food Tasting <span class="text-danger">*</span></label>
-                        <input type="text" name="preferred_date" id="datePicker" class="form-control custom-select @error('preferred_date') is-invalid @enderror" 
-                            value="{{ old('preferred_date') }}" required placeholder="Select date">
-                        @error('preferred_date')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" name="understanding" id="understanding" required 
-                               {{ old('understanding') ? 'checked' : '' }}>
-                        <label class="form-check-label" for="understanding">
-                            I understand that food tasting is subject to menu availability and specific dish requests are not allowed.
-                        </label>
-                        @error('understanding')
-                            <div class="text-danger small">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="agreement" id="agreement" required 
-                               {{ old('agreement') ? 'checked' : '' }}>
-                        <label class="form-check-label" for="agreement">
-                            I agree to the terms and conditions of the Food Tasting service.
-                        </label>
-                        @error('agreement')
-                            <div class="text-danger small">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="mt-4 d-flex justify-content-end gap-2">
-                    <a href="{{ route('guest.home')}}" class="btn btn-secondary" id="cancelBtn">
-                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                        <span class="btn-text">Cancel</span>
-                    </a>
-                    <button type="submit" class="btn btn-darkorange" id="submitBtn">
-                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                        <span class="btn-text">Submit</span>
-                    </button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
@@ -352,9 +386,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const cancelBtn = document.getElementById('cancelBtn');
     const understandingCheckbox = document.getElementById('understanding');
     const agreementCheckbox = document.getElementById('agreement');
-    const deliveryAddress = document.querySelector('textarea[name="delivery_address"]');
     const pickupRadio = document.getElementById('pickup');
     const deliveryRadio = document.getElementById('delivery');
+    
+    // Get address fields
+    const regionSelect = document.getElementById('region');
+    const provinceSelect = document.getElementById('province');
+    const citySelect = document.getElementById('city');
+    const barangaySelect = document.getElementById('barangay');
+    const streetInput = document.querySelector('input[name="street_houseno"]');
     let isSubmitting = false;
 
     // Initialize date picker
@@ -382,29 +422,44 @@ document.addEventListener('DOMContentLoaded', function() {
         submitBtn.disabled = !(understandingCheckbox.checked && agreementCheckbox.checked);
     }
 
-    // Add event listeners to checkboxes
-    understandingCheckbox.addEventListener('change', updateSubmitButton);
-    agreementCheckbox.addEventListener('change', updateSubmitButton);
+    // Function to toggle address fields
+    function toggleAddressFields() {
+        const isDelivery = deliveryRadio.checked;
+        
+        // Toggle region and street address
+        regionSelect.disabled = !isDelivery;
+        streetInput.disabled = !isDelivery;
 
-    // Call initially to set initial state
-    updateSubmitButton();
-
-    // Function to toggle the delivery address field based on selection
-    function toggleDeliveryAddress() {
-        if (pickupRadio.checked) {
-            deliveryAddress.disabled = true;
-            deliveryAddress.value = ''; // Clear the delivery address when disabled
-        } else if (deliveryRadio.checked) {
-            deliveryAddress.disabled = false;
+        if (!isDelivery) {
+            // Clear fields when switching to pickup
+            regionSelect.value = '';
+            provinceSelect.value = '';
+            citySelect.value = '';
+            barangaySelect.value = '';
+            streetInput.value = '';
+            
+            // Disable dependent fields
+            provinceSelect.disabled = true;
+            citySelect.disabled = true;
+            barangaySelect.disabled = true;
         }
     }
 
-    // Disable delivery address field by default (for the Pickup option)
-    deliveryAddress.disabled = true;
+    // Set initial state of address fields
+    regionSelect.disabled = true;
+    streetInput.disabled = true;
+    provinceSelect.disabled = true;
+    citySelect.disabled = true;
+    barangaySelect.disabled = true;
 
-    // Event listeners for delivery options
-    pickupRadio.addEventListener('change', toggleDeliveryAddress);
-    deliveryRadio.addEventListener('change', toggleDeliveryAddress);
+    // Add event listeners
+    understandingCheckbox.addEventListener('change', updateSubmitButton);
+    agreementCheckbox.addEventListener('change', updateSubmitButton);
+    pickupRadio.addEventListener('change', toggleAddressFields);
+    deliveryRadio.addEventListener('change', toggleAddressFields);
+
+    // Call initially to set initial state
+    updateSubmitButton();
 
     // Form submission handling
     form.addEventListener('submit', function(e) {

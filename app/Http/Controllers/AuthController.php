@@ -105,7 +105,7 @@ class AuthController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Login error: ' . $e->getMessage());
-            return redirect()->back()->with(['status' => 'Authentication failed. Please try again.']);
+            return redirect()->back()->with(['error' => 'Authentication failed. Please try again.']);
         }
     }
 
@@ -117,10 +117,10 @@ class AuthController extends Controller
 
         try {
             $this->auth->sendEmailVerificationLink($request->email);
-            return redirect()->back()->with('status', 'Verification email has been resent.');
+            return redirect()->back()->with('error', 'Verification email has been resent.');
         } catch (\Exception $e) {
             Log::error('Email verification error: ' . $e->getMessage());
-            return redirect()->back()->with('status', 'Failed to send verification email. Please try again.');
+            return redirect()->back()->with('error', 'Failed to send verification email. Please try again.');
         }
     }
 
@@ -136,7 +136,7 @@ class AuthController extends Controller
             case 'Staff':
                 return redirect('/admin/dashboard')->with('status', 'Logged In as ' . session('fname') . ' (Staff)');
             default:
-                return redirect('login')->with('status', 'Invalid User Role');
+                return redirect('login')->with('error', 'Invalid User Role');
         }
     }
 
