@@ -71,7 +71,7 @@
 
                             <div class="row">
                                 <!-- Region Dropdown -->
-                                <div class="form-group col-md-6 mb-3">
+                                <div class="col-md-6 mb-3 text-start">
                                     <label for="region">Region</label>
                                     <select name="region" id="region" class="form-control">
                                         <option value="" disabled selected>Select a Region</option>

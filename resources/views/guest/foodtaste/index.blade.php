@@ -1,324 +1,370 @@
 @extends('layouts.guestlayout')
 
 @section('content')
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
-<div class="container mt-5" style="padding-top: 50px;">
-    <div class="card custom-card">
-        <div class="card-body">
-            <h2 class="mb-4">Food Tasting Form</h2>
-            
-            <div class="mb-4">
-                <p>Experience the quality and taste of our dishes before booking your event. Our Food Tasting
-                service allows you to sample a selection of menu items prepared for the day. Please note
-                that personalized requests for specific dishes are not available, as the tasting menu is
-                based on the items scheduled for that day.</p>
-
-                <h5 class="text-darkorange mt-4 mb-3">How It Works:</h5>
-                <ol class="mb-4">
-                    <li>Request a Tasting – Schedule a tasting appointment by filling out this form or contacting us directly.</li>
-                    <li>Choose Your Option – Select between pick-up or delivery via Lalamove.</li>
-                    <li>Taste the Experience – Receive a curated selection of menu items available on the chosen date.</li>
-                </ol>
+<div class="content-header" style="padding-top: 80px;">
+    <div class="container">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0"></h1>
             </div>
-
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show">
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            <form action="#" method="POST" id="tastingForm">
-                @csrf
-                
-                <div class="mb-4">
-                    <label class="form-label text-darkorange">Client's Name <span class="text-danger">*</span></label>
-                    <input type="text" name="client_name" class="form-control custom-select @error('client_name') is-invalid @enderror" 
-                           value="{{ old('client_name') }}" required>
-                    @error('client_name')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label text-darkorange">Email Address <span class="text-danger">*</span></label>
-                    <input type="email" name="email" class="form-control custom-select @error('email') is-invalid @enderror" 
-                           value="{{ old('email') }}" required>
-                    @error('email')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label text-darkorange">Phone Number <span class="text-danger">*</span></label>
-                    <input type="tel" name="phone" class="form-control custom-select @error('phone') is-invalid @enderror" 
-                           value="{{ old('phone') }}" required>
-                    @error('phone')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label text-darkorange">Pickup or Delivery? <span class="text-danger">*</span></label>
-                    <div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="radio" name="delivery_option" id="pickup" value="pickup" 
-                                   {{ old('delivery_option') == 'pickup' ? 'checked' : '' }} required>
-                            <label class="form-check-label" for="pickup">Pickup</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="delivery_option" id="delivery" value="delivery" 
-                                   {{ old('delivery_option') == 'delivery' ? 'checked' : '' }}>
-                            <label class="form-check-label" for="delivery">Delivery</label>
-                        </div>
-                    </div>
-                    @error('delivery_option')
-                        <div class="text-danger small">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label text-darkorange">Preferred Time for Pick-Up/Delivery <span class="text-danger">*</span></label>
-                    <input type="text" name="preferred_time" id="timePicker" class="form-control custom-select @error('preferred_time') is-invalid @enderror" 
-                        value="{{ old('preferred_time') }}" required placeholder="Select time">
-                    @error('preferred_time')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label text-darkorange">Preferred Date for Food Tasting <span class="text-danger">*</span></label>
-                    <input type="text" name="preferred_date" id="datePicker" class="form-control custom-select @error('preferred_date') is-invalid @enderror" 
-                        value="{{ old('preferred_date') }}" required placeholder="Select date">
-                    @error('preferred_date')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label text-darkorange">Delivery Information: Address</label>
-                    <textarea name="delivery_address" class="form-control custom-select @error('delivery_address') is-invalid @enderror" 
-                              rows="3">{{ old('delivery_address') }}</textarea>
-                    @error('delivery_address')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="mb-4">
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" name="understanding" id="understanding" required 
-                               {{ old('understanding') ? 'checked' : '' }}>
-                        <label class="form-check-label" for="understanding">
-                            I understand that food tasting is subject to menu availability and specific dish requests are not allowed.
-                        </label>
-                        @error('understanding')
-                            <div class="text-danger small">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="agreement" id="agreement" required 
-                               {{ old('agreement') ? 'checked' : '' }}>
-                        <label class="form-check-label" for="agreement">
-                            I agree to the terms and conditions of the Food Tasting service.
-                        </label>
-                        @error('agreement')
-                            <div class="text-danger small">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="mt-4 d-flex justify-content-end gap-2">
-                    <a href="{{ route('guest.home')}}" class="btn btn-secondary" id="cancelBtn">
-                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                        <span class="btn-text">Cancel</span>
-                    </a>
-                    <button type="submit" class="btn btn-darkorange" id="submitBtn">
-                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                        <span class="btn-text">Submit</span>
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 </div>
 
-<style>
-/* Card Styles */
-.custom-card {
-    border: 2px solid darkorange;
-    background-color: #f5f5dc;
-    border-radius: 10px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+<div class="container py-4" style="padding-top: 80px;">
+    <div class="row justify-content-center">
+        <div class="col-12">
+                <!-- Add User Button -->
+                <div class="d-flex justify-content-end">
+                    <a href="{{ route('guest.foodtaste.create') }}" class="btn btn-darkorange mb-2">Create Food Tasting Inquiry</a>
+                </div>
+            <!-- Check Status Form -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <h2 class="fw-bold">Check Food Tasting Inquiry Status</h2>
+                        <p class="text-muted small">Enter your reference number to view your food tasting details</p>
+                    </div>
 
-.custom-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
-}
+                    <form method="POST" action="/check-status">
+                        @csrf
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="reference_number" class="form-label">Reference Number</label>
+                                    <input type="text" 
+                                        class="form-control" 
+                                        id="reference_number" 
+                                        name="reference_number" 
+                                        value="{{ old('reference_number', request('reference_number')) }}" 
+                                        placeholder="Enter your 12-digit reference number">
+                                    @if ($errors->has('reference_number'))
+                                        <small class="text-danger">{{ $errors->first('reference_number') }}</small>
+                                    @endif
+                                </div>
 
-/* Form Select Styles */
-.custom-select {
-    border: 2px solid darkorange;
-    border-radius: 5px;
-    padding: 8px 12px;
-    transition: all 0.3s ease;
-}
+                                <button type="submit" class="btn btn-darkorange w-100">
+                                    Check Status
+                                </button>
+                            </div>
+                        </div>
+                    </form>
 
-.custom-select:focus {
-    border-color: darkorange;
-    box-shadow: 0 0 5px rgba(255, 140, 0, 0.3);
-    outline: none;
-}
+                    @if(session('error'))
+                    <div class="alert alert-danger mt-3" role="alert">
+                        {{ session('error') }}
+                    </div>
+                    @endif
+                </div>
+            </div>
 
-/* Button Styles */
-.btn-darkorange {
-    background-color: darkorange;
-    color: white;
-    border: none;
-    padding: 8px 20px;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-}
+            <!-- Reservation Details -->
+            @if(isset($foodtaste))
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h3 class="fw-bold mb-4">Reservation Details</h3>
 
-.btn-darkorange:hover {
-    background-color: #ff8c00;
-    color: white;
-    transform: translateY(-1px);
-}
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <!-- Basic Info -->
+                                <tr>
+                                    <th colspan="2" class="table-light">Personal Information</th>
+                                </tr>
+                                <tr>
+                                    <th width="30%">Reference Number</th>
+                                    <td>{{ $reservation['reference_number'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Status</th>
+                                    <td><span class="badge status-badge {{ strtolower($reservation['status']) }}">{{ $reservation['status'] }}</span></td>
+                                </tr>
+                                <tr>
+                                    <th>Created At</th>
+                                    <td>{{ \Carbon\Carbon::parse($reservation['created_at'])->format('M d, Y h:i A') }}</td>
+                                </tr>
+                                
+                                <!-- Personal Information -->
+                                <tr>
+                                    <th colspan="2" class="table-light">Personal Information</th>
+                                </tr>
+                                <tr>
+                                    <th>Name</th>
+                                    <td>{{ $reservation['first_name'] }} {{ $reservation['last_name'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Email</th>
+                                    <td>{{ $reservation['email'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Phone</th>
+                                    <td>{{ $reservation['phone'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Address</th>
+                                    <td>{{ $reservation['street_houseno'] }}, {{ $reservation['barangay'] }}, {{ $reservation['city'] }}, {{ $reservation['province'] }}, {{ $reservation['region'] }}</td>
+                                </tr>
+                                
+                                <!-- Event Details -->
+                                <tr>
+                                    <th colspan="2" class="table-light">Event Details</th>
+                                </tr>
+                                <tr>
+                                    <th>Event Title</th>
+                                    <td>{{ $reservation['event_title'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date</th>
+                                    <td>{{ $reservation['event_date'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Time</th>
+                                    <td>{{ $reservation['event_time'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Venue</th>
+                                    <td>{{ $reservation['venue'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Theme</th>
+                                    <td>{{ $reservation['theme'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Number of Guests</th>
+                                    <td>{{ $reservation['guests_number'] }}</td>
+                                </tr>
+                                
+                                <!-- Package and Menu Details -->
+                                <tr>
+                                    <th colspan="2" class="table-light">Package and Menu Details</th>
+                                </tr>
+                                <tr>
+                                    <th>Package</th>
+                                    <td>{{ $reservation['package_name'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Menu</th>
+                                    <td>{{ $reservation['menu_name'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Menu Content:</th>
+                                    <td>
+                                        @if(isset($reservation['menu_content']) && count($reservation['menu_content']) > 0)
+                                            <table class="table table-sm table-borderless mb-0">
+                                                @foreach ($reservation['menu_content'] as $item)
+                                                    <tr>
+                                                        <td><strong>{{ $item['category'] }}:</strong></td>
+                                                        <td>{{ $item['food'] }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </table>
+                                        @else
+                                            <p>No menu content available.</p>
+                                        @endif
+                                    </td>
+                                </tr>
+                                
+                                <!-- Additional Requests -->
+                                <tr>
+                                    <th colspan="2" class="table-light">Additional Requests</th>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">{{ $reservation->other_requests ?? 'No Request' }}</td>
+                                </tr>
 
-.btn-darkorange:active {
-    transform: translateY(1px);
-}
+                                
+                                <!-- Payment Information -->
+                                <tr>
+                                    <th colspan="2" class="table-light">Payment Information</th>
+                                </tr>
+                                <tr>
+                                    <th>Reservation Fee</th>
+                                    <td>₱5,000.00</td>
+                                </tr>
+                                <tr>
+                                    <th>Payment Status of Reservation Fee</th>
+                                    <td>
+                                    <span class="badge 
+                                        {{ 
+                                            $reservation['payment_status'] === 'Paid' ? 'bg-success' : 
+                                            ($reservation['payment_status'] === 'Pending' ? 'bg-warning' : 'bg-danger') 
+                                        }}">
+                                        {{ $reservation['payment_status'] }}
+                                    </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Payment Date of Reservation Fee</th>
+                                    <td>{{ $reservation['payment_submitted_at'] ? \Carbon\Carbon::parse($reservation['payment_submitted_at'])->format('M d, Y h:i A') : 'None' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Reservation Price</th>
+                                    <td>₱{{ number_format($reservation['total_price'], 2) }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
-/* Text Colors */
-.text-darkorange {
-    color: darkorange;
-}
+                    <!-- Action Buttons -->
+                    <div class="d-flex gap-2 justify-content-center mt-4">
+                        @php
+                            $pencilExpiresAt = new DateTime($reservation['pencil_expires_at']);
+                            $now = new DateTime();
+                            $interval = $now->diff($pencilExpiresAt);
+                            $daysUntilExpiration = $interval->days + ($interval->h / 24) + ($interval->i / 1440);
+                            $isWithinThreeDays = $daysUntilExpiration <= 3;
+                        @endphp
 
-/* Form Label Styles */
-.form-label {
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-}
-</style>
+                        @if(!in_array($reservation['status'], ['Cancelled', 'Finished']))
+                            @if($reservation['payment_status'] !== 'Paid' && $reservation['payment_status'] !== 'Pending')
+                                <a href="{{ route('guest.payment', ['reservation_id' => $reservation['reservation_id']]) }}" 
+                                    class="btn btn-success">
+                                    Make Payment
+                                </a>
+                            @endif
 
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+                            @if(in_array($reservation['status'], ['Pencil', 'Pending', 'Confirmed']))
+                                <a href="{{ route('guest.reserve.edit', ['reservation_id' => $reservation['reservation_id']]) }}" 
+                                    class="btn btn-primary {{ $isWithinThreeDays ? 'disabled' : '' }}"
+                                    @if($isWithinThreeDays) 
+                                        title="Editing is disabled within 3 days of pencil booking expiration"
+                                        onclick="return false;"
+                                    @endif>
+                                    Edit Details
+                                </a>
+                            @endif
+
+                            @if(in_array($reservation['status'], ['Pencil', 'Pending', 'Confirmed']))
+                                <form action="{{ route('reservation.cancel', ['reservation_id' => $reservation['reservation_id']]) }}" 
+                                    method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" 
+                                        class="btn btn-danger {{ $isWithinThreeDays ? 'disabled' : '' }}"
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#cancelModal"
+                                        @if($isWithinThreeDays) 
+                                            title="Cancellation is disabled within 3 days of pencil booking expiration"
+                                            onclick="return false;"
+                                        @endif>
+                                        Cancel Reservation
+                                    </button>
+                                </form>
+                            @endif
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cancel Confirmation Modal -->
+            <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="cancelModalLabel">Confirm Cancellation</h5>
+                        </div>
+                        <form action="{{ route('reservation.cancel', ['reservation_id' => $reservation['reservation_id']]) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <div class="modal-body">
+                                <p>Are you sure you want to cancel this reservation? This action cannot be undone.</p>
+                                
+                                <div class="mb-3">
+                                    <label for="cancellation_reason" class="form-label">Reason for Cancellation</label>
+                                    <select class="form-select mb-3" id="cancellation_reason" name="cancellation_reason" required>
+                                        <option value="" disabled selected>Select a reason...</option>
+                                        <option value="Change in Event Plans">Change in Event Plans</option>
+                                        <option value="Budget Issues">Budget Issues</option>
+                                        <option value="Found Another Caterer">Found Another Caterer</option>
+                                        <option value="Event Postponed">Event Postponed</option>
+                                        <option value="other">Other (Please specify)</option>
+                                    </select>
+                                    
+                                    <!-- Other reason textarea - hidden by default -->
+                                    <div id="otherReasonDiv" style="display: none;">
+                                        <textarea 
+                                            class="form-control" 
+                                            id="other_reason" 
+                                            name="other_reason" 
+                                            rows="3" 
+                                            placeholder="Please specify your reason..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger">Confirm Cancellation</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            @endif
+        </div>
+    </div>
+</div>
+
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Get required elements
-    const form = document.getElementById('tastingForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const cancelBtn = document.getElementById('cancelBtn');
-    const understandingCheckbox = document.getElementById('understanding');
-    const agreementCheckbox = document.getElementById('agreement');
-    let isSubmitting = false;
-
-    // Initialize date picker
-    const datePicker = flatpickr("#datePicker", {
-        dateFormat: "Y-m-d",
-        minDate: "today",
-        locale: {
-            firstDayOfWeek: 1 
-        }
-    });
-
-    // Initialize time picker with AM/PM
-    const timePicker = flatpickr("#timePicker", {
-        enableTime: true,
-        noCalendar: true,
-        dateFormat: "h:i K", 
-        minTime: "09:00",
-        maxTime: "17:00",
-        defaultHour: 9,
-        time_24hr: false 
-    });
-
-    // Function to check both checkboxes and update submit button
-    function updateSubmitButton() {
-        if(understandingCheckbox.checked && agreementCheckbox.checked) {
-            submitBtn.disabled = false;
-        } else {
-            submitBtn.disabled = true;
-        }
+document.getElementById('cancellation_reason').addEventListener('change', function() {
+    const otherReasonDiv = document.getElementById('otherReasonDiv');
+    const otherReasonInput = document.getElementById('other_reason');
+    
+    if (this.value === 'other') {
+        otherReasonDiv.style.display = 'block';
+        otherReasonInput.required = true;
+    } else {
+        otherReasonDiv.style.display = 'none';
+        otherReasonInput.required = false;
     }
-
-    // Add event listeners to checkboxes
-    understandingCheckbox.addEventListener('change', updateSubmitButton);
-    agreementCheckbox.addEventListener('change', updateSubmitButton);
-
-    // Call initially to set initial state
-    updateSubmitButton();
-
-    // Form submission handling
-    form.addEventListener('submit', function(e) {
-        if (isSubmitting) {
-            e.preventDefault();
-            return;
-        }
-
-        isSubmitting = true;
-        submitBtn.disabled = true;
-        
-        // Show spinner, hide text
-        submitBtn.querySelector('.spinner-border').classList.remove('d-none');
-        submitBtn.querySelector('.btn-text').textContent = 'Submitting...';
-    });
-
-    // Cancel button handling
-    cancelBtn.addEventListener('click', function(e) {
-        if (isSubmitting) {
-            e.preventDefault();
-            return;
-        }
-
-        cancelBtn.disabled = true;
-        
-        // Show spinner, hide text
-        cancelBtn.querySelector('.spinner-border').classList.remove('d-none');
-        cancelBtn.querySelector('.btn-text').textContent = 'Cancelling...';
-    });
 });
 </script>
 
 <style>
-/* Flatpickr custom styles */
-.flatpickr-calendar.material_orange {
-    box-shadow: 0 3px 13px rgba(255, 140, 0, 0.08);
-}
+    .status-badge {
+        padding: 0.5em 0.75em;
+        border: 1px solid;
+        border-radius: 0.25rem;
+        font-weight: 500;
+    }
 
-.flatpickr-day.selected, 
-.flatpickr-day.selected:hover {
-    background: darkorange !important;
-    border-color: darkorange !important;
-}
+    .status-badge.pending {
+        color: #ffa500;
+        background-color: rgba(255, 165, 0, 0.2);
+        border-color: #ffa500;
+    }
 
-.flatpickr-day.today {
-    border-color: darkorange !important;
-}
+    .status-badge.confirmed {
+        color: #28a745;
+        background-color: rgba(40, 167, 69, 0.2);
+        border-color: #28a745;
+    }
 
-.flatpickr-day.today:hover {
-    background: rgba(255, 140, 0, 0.15);
-}
+    .status-badge.cancelled {
+        color: #dc3545;
+        background-color: rgba(220, 53, 69, 0.2);
+        border-color: #dc3545;
+    }
 
-.flatpickr-time input:hover,
-.flatpickr-time .flatpickr-am-pm:hover,
-.flatpickr-time input:focus,
-.flatpickr-time .flatpickr-am-pm:focus {
-    background: rgba(255, 140, 0, 0.05);
-}
+    .status-badge.finished {
+        color: #007bff;
+        background-color: rgba(0, 123, 255, 0.2);
+        border-color: #007bff;
+    }
 
-.flatpickr-calendar.material_orange .flatpickr-day.selected {
-    box-shadow: 0 3px 13px rgba(255, 140, 0, 0.2);
-}
+    .status-badge.pencil {
+        color: #6c757d;
+        background-color: rgba(108, 117, 125, 0.2);
+        border-color: #6c757d;
+    }
+
+    .table th {
+    background-color: #f8f9fa;
+    vertical-align: middle;
+    
+    }
+    .table-light {
+        background-color: #e9ecef !important;
+        font-weight: bold;
+    }
 </style>
 @endsection

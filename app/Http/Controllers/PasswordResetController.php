@@ -16,7 +16,7 @@ class PasswordResetController extends Controller
         $this->auth = $auth;
     }
 
-    // Show the password reset form (already in place for email)
+    // Show the initial reset password form
     public function showResetForm()
     {
         return view('admin.auth.passwords.reset');
@@ -28,7 +28,13 @@ class PasswordResetController extends Controller
         $request->validate(['email' => 'required|email']);
 
         try {
-            $this->auth->sendPasswordResetLink($request->email);
+            $actionCodeSettings = [
+                'url' => route('password.new'), // The URL to redirect to after clicking the link
+                'handleCodeInApp' => true
+            ];
+
+            $this->auth->sendPasswordResetLink($request->email, $actionCodeSettings);
+            
             Log::info('Activity Log', ['user' => $request->email, 'action' => 'Requested a password reset.']);
             return redirect()->back()->with('status', 'Password reset email sent! Check your inbox.');
         } catch (\Exception $e) {
@@ -37,10 +43,18 @@ class PasswordResetController extends Controller
         }
     }
 
+    // Show the new password form
     public function showNewPasswordForm(Request $request)
     {
-        $oobCode = $request->get('oobCode');
-        return view('admin.auth.passwords.new', ['oobCode' => $request->get('oobCode')], compact('oobCode'));
+        // Validate that we have an oobCode
+        if (!$request->has('oobCode')) {
+            return redirect()->route('password.reset.form')
+                           ->with('error', 'Invalid password reset link.');
+        }
+
+        return view('admin.auth.passwords.new', [
+            'oobCode' => $request->oobCode
+        ]);
     }
 
     // Handle the password reset confirmation
@@ -53,9 +67,7 @@ class PasswordResetController extends Controller
         ]);
 
         try {
-            // Use Firebase to reset the password using the oobCode
             $this->auth->confirmPasswordReset($request->oobCode, $request->new_password);
-
             return redirect()->route('login')->with('status', 'Password reset successful! You can now log in.');
         } catch (\Exception $e) {
             Log::error('Error resetting password: ' . $e->getMessage());

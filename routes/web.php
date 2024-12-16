@@ -73,6 +73,7 @@ Route::get('/quotation', [QuotationController::class, 'index'])->name('guest.quo
 
 //Food Taste
 Route::get('/food-taste', [FoodTasteController::class, 'index'])->name('guest.foodtaste');
+Route::get('/food-taste/create', [FoodTasteController::class, 'create'])->name('guest.foodtaste.create');
 
 Route::view('/unauthorized', 'unauthorized')->name('unauthorized');
 
@@ -83,14 +84,11 @@ Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login'])->name('firebase.login');
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
-// Password reset form
-Route::get('/reset/password', [PasswordResetController::class, 'showResetForm'])->name('password.reset.form');
-// Send reset password link
-Route::post('/reset/password', [PasswordResetController::class, 'sendResetLink'])->name('password.reset.send');
-// Show the new password form (after clicking the link)
-Route::get('/reset-password/{oobCode}', [PasswordResetController::class, 'showNewPasswordForm'])->name('password.new');
-// Confirm the password reset and update the password in Firebase
-    Route::post('/reset-password/{oobCode}', [PasswordResetController::class, 'confirmReset'])->name('password.reset.confirm');
+// Password Reset
+Route::get('/reset-password', [PasswordResetController::class, 'showResetForm'])->name('password.reset.form');
+Route::post('/reset-password', [PasswordResetController::class, 'sendResetLink'])->name('password.reset.send');
+Route::get('/new-password', [PasswordResetController::class, 'showNewPasswordForm'])->name('password.new');
+Route::post('/new-password', [PasswordResetController::class, 'confirmReset'])->name('password.reset.confirm');
 
 // Email Verification Routes
 Route::get('/email/verify', [EmailVerificationController::class, 'notice'])
