@@ -41,12 +41,11 @@ class PasswordResetController extends Controller
                 'handleCodeInApp' => true
             ];
             
-            $link = $this->auth->getPasswordResetLink($request->email, $actionCodeSettings);
+            // Instead of getPasswordResetLink, directly create and send the reset link email
+            $this->auth->sendPasswordResetLink($request->email);
             
-            // Log the link to verify it's being generated
-            Log::info('Password Reset Link Generated', [
-                'email' => $request->email,
-                'link' => $link
+            Log::info('Password Reset Email Sent', [
+                'email' => $request->email
             ]);
 
             return redirect()->back()->with('status', 'Password reset email sent! Check your inbox.');
@@ -54,7 +53,7 @@ class PasswordResetController extends Controller
             Log::error('Firebase Error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Failed to send reset email: ' . $e->getMessage());
         }
-    }
+    }   
 
     // Show the new password form
     public function showNewPasswordForm(Request $request)
@@ -80,11 +79,23 @@ class PasswordResetController extends Controller
         ]);
 
         try {
+            // First verify the action code
+            $email = $this->auth->verifyPasswordResetCode($request->oobCode);
+            
+            // If verification succeeds, reset the password
             $this->auth->confirmPasswordReset($request->oobCode, $request->new_password);
-            return redirect()->route('login')->with('status', 'Password reset successful! You can now log in.');
+            
+            // Log successful password reset
+            Log::info('Password reset successful', [
+                'email' => $email
+            ]);
+
+            return redirect()->route('login')
+                ->with('status', 'Password reset successful! You can now log in with your new password.');
         } catch (\Exception $e) {
             Log::error('Error resetting password: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed to reset password.');
+            return redirect()->back()
+                ->with('error', 'Failed to reset password: ' . $e->getMessage());
         }
     }
 }
