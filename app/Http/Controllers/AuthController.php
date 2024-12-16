@@ -105,7 +105,7 @@ class AuthController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Login error: ' . $e->getMessage());
-            return redirect()->back()->with(['error' => 'Authentication failed. Please try again.']);
+            return redirect()->back()->with(['status' => 'Authentication failed. Please try again.']);
         }
     }
 
@@ -120,7 +120,7 @@ class AuthController extends Controller
             return redirect()->back()->with('status', 'Verification email has been resent.');
         } catch (\Exception $e) {
             Log::error('Email verification error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed to send verification email. Please try again.');
+            return redirect()->back()->with('status', 'Failed to send verification email. Please try again.');
         }
     }
 

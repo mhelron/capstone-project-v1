@@ -28,19 +28,7 @@ class PasswordResetController extends Controller
         $request->validate(['email' => 'required|email']);
 
         try {
-            try {
-                $user = $this->auth->getUserByEmail($request->email);
-            } catch (\Exception $e) {
-                return redirect()->back()->with('error', 'No account found with this email address.');
-            }
-
-            $resetUrl = 'https://www.kylaandkylecatering.com/new-password';
-            
-            $actionCodeSettings = [
-                'continueUrl' => $resetUrl,
-                'handleCodeInApp' => true
-            ];
-            
+          
             // Instead of getPasswordResetLink, directly create and send the reset link email
             $this->auth->sendPasswordResetLink($request->email);
             
