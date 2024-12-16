@@ -161,6 +161,8 @@ class FoodTasteController extends Controller
                 'status' => 'pending',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
+                'set_time' => '',
+                'set_date' => '',
             ];
 
             // Add address fields separately if delivery is selected

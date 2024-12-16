@@ -232,7 +232,7 @@
         <div class="col-lg-4">
             <div class="card custom-card">
                 <div class="card-body">
-                    <h3 class="text-darkorange mb-3">Availabe Food for Tasting</h3>
+                    <h3 class="text-darkorange mb-3">Availabe Food for Food Tasting</h3>
 
                     <!-- Loop through the formatted reservations grouped by event date -->
                     @if($formattedReservations)

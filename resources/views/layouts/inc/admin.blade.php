@@ -33,6 +33,12 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
+                        <a href="{{route('admin.foodtaste.index')}}" class="sidebar-link">
+                            <i class='bx bx-fork'></i>
+                            <span>Food Tasting</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
                         <a href="{{route('admin.users')}}" class="sidebar-link">
                             <i class='bx bx-user'></i>
                             <span>User</span>

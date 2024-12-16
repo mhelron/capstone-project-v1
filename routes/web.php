@@ -19,6 +19,7 @@ use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\CustomMenuController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\FoodTasteController;
+use App\Http\Controllers\FoodTasteControllerAdmin;
 
 use App\Http\Controllers\BotmanController;
 
@@ -158,6 +159,14 @@ Route::middleware([AuthMiddleware::class])->group(function () {
             Route::put('/admin/reservations/{id}/finish', [ReservationController::class, 'finishReservationAuto']);
             Route::put('/cancel-reservation/{id}', [ReservationController::class, 'cancelReservation'])->name('admin.reserve.cancel');
             Route::put('/archive-reservation/{id}', [ReservationController::class, 'destroy'])->name('admin.reserve.archive');
+        });
+    });
+
+    Route::group(['middleware' => RoleMiddleware::class . ':Super Admin,Admin,Manager,Staff'], function () {
+        // Food Taste Route 
+        Route::prefix('admin/food-taste')->group(function () {
+            Route::get('/', [FoodTasteControllerAdmin::class, 'index'])->name('admin.foodtaste.index');
+            Route::post('set-schedule/{id}', [FoodTasteControllerAdmin::class, 'setSchedule'])->name('admin.foodtaste.setSchedule');
         });
     });
 

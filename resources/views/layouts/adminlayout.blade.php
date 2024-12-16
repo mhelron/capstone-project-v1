@@ -80,7 +80,7 @@
         @endswitch
             <div class="main p-3">
             <nav class="navbar navbar-expand px-4 py-3 admin-nav">
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center ms-auto">
                     <span class="fs-5">
                         <span id="greeting"></span>,
                         <span class="user-name">{{ Session::get('firebase_user')->displayName }}</span><span style="font-size: 16px;">! Today is </span>

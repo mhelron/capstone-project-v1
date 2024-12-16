@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\Storage;
                 <a href="{{route('guest.reserve')}}" class="btn btn-darkorange me-2">Reserve</a>
                 <a href="{{route('guest.check')}}" class="btn btn-darkorange me-2">View Status</a>
                 <a href="{{route('guest.quote')}}" class="btn btn-darkorange me-2">Quote</a>
-                <a href="{{route('guest.foodtaste')}}" class="btn btn-darkorange">Food Taste</a>
+                <a href="{{route('guest.foodtaste.index')}}" class="btn btn-darkorange">Food Taste</a>
             </div>
         </div>
 
