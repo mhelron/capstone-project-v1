@@ -28,30 +28,31 @@ class PasswordResetController extends Controller
         $request->validate(['email' => 'required|email']);
 
         try {
-            // Check if user exists
             try {
                 $user = $this->auth->getUserByEmail($request->email);
             } catch (\Exception $e) {
                 return redirect()->back()->with('error', 'No account found with this email address.');
             }
 
-            // Make sure this matches your exact domain
+            $resetUrl = 'https://www.kylaandkylecatering.com/new-password';
+            
             $actionCodeSettings = [
-                'continueUrl' => 'https://kylaandkylecatering.com/new-password',
+                'continueUrl' => $resetUrl,
                 'handleCodeInApp' => true
             ];
             
             $link = $this->auth->getPasswordResetLink($request->email, $actionCodeSettings);
             
-            Log::info('Password reset link generated', [
-                'user' => $request->email,
-                'link' => $link // This will help you debug the exact URL
+            // Log the link to verify it's being generated
+            Log::info('Password Reset Link Generated', [
+                'email' => $request->email,
+                'link' => $link
             ]);
 
             return redirect()->back()->with('status', 'Password reset email sent! Check your inbox.');
         } catch (\Exception $e) {
             Log::error('Firebase Error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed to send password reset email: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to send reset email: ' . $e->getMessage());
         }
     }
 
