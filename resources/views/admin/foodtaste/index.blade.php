@@ -61,7 +61,7 @@
                                             </span>
                                         </td>
                                         <td>{{ $item['set_time'] }}</td>
-                                        <td>{{ $item['set_date'] }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($item['set_date'])->format('M d, Y') }}</td>
                                         <td>
                                             <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#detailsModal{{ $key }}">
                                                 Details

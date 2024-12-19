@@ -150,6 +150,7 @@ return [
         App\Providers\AppServiceProvider::class,
         Kreait\Laravel\Firebase\ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
     ],
 
     'aliases' => [

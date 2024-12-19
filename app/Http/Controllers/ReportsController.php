@@ -9,6 +9,7 @@ use App\Exports\LogsExport;
 use Kreait\Firebase\Contract\Database;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 
 class ReportsController extends Controller
@@ -50,14 +51,14 @@ class ReportsController extends Controller
         $data = [
             'years' => [],
             'months' => [
-                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
             ],
-            'yearlyData' => [],      // Yearly total counts
-            'monthlyTrends' => [],    // Monthly trends for each year
-            'monthlyData' => [],      // Monthly breakdown for selected year
-            'weeklyData' => [],       // Weekly breakdown for selected month
-            'dailyData' => []         // Daily breakdown for selected week
+            'yearlyData' => [],      
+            'monthlyTrends' => [],    
+            'monthlyData' => [],      
+            'weeklyData' => [],       
+            'dailyData' => []         
         ];
 
         foreach ($reservations as $reservation) {
@@ -65,33 +66,53 @@ class ReportsController extends Controller
 
             $date = new \DateTime($reservation['event_date']);
             $year = $date->format('Y');
-            $month = $date->format('n') - 1; // 0-11
-            $week = ceil($date->format('j') / 7);
-            $day = $date->format('j');
+            $month = (int)$date->format('n'); // 1-12 format
+            $day = (int)$date->format('j');
 
-            // Track years
+            // Calculate the correct week number
+            $firstDayOfMonth = new \DateTime($date->format('Y-m-1'));
+            $firstDayOfWeek = $firstDayOfMonth->format('w'); // 0 (Sunday) to 6 (Saturday)
+            $adjustedDay = $day + $firstDayOfWeek - 1;
+            $weekOfMonth = ceil($adjustedDay / 7);
+
+            // Get total weeks in month
+            $lastDayOfMonth = new \DateTime($date->format('Y-m-t'));
+            $lastDay = (int)$lastDayOfMonth->format('j');
+            $lastDayOfWeek = $lastDayOfMonth->format('w');
+            $totalWeeks = ceil(($lastDay + $firstDayOfWeek - 1) / 7);
+
+            // Track years and initialize data structures
             if (!in_array($year, $data['years'])) {
                 $data['years'][] = $year;
                 $data['yearlyData'][$year] = 0;
                 $data['monthlyTrends'][$year] = array_fill(0, 12, 0);
-                $data['monthlyData'][$year] = array_fill(0, 12, 0);
+                $data['monthlyData'][$year] = array_fill(1, 12, 0);
                 $data['weeklyData'][$year] = [];
                 $data['dailyData'][$year] = [];
                 
-                // Initialize weekly and daily data structures
-                for ($m = 0; $m < 12; $m++) {
-                    $data['weeklyData'][$year][$m] = array_fill(0, 6, 0); // Up to 6 weeks
-                    $data['dailyData'][$year][$m] = array_fill(1, 31, 0); // Days 1-31
+                // Initialize data structures with dynamic week counts
+                for ($m = 1; $m <= 12; $m++) {
+                    $monthDate = new \DateTime("$year-$m-01");
+                    $weeksInMonth = ceil((date('t', $monthDate->getTimestamp()) + 
+                        (int)$monthDate->format('w') - 1) / 7);
+                    $data['weeklyData'][$year][$m] = array_fill(1, $weeksInMonth, 0);
+                    $data['dailyData'][$year][$m] = array_fill(1, 31, 0);
                 }
             }
 
             // Update counts
             $data['yearlyData'][$year]++;
-            $data['monthlyTrends'][$year][$month]++;
+            $data['monthlyTrends'][$year][$month-1]++;
             $data['monthlyData'][$year][$month]++;
             
-            if ($week >= 1 && $week <= 6) {
-                $data['weeklyData'][$year][$month][$week - 1]++;
+            // Store week count for the month
+            if (!isset($data['weeklyData'][$year][$month]['totalWeeks'])) {
+                $data['weeklyData'][$year][$month]['totalWeeks'] = $totalWeeks;
+            }
+            
+            // Update weekly data
+            if ($weekOfMonth > 0) {
+                $data['weeklyData'][$year][$month][$weekOfMonth]++;
             }
             
             $data['dailyData'][$year][$month][$day]++;
@@ -103,18 +124,173 @@ class ReportsController extends Controller
         return $data;
     }
 
-    public function printReservations()
+    public function printReservations(Request $request)
     {
         $reservations = $this->getFinishedReservations();
-        $reportData = $this->generateReportData($reservations);
-
-        // Convert month abbreviations to full names for print view
-        $reportData['months'] = [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
+        $originalReportData = $this->generateReportData($reservations); // Store original unfiltered data
+        
+        // Add filter information
+        $reportData = $originalReportData;
+        $reportData['filters'] = [
+            'report_type' => $request->report_type,
+            'year' => $request->year,
+            'month' => $request->month,
+            'week' => $request->week,
         ];
 
-        return view('admin.reports.reservation.print', $reportData);
+        // Only filter data if we're not generating "all" reports
+        if ($request->report_type !== 'all') {
+            // Select appropriate view and filter data based on report type
+            switch($request->report_type) {
+                case 'yearly':
+                    if($request->year) {
+                        $filteredReservations = array_filter($reservations, function($reservation) use ($request) {
+                            if (!isset($reservation['event_date'])) return false;
+                            $date = new \DateTime($reservation['event_date']);
+                            return $date->format('Y') == $request->year;
+                        });
+                        $reportData = $this->generateReportData($filteredReservations);
+                        $reportData['filters'] = ['year' => $request->year];
+                    }
+                    $pdf = PDF::loadView('admin.reports.reservation.yearly-print', $reportData);
+                    $filename = 'yearly-report.pdf';
+                    break;
+
+                case 'monthly':
+                    if($request->year && $request->month) {
+                        $filteredReservations = array_filter($reservations, function($reservation) use ($request) {
+                            if (!isset($reservation['event_date'])) return false;
+                            $date = new \DateTime($reservation['event_date']);
+                            return $date->format('Y') == $request->year && 
+                                (int)$date->format('n') == $request->month;
+                        });
+                        $reportData = $this->generateReportData($filteredReservations);
+                        $reportData['filters'] = [
+                            'year' => $request->year,
+                            'month' => $request->month
+                        ];
+                    }
+                    $pdf = PDF::loadView('admin.reports.reservation.monthly-print', $reportData);
+                    $filename = 'monthly-report.pdf';
+                    break;
+
+                case 'weekly':
+                    if($request->year && $request->month && $request->week) {
+                        $filteredReservations = array_filter($reservations, function($reservation) use ($request) {
+                            if (!isset($reservation['event_date'])) return false;
+                            $date = new \DateTime($reservation['event_date']);
+                            $firstDayOfMonth = new \DateTime($date->format('Y-m-1'));
+                            $firstDayOfWeek = $firstDayOfMonth->format('w'); // 0 (Sunday) to 6 (Saturday)
+                            $day = (int)$date->format('j');
+                            $adjustedDay = $day + $firstDayOfWeek - 1;
+                            $weekOfMonth = ceil($adjustedDay / 7);
+                            
+                            return $date->format('Y') == $request->year && 
+                                (int)$date->format('n') == $request->month &&
+                                $weekOfMonth == $request->week;
+                        });
+                        $reportData = $this->generateReportData($filteredReservations);
+                    }
+                    $pdf = PDF::loadView('admin.reports.reservation.weekly-print', $reportData);
+                    $filename = 'weekly-report.pdf';
+                    break;
+            }
+        } else {
+            // For "all" reports, use the original unfiltered data
+            $pdf = PDF::loadView('admin.reports.reservation.print', $originalReportData);
+            $filename = 'reservation-report.pdf';
+        }
+
+        // Configure PDF settings
+        $pdf->setPaper('a4', 'portrait');
+        
+        // Optional: Set more PDF options if needed
+        $pdf->setOptions([
+            'isRemoteEnabled' => true,
+            'isHtml5ParserEnabled' => true,
+            'isPhpEnabled' => true
+        ]);
+
+        return $pdf->stream($filename);
+    }
+
+    public function printYearlyReport(Request $request)
+    {
+        $reservations = $this->getFinishedReservations();
+        
+        if($request->year) {
+            $reservations = array_filter($reservations, function($reservation) use ($request) {
+                if (!isset($reservation['event_date'])) return false;
+                $date = new \DateTime($reservation['event_date']);
+                return $date->format('Y') == $request->year;
+            });
+        }
+        
+        $reportData = $this->generateReportData($reservations);
+        $reportData['filters'] = ['year' => $request->year];
+
+        $pdf = PDF::loadView('admin.reports.reservation.yearly-print', $reportData);
+        $pdf->setPaper('a4', 'portrait');
+
+        return $pdf->stream('yearly-report.pdf');
+    }
+
+    public function printMonthlyReport(Request $request)
+    {
+        $reservations = $this->getFinishedReservations();
+        
+        if($request->year && $request->month) {
+            $reservations = array_filter($reservations, function($reservation) use ($request) {
+                if (!isset($reservation['event_date'])) return false;
+                $date = new \DateTime($reservation['event_date']);
+                return $date->format('Y') == $request->year && 
+                    (int)$date->format('n') == $request->month;
+            });
+        }
+        
+        $reportData = $this->generateReportData($reservations);
+        $reportData['filters'] = [
+            'year' => $request->year,
+            'month' => $request->month
+        ];
+        
+        $pdf = PDF::loadView('admin.reports.reservation.monthly-print', $reportData);
+        $pdf->setPaper('a4', 'portrait');
+
+        return $pdf->stream('monthly-report.pdf');
+    }
+
+    public function printWeeklyReport(Request $request)
+    {
+        $reservations = $this->getFinishedReservations();
+        
+        if($request->year && $request->month && $request->week) {
+            $filteredReservations = array_filter($reservations, function($reservation) use ($request) {
+                if (!isset($reservation['event_date'])) return false;
+                $date = new \DateTime($reservation['event_date']);
+                $firstDayOfMonth = new \DateTime($date->format('Y-m-1'));
+                $firstDayOfWeek = $firstDayOfMonth->format('w'); // 0 (Sunday) to 6 (Saturday)
+                $day = (int)$date->format('j');
+                $adjustedDay = $day + $firstDayOfWeek - 1;
+                $weekOfMonth = ceil($adjustedDay / 7);
+                
+                return $date->format('Y') == $request->year && 
+                    (int)$date->format('n') == $request->month &&
+                    $weekOfMonth == $request->week;
+            });
+            $reportData = $this->generateReportData($filteredReservations);
+        }
+        
+        $reportData = $this->generateReportData($reservations);
+        $reportData['filters'] = [
+            'year' => $request->year,
+            'month' => $request->month,
+            'week' => $request->week
+        ];
+        
+        $pdf = PDF::loadView('admin.reports.reservation.weekly-print', $reportData);
+        $pdf->setPaper('a4', 'portrait');
+        return $pdf->stream('weekly-report.pdf');
     }
 
     public function sales()
