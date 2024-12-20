@@ -72,8 +72,8 @@
 
                     <!-- Bank Transfer Details -->
                     <div class="text-center mb-4">
-                        <p>Or Bank Transfer:</p>
-                        <p><strong>Bank: 123456789</strong></p>
+                        <p>Or Bank Transfer: UnionBank</p>
+                        <p><strong>Bank: 1094 2104 2567</strong></p>
                     </div>
 
                     <!-- Display Reservation Details -->
