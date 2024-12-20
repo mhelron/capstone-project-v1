@@ -110,7 +110,7 @@
         <div class="card">
             <div class="card-header bg-primary text-white">
                 <div class="d-flex justify-content-between align-items-center">
-                    <span>Monthly</span>
+                    <span>Monthly Report</span>
                     <div class="d-flex gap-2">
                         <select id="monthlyYearSelector" class="form-select form-select-sm custom-select-height">
                             @foreach($years as $year)
@@ -138,7 +138,7 @@
         <div class="card">
             <div class="card-header bg-primary text-white">
                 <div class="d-flex justify-content-between align-items-center">
-                    <span>Weekly Analysis</span>
+                    <span>Weekly Report</span>
                     <div class="d-flex gap-2">
                         <select id="weeklyYearSelector" class="form-select form-select-sm custom-select-height">
                             @foreach($years as $year)
@@ -177,7 +177,7 @@
         <div class="card">
             <div class="card-header bg-primary text-white">
                 <div class="d-flex justify-content-between align-items-center">
-                    <span>Daily Analysis</span>
+                    <span>Daily Report</span>
                     <div class="d-flex gap-2">
                         <select id="dailyYearSelector" class="form-select form-select-sm custom-select-height">
                             @foreach($years as $year)

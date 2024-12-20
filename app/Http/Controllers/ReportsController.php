@@ -51,8 +51,8 @@ class ReportsController extends Controller
         $data = [
             'years' => [],
             'months' => [
-                'January', 'February', 'March', 'April', 'May', 'June',
-                'July', 'August', 'September', 'October', 'November', 'December'
+                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
             ],
             'yearlyData' => [],      
             'monthlyTrends' => [],    
@@ -295,124 +295,182 @@ class ReportsController extends Controller
 
     public function sales()
     {
-        $reservations = $this->database->getReference($this->reservations)->getValue();
-        $reservations = is_array($reservations) ? $reservations : [];
+        $reservations = $this->getFinishedReservations();
         
-        $finishedReservations = array_filter($reservations, function ($reservation) {
-            return isset($reservation['status']) && $reservation['status'] === 'Finished';
-        });
+        // Get all the report data
+        $reportData = $this->generateSalesData($reservations);
+        
+        $isExpanded = session()->get('sidebar_is_expanded', true);
+        
+        return view('admin.reports.sales.index', array_merge(
+            ['isExpanded' => $isExpanded],
+            $reportData
+        ));
+    }
 
-        // Initialize all data arrays
-        $years = [];
-        $yearlyFees = [];
-        $yearlyPrices = [];
-        $monthlyData = [];
-        $weeklyData = [];
-        $dailyData = []; // New array for daily data
-        $currentWeekData = []; // New array for current week
+    private function generateSalesData($reservations)
+    {
+        $data = [
+            'years' => [],
+            'months' => [
+                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+            ],
+            'yearlyFees' => [],
+            'yearlyPrices' => [],
+            'monthlyData' => [],
+            'weeklyData' => [],
+            'dailyData' => []
+        ];
 
-        foreach ($finishedReservations as $reservation) {
-            if (!empty($reservation['event_date'])) {
-                $eventDate = strtotime($reservation['event_date']);
-                $eventYear = date('Y', $eventDate);
-                $eventMonth = date('n', $eventDate);
-                $eventDay = date('j', $eventDate);
-                
-                // Initialize year if not exists
-                if (!in_array($eventYear, $years)) {
-                    $years[] = $eventYear;
-                    $yearlyFees[$eventYear] = 0;
-                    $yearlyPrices[$eventYear] = 0;
-                    $monthlyData[$eventYear] = [
-                        'reservationFees' => array_fill(0, 12, 0),
-                        'totalPrices' => array_fill(0, 12, 0)
+        foreach ($reservations as $reservation) {
+            if (!isset($reservation['event_date'])) continue;
+
+            $eventDate = strtotime($reservation['event_date']);
+            $year = date('Y', $eventDate);
+            $month = (int)date('n', $eventDate);
+            $day = (int)date('j', $eventDate);
+            
+            // Calculate week number (ensure it's between 1-4)
+            $firstDayOfMonth = new \DateTime("$year-$month-01");
+            $firstDayOfWeek = $firstDayOfMonth->format('w');
+            $adjustedDay = $day + $firstDayOfWeek - 1;
+            $weekOfMonth = min(4, ceil($adjustedDay / 7)); // Ensure week is max 4
+
+            // Initialize year data if not exists
+            if (!in_array($year, $data['years'])) {
+                $data['years'][] = $year;
+                $data['yearlyFees'][$year] = 0;
+                $data['yearlyPrices'][$year] = 0;
+                $data['monthlyData'][$year] = [
+                    'reservationFees' => array_fill(0, 12, 0),
+                    'totalPrices' => array_fill(0, 12, 0)
+                ];
+                $data['weeklyData'][$year] = [];
+                $data['dailyData'][$year] = [];
+
+                // Initialize weekly and daily data structures
+                for ($m = 1; $m <= 12; $m++) {
+                    $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $m, $year);
+                    $data['weeklyData'][$year][$m] = [
+                        'weeklyFees' => array_fill(0, 4, 0),     // Changed from reservationFees
+                        'weeklyPrices' => array_fill(0, 4, 0)    // Changed from totalPrices
                     ];
-                    $weeklyData[$eventYear] = [];
-                    $dailyData[$eventYear] = []; // Initialize daily data structure
-                    
-                    for ($month = 1; $month <= 12; $month++) {
-                        $weeklyData[$eventYear][$month] = [
-                            'reservationFees' => array_fill(0, 4, 0),
-                            'totalPrices' => array_fill(0, 4, 0)
-                        ];
-                        
-                        // Initialize daily data for each month
-                        $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $eventYear);
-                        $dailyData[$eventYear][$month] = [
-                            'reservationFees' => array_fill(1, $daysInMonth, 0),
-                            'totalPrices' => array_fill(1, $daysInMonth, 0)
-                        ];
-                    }
+                    $data['dailyData'][$year][$m] = [
+                        'reservationFees' => array_fill(1, $daysInMonth, 0),
+                        'totalPrices' => array_fill(1, $daysInMonth, 0)
+                    ];
                 }
+            }
 
-                // Existing yearly and monthly aggregation
-                if (isset($reservation['reserve_fee'])) {
-                    $yearlyFees[$eventYear] += floatval($reservation['reserve_fee']);
-                    $monthlyData[$eventYear]['reservationFees'][$eventMonth - 1] += floatval($reservation['reserve_fee']);
-                    $dailyData[$eventYear][$eventMonth]['reservationFees'][$eventDay] += floatval($reservation['reserve_fee']);
-                }
-                
-                if (isset($reservation['total_price'])) {
-                    $yearlyPrices[$eventYear] += floatval($reservation['total_price']);
-                    $monthlyData[$eventYear]['totalPrices'][$eventMonth - 1] += floatval($reservation['total_price']);
-                    $dailyData[$eventYear][$eventMonth]['totalPrices'][$eventDay] += floatval($reservation['total_price']);
-                }
+            // Update sales data
+            if (isset($reservation['reserve_fee'])) {
+                $fee = floatval($reservation['reserve_fee']);
+                $data['yearlyFees'][$year] += $fee;
+                $data['monthlyData'][$year]['reservationFees'][$month - 1] += $fee;
+                $data['weeklyData'][$year][$month]['weeklyFees'][$weekOfMonth - 1] += $fee;  // Changed key name
+                $data['dailyData'][$year][$month]['reservationFees'][$day] += $fee;
+            }
 
-                // Weekly data aggregation
-                $eventWeek = (int)(date('W', $eventDate) - 1) % 4;
-                if (isset($reservation['reserve_fee'])) {
-                    $weeklyData[$eventYear][$eventMonth]['reservationFees'][$eventWeek] += floatval($reservation['reserve_fee']);
-                }
-                if (isset($reservation['total_price'])) {
-                    $weeklyData[$eventYear][$eventMonth]['totalPrices'][$eventWeek] += floatval($reservation['total_price']);
-                }
-
-                // Current week data
-                $currentWeekStart = strtotime('monday this week');
-                $currentWeekEnd = strtotime('sunday this week');
-                
-                if ($eventDate >= $currentWeekStart && $eventDate <= $currentWeekEnd) {
-                    $weekDay = date('w', $eventDate); // 0 (Sunday) to 6 (Saturday)
-                    if (!isset($currentWeekData[$weekDay])) {
-                        $currentWeekData[$weekDay] = [
-                            'date' => date('Y-m-d', $eventDate),
-                            'reservationFees' => 0,
-                            'totalPrices' => 0
-                        ];
-                    }
-                    if (isset($reservation['reserve_fee'])) {
-                        $currentWeekData[$weekDay]['reservationFees'] += floatval($reservation['reserve_fee']);
-                    }
-                    if (isset($reservation['total_price'])) {
-                        $currentWeekData[$weekDay]['totalPrices'] += floatval($reservation['total_price']);
-                    }
-                }
+            if (isset($reservation['total_price'])) {
+                $price = floatval($reservation['total_price']);
+                $data['yearlyPrices'][$year] += $price;
+                $data['monthlyData'][$year]['totalPrices'][$month - 1] += $price;
+                $data['weeklyData'][$year][$month]['weeklyPrices'][$weekOfMonth - 1] += $price;  // Changed key name
+                $data['dailyData'][$year][$month]['totalPrices'][$day] += $price;
             }
         }
 
         // Sort years in descending order
-        rsort($years);
-        
-        $months = [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
-        ];
+        rsort($data['years']);
 
-        $isExpanded = session()->get('sidebar_is_expanded', true);
-
-        return view('admin.reports.sales.index', [
-            'years' => $years,
-            'yearlyFees' => $yearlyFees,
-            'yearlyPrices' => $yearlyPrices,
-            'months' => $months,
-            'monthlyData' => $monthlyData,
-            'weeklyData' => $weeklyData,
-            'dailyData' => $dailyData,
-            'currentWeekData' => $currentWeekData,
-            'isExpanded' => $isExpanded,
-        ]);
+        return $data;
     }
 
+    public function printSales(Request $request)
+    {
+        $reservations = $this->getFinishedReservations();
+        $originalReportData = $this->generateSalesData($reservations);
+        
+        // Organize the data in the format expected by the view
+        $yearlyData = [];
+        foreach ($originalReportData['years'] as $year) {
+            $yearlyData[$year] = [
+                'yearlyFees' => $originalReportData['yearlyFees'][$year] ?? 0,
+                'yearlyPrices' => $originalReportData['yearlyPrices'][$year] ?? 0,
+                'reservationFees' => $originalReportData['monthlyData'][$year]['reservationFees'] ?? array_fill(0, 12, 0),
+                'totalPrices' => $originalReportData['monthlyData'][$year]['totalPrices'] ?? array_fill(0, 12, 0),
+                'weeklyData' => $originalReportData['weeklyData'][$year] ?? []
+            ];
+        }
+
+        // Prepare the view data
+        $viewData = [
+            'months' => $originalReportData['months'],
+            'yearlyData' => $yearlyData,
+            'filters' => [
+                'report_type' => $request->report_type,
+                'year' => $request->year,
+                'month' => $request->month,
+                'week' => $request->week,
+            ]
+        ];
+
+        // Initialize variables
+        $view = 'admin.reports.sales.print';
+        $filename = 'sales-report.pdf';
+
+        // Filter data based on report type
+        if ($request->report_type !== 'all') {
+            switch($request->report_type) {
+                case 'yearly':
+                    if($request->year) {
+                        $viewData['yearlyData'] = [
+                            $request->year => $yearlyData[$request->year] ?? []
+                        ];
+                    }
+                    $view = 'admin.reports.sales.yearly-print';
+                    $filename = 'yearly-sales-report.pdf';
+                    break;
+
+                case 'monthly':
+                    if($request->year && $request->month) {
+                        $viewData['yearlyData'] = [
+                            $request->year => $yearlyData[$request->year] ?? []
+                        ];
+                        $viewData['selectedMonth'] = $request->month;
+                    }
+                    $view = 'admin.reports.sales.monthly-print';
+                    $filename = 'monthly-sales-report.pdf';
+                    break;
+
+                case 'weekly':
+                    if($request->year && $request->month && $request->week) {
+                        $viewData['yearlyData'] = [
+                            $request->year => $yearlyData[$request->year] ?? []
+                        ];
+                        $viewData['selectedMonth'] = $request->month;
+                        $viewData['selectedWeek'] = $request->week;
+                    }
+                    $view = 'admin.reports.sales.weekly-print';
+                    $filename = 'weekly-sales-report.pdf';
+                    break;
+            }
+        }
+
+        // Generate PDF
+        $pdf = PDF::loadView($view, $viewData);
+
+        // Configure PDF settings
+        $pdf->setPaper('a4', 'portrait');
+        $pdf->setOptions([
+            'isRemoteEnabled' => true,
+            'isHtml5ParserEnabled' => true,
+            'isPhpEnabled' => true
+        ]);
+
+        return $pdf->stream($filename);
+    }
 
     public function showLogs(Request $request)
     {
@@ -626,75 +684,5 @@ class ReportsController extends Controller
         return view('admin.reports.location.index', compact(
             'monthlyCounts', 'weeklyCounts', 'yearlyCounts', 'isExpanded'
         ));
-    }
-
-    public function printSales()
-    {
-        $reservations = $this->database->getReference($this->reservations)->getValue();
-        $reservations = is_array($reservations) ? $reservations : [];
-
-        // Filter finished reservations
-        $finishedReservations = array_filter($reservations, function ($reservation) {
-            return isset($reservation['status']) && $reservation['status'] === 'Finished';
-        });
-
-        // Initialize months array
-        $months = [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
-        ];
-
-        // Initialize yearly data structure
-        $yearlyData = [];
-
-        // Process reservations
-        foreach ($finishedReservations as $reservation) {
-            if (!empty($reservation['event_date'])) {
-                $eventDate = strtotime($reservation['event_date']);
-                $eventYear = date('Y', $eventDate);
-                $eventMonth = date('n', $eventDate); // 1-12 format
-                $week = ceil(date('j', $eventDate) / 7); // 1-4 format
-
-                // Initialize data structure for the year if not already set
-                if (!isset($yearlyData[$eventYear])) {
-                    $yearlyData[$eventYear] = [
-                        'reservationFees' => array_fill(0, 12, 0),
-                        'totalPrices' => array_fill(0, 12, 0),
-                        'yearlyFees' => 0,
-                        'yearlyPrices' => 0,
-                        'weeklyData' => [] // New structure for weekly data by month
-                    ];
-                    
-                    // Initialize weekly data for each month
-                    for ($month = 1; $month <= 12; $month++) {
-                        $yearlyData[$eventYear]['weeklyData'][$month] = [
-                            'weeklyFees' => array_fill(0, 4, 0),
-                            'weeklyPrices' => array_fill(0, 4, 0)
-                        ];
-                    }
-                }
-
-                // Add data to the appropriate year and month
-                if (isset($reservation['reserve_fee'])) {
-                    $fee = floatval($reservation['reserve_fee']);
-                    $yearlyData[$eventYear]['reservationFees'][$eventMonth - 1] += $fee;
-                    $yearlyData[$eventYear]['yearlyFees'] += $fee;
-                    if ($week >= 1 && $week <= 4) {
-                        $yearlyData[$eventYear]['weeklyData'][$eventMonth]['weeklyFees'][$week - 1] += $fee;
-                    }
-                }
-
-                if (isset($reservation['total_price'])) {
-                    $price = floatval($reservation['total_price']);
-                    $yearlyData[$eventYear]['totalPrices'][$eventMonth - 1] += $price;
-                    $yearlyData[$eventYear]['yearlyPrices'] += $price;
-                    if ($week >= 1 && $week <= 4) {
-                        $yearlyData[$eventYear]['weeklyData'][$eventMonth]['weeklyPrices'][$week - 1] += $price;
-                    }
-                }
-            }
-        }
-
-        return view('admin.reports.sales.print', compact('months', 'yearlyData'));
     }
 }
