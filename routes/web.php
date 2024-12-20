@@ -190,9 +190,9 @@ Route::middleware([AuthMiddleware::class])->group(function () {
             Route::get('/sales', [ReportsController::class, 'sales'])->name('admin.reports.sales');
             Route::get('/sales/print', [ReportsController::class, 'printSales'])->name('admin.reports.sales.print');
             Route::get('/packages', [ReportsController::class, 'packages'])->name('admin.reports.packages');
-            Route::get('/packages/yearly/{year}', [ReportsController::class, 'getYearlyData']);
-            Route::get('/packages/monthly', [ReportsController::class, 'getMonthlyData']);
-            Route::get('/packages/weekly', [ReportsController::class, 'getWeeklyData']);
+            Route::get('/packages/yearly', [ReportsController::class, 'getYearlyRankings']);
+            Route::get('/packages/monthly', [ReportsController::class, 'getMonthlyRankings']);
+            Route::get('/packages/weekly', [ReportsController::class, 'getWeeklyRankings']);
             Route::get('/locations', [ReportsController::class, 'locations'])->name('admin.reports.locations');
         });
     });

@@ -578,37 +578,211 @@ class ReportsController extends Controller
         return redirect()->back()->with('error', 'Log file not found');
     }
 
-    public function packages() {
-        // Get data from Firebase or another source
+    public function packages(Request $request) {
+        // Get data from Firebase
         $reservations = $this->database->getReference($this->reservations)->getValue();
         $reservations = is_array($reservations) ? $reservations : [];
-
+    
         // Filter only finished reservations
         $finishedReservations = array_filter($reservations, function ($reservation) {
             return isset($reservation['status']) && $reservation['status'] === 'Finished';
         });
-
-        // Initialize an array for counting package occurrences
-        $packageCounts = [];
-
+    
+        // Get all available years from the data
+        $years = [];
         foreach ($finishedReservations as $reservation) {
-            if (isset($reservation['package_name'])) {
-                $packageName = $reservation['package_name'];
-
-                // Increment the count for the package
-                if (isset($packageCounts[$packageName])) {
-                    $packageCounts[$packageName]++;
-                } else {
-                    $packageCounts[$packageName] = 1;
-                }
+            if (isset($reservation['event_date'])) {
+                $year = date('Y', strtotime($reservation['event_date']));
+                $years[$year] = $year;
             }
         }
-
-        // Sort the packages based on their reservation count in descending order
-        arsort($packageCounts);
-        $isExpanded = session()->get('sidebar_is_expanded', true);
+        krsort($years); // Sort years in descending order
     
-        return view('admin.reports.packages.index', compact('packageCounts', 'isExpanded'));
+        // Get current date information
+        $currentDate = new \DateTime();
+        $selectedYear = $request->input('year', $currentDate->format('Y'));
+        $selectedMonth = $request->input('month', $currentDate->format('n'));
+        $selectedWeek = $request->input('week', $currentDate->format('W'));
+    
+        // Initialize arrays for different time periods
+        $allTimeRankings = [];
+        $yearlyRankings = [];
+        $monthlyRankings = [];
+        $weeklyRankings = [];
+    
+        foreach ($finishedReservations as $reservation) {
+            if (!isset($reservation['package_name']) || !isset($reservation['event_date'])) {
+                continue;
+            }
+    
+            $packageName = $reservation['package_name'];
+            $eventDate = new \DateTime($reservation['event_date']);
+            
+            // All-time rankings
+            if (!isset($allTimeRankings[$packageName])) {
+                $allTimeRankings[$packageName] = 0;
+            }
+            $allTimeRankings[$packageName]++;
+    
+            // Yearly rankings (selected year)
+            if ($eventDate->format('Y') === $selectedYear) {
+                if (!isset($yearlyRankings[$packageName])) {
+                    $yearlyRankings[$packageName] = 0;
+                }
+                $yearlyRankings[$packageName]++;
+            }
+    
+            // Monthly rankings (selected year and month)
+            if ($eventDate->format('Y') === $selectedYear && $eventDate->format('n') === $selectedMonth) {
+                if (!isset($monthlyRankings[$packageName])) {
+                    $monthlyRankings[$packageName] = 0;
+                }
+                $monthlyRankings[$packageName]++;
+            }
+    
+            // Weekly rankings (selected year, month, and week)
+            if ($eventDate->format('Y') === $selectedYear && 
+                $eventDate->format('n') === $selectedMonth && 
+                $eventDate->format('W') === $selectedWeek) {
+                if (!isset($weeklyRankings[$packageName])) {
+                    $weeklyRankings[$packageName] = 0;
+                }
+                $weeklyRankings[$packageName]++;
+            }
+        }
+    
+        // Sort all rankings in descending order
+        arsort($allTimeRankings);
+        arsort($yearlyRankings);
+        arsort($monthlyRankings);
+        arsort($weeklyRankings);
+    
+        // Get months array
+        $months = [
+            1 => 'Jan',
+            2 => 'Feb',
+            3 => 'Mar',
+            4 => 'Apr',
+            5 => 'May',
+            6 => 'June',
+            7 => 'Jul',
+            8 => 'Aug',
+            9 => 'Sep',
+            10 => 'Oct',
+            11 => 'Nov',
+            12 => 'Dec'
+        ];
+    
+        $isExpanded = session()->get('sidebar_is_expanded', true);
+        
+        return view('admin.reports.packages.index', compact(
+            'allTimeRankings',
+            'yearlyRankings',
+            'monthlyRankings',
+            'weeklyRankings',
+            'years',
+            'months',
+            'selectedYear',
+            'selectedMonth',
+            'selectedWeek',
+            'isExpanded'
+        ));
+    }
+
+    public function getYearlyRankings(Request $request) {
+        $selectedYear = $request->input('year');
+        $yearlyRankings = [];
+        
+        $finishedReservations = $this->getFinishedReservations();
+        
+        foreach ($finishedReservations as $reservation) {
+            if (!isset($reservation['package_name']) || !isset($reservation['event_date'])) {
+                continue;
+            }
+    
+            $eventDate = new \DateTime($reservation['event_date']);
+            if ($eventDate->format('Y') === $selectedYear) {
+                $packageName = $reservation['package_name'];
+                if (!isset($yearlyRankings[$packageName])) {
+                    $yearlyRankings[$packageName] = 0;
+                }
+                $yearlyRankings[$packageName]++;
+            }
+        }
+        
+        arsort($yearlyRankings);
+        
+        return response()->json([
+            'rankings' => $yearlyRankings
+        ]);
+    }
+    
+    public function getMonthlyRankings(Request $request) {
+        $selectedYear = $request->input('year');
+        $selectedMonth = $request->input('month');
+        $monthlyRankings = [];
+        
+        $finishedReservations = $this->getFinishedReservations();
+        
+        foreach ($finishedReservations as $reservation) {
+            if (!isset($reservation['package_name']) || !isset($reservation['event_date'])) {
+                continue;
+            }
+    
+            $eventDate = new \DateTime($reservation['event_date']);
+            if ($eventDate->format('Y') === $selectedYear && 
+                $eventDate->format('n') === $selectedMonth) {
+                $packageName = $reservation['package_name'];
+                if (!isset($monthlyRankings[$packageName])) {
+                    $monthlyRankings[$packageName] = 0;
+                }
+                $monthlyRankings[$packageName]++;
+            }
+        }
+        
+        arsort($monthlyRankings);
+        
+        return response()->json([
+            'rankings' => $monthlyRankings
+        ]);
+    }
+    
+    public function getWeeklyRankings(Request $request) {
+        $selectedYear = $request->input('year');
+        $selectedMonth = $request->input('month');
+        $selectedWeek = $request->input('week');
+        $weeklyRankings = [];
+        
+        $finishedReservations = $this->getFinishedReservations();
+        
+        foreach ($finishedReservations as $reservation) {
+            if (!isset($reservation['package_name']) || !isset($reservation['event_date'])) {
+                continue;
+            }
+    
+            $eventDate = new \DateTime($reservation['event_date']);
+            $firstDayOfMonth = new \DateTime($eventDate->format('Y-m-1'));
+            $firstDayOfWeek = $firstDayOfMonth->format('w');
+            $day = (int)$eventDate->format('j');
+            $adjustedDay = $day + $firstDayOfWeek - 1;
+            $weekOfMonth = ceil($adjustedDay / 7);
+            
+            if ($eventDate->format('Y') === $selectedYear && 
+                $eventDate->format('n') === $selectedMonth &&
+                $weekOfMonth == $selectedWeek) {
+                $packageName = $reservation['package_name'];
+                if (!isset($weeklyRankings[$packageName])) {
+                    $weeklyRankings[$packageName] = 0;
+                }
+                $weeklyRankings[$packageName]++;
+            }
+        }
+        
+        arsort($weeklyRankings);
+        
+        return response()->json([
+            'rankings' => $weeklyRankings
+        ]);
     }
     
 
