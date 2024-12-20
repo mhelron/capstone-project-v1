@@ -23,6 +23,29 @@
             </div>
         </div>
 
+        <!-- Add the Halal Check Modal -->
+        <div class="modal fade" id="halalCheckModal" tabindex="-1" aria-labelledby="halalCheckModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="halalCheckModalLabel">Dietary Preference</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p class="mb-4">Would you like to customize this menu with Halal options?</p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <button type="button" class="btn btn-darkorange" id="halalYesBtn">
+                                Yes, Halal Options
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="halalNoBtn">
+                                No, Standard Menu
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row mb-4">
             <div class="col-lg-12 mb-4">
                 <h3 class="text-left mb-4">Menus</h3>
@@ -60,18 +83,13 @@
                                             <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                             <span class="btn-text">Select Menu</span>
                                         </a>
-                                        <a href="{{ route('menu.customize', [
-                                            'packageId' => $package['id'] ?? array_key_first($packages),
-                                            'menuName' => $menu['menu_name']
-                                        ]) }}" 
-                                        class="btn btn-secondary flex-grow-1 menu-btn"
-                                        data-href="{{ route('menu.customize', [
-                                            'packageId' => $package['id'] ?? array_key_first($packages),
-                                            'menuName' => $menu['menu_name']
-                                        ]) }}">
+                                        <button type="button" 
+                                            class="btn btn-secondary flex-grow-1 customize-menu-btn" 
+                                            data-package-id="{{ $package['id'] ?? array_key_first($packages) }}"
+                                            data-menu-name="{{ $menu['menu_name'] }}">
                                             <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                             <span class="btn-text">Customize Menu</span>
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -289,19 +307,18 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Handle all menu buttons
+    const halalModal = new bootstrap.Modal(document.getElementById('halalCheckModal'));
+    
+    // Handle regular menu select buttons
     document.querySelectorAll('.menu-btn').forEach(button => {
         button.addEventListener('click', function(e) {
-            e.preventDefault(); // Prevent immediate navigation
+            e.preventDefault();
             
             const button = this;
-            const loadingText = button.classList.contains('btn-darkorange') ? 'Selecting...' : 'Customizing...';
+            const loadingText = 'Selecting...';
             const href = button.getAttribute('data-href');
             
-            // Prevent multiple clicks
-            if (button.classList.contains('loading')) {
-                return;
-            }
+            if (button.classList.contains('loading')) return;
 
             // Add loading state
             button.classList.add('loading');
@@ -310,25 +327,71 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Disable all menu buttons in the same container
             const buttonContainer = button.closest('.d-flex');
-            buttonContainer.querySelectorAll('.menu-btn').forEach(btn => {
+            buttonContainer.querySelectorAll('.btn').forEach(btn => {
                 btn.style.pointerEvents = 'none';
                 if (btn !== button) {
                     btn.style.opacity = '0.5';
                 }
             });
 
-            // Navigate after a short delay to show loading state
             setTimeout(() => {
                 window.location.href = href;
-            }, 500); // 500ms delay to show loading state
+            }, 500);
         });
+    });
+
+    // Handle customize menu buttons
+    document.querySelectorAll('.customize-menu-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const packageId = this.getAttribute('data-package-id');
+            const menuName = this.getAttribute('data-menu-name');
+
+            // Store current selection in modal
+            document.getElementById('halalYesBtn').setAttribute('data-package-id', packageId);
+            document.getElementById('halalYesBtn').setAttribute('data-menu-name', menuName);
+            document.getElementById('halalNoBtn').setAttribute('data-package-id', packageId);
+            document.getElementById('halalNoBtn').setAttribute('data-menu-name', menuName);
+
+            // Show the modal
+            halalModal.show();
+        });
+    });
+
+    // Handle Halal Yes button
+    document.getElementById('halalYesBtn').addEventListener('click', function() {
+        const button = this;
+        const packageId = button.getAttribute('data-package-id');
+        const menuName = button.getAttribute('data-menu-name');
+
+        const url = "{{ route('menu.customize.halal', ['packageId' => ':packageId', 'menuName' => ':menuName']) }}"
+            .replace(':packageId', packageId)
+            .replace(':menuName', menuName);
+
+        halalModal.hide();
+        window.location.href = url;
+    });
+
+    // Handle Halal No button
+    document.getElementById('halalNoBtn').addEventListener('click', function() {
+        const button = this;
+        const packageId = button.getAttribute('data-package-id');
+        const menuName = button.getAttribute('data-menu-name');
+
+        const url = "{{ route('menu.customize', ['packageId' => ':packageId', 'menuName' => ':menuName']) }}"
+            .replace(':packageId', packageId)
+            .replace(':menuName', menuName);
+
+        halalModal.hide();
+        window.location.href = url;
     });
 });
 
 // Reset buttons if user navigates back
 window.addEventListener('pageshow', function(event) {
     if (event.persisted) {
-        document.querySelectorAll('.menu-btn').forEach(button => {
+        document.querySelectorAll('.menu-btn, .customize-menu-btn').forEach(button => {
             button.classList.remove('loading');
             button.querySelector('.spinner-border').classList.add('d-none');
             button.querySelector('.btn-text').textContent = 

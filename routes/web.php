@@ -43,6 +43,8 @@ Route::get('/packages/san-mateo', [ListPackageController::class, 'sanmateo'])->n
 Route::get('/packages/motalban', [ListPackageController::class, 'montalban'])->name('guest.packages.montalban');
 Route::get('/menu/customize/{packageId}/{menuName}', [CustomMenuController::class, 'edit'])->name('menu.customize');
 Route::post('/menu/update/{packageId}', [CustomMenuController::class, 'update'])->name('menu.update');
+Route::get('/menu/customize/halal/{packageId}/{menuName}', [CustomMenuController::class, 'editHalal'])->name('menu.customize.halal');
+Route::post('/menu/update/halal/{packageId}', [CustomMenuController::class, 'updateHalal'])->name('menu.update.halal');
 
 //Gallery
 Route::get('/gallery', [GuestController::class, 'indexGallery'])->name('guest.gallery');
