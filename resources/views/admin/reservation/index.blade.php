@@ -148,71 +148,107 @@
                                                                     </div>
                                                                     <div class="modal-body">
                                                                         <ul class="list-group">
-                                                                            <li class="list-group-item"><strong>Address:</strong> 
-                                                                                {{ $item['street_houseno'] ?? 'No Street/House No.' }}, 
-                                                                                {{ $item['barangay'] ?? 'No Barangay' }}, 
-                                                                                {{ $item['city'] ?? 'No City' }}, 
-                                                                                {{ $item['province'] ?? 'No Province' }}, 
-                                                                                {{ $item['region'] ?? 'No Region' }}
-                                                                            </li>
+                                                                            <!-- Basic Information -->
                                                                             <li class="list-group-item">
-                                                                                <strong>Menu Name:</strong> 
-                                                                                <span 
-                                                                                    data-bs-toggle="tooltip" 
-                                                                                    data-bs-html="true"
-                                                                                    data-bs-placement="right"
-                                                                                    title="{{ isset($item['menu_content']) ? implode(',<br>', array_column($item['menu_content'], 'food')) : 'No menu content available' }}"
-                                                                                    class="tooltip-text"
-                                                                                    style="cursor: pointer;">
-                                                                                    {{ $item['menu_name'] ?? 'No Menu Selected' }}
-                                                                                </span>
+                                                                                <h6 class="fw-bold mb-2">Client Information</h6>
+                                                                                <div><strong>Name:</strong> {{ $item['first_name'] }} {{ $item['last_name'] }}</div>
+                                                                                <div><strong>Email:</strong> {{ $item['email'] }}</div>
+                                                                                <div><strong>Phone:</strong> {{ $item['phone'] }}</div>
+                                                                                <div><strong>Address:</strong> 
+                                                                                    {{ $item['street_houseno'] ?? 'No Street/House No.' }}, 
+                                                                                    {{ $item['barangay'] ?? 'No Barangay' }}, 
+                                                                                    {{ $item['city'] ?? 'No City' }}, 
+                                                                                    {{ $item['province'] ?? 'No Province' }}, 
+                                                                                    {{ $item['region'] ?? 'No Region' }}
+                                                                                </div>
                                                                             </li>
-                                                                            <li class="list-group-item"><strong>Venue:</strong> {{ $item['venue'] }}</li>
-                                                                            @if(isset($item['package_name']) && \Illuminate\Support\Str::contains($item['package_name'], 'Wedding'))
-                                                                                <li class="list-group-item"><strong>Sponsors:</strong> {{ $item['sponsors'] ?? 'No sponsors' }}</li>
-                                                                            @endif
-                                                                            <li class="list-group-item"><strong>Event Time:</strong> {{ \Carbon\Carbon::parse($item['event_time'])->format('g:i A') }}</li>
-                                                                            <li class="list-group-item"><strong>Theme:</strong> {{ $item['theme'] }}</li>
-                                                                            <li class="list-group-item"><strong>Other Requests:</strong> {{ $item['other_requests'] ?? 'No requests' }}</li>
+
+                                                                            <!-- Event Details -->
+                                                                            <li class="list-group-item">
+                                                                                <h6 class="fw-bold mb-2">Event Details</h6>
+                                                                                <div><strong>Event Title:</strong> {{ $item['event_title'] }}</div>
+                                                                                <div><strong>Event Date:</strong> {{ \Carbon\Carbon::parse($item['event_date'])->format('F j, Y') }}</div>
+                                                                                <div><strong>Event Time:</strong> {{ \Carbon\Carbon::parse($item['event_time'])->format('g:i A') }}</div>
+                                                                                <div><strong>Venue:</strong> {{ $item['venue'] }}</div>
+                                                                                <div><strong>Theme:</strong> {{ $item['theme'] }}</div>
+                                                                                <div><strong>Number of Guests:</strong> {{ $item['guests_number'] }}</div>
+                                                                                @if(isset($item['sponsors']) && $item['sponsors'] > 0)
+                                                                                    <div><strong>Number of Sponsors:</strong> {{ $item['sponsors'] }}</div>
+                                                                                @endif
+                                                                            </li>
+
+                                                                            <!-- Package and Menu -->
+                                                                            <li class="list-group-item">
+                                                                                <h6 class="fw-bold mb-2">Package and Menu</h6>
+                                                                                <div><strong>Package:</strong> {{ $item['package_name'] }}</div>
+                                                                                <div><strong>Menu Name:</strong> 
+                                                                                    <span 
+                                                                                        data-bs-toggle="tooltip" 
+                                                                                        data-bs-html="true"
+                                                                                        data-bs-placement="right"
+                                                                                        title="{{ isset($item['menu_content']) ? implode(',<br>', array_column($item['menu_content'], 'food')) : 'No menu content available' }}"
+                                                                                        class="tooltip-text"
+                                                                                        style="cursor: pointer;">
+                                                                                        {{ $item['menu_name'] ?? 'No Menu Selected' }}
+                                                                                    </span>
+                                                                                </div>
+                                                                            </li>
+
+                                                                            <!-- Payment Information -->
+                                                                            <li class="list-group-item">
+                                                                                <h6 class="fw-bold mb-2">Payment Information</h6>
+                                                                                <div><strong>Payment Status:</strong> {{ $item['payment_status'] }}</div>
+                                                                                <div><strong>Reference Number:</strong> {{ $item['reference_number'] }}</div>
+                                                                                <div><strong>Reservation Fee:</strong> ₱{{ number_format($item['reserve_fee'], 2) }}</div>
+                                                                                <div><strong>Total Price:</strong> ₱{{ number_format($item['total_price'], 2) }}</div>
+                                                                                @if($item['payment_submitted_at'])
+                                                                                    <div><strong>Payment Submitted:</strong> {{ \Carbon\Carbon::parse($item['payment_submitted_at'])->format('F j, Y g:i A') }}</div>
+                                                                                @endif
+                                                                            </li>
+
+                                                                            <!-- Payment Proof -->
+                                                                            <li class="list-group-item">
+                                                                                <h6 class="fw-bold mb-2">Payment Proof</h6>
+                                                                                @if(isset($item['payment_proof']) && !empty($item['payment_proof']))
+                                                                                    <div class="text-center mb-3">
+                                                                                        <img src="{{ asset('storage/'.$item['payment_proof']) }}" alt="Payment Proof" class="img-fluid" style="max-height: 300px;">
+                                                                                    </div>
+                                                                                @else
+                                                                                    <div class="text-center text-muted mb-2">No payment proof uploaded</div>
+                                                                                @endif
+                                                                                
+                                                                                <div class="mt-2">
+                                                                                    <strong>Payment Submission:</strong>
+                                                                                    @if(isset($item['payment_submitted_at']) && !empty($item['payment_submitted_at']))
+                                                                                        {{ \Carbon\Carbon::parse($item['payment_submitted_at'])->format('F j, Y, g:i A') }}
+                                                                                    @else
+                                                                                        Not Available
+                                                                                    @endif
+                                                                                </div>
+                                                                            </li>
+
+                                                                            <!-- Reservation Status -->
+                                                                            <li class="list-group-item">
+                                                                                <h6 class="fw-bold mb-2">Reservation Status</h6>
+                                                                                <div><strong>Status:</strong> {{ $item['status'] }}</div>
+                                                                                <div><strong>Reservation Type:</strong> {{ $item['reserve_type'] }}</div>
+                                                                                <div><strong>Created At:</strong> {{ \Carbon\Carbon::parse($item['created_at'])->format('F j, Y g:i A') }}</div>
+                                                                                @if($item['pencil_created_at'])
+                                                                                    <div><strong>Pencil Created:</strong> {{ \Carbon\Carbon::parse($item['pencil_created_at'])->format('F j, Y g:i A') }}</div>
+                                                                                @endif
+                                                                                @if($item['pencil_expires_at'])
+                                                                                    <div><strong>Pencil Expires:</strong> {{ \Carbon\Carbon::parse($item['pencil_expires_at'])->format('F j, Y g:i A') }}</div>
+                                                                                @endif
+                                                                                @if($item['cancelled_at'])
+                                                                                    <div><strong>Cancelled At:</strong> {{ \Carbon\Carbon::parse($item['cancelled_at'])->format('F j, Y g:i A') }}</div>
+                                                                                    <div><strong>Cancellation Reason:</strong> {{ $item['cancellation_reason'] ?: 'No reason provided' }}</div>
+                                                                                @endif
+                                                                            </li>
                                                                         </ul>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </td>
-                                                    <!-- Separate Image Modal Trigger -->
-                                                    <td>
-                                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#imageModal{{ $key }}">
-                                                            View Payment
-                                                        </button>
-
-                                                        <!-- Image Modal -->
-                                                        <div class="modal fade" id="imageModal{{ $key }}" tabindex="-1" aria-labelledby="imageModalLabel{{ $key }}" aria-hidden="true">
-                                                            <div class="modal-dialog modal-dialog-centered">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 class="modal-title" id="imageModalLabel{{ $key }}">Payment Details for {{ $item['first_name'] }}</h5>
-                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <!-- Display Payment Proof Image -->
-                                                                        @if(isset($item['payment_proof']) && !empty($item['payment_proof']))
-                                                                            <img src="{{ asset('storage/'.$item['payment_proof']) }}" alt="Payment Proof" class="img-fluid mb-3">
-                                                                        @else
-                                                                            <p>No payment details available.</p>
-                                                                        @endif
-
-                                                                        <!-- Check if 'payment_submitted_at' exists and display it -->
-                                                                        @if(isset($item['payment_submitted_at']) && !empty($item['payment_submitted_at']))
-                                                                            <p><strong>Submitted At:</strong> {{ \Carbon\Carbon::parse($item['payment_submitted_at'])->format('F j, Y, g:i A') }}</p>
-                                                                        @else
-                                                                            <p><strong>Submitted At:</strong> Not Available</p>
-                                                                        @endif
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
                                                     </td>
                                                     <td>
                                                         <form action="{{url('admin/reservations/confirm-reservation/'.$key)}}" method="POST" class="me-2 d-inline">
@@ -452,32 +488,102 @@
                                                                     </div>
                                                                     <div class="modal-body">
                                                                         <ul class="list-group">
-                                                                            <li class="list-group-item"><strong>Address:</strong> 
-                                                                                {{ $item['street_houseno'] ?? 'No Street/House No.' }}, 
-                                                                                {{ $item['barangay'] ?? 'No Barangay' }}, 
-                                                                                {{ $item['city'] ?? 'No City' }}, 
-                                                                                {{ $item['province'] ?? 'No Province' }}, 
-                                                                                {{ $item['region'] ?? 'No Region' }}
-                                                                            </li>
-                                                                            <li class="list-group-item"><strong>Phone:</strong> {{ $item['phone'] }}</li>
+                                                                            <!-- Basic Information -->
                                                                             <li class="list-group-item">
-                                                                                <strong>Menu Name:</strong> 
-                                                                                <span 
-                                                                                    data-bs-toggle="tooltip" 
-                                                                                    data-bs-html="true"
-                                                                                    data-bs-placement="right"
-                                                                                    title="{{ isset($item['menu_content']) ? implode(',<br>', array_column($item['menu_content'], 'food')) : 'No menu content available' }}"
-                                                                                    style="cursor: pointer;">
-                                                                                    {{ $item['menu_name'] ?? 'No Menu Selected' }}
-                                                                                </span>
+                                                                                <h6 class="fw-bold mb-2">Client Information</h6>
+                                                                                <div><strong>Name:</strong> {{ $item['first_name'] }} {{ $item['last_name'] }}</div>
+                                                                                <div><strong>Email:</strong> {{ $item['email'] }}</div>
+                                                                                <div><strong>Phone:</strong> {{ $item['phone'] }}</div>
+                                                                                <div><strong>Address:</strong> 
+                                                                                    {{ $item['street_houseno'] ?? 'No Street/House No.' }}, 
+                                                                                    {{ $item['barangay'] ?? 'No Barangay' }}, 
+                                                                                    {{ $item['city'] ?? 'No City' }}, 
+                                                                                    {{ $item['province'] ?? 'No Province' }}, 
+                                                                                    {{ $item['region'] ?? 'No Region' }}
+                                                                                </div>
                                                                             </li>
-                                                                            <li class="list-group-item"><strong>Venue:</strong> {{ $item['venue'] }}</li>
-                                                                            @if(isset($item['package_name']) && \Illuminate\Support\Str::contains($item['package_name'], 'Wedding'))
-                                                                                <li class="list-group-item"><strong>Sponsors:</strong> {{ $item['sponsors'] ?? 'No sponsors' }}</li>
-                                                                            @endif
-                                                                            <li class="list-group-item"><strong>Event Time:</strong> {{ \Carbon\Carbon::parse($item['event_time'])->format('g:i A') }}</li>
-                                                                            <li class="list-group-item"><strong>Theme:</strong> {{ $item['theme'] }}</li>
-                                                                            <li class="list-group-item"><strong>Other Requests:</strong> {{ $item['other_requests'] ?? 'No requests' }}</li>
+
+                                                                            <!-- Event Details -->
+                                                                            <li class="list-group-item">
+                                                                                <h6 class="fw-bold mb-2">Event Details</h6>
+                                                                                <div><strong>Event Title:</strong> {{ $item['event_title'] }}</div>
+                                                                                <div><strong>Event Date:</strong> {{ \Carbon\Carbon::parse($item['event_date'])->format('F j, Y') }}</div>
+                                                                                <div><strong>Event Time:</strong> {{ \Carbon\Carbon::parse($item['event_time'])->format('g:i A') }}</div>
+                                                                                <div><strong>Venue:</strong> {{ $item['venue'] }}</div>
+                                                                                <div><strong>Theme:</strong> {{ $item['theme'] }}</div>
+                                                                                <div><strong>Number of Guests:</strong> {{ $item['guests_number'] }}</div>
+                                                                                @if(isset($item['sponsors']) && $item['sponsors'] > 0)
+                                                                                    <div><strong>Number of Sponsors:</strong> {{ $item['sponsors'] }}</div>
+                                                                                @endif
+                                                                            </li>
+
+                                                                            <!-- Package and Menu -->
+                                                                            <li class="list-group-item">
+                                                                                <h6 class="fw-bold mb-2">Package and Menu</h6>
+                                                                                <div><strong>Package:</strong> {{ $item['package_name'] }}</div>
+                                                                                <div><strong>Menu Name:</strong> 
+                                                                                    <span 
+                                                                                        data-bs-toggle="tooltip" 
+                                                                                        data-bs-html="true"
+                                                                                        data-bs-placement="right"
+                                                                                        title="{{ isset($item['menu_content']) ? implode(',<br>', array_column($item['menu_content'], 'food')) : 'No menu content available' }}"
+                                                                                        class="tooltip-text"
+                                                                                        style="cursor: pointer;">
+                                                                                        {{ $item['menu_name'] ?? 'No Menu Selected' }}
+                                                                                    </span>
+                                                                                </div>
+                                                                            </li>
+
+                                                                            <!-- Payment Information -->
+                                                                            <li class="list-group-item">
+                                                                                <h6 class="fw-bold mb-2">Payment Information</h6>
+                                                                                <div><strong>Payment Status:</strong> {{ $item['payment_status'] }}</div>
+                                                                                <div><strong>Reference Number:</strong> {{ $item['reference_number'] }}</div>
+                                                                                <div><strong>Reservation Fee:</strong> ₱{{ number_format($item['reserve_fee'], 2) }}</div>
+                                                                                <div><strong>Total Price:</strong> ₱{{ number_format($item['total_price'], 2) }}</div>
+                                                                                @if($item['payment_submitted_at'])
+                                                                                    <div><strong>Payment Submitted:</strong> {{ \Carbon\Carbon::parse($item['payment_submitted_at'])->format('F j, Y g:i A') }}</div>
+                                                                                @endif
+                                                                            </li>
+
+                                                                            <!-- Payment Proof -->
+                                                                            <li class="list-group-item">
+                                                                                <h6 class="fw-bold mb-2">Payment Proof</h6>
+                                                                                @if(isset($item['payment_proof']) && !empty($item['payment_proof']))
+                                                                                    <div class="text-center mb-3">
+                                                                                        <img src="{{ asset('storage/'.$item['payment_proof']) }}" alt="Payment Proof" class="img-fluid" style="max-height: 300px;">
+                                                                                    </div>
+                                                                                @else
+                                                                                    <div class="text-center text-muted mb-2">No payment proof uploaded</div>
+                                                                                @endif
+                                                                                
+                                                                                <div class="mt-2">
+                                                                                    <strong>Payment Submission:</strong>
+                                                                                    @if(isset($item['payment_submitted_at']) && !empty($item['payment_submitted_at']))
+                                                                                        {{ \Carbon\Carbon::parse($item['payment_submitted_at'])->format('F j, Y, g:i A') }}
+                                                                                    @else
+                                                                                        Not Available
+                                                                                    @endif
+                                                                                </div>
+                                                                            </li>
+
+                                                                            <!-- Reservation Status -->
+                                                                            <li class="list-group-item">
+                                                                                <h6 class="fw-bold mb-2">Reservation Status</h6>
+                                                                                <div><strong>Status:</strong> {{ $item['status'] }}</div>
+                                                                                <div><strong>Reservation Type:</strong> {{ $item['reserve_type'] }}</div>
+                                                                                <div><strong>Created At:</strong> {{ \Carbon\Carbon::parse($item['created_at'])->format('F j, Y g:i A') }}</div>
+                                                                                @if(isset($item['pencil_created_at']) && !empty($item['pencil_created_at']))
+                                                                                    <div><strong>Pencil Created:</strong> {{ \Carbon\Carbon::parse($item['pencil_created_at'])->format('F j, Y g:i A') }}</div>
+                                                                                @endif
+                                                                                @if(isset($item['pencil_expires_at']) && !empty($item['pencil_expires_at']))
+                                                                                    <div><strong>Pencil Expires:</strong> {{ \Carbon\Carbon::parse($item['pencil_expires_at'])->format('F j, Y g:i A') }}</div>
+                                                                                @endif
+                                                                                @if(isset($item['cancelled_at']) && !empty($item['cancelled_at']))
+                                                                                    <div><strong>Cancelled At:</strong> {{ \Carbon\Carbon::parse($item['cancelled_at'])->format('F j, Y g:i A') }}</div>
+                                                                                    <div><strong>Cancellation Reason:</strong> {{ isset($item['cancellation_reason']) && !empty($item['cancellation_reason']) ? $item['cancellation_reason'] : 'No reason provided' }}</div>
+                                                                                @endif
+                                                                            </li>
                                                                         </ul>
                                                                     </div>
                                                                 </div>
@@ -608,32 +714,81 @@
                                                                     </div>
                                                                     <div class="modal-body">
                                                                         <ul class="list-group">
-                                                                            <li class="list-group-item"><strong>Address:</strong> 
-                                                                                {{ $item['street_houseno'] ?? 'No Street/House No.' }}, 
-                                                                                {{ $item['barangay'] ?? 'No Barangay' }}, 
-                                                                                {{ $item['city'] ?? 'No City' }}, 
-                                                                                {{ $item['province'] ?? 'No Province' }}, 
-                                                                                {{ $item['region'] ?? 'No Region' }}
-                                                                            </li>
-                                                                            <li class="list-group-item"><strong>Phone:</strong> {{ $item['phone'] }}</li>
+                                                                            <!-- Basic Information -->
                                                                             <li class="list-group-item">
-                                                                                <strong>Menu Name:</strong> 
-                                                                                <span 
-                                                                                    data-bs-toggle="tooltip" 
-                                                                                    data-bs-html="true"
-                                                                                    data-bs-placement="right"
-                                                                                    title="{{ isset($item['menu_content']) ? implode(',<br>', array_column($item['menu_content'], 'food')) : 'No menu content available' }}"
-                                                                                    style="cursor: pointer;">
-                                                                                    {{ $item['menu_name'] ?? 'No Menu Selected' }}
-                                                                                </span>
+                                                                                <h6 class="fw-bold mb-2">Client Information</h6>
+                                                                                <div><strong>Name:</strong> {{ $item['first_name'] }} {{ $item['last_name'] }}</div>
+                                                                                <div><strong>Email:</strong> {{ $item['email'] }}</div>
+                                                                                <div><strong>Phone:</strong> {{ $item['phone'] }}</div>
+                                                                                <div><strong>Address:</strong> 
+                                                                                    {{ $item['street_houseno'] ?? 'No Street/House No.' }}, 
+                                                                                    {{ $item['barangay'] ?? 'No Barangay' }}, 
+                                                                                    {{ $item['city'] ?? 'No City' }}, 
+                                                                                    {{ $item['province'] ?? 'No Province' }}, 
+                                                                                    {{ $item['region'] ?? 'No Region' }}
+                                                                                </div>
                                                                             </li>
-                                                                            <li class="list-group-item"><strong>Venue:</strong> {{ $item['venue'] }}</li>
-                                                                            @if(isset($item['package_name']) && \Illuminate\Support\Str::contains($item['package_name'], 'Wedding'))
-                                                                                <li class="list-group-item"><strong>Sponsors:</strong> {{ $item['sponsors'] ?? 'No sponsors' }}</li>
-                                                                            @endif
-                                                                            <li class="list-group-item"><strong>Event Time:</strong> {{ \Carbon\Carbon::parse($item['event_time'])->format('g:i A') }}</li>
-                                                                            <li class="list-group-item"><strong>Theme:</strong> {{ $item['theme'] }}</li>
-                                                                            <li class="list-group-item"><strong>Other Requests:</strong> {{ $item['other_requests'] ?? 'No requests' }}</li>
+
+                                                                            <!-- Event Details -->
+                                                                            <li class="list-group-item">
+                                                                                <h6 class="fw-bold mb-2">Event Details</h6>
+                                                                                <div><strong>Event Title:</strong> {{ $item['event_title'] }}</div>
+                                                                                <div><strong>Event Date:</strong> {{ \Carbon\Carbon::parse($item['event_date'])->format('F j, Y') }}</div>
+                                                                                <div><strong>Event Time:</strong> {{ \Carbon\Carbon::parse($item['event_time'])->format('g:i A') }}</div>
+                                                                                <div><strong>Venue:</strong> {{ $item['venue'] }}</div>
+                                                                                <div><strong>Theme:</strong> {{ $item['theme'] }}</div>
+                                                                                <div><strong>Number of Guests:</strong> {{ $item['guests_number'] }}</div>
+                                                                                @if(isset($item['sponsors']) && $item['sponsors'] > 0)
+                                                                                    <div><strong>Number of Sponsors:</strong> {{ $item['sponsors'] }}</div>
+                                                                                @endif
+                                                                            </li>
+
+                                                                            <!-- Package and Menu -->
+                                                                            <li class="list-group-item">
+                                                                                <h6 class="fw-bold mb-2">Package and Menu</h6>
+                                                                                <div><strong>Package:</strong> {{ $item['package_name'] }}</div>
+                                                                                <div><strong>Menu Name:</strong> 
+                                                                                    <span 
+                                                                                        data-bs-toggle="tooltip" 
+                                                                                        data-bs-html="true"
+                                                                                        data-bs-placement="right"
+                                                                                        title="{{ isset($item['menu_content']) ? implode(',<br>', array_column($item['menu_content'], 'food')) : 'No menu content available' }}"
+                                                                                        class="tooltip-text"
+                                                                                        style="cursor: pointer;">
+                                                                                        {{ $item['menu_name'] ?? 'No Menu Selected' }}
+                                                                                    </span>
+                                                                                </div>
+                                                                            </li>
+
+                                                                            <!-- Payment Information -->
+                                                                            <li class="list-group-item">
+                                                                                <h6 class="fw-bold mb-2">Payment Information</h6>
+                                                                                <div><strong>Payment Status:</strong> {{ $item['payment_status'] }}</div>
+                                                                                <div><strong>Reference Number:</strong> {{ $item['reference_number'] }}</div>
+                                                                                <div><strong>Reservation Fee:</strong> ₱{{ number_format($item['reserve_fee'], 2) }}</div>
+                                                                                <div><strong>Total Price:</strong> ₱{{ number_format($item['total_price'], 2) }}</div>
+                                                                                @if($item['payment_submitted_at'])
+                                                                                    <div><strong>Payment Submitted:</strong> {{ \Carbon\Carbon::parse($item['payment_submitted_at'])->format('F j, Y g:i A') }}</div>
+                                                                                @endif
+                                                                            </li>
+
+                                                                            <!-- Reservation Status -->
+                                                                            <li class="list-group-item">
+                                                                                <h6 class="fw-bold mb-2">Reservation Status</h6>
+                                                                                <div><strong>Status:</strong> {{ $item['status'] }}</div>
+                                                                                <div><strong>Reservation Type:</strong> {{ $item['reserve_type'] }}</div>
+                                                                                <div><strong>Created At:</strong> {{ \Carbon\Carbon::parse($item['created_at'])->format('F j, Y g:i A') }}</div>
+                                                                                @if(isset($item['pencil_created_at']) && !empty($item['pencil_created_at']))
+                                                                                    <div><strong>Pencil Created:</strong> {{ \Carbon\Carbon::parse($item['pencil_created_at'])->format('F j, Y g:i A') }}</div>
+                                                                                @endif
+                                                                                @if(isset($item['pencil_expires_at']) && !empty($item['pencil_expires_at']))
+                                                                                    <div><strong>Pencil Expires:</strong> {{ \Carbon\Carbon::parse($item['pencil_expires_at'])->format('F j, Y g:i A') }}</div>
+                                                                                @endif
+                                                                                @if(isset($item['cancelled_at']) && !empty($item['cancelled_at']))
+                                                                                    <div><strong>Cancelled At:</strong> {{ \Carbon\Carbon::parse($item['cancelled_at'])->format('F j, Y g:i A') }}</div>
+                                                                                    <div><strong>Cancellation Reason:</strong> {{ isset($item['cancellation_reason']) && !empty($item['cancellation_reason']) ? $item['cancellation_reason'] : 'No reason provided' }}</div>
+                                                                                @endif
+                                                                            </li>
                                                                         </ul>
                                                                     </div>
                                                                 </div>
@@ -786,16 +941,30 @@
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <form action="{{url('admin/reservations/confirm-pencil/'.$key)}}" method="POST" class="me-2 d-inline">
-                                                            @csrf
-                                                            @method('PUT')
-                                                            <button type="submit" class="btn btn-sm btn-success">Confirm</button>
-                                                        </form>
-                                                        <form action="{{url('admin/reservations/cancel-pencil/'.$key)}}" method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('PUT')
-                                                            <button type="submit" class="btn btn-sm btn-secondary">Cancel</button>
-                                                        </form>
+                                                        @if(strtolower($item['status']) === 'expired')
+                                                            <form id="archiveFormPencil{{ $key }}" action="{{ url('admin/reservations/archive-reservation/' . $key) }}" method="POST" class="d-inline">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                <button type="button" class="btn btn-sm btn-secondary" 
+                                                                        data-bs-toggle="modal" 
+                                                                        data-bs-target="#archiveModalPencil" 
+                                                                        data-id="{{ $key }}" 
+                                                                        data-name="{{ $item['package_name'] }}">
+                                                                    Archive
+                                                                </button>
+                                                            </form>
+                                                        @else
+                                                            <form action="{{url('admin/reservations/confirm-pencil/'.$key)}}" method="POST" class="me-2 d-inline">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                <button type="submit" class="btn btn-sm btn-success">Confirm</button>
+                                                            </form>
+                                                            <form action="{{url('admin/reservations/cancel-pencil/'.$key)}}" method="POST" class="d-inline">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                <button type="submit" class="btn btn-sm btn-secondary">Cancel</button>
+                                                            </form>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @empty
@@ -864,6 +1033,23 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                 <button type="button" class="btn btn-success" id="confirmFinishButton">Yes, Finish</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="archiveModalPencil" tabindex="-1" aria-labelledby="archiveModalLabelPencil" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="archiveModalLabelPencil">Confirm Archive</h5>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to archive <strong id="userNamePencil"></strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmArchiveButtonPencil">Archive</button>
             </div>
         </div>
     </div>
@@ -1016,6 +1202,34 @@ document.addEventListener('DOMContentLoaded', function() {
 });yt
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const archiveButtonsPencil = document.querySelectorAll('[data-bs-target="#archiveModalPencil"]');
+    const userNameFieldPencil = document.getElementById('userNamePencil');
+    const confirmArchiveButtonPencil = document.getElementById('confirmArchiveButtonPencil');
+
+    // Update modal data when clicking the Archive button
+    archiveButtonsPencil.forEach(button => {
+        button.addEventListener('click', function () {
+            const userName = this.getAttribute('data-name');
+            const reservationID = this.getAttribute('data-id');
+            
+            // Populate modal with package name
+            userNameFieldPencil.textContent = userName;
+
+            // Store the form ID for later use
+            confirmArchiveButtonPencil.setAttribute('data-form-id', 'archiveFormPencil' + reservationID);
+        });
+    });
+
+    // Submit form when Confirm button is clicked
+    confirmArchiveButtonPencil.addEventListener('click', function () {
+        const formId = this.getAttribute('data-form-id');
+        document.getElementById(formId).submit();
+    });
+});
+</script>
+
 <style>
 .filter-controls {
     background: #f8f9fa;
@@ -1038,6 +1252,31 @@ document.addEventListener('DOMContentLoaded', function() {
     max-width: 200px;
 }
 </style>
+
+<style>
+    .modal-body .list-group-item h6 {
+        color: #333;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 8px;
+        margin-bottom: 12px;
+    }
+    
+    .modal-body .list-group-item div {
+        margin-bottom: 6px;
+    }
+    
+    .modal-body .list-group-item div:last-child {
+        margin-bottom: 0;
+    }
+
+    .tooltip-text[data-bs-toggle="tooltip"] {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px;
+        display: inline-block;
+    }
+</style>        
 
 @vite('resources/js/filter.js')
 

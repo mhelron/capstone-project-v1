@@ -150,7 +150,10 @@ class CustomMenuController extends Controller
         }
 
         // Convert the original menu to halal by removing pork items
-        $halalMenu = ['foods' => []];
+        $halalMenu = [
+            'menu_name' => $selectedMenu['menu_name'],
+            'foods' => []
+        ];
         $selectedFoods = [];
         $counter = 0;
         
@@ -249,8 +252,15 @@ class CustomMenuController extends Controller
         }
 
         $menuId = Str::random(10);
+        
+        // Use the original menu name for customization
+        $menuName = trim($request->menu_name);
+        if (empty($menuName)) {
+            $menuName = $package['package_name'] . ' Menu';
+        }
+        
         $customizedMenu = [
-            'menu_name' => $request->menu_name . ' (Halal)',
+            'menu_name' => $menuName . ' (Customized - Halal)',
             'menu_id' => $menuId,
             'foods' => [],
             'is_halal' => true,
