@@ -54,7 +54,7 @@
                             <div class="form-group col-md-6 mb-3">
                                 <label class="form-label">Lastname: <span class="text-danger">*</span></label>
                                 <input type="text" name="lastname" class="form-control custom-select @error('lastname') is-invalid @enderror" 
-                                    value="{{ old('client_name') }}" required>
+                                    value="{{ old('lastname') }}" required>
                                 @error('lastname')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

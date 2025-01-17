@@ -79,6 +79,8 @@ Route::get('/food-taste', [FoodTasteController::class, 'index'])->name('guest.fo
 Route::get('/food-taste/create', [FoodTasteController::class, 'create'])->name('guest.foodtaste.create');
 Route::post('/food-taste', [FoodTasteController::class, 'store'])->name('guest.foodtaste.store');
 Route::post('/food-taste/view', [FoodTasteController::class, 'checkStatus'])->name('guest.check.submit');
+Route::post('/admin/foodtaste/update-status/{id}', [FoodTasteController::class, 'updateStatus'])
+    ->name('admin.foodtaste.updateStatus');
 
 Route::view('/unauthorized', 'unauthorized')->name('unauthorized');
 

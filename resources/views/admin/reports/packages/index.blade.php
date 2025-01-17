@@ -76,7 +76,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3" class="empty-message">No packages found</td>
+                                    <td colspan="3" class="empty-message">No data found</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -121,7 +121,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3" class="empty-message">No packages found for selected year</td>
+                                    <td colspan="3" class="empty-message">No data found</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -174,7 +174,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3" class="empty-message">No packages found for selected month</td>
+                                    <td colspan="3" class="empty-message">No data found</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -234,7 +234,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3" class="empty-message">No packages found for selected week</td>
+                                    <td colspan="3" class="empty-message">No data found</td>
                                 </tr>
                             @endforelse
                         </tbody>

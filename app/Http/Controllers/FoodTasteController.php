@@ -7,6 +7,9 @@ use Kreait\Firebase\Contract\Database;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\FoodTasteCreateMail;
+use App\Mail\FoodTasteStatusUpdateMail;
 
 class FoodTasteController extends Controller
 {
@@ -181,11 +184,29 @@ class FoodTasteController extends Controller
                 throw new \Exception('Failed to get Firebase reference key');
             }
 
+            // Send confirmation email
+            try {
+                Mail::mailer('clients')
+                    ->to($validatedData['email'])
+                    ->send(new FoodTasteCreateMail($foodtasteData));
+
+                Log::info('Food tasting confirmation email sent successfully', [
+                    'email' => $validatedData['email'],
+                    'reference_number' => $reference_number
+                ]);
+            } catch (\Exception $mailException) {
+                Log::error('Failed to send food tasting confirmation email:', [
+                    'error' => $mailException->getMessage(),
+                    'email' => $validatedData['email']
+                ]);
+                // Continue with the process even if email fails
+            }
+
             // Store reference number in session
             session(['last_reference_number' => $reference_number]);
 
             // Redirect with success message
-            return redirect()->route('guest.foodtaste')->with([
+            return redirect()->route('guest.foodtaste.index')->with([
                 'success' => 'Food tasting request submitted successfully! Your reference number is: ' . $reference_number,
                 'reference_number' => $reference_number
             ]);
@@ -202,4 +223,56 @@ class FoodTasteController extends Controller
         }
     }
 
+    public function updateStatus($id, Request $request)
+    {
+        try {
+            $status = $request->status;
+            
+            // Get the current food tasting request
+            $foodtasteRef = $this->database->getReference($this->foodtaste)->getChild($id);
+            $foodtaste = $foodtasteRef->getValue();
+
+            if (!$foodtaste) {
+                return redirect()->back()->with('error', 'Food tasting request not found.');
+            }
+
+            // Update the status
+            $updates = [
+                'status' => $status,
+                'updated_at' => Carbon::now()->toDateTimeString(),
+            ];
+
+            $foodtasteRef->update($updates);
+
+            // Merge updates for email
+            $foodtaste = array_merge($foodtaste, $updates);
+
+            // Send email notification based on status
+            try {
+                Mail::mailer('clients')
+                    ->to($foodtaste['email'])
+                    ->send(new FoodTasteStatusUpdateMail($foodtaste));
+
+                Log::info('Food tasting status update email sent successfully', [
+                    'email' => $foodtaste['email'],
+                    'status' => $status
+                ]);
+            } catch (\Exception $mailException) {
+                Log::error('Failed to send food tasting status update email:', [
+                    'error' => $mailException->getMessage(),
+                    'email' => $foodtaste['email']
+                ]);
+            }
+
+            $statusMessage = ucfirst($status);
+            return redirect()->back()->with('status', "Food tasting request has been {$statusMessage}!");
+
+        } catch (\Exception $e) {
+            Log::error('Error updating food tasting status:', [
+                'error' => $e->getMessage(),
+                'id' => $id
+            ]);
+            return redirect()->back()->with('error', 'Failed to update status: ' . $e->getMessage());
+        }
+    }
 }
