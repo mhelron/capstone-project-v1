@@ -281,7 +281,7 @@ function updateStatus(inquiryId, status) {
     if (confirm(`Are you sure you want to ${status} this quotation?`)) {
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = `{{ url('admin/quotation/update-status') }}/${inquiryId}`;
+        form.action = `{{ route('admin.quotation.updateStatus', ':id') }}`.replace(':id', inquiryId);
         
         const csrfToken = document.createElement('input');
         csrfToken.type = 'hidden';

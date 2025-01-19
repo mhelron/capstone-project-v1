@@ -15,7 +15,8 @@
             <div style="background-color: #f9f9f9; padding: 15px; margin: 20px 0; border-left: 4px solid #28a745;">
                 <p><strong>Event Details:</strong></p>
                 <ul style="list-style: none; padding-left: 20px;">
-                    <li>Event Title: {{ $quotationData['event_title'] }}</li>
+                    <li>Event Type: {{ $quotationData['is_wedding'] == '1' ? 'Wedding' : 'Regular Event' }}</li>
+                    <li>Event: {{ $quotationData['event'] }}</li>
                     <li>Date: {{ date('F j, Y', strtotime($quotationData['event_date'])) }}</li>
                     <li>Time: {{ $quotationData['event_time'] }}</li>
                     <li>Venue: {{ $quotationData['venue'] }}</li>
@@ -23,10 +24,15 @@
                     <li>Number of Guests: {{ $quotationData['guest_count'] }}</li>
                 </ul>
 
+                <p><strong>Menu Details:</strong></p>
+                <ul style="list-style: none; padding-left: 20px;">
+                    @foreach($quotationData['menu_content'] as $menu)
+                        <li><strong>{{ $menu['category'] }}:</strong> {{ $menu['food'] }}</li>
+                    @endforeach
+                </ul>
+
                 <p><strong>Package Details:</strong></p>
                 <ul style="list-style: none; padding-left: 20px;">
-                    <li>Package Name: {{ $quotationData['package'] }}</li>
-                    <li>Menu Name: {{ $quotationData['menu_name'] }}</li>
                     <li>Total Price: ₱{{ number_format($quotationData['total_price'], 2) }}</li>
                     <li>Payment Status: {{ $quotationData['payment_status'] }}</li>
                 </ul>

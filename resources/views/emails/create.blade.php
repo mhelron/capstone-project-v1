@@ -17,7 +17,8 @@
             
             <p><strong>Event Details:</strong></p>
             <ul style="list-style: none; padding-left: 20px;">
-                <li>Event Title: {{ $quotationData['event_title'] }}</li>
+                <li>Event Type: {{ $quotationData['is_wedding'] == '1' ? 'Wedding' : 'Regular Event' }}</li>
+                <li>Event: {{ $quotationData['event'] }}</li>
                 <li>Date: {{ date('F j, Y', strtotime($quotationData['event_date'])) }}</li>
                 <li>Time: {{ $quotationData['event_time'] }}</li>
                 <li>Venue: {{ $quotationData['venue'] }}</li>
@@ -25,10 +26,11 @@
                 <li>Number of Guests: {{ $quotationData['guest_count'] }}</li>
             </ul>
 
-            <p><strong>Package Details:</strong></p>
+            <p><strong>Menu Details:</strong></p>
             <ul style="list-style: none; padding-left: 20px;">
-                <li>Package Name: {{ $quotationData['package'] }}</li>
-                <li>Menu Name: {{ $quotationData['menu_name'] }}</li>
+                @foreach($quotationData['menu_content'] as $menu)
+                    <li><strong>{{ $menu['category'] }}:</strong> {{ $menu['food'] }}</li>
+                @endforeach
             </ul>
             
             <p><strong>Contact Information:</strong></p>
@@ -38,11 +40,13 @@
             </ul>
             
             <p><strong>Complete Address:</strong></p>
-            <ul style="list-style: none; padding-left: 20px;">
-                <li>{{ $quotationData['street_houseno'] }}</li>
-                <li>{{ $quotationData['barangay'] }}, {{ $quotationData['city'] }}</li>
-                <li>{{ $quotationData['province'] }}, {{ $quotationData['region'] }}</li>
-            </ul>
+            <p style="margin-left: 20px;">
+                {{ $quotationData['street_houseno'] }}, 
+                {{ $quotationData['barangay'] }}, 
+                {{ $quotationData['city'] }}, 
+                {{ $quotationData['province'] }}, 
+                {{ $quotationData['region'] }}
+            </p>
         </div>
 
         <p>We will review your request and prepare a detailed quotation based on your requirements.</p>

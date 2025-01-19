@@ -274,7 +274,22 @@ class QuotationController extends Controller
                 throw new \Exception('Failed to get Firebase reference key');
             }
 
-            // Rest of your code (email sending, etc.)
+            try {
+                Mail::mailer('clients')
+                    ->to($validatedData['email'])
+                    ->send(new QuotationCreateMail($quotationData));
+    
+                Log::info('Quotation confirmation email sent successfully', [
+                    'email' => $validatedData['email'],
+                    'reference_number' => $reference_number
+                ]);
+            } catch (\Exception $mailException) {
+                Log::error('Failed to send quotation confirmation email:', [
+                    'error' => $mailException->getMessage(),
+                    'email' => $validatedData['email']
+                ]);
+                // Continue with the process even if email fails
+            }
             
             return redirect()->route('guest.quotation.index')->with([
                 'success' => 'Quotation request submitted successfully! Your reference number is: ' . $reference_number,
@@ -288,55 +303,6 @@ class QuotationController extends Controller
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Failed to submit quotation request: ' . $e->getMessage());
-        }
-    }
-
-    public function updateStatus($id, Request $request)
-    {
-        try {
-            $status = $request->status;
-            
-            $quotationRef = $this->database->getReference($this->quotations)->getChild($id);
-            $quotation = $quotationRef->getValue();
-
-            if (!$quotation) {
-                return redirect()->back()->with('error', 'Quotation request not found.');
-            }
-
-            $updates = [
-                'status' => $status,
-                'updated_at' => Carbon::now()->toDateTimeString(),
-            ];
-
-            $quotationRef->update($updates);
-
-            $quotation = array_merge($quotation, $updates);
-
-            try {
-                Mail::mailer('clients')
-                    ->to($quotation['email'])
-                    ->send(new QuotationStatusUpdateMail($quotation));
-
-                Log::info('Quotation status update email sent successfully', [
-                    'email' => $quotation['email'],
-                    'status' => $status
-                ]);
-            } catch (\Exception $mailException) {
-                Log::error('Failed to send quotation status update email:', [
-                    'error' => $mailException->getMessage(),
-                    'email' => $quotation['email']
-                ]);
-            }
-
-            $statusMessage = ucfirst($status);
-            return redirect()->back()->with('status', "Quotation request has been {$statusMessage}!");
-
-        } catch (\Exception $e) {
-            Log::error('Error updating quotation status:', [
-                'error' => $e->getMessage(),
-                'id' => $id
-            ]);
-            return redirect()->back()->with('error', 'Failed to update status: ' . $e->getMessage());
         }
     }
 }
