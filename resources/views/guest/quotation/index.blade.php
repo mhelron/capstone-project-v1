@@ -101,6 +101,16 @@
                                         <th>Phone</th>
                                         <td>{{ $quotation['phone'] }}</td>
                                     </tr>
+                                    <tr>
+                                        <th>Complete Address</th>
+                                        <td>
+                                            {{ $quotation['street_houseno'] }}, 
+                                            {{ $quotation['barangay'] }}, 
+                                            {{ $quotation['city'] }}, 
+                                            {{ $quotation['province'] }}, 
+                                            {{ $quotation['region'] }}
+                                        </td>
+                                    </tr>
 
                                     <!-- Event Details -->
                                     <tr>
@@ -131,19 +141,6 @@
                                         <td>{{ $quotation['guest_count'] }}</td>
                                     </tr>
 
-                                    <!-- Package Details -->
-                                    <tr>
-                                        <th colspan="2" class="table-light">Package Details</th>
-                                    </tr>
-                                    <tr>
-                                        <th>Total Price</th>
-                                        <td>₱{{ number_format($quotation['total_price'], 2) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Payment Status</th>
-                                        <td>{{ $quotation['payment_status'] }}</td>
-                                    </tr>
-
                                     <!-- Menu Selections -->
                                     <tr>
                                         <th colspan="2" class="table-light">Menu Selections</th>
@@ -161,19 +158,17 @@
                                         </tr>
                                     @endif
 
-                                    <!-- Address Information -->
+                                    <!-- Package Details -->
                                     <tr>
-                                        <th colspan="2" class="table-light">Address Information</th>
+                                        <th colspan="2" class="table-light">Package Details</th>
                                     </tr>
                                     <tr>
-                                        <th>Complete Address</th>
-                                        <td>
-                                            {{ $quotation['street_houseno'] }}, 
-                                            {{ $quotation['barangay'] }}, 
-                                            {{ $quotation['city'] }}, 
-                                            {{ $quotation['province'] }}, 
-                                            {{ $quotation['region'] }}
-                                        </td>
+                                        <th>Total Quote Price Set</th>
+                                        <td>₱{{ number_format($quotation['total_price'], 2) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Payment Status</th>
+                                        <td>{{ $quotation['payment_status'] }}</td>
                                     </tr>
                                 </tbody>
                             </table>

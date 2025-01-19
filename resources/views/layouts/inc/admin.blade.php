@@ -39,6 +39,12 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
+                        <a href="{{route('quotation.index')}}" class="sidebar-link">
+                            <i class='bx bx-clipboard'></i>
+                            <span>Quotation</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
                         <a href="{{route('admin.users')}}" class="sidebar-link">
                             <i class='bx bx-user'></i>
                             <span>User</span>

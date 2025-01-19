@@ -20,6 +20,7 @@ use App\Http\Controllers\CustomMenuController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\FoodTasteController;
 use App\Http\Controllers\FoodTasteControllerAdmin;
+use App\Http\Controllers\QuotationControllerAdmin;
 
 use App\Http\Controllers\BotmanController;
 
@@ -176,6 +177,14 @@ Route::middleware([AuthMiddleware::class])->group(function () {
         });
 
         Route::post('/admin/foodtaste/update-status/{id}', [FoodTasteController::class, 'updateStatus'])->name('admin.foodtaste.updateStatus');
+
+        // Admin Quotation Routes
+        Route::prefix('admin/quotation')->group(function () {
+            Route::get('/', [QuotationControllerAdmin::class, 'index'])->name('quotation.index');
+            Route::post('/update-status/{id}', [QuotationControllerAdmin::class, 'updateStatus'])->name('admin.quotation.updateStatus');
+            Route::post('/set-pricing/{id}', [QuotationControllerAdmin::class, 'setPricing'])->name('admin.quotation.setPricing');
+            Route::post('/update-payment-status/{id}', [QuotationControllerAdmin::class, 'updatePaymentStatus'])->name('admin.quotation.updatePaymentStatus');
+        });
     });
 
     Route::group(['middleware' => RoleMiddleware::class . ':Super Admin'], function () {

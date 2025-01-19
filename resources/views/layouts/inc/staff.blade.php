@@ -32,6 +32,12 @@
                             <span>Food Tasting</span>
                         </a>
                     </li>
+                    <li class="sidebar-item">
+                        <a href="{{route('quotation.index')}}" class="sidebar-link">
+                            <i class='bx bx-clipboard'></i>
+                            <span>Quotation</span>
+                        </a>
+                    </li>
                 </ul>
 
                 <div class="sidebar-footer">
