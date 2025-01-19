@@ -72,15 +72,16 @@ Route::get('/edit-reserve/{reservation_id}', [GuestReservationController::class,
 Route::put('/edit-reserve/{reservation_id}', [GuestReservationController::class, 'update'])->name('guest.reservation.update');
 
 //Quotation
-Route::get('/quotation', [QuotationController::class, 'index'])->name('guest.quote');
+Route::get('/quotation', [QuotationController::class, 'index'])->name('guest.quotation.index');
+Route::get('/quotation/create', [QuotationController::class, 'create'])->name('guest.quotation.create');
+Route::post('/quotation', [QuotationController::class, 'store'])->name('guest.quotation.store');
+Route::post('/quotation/view', [QuotationController::class, 'checkStatus'])->name('guest.quotation.check.submit');
 
 //Food Taste
 Route::get('/food-taste', [FoodTasteController::class, 'index'])->name('guest.foodtaste.index');
 Route::get('/food-taste/create', [FoodTasteController::class, 'create'])->name('guest.foodtaste.create');
 Route::post('/food-taste', [FoodTasteController::class, 'store'])->name('guest.foodtaste.store');
 Route::post('/food-taste/view', [FoodTasteController::class, 'checkStatus'])->name('guest.check.submit');
-Route::post('/admin/foodtaste/update-status/{id}', [FoodTasteController::class, 'updateStatus'])
-    ->name('admin.foodtaste.updateStatus');
 
 Route::view('/unauthorized', 'unauthorized')->name('unauthorized');
 
@@ -171,7 +172,10 @@ Route::middleware([AuthMiddleware::class])->group(function () {
         Route::prefix('admin/food-taste')->group(function () {
             Route::get('/', [FoodTasteControllerAdmin::class, 'index'])->name('admin.foodtaste.index');
             Route::post('set-schedule/{id}', [FoodTasteControllerAdmin::class, 'setSchedule'])->name('admin.foodtaste.setSchedule');
+            Route::post('/update-status/{id}', [FoodTasteController::class, 'updateStatus'])->name('admin.foodtaste.updateStatus');
         });
+
+        Route::post('/admin/foodtaste/update-status/{id}', [FoodTasteController::class, 'updateStatus'])->name('admin.foodtaste.updateStatus');
     });
 
     Route::group(['middleware' => RoleMiddleware::class . ':Super Admin'], function () {

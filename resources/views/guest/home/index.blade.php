@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Storage;
             <div class="d-flex mt-4 mb-4">
                 <a href="{{route('guest.reserve')}}" class="btn btn-darkorange me-2">Reserve</a>
                 <a href="{{route('guest.check')}}" class="btn btn-darkorange me-2">View Status</a>
-                <a href="{{route('guest.quote')}}" class="btn btn-darkorange me-2">Quote</a>
+                <a href="{{route('guest.quotation.index')}}" class="btn btn-darkorange me-2">Quote</a>
                 <a href="{{route('guest.foodtaste.index')}}" class="btn btn-darkorange">Food Taste</a>
             </div>
         </div>
